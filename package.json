@@ -2,8 +2,8 @@
   "name": "angular-seed",
   "private": true,
   "version": "0.0.0",
-  "description": "A starter project for AngularJS",
-  "repository": "https://github.com/angular/angular-seed",
+  "description": "TI praxis",
+  "repository": "https://github.com/resterle/ti-praxis",
   "license": "MIT",
   "devDependencies": {
     "bower": "^1.3.1",
