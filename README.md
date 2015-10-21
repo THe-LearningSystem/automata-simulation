@@ -1,3 +1,5 @@
+Der Micha ist zu blöd dafür
+
 # angular-seed — the seed for AngularJS apps
 
 This project is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
@@ -16,7 +18,7 @@ To get you started you can simply clone the angular-seed repository and install 
 
 ### Prerequisites
 
-You need git to clone the angular-seed repository. You can get git from
+You need git to clone the angular-seed repository. You can get git from 
 [http://git-scm.com/](http://git-scm.com/).
 
 We also use a number of node.js tools to initialize and test angular-seed. You must have node.js and
