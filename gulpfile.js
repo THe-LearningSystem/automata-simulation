@@ -3,7 +3,6 @@ var gulp = require('gulp'),
     less = require('gulp-less'),
     livereload = require('gulp-livereload'),
     wiredep = require('wiredep'),
-    modRewrite = require('connect-modrewrite'),
     connect = require('gulp-connect'),
     gulpif = require('gulp-if'),
     mainBowerFiles = require('gulp-main-bower-files'),
@@ -13,25 +12,12 @@ var gulp = require('gulp'),
 
 var paths = {
   js: 'app/js/**/*.js',
-  less: 'app/less/style.less',
-  modals: 'app/views/modals/*.html',
-  views: 'app/views/**/*.html',
+  views: 'app/view*/*.html',
+  less: '',
   css: 'app/styles/**/*.css',
   images: 'app/images/**/*',
-  fonts: [
-    'app/fonts/pe-icon-7-stroke/fonts/*.*',
-    'bower_components/fontawesome/fonts/*.*',
-    'bower_components/bootstrap/fonts/*.*'
-    ],
-  vendorFonts: [
-    'bower_components/bootstrap/fonts/*.*',
-    'bower_components/angular-ui-grid/ui-grid.eot',
-    'bower_components/angular-ui-grid/ui-grid.svg',
-    'bower_components/angular-ui-grid/ui-grid.ttf',
-    'bower_components/angular-ui-grid/ui-grid.woff'
-    ],
   dist: './dist',
-  index: 'app/index.html',
+  index: './app/index.html',
   all: './app/**/*.*'
 }
 
@@ -71,6 +57,7 @@ gulp.task('assets', function(){
 /////////////////////////////////////////////////
 
 gulp.task('wiredep-js', function(){
+  console.log(wiredep().js);
   gulp.src(wiredep().js)
     .pipe(fileSort())
     .pipe(gulp.dest(paths.dist+'/scripts/vendor'));
@@ -141,15 +128,6 @@ gulp.task('live', function(){
   connect.server({
     port: 9000,
     livereload: true,
-    middleware: function() {
-      return [
-        modRewrite([
-          '^/api/v1/(.*)$ http://localhost:3000/api/v1/$1 [P]',
-          '^/bower_components/(.*)$ /bower_components/$1 [L]',
-          '^/(.*)$ /app/$1'
-        ])
-      ];
-    }
   });
   gulp.watch(paths.all, function(obj) {
     if (obj.type === 'changed') {
