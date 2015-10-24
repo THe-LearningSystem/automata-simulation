@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+    sass = require('gulp-sass'),
     uglify = require('gulp-uglify'),
     livereload = require('gulp-livereload'),
     wiredep = require('wiredep'),
@@ -12,6 +13,7 @@ var gulp = require('gulp'),
 var paths = {
   js: 'app/js/**/*.js',
   views: 'app/view*/*.html',
+  sass: 'app/styles/**/*scss',
   css: 'app/styles/**/*.css',
   images: 'app/images/**/*',
   dist: './dist',
@@ -23,7 +25,19 @@ var pipes = {};
 pipes.uglifyAndConcat = function(){
   return
 }
+///////////////////////////
+// Bootstrap SASS
+////////////////////////////
 
+gulp.task('sass', function(){
+    gulp.src('app/styles/bootstrap.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('app/styles'));
+    gulp.src('app/styles/app.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('app/styles'));
+
+});
 
 ///////////////////////////
 // Get, uglify and copy application js
@@ -116,6 +130,7 @@ gulp.task('live', function(){
     port: 9000,
     livereload: true,
   });
+    gulp.watch(paths.sass,['sass']);
   gulp.watch(paths.all, function(obj) {
     if (obj.type === 'changed') {
       console.log(obj.path+' changed');
@@ -123,6 +138,7 @@ gulp.task('live', function(){
       .pipe(connect.reload());
     }
   });
+    
 });
 
 gulp.task('liveDist', function(){
