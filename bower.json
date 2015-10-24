@@ -1,6 +1,6 @@
 {
-  "name": "angular-seed",
-  "description": "A starter project for AngularJS",
+  "name": "myapp",
+  "description": "A Project to simulate Automata",
   "version": "0.0.0",
   "homepage": "https://github.com/resterle/ti-praxis",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "angular-loader": "~1.4.0",
     "angular-mocks": "~1.4.0",
     "html5-boilerplate": "~5.2.0",
-    "bootstrap-sass": "~3.3.5",
-    "d3": "~3.5.6"
+    "d3": "~3.5.6",
+    "bootstrap-sass": "~3.3.5"
   }
 }

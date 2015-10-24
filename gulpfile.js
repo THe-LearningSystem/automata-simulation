@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
-    less = require('gulp-less'),
     livereload = require('gulp-livereload'),
     wiredep = require('wiredep'),
     connect = require('gulp-connect'),
@@ -13,7 +12,6 @@ var gulp = require('gulp'),
 var paths = {
   js: 'app/js/**/*.js',
   views: 'app/view*/*.html',
-  less: '',
   css: 'app/styles/**/*.css',
   images: 'app/images/**/*',
   dist: './dist',
@@ -26,17 +24,6 @@ pipes.uglifyAndConcat = function(){
   return
 }
 
-/////////////////////////////////
-// LESS
-/////////////////////////////////
-gulp.task('less', function(){
-  gulp.src(paths.less)
-  .pipe(less({
-    paths: ['app/styles']
-  }))
-  .pipe(gulp.dest(paths.dist+'/styles'))
-  .pipe(livereload())
-});
 
 ///////////////////////////
 // Get, uglify and copy application js
@@ -161,12 +148,11 @@ gulp.task('watch', function(){
     port: 3000,
     basePath: 'app'
   });
-  gulp.watch(paths.less, ['less'])
 });
 
 /////////////////////////////////////////////////
 //  Development Task
 /////////////////////////////////////////////////
-//gulp.task('dev', ['setupDev', 'scripts', 'html', 'less', 'fonts', 'bower', 'watch'])
+//gulp.task('dev', ['setupDev', 'scripts', 'html',  'fonts', 'bower', 'watch'])
 
 gulp.task('build', ['wiredep-js', 'wiredep-css', 'assets', 'views', 'images', 'fonts', 'index']);
