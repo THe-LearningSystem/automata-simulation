@@ -9,6 +9,14 @@ config(['$routeProvider', function($routeProvider) {
         templateUrl: 'view/simulation.html',
         controller: 'simulationCtrl'
     })
+    $routeProvider.when('/graphdesigner',{
+        templateUrl: 'view/graphdesigner.html',
+        controller: 'simulationCtrl'
+    })
+    $routeProvider.when('/design-paper',{
+        templateUrl: 'view/design-paper.html',
+        controller: 'simulationCtrl'
+    })
   $routeProvider.otherwise({redirectTo: '/simulation'});
 }]);
 myApp.controller('simulationCtrl',['$scope','$log',function($scope,$log){
