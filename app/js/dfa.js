@@ -1,4 +1,4 @@
-function DEA(config){
+var DFA = function(config){
   var self = this;
  
   self.config = config; 
@@ -50,6 +50,7 @@ function DEA(config){
       self.status = 'accepted';
     }
     self.statusSequence.push(newStatus);
+    return nextState;
   }
 
   // Running the simulation by repeadetly calling step untill status is 'accepted' or
@@ -61,6 +62,23 @@ function DEA(config){
     }
     if(self.status == 'accepted') {return true}
     return false;
+  }
+
+  // Undo function to step backwards
+  self.undo = function(){
+    // return if utomat is not running
+    if (!(_.include(['step', 'accepted', 'not accepted'], self.status))){
+      return;
+    }
+    
+    // Decrease count and remove last element from statusSequence
+    self.count--;
+    self.statusSequence.pop();
+
+    // Reset if no more undoing is impossible
+    if(self.count == 0){
+      self.reset();
+    }
   }
 
 }

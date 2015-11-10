@@ -1,6 +1,6 @@
-describe("DEA test suite", function() {
+describe("DFAA test suite", function() {
 
-    var dea = new DEA({
+    var dfa = new DFA({
       startState: 's0',
       finalStates: ['s5'],
       transitions: [
@@ -13,38 +13,69 @@ describe("DEA test suite", function() {
       ]
     });
 
+    var dft = new DFT({
+      startState: 's0',
+      finalStates: ['s5'],
+      transitions: [
+        ['s0', 'h', 's1', 'o'],
+        ['s1', 'e', 's2', 'l'],
+        ['s2', 'l', 's3', 'l'],
+        ['s3', 'l', 's4', 'e'],
+        ['s4', 'o', 's5', 'h'],
+        ['s5', 'h', 's1', 'o']
+      ]
+    });
+
     it("should step through", function(){
-      dea.setInput('he');
-      dea.step();
-      expect(dea.status).toBe('step');
-      expect(_.isEqual(dea.statusSequence, ['s0','s1'])).toBe(true);
+      dfa.setInput('he');
+      dfa.step();
+      expect(dfa.status).toBe('step');
+      expect(_.isEqual(dfa.statusSequence, ['s0','s1'])).toBe(true);
     });
 
     it("sould reset", function(){
-      dea.reset();
-      expect(dea.status).toBe('stoped');
-      expect(_.isEqual(dea.statusSequence, ['s0'])).toBe(true);
+      dfa.reset();
+      expect(dfa.status).toBe('stoped');
+      expect(_.isEqual(dfa.statusSequence, ['s0'])).toBe(true);
     });
 
     it("schould not accept a words", function() {
-      dea.setInput('helloh');
-      dea.reset();
-      expect(dea.run()).toBe(false);
-      expect(_.isEqual(dea.statusSequence, ['s0','s1','s2','s3','s4','s5','s1'])).toBe(true);
+      dfa.setInput('helloh');
+      dfa.reset();
+      expect(dfa.run()).toBe(false);
+      expect(_.isEqual(dfa.statusSequence, ['s0','s1','s2','s3','s4','s5','s1'])).toBe(true);
     });
 
     it("schould accept a single word", function() {
-      dea.setInput('hello');
-      dea.reset();
-      expect(dea.run()).toBe(true);
-      expect(_.isEqual(dea.statusSequence, ['s0','s1','s2','s3','s4','s5'])).toBe(true);
+      dfa.setInput('hello');
+      dfa.reset();
+      expect(dfa.run()).toBe(true);
+      expect(_.isEqual(dfa.statusSequence, ['s0','s1','s2','s3','s4','s5'])).toBe(true);
     });
 
     it("schould accept repeaded words", function() {
-      dea.setInput('hellohello');
-      dea.reset();
-      expect(dea.run()).toBe(true);
-      expect(_.isEqual(dea.statusSequence, ['s0','s1','s2','s3','s4','s5','s1','s2','s3','s4','s5'])).toBe(true);
+      dfa.setInput('hellohello');
+      dfa.reset();
+      expect(dfa.run()).toBe(true);
+      expect(_.isEqual(dfa.statusSequence, ['s0','s1','s2','s3','s4','s5','s1','s2','s3','s4','s5'])).toBe(true);
+    });
+
+    it("should undo a step", function(){
+      dfa.setInput('hello');
+      dfa.reset();
+      dfa.step();
+      dfa.step();
+      dfa.undo();
+      expect(_.last(dfa.statusSequence)).toBe('s1');
+    });
+
+    it("should reset itself when undo is impossible", function(){
+      dfa.setInput('hello');
+      dfa.reset();
+      dfa.step();
+      dfa.undo();
+      expect(dfa.status).toBe('stoped');
+      expect(dfa.statusSequence.length).toBe(1);
     });
 });
 
