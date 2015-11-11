@@ -17,7 +17,7 @@ var DFT = function(config){
   var _step = self.step;
   self.step = function(){
     var nextState = _step();
-    if(self.status!=('not accepted' && undefined)){
+    if(self.status!='not accepted'){
       self.output.push(nextState[0][3]);
       return nextState;
     }

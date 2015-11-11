@@ -1,4 +1,4 @@
-describe("DFAA test suite", function() {
+describe("DFA test suite", function() {
 
     var dfa = new DFA({
       startState: 's0',
@@ -10,19 +10,6 @@ describe("DFAA test suite", function() {
         ['s3', 'l', 's4'],
         ['s4', 'o', 's5'],
         ['s5', 'h', 's1']
-      ]
-    });
-
-    var dft = new DFT({
-      startState: 's0',
-      finalStates: ['s5'],
-      transitions: [
-        ['s0', 'h', 's1', 'o'],
-        ['s1', 'e', 's2', 'l'],
-        ['s2', 'l', 's3', 'l'],
-        ['s3', 'l', 's4', 'e'],
-        ['s4', 'o', 's5', 'h'],
-        ['s5', 'h', 's1', 'o']
       ]
     });
 

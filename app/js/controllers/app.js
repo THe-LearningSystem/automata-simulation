@@ -4,6 +4,7 @@
 var myApp = angular.module('myApp', [
   'ngRoute',
 ]).
+
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/simulation',{
         templateUrl: 'view/simulation.html',
@@ -11,6 +12,4 @@ config(['$routeProvider', function($routeProvider) {
     })
   $routeProvider.otherwise({redirectTo: '/simulation'});
 }]);
-myApp.controller('simulationCtrl',['$scope','$log',function($scope,$log){
-    
-}])
+

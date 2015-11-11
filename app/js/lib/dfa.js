@@ -18,6 +18,7 @@ var DFA = function(config){
   // setting the status to 'stop'
   self.reset = function(){
     self.statusSequence = [self.config.startState];
+    self.count = 0;
     self.status = 'stoped';
   }
 
@@ -26,7 +27,7 @@ var DFA = function(config){
     if(self.status == 'stoped'){
       self.reset();
       self.status = 'step'
-    } else if (self.status == ('accepted' || 'not accepted' || undefined)) {
+    } else if (self.status == undefined) {
       return;
     }
 
