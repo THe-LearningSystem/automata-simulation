@@ -7,4 +7,6 @@
 .draggable {
         cursor: move;
     }
-
+.draggable-node.circle :hover{
+    background-color: black;
+}
