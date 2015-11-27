@@ -1,12 +1,43 @@
 @import 'bootstrap_variables';
 
 
+$node-color: #CCC;
+$nodehover: #A00;
+
 #diagramm{
 	border:1px solid #000;
 }
 .draggable {
         cursor: move;
     }
-.draggable-node.circle :hover{
-    background-color: black;
+.node:hover .node-circle{
+   fill: $nodehover;
 }
+
+.node{
+    cursor:context-menu;
+
+}
+
+.node-circle{
+    fill: $node-color;
+    stroke: #666;
+    stroke-width: 1;
+}
+
+.node-text{
+    font-size: 15px;
+}
+
+.node-text:hover{
+    
+}
+
+.transition{
+       cursor:context-menu;
+}
+
+.transition-text{
+ 
+}
+

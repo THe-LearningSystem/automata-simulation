@@ -8,20 +8,22 @@ var GraphDesigner = function (style, svgSelector) {
     //default style values
     var defaultStyle = {
             nodeRadius: 25,
-            nodeBorderColor: "#666",
-            nodeBorderWidth: 1,
-            nodeColorPrimary: "#8CC",
-            nodeColorSelected: "#C88",
-            nodeFontColor: "#000",
-            nodeFontSize: "15px",
+            nodeColorSelected: "#FF0000",
             transitionColor: "#000",
             transitionWidth: 2,
             transitionFontSize: "15px",
-            transitionFontColor: "#000"
+            transitionFontColor: "#000",
+            selected : false
         };
 
     self.style = _.merge(defaultStyle, style);
-    self.svg = d3.select(svgSelector);
+    self.svgOuter = d3.select(svgSelector);
+    self.svg = self.svgOuter.call(d3.behavior.zoom().on("zoom", function () {
+        if(!self.style.selected){
+    self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+        }
+  }))
+  .append("g")
     
     //DEFS
     self.defs = self.svg.append('svg:defs');
@@ -80,21 +82,19 @@ var GraphDesigner = function (style, svgSelector) {
         var node = self.nodes[id];
         var group = self.svg.append("g")
             .attr("transform", "translate(" + node.x + " " + node.y + ")")
-            .attr("class", "draggable-node")
+            .attr("class", "node")
             .attr("object-id", id);
 
         var circleSelection = group.append("circle")
-            .attr("r", self.style.nodeRadius)
-            .attr("stroke-width", self.style.nodeBorderWidth)
-            .attr("stroke", self.style.nodeBorderColor)
-            .style("fill", self.style.nodeColorPrimary);
+            .attr("class","node-circle")
+            .attr("r", self.style.nodeRadius);
 
         var text = group.append("text")
             .text(node.name)
+        .attr("class","node-text")
             .attr("dominant-baseline", "central")
             .attr("fill", self.style.nodeFontColor)
-            .attr("text-anchor", "middle")
-            .style("font-size", self.style.nodeFontSize);
+            .attr("text-anchor", "middle");
 
         self.nodes[id].objReference = group;
 
@@ -107,14 +107,41 @@ var GraphDesigner = function (style, svgSelector) {
                 self.drawNode(key);
             });
     }
+    
+    
+    //Checks if a node has a transition
+    self.nodeHasTransitions = function(name){
+        //before we checked if the node exist ? ERRROR CHECK IN THIS FUNCITON?
+        var tmp = false;
+        _.forEach(self.transitions, function (transition) {
+            if (transition.from === name || transition.to ===name)
+                return tmp = true;
+        });
+        return tmp;
+    }
+    
+    //remove a Node if exist
+    self.removeNode = function(name){
+        if(self.existsNodeWithName(name)){
+            if(!self.nodeHasTransitions(name)){
+                
+            }else{
+                console.log("NODE HAS Trannsitions")   
+            }
+        }else{
+            console.log("Node doesnt exist");
+        }
+    }
         
 
     //Node drag and drop behaviour
     self.dragNode = d3.behavior.drag()
         .on("dragstart", function() {
-            d3.select(this).select("circle").style('fill', self.style.nodeColorSelected);
+             d3.select(this).select("circle").style('fill', self.style.nodeColorSelected);
+        self.style.selected = true;
         })
         .on("drag", function() {
+                   
             d3.select(this)
                 .attr("transform", "translate(" + d3.event.x + " " + d3.event.y + ")")
                 .attr("x", d3.event.x);
@@ -125,7 +152,8 @@ var GraphDesigner = function (style, svgSelector) {
 
         })
         .on("dragend", function() {
-            d3.select(this).select("circle").style('fill', self.style.nodeColorPrimary);
+            d3.select(this).select("circle").style('fill', null);
+        self.style.selected = false;
         });
 
 
@@ -159,14 +187,14 @@ var GraphDesigner = function (style, svgSelector) {
         var richtungsvektor  = { "x":x2-x1,"y":y2-y1};
         var richtungsVectorLength = Math.sqrt(richtungsvektor.x*richtungsvektor.x +richtungsvektor.y*richtungsvektor.y);
         var n = self.style.nodeRadius /richtungsVectorLength;
-        console.log(n);
         var x3 = x1+n*richtungsvektor.x;
         var y3 = y1 + n*richtungsvektor.y;
         var x4 = x2 -n*richtungsvektor.x;
         var y4 = y2-n*richtungsvektor.y;
 
         var group = self.svg.append("g")
-            .attr("transform", "translate(" + x3 + " " + y3 + ")");
+            .attr("transform", "translate(" + x3 + " " + y3 + ")")
+            .attr("class","transition");
 
         var line = group.append("line")
             .attr("x2", x4 - x3)
@@ -176,6 +204,7 @@ var GraphDesigner = function (style, svgSelector) {
             .attr("marker-end","url(#marker-end-arrow)");
 
         var text = group.append("text")
+            .attr("class", "transition-text")
             .text(transition.name)
             .attr("x",(x4-x3)/2)
             .attr("y",(y4-y3)/2)
@@ -221,6 +250,23 @@ self.transitions[id].objReference = group;
 
         });
     }
+    
+    self.removeTransition = function(from,to,name){
+            var tmp = true;
+        _.forEach(self.transitions, function (transition,id) {
+            if (transition.from == from && transition.to == to && transition.name === name){
+                tmp = true;
+                console.log("NAMNE"+name+"From"+from)
+                //remove the transition
+                console.log(transition);
+                
+            }
+
+        });
+        if(!tmp){
+            console.log("DIDNT found transition")
+        }
+    }
 
     //update the transitions when a node is moved
     self.updateTransitionsAfterNodeDrag = function(nodeId) {
@@ -237,7 +283,6 @@ self.transitions[id].objReference = group;
                             var richtungsvektor  = { "x":x2-x1,"y":y2-y1};
         var richtungsVectorLength = Math.sqrt(richtungsvektor.x*richtungsvektor.x +richtungsvektor.y*richtungsvektor.y);
         var n = self.style.nodeRadius /richtungsVectorLength;
-        console.log(n);
         var x3 = x1+n*richtungsvektor.x;
         var y3 = y1 + n*richtungsvektor.y;
         var x4 = x2 -n*richtungsvektor.x;
@@ -258,7 +303,7 @@ self.transitions[id].objReference = group;
         }
     //BETTER SOLUTION THIS IN THE OBJECT ..
 self.callNodeListener = function eventListener(){
-    d3.selectAll(".draggable-node").call(myGraphDesigner.dragNode);
+    d3.selectAll(".node").call(myGraphDesigner.dragNode);
 }
 
 
