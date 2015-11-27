@@ -1,14 +1,14 @@
 #diagramm {
   border: 1px solid #000; }
 
-.draggable {
-  cursor: move; }
-
-.node:hover .node-circle {
-  fill: #A00; }
-
 .node {
   cursor: context-menu; }
+
+.node:hover .node-circle {
+  fill: #600; }
+
+.node:active .node-circle {
+  fill: #F00; }
 
 .node-circle {
   fill: #CCC;
@@ -20,3 +20,7 @@
 
 .transition {
   cursor: context-menu; }
+
+.transition-line {
+  stroke: #000;
+  stroke-width: 2; }

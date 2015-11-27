@@ -1,43 +1,54 @@
 @import 'bootstrap_variables';
-
-
-$node-color: #CCC;
-$nodehover: #A00;
-
-#diagramm{
-	border:1px solid #000;
-}
-.draggable {
-        cursor: move;
-    }
-.node:hover .node-circle{
-   fill: $nodehover;
-}
-
-.node{
-    cursor:context-menu;
-
+//Node Settings
+$nodeColor: #CCC;
+$nodeColorHover: #600;
+$nodeColorSelected: #F00;
+$nodeBorderWidth:1;
+$nodeBorderColor:#666;
+$nodeFontSize:15px;
+$nodeFontColor: #000;
+//Transition Settings
+$transitiionColor: #000;
+$transitionFontSize: 15px;
+$transitionFontColor: #000;
+$transitionWith:2;
+#diagramm {
+    border: 1px solid #000;
 }
 
-.node-circle{
-    fill: $node-color;
-    stroke: #666;
-    stroke-width: 1;
+//Node
+.node {
+    cursor: context-menu;
 }
 
-.node-text{
-    font-size: 15px;
+.node:hover .node-circle {
+    fill: $nodeColorHover;
 }
 
-.node-text:hover{
-    
+.node:active .node-circle {
+    fill: $nodeColorSelected;
 }
 
-.transition{
-       cursor:context-menu;
+.node-circle {
+    fill: $nodeColor;
+    stroke: $nodeBorderColor;
+    stroke-width: $nodeBorderWidth;
 }
 
-.transition-text{
- 
+.node-text {
+    font-size: $nodeFontSize;
 }
 
+.node-text:hover {}
+
+//Transition
+.transition {
+    cursor: context-menu;
+}
+
+.transition-line {
+    stroke: $transitiionColor;
+    stroke-width: $transitionWith;
+}
+
+.transition-text {}
