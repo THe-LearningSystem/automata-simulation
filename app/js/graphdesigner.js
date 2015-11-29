@@ -38,14 +38,17 @@ var GraphDesigner = function(style, svgSelector) {
 
 
     //Node,Transition ect
-    self.nodes = [];
+    self.node = {};
+    self.node.start = null;
+    self.node.end = null;
+    self.node.nodes = [];
     self.transitions = [];
 
 
     //check if there is an other node with the given name
     self.isNodeNameUnique = function(name) {
         var tmp = true;
-        _.forEach(self.nodes, function(node) {
+        _.forEach(self.node.nodes, function(node) {
             if (node.name == name)
                 return tmp = false;
         });
@@ -54,18 +57,20 @@ var GraphDesigner = function(style, svgSelector) {
 
     //check if a node exist with the given name
     self.existsNodeWithName = function(name) {
-        for (var i = 0; i < self.nodes.length; i++) {
-            if (self.nodes[i].name == name) {
-                return true;
-            }
-        }
-        return false;
+        var tmp = false;
+        _.forEach(self.node.nodes, function(node) {
+            if (node.name == name)
+                return tmp = true;
+        })
+        return tmp;
     }
+    
+
 
     //get a node id with the given name
     self.getNodeIdByName = function(name) {
         var tmp = null;
-        _.forEach(self.nodes, function(node, key) {
+        _.forEach(self.node.nodes, function(node, key) {
             if (node.name == name) {
                 tmp = key;
             }
@@ -98,12 +103,12 @@ var GraphDesigner = function(style, svgSelector) {
     //Add a Node
     self.addNode = function(x, y, name) {
         if (self.isNodeNameUnique(name)) {
-            self.nodes.push({
+            self.node.nodes.push({
                 "name": name,
                 "x": x,
                 "y": y
             });
-            self.drawNode(self.nodes.length - 1);
+            self.drawNode(self.node.nodes.length - 1);
             self.callNodeListener();
         } else {
             console.log("The nodeName already exists!");
@@ -114,7 +119,7 @@ var GraphDesigner = function(style, svgSelector) {
     //rename the node with the given name with a new name
     self.renameNode = function(name, newname) {
         var renamedNode = false;
-        _.forEach(self.nodes, function(node, key) {
+        _.forEach(self.node.nodes, function(node, key) {
             if (node.name == name) {
                 renamedNode = true;
                 node.name = newname;
@@ -141,7 +146,7 @@ var GraphDesigner = function(style, svgSelector) {
 
     //draw the node with the id on the svg
     self.drawNode = function(id) {
-        var node = self.nodes[id];
+        var node = self.node.nodes[id];
         var group = self.svgNodes.append("g")
             .attr("transform", "translate(" + node.x + " " + node.y + ")")
             .attr("class", "node")
@@ -157,13 +162,13 @@ var GraphDesigner = function(style, svgSelector) {
             .attr("dominant-baseline", "central")
             .attr("text-anchor", "middle");
 
-        self.nodes[id].objReference = group;
+        self.node.nodes[id].objReference = group;
         return group;
     }
 
     //draw all the nodes
     self.drawNodes = function() {
-        _.forEach(self.nodes, function(node, key) {
+        _.forEach(self.node.nodes, function(node, key) {
             self.drawNode(key);
         });
     }
@@ -179,8 +184,8 @@ var GraphDesigner = function(style, svgSelector) {
                 .attr("transform", "translate(" + d3.event.x + " " + d3.event.y + ")")
                 .attr("x", d3.event.x);
             //update the node in the array
-            self.nodes[d3.select(this).attr("object-id")].x = d3.event.x;
-            self.nodes[d3.select(this).attr("object-id")].y = d3.event.y;
+            self.node.nodes[d3.select(this).attr("object-id")].x = d3.event.x;
+            self.node.nodes[d3.select(this).attr("object-id")].y = d3.event.y;
             //update the transitions after dragging a node
             self.updateTransitionsAfterNodeDrag(d3.select(this).attr("object-id"));
         })
@@ -241,10 +246,10 @@ var GraphDesigner = function(style, svgSelector) {
         var transition = self.transitions[id];
         var fromId = self.getNodeIdByName(transition.from);
         var toId = self.getNodeIdByName(transition.to);
-        var x1 = self.nodes[fromId].x;
-        var y1 = self.nodes[fromId].y;
-        var x2 = self.nodes[toId].x;
-        var y2 = self.nodes[toId].y;
+        var x1 = self.node.nodes[fromId].x;
+        var y1 = self.node.nodes[fromId].y;
+        var x2 = self.node.nodes[toId].x;
+        var y2 = self.node.nodes[toId].y;
         var richtungsvektor = {
             "x": x2 - x1,
             "y": y2 - y1
@@ -289,16 +294,16 @@ var GraphDesigner = function(style, svgSelector) {
 
     //update the transitions when a node is moved
     self.updateTransitionsAfterNodeDrag = function(nodeId) {
-        var nodeName = self.nodes[nodeId].name;
+        var nodeName = self.node.nodes[nodeId].name;
         _.forEach(self.transitions, function(n, key) {
             if (n.from == nodeName || n.to == nodeName) {
                 var obj = n.objReference;
                 var fromId = self.getNodeIdByName(n.from);
                 var toId = self.getNodeIdByName(n.to);
-                var x1 = self.nodes[fromId].x;
-                var y1 = self.nodes[fromId].y;
-                var x2 = self.nodes[toId].x;
-                var y2 = self.nodes[toId].y;
+                var x1 = self.node.nodes[fromId].x;
+                var y1 = self.node.nodes[fromId].y;
+                var x2 = self.node.nodes[toId].x;
+                var y2 = self.node.nodes[toId].y;
                 var richtungsvektor = {
                     "x": x2 - x1,
                     "y": y2 - y1
