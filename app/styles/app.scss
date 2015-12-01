@@ -1,7 +1,54 @@
 @import 'bootstrap_variables';
-
-
-#diagramm{
-	border:1px solid #000;
+//Node Settings
+$nodeColor: #CCC;
+$nodeColorHover: #600;
+$nodeColorSelected: #F00;
+$nodeBorderWidth:1;
+$nodeBorderColor:#666;
+$nodeFontSize:15px;
+$nodeFontColor: #000;
+//Transition Settings
+$transitiionColor: #000;
+$transitionFontSize: 15px;
+$transitionFontColor: #000;
+$transitionWith:2;
+#diagramm {
+    border: 1px solid #000;
 }
 
+//Node
+.node {
+    cursor: context-menu;
+}
+
+.node:hover .node-circle {
+    fill: $nodeColorHover;
+}
+
+.node:active .node-circle {
+    fill: $nodeColorSelected;
+}
+
+.node-circle {
+    fill: $nodeColor;
+    stroke: $nodeBorderColor;
+    stroke-width: $nodeBorderWidth;
+}
+
+.node-text {
+    font-size: $nodeFontSize;
+}
+
+.node-text:hover {}
+
+//Transition
+.transition {
+    cursor: context-menu;
+}
+
+.transition-line {
+    stroke: $transitiionColor;
+    stroke-width: $transitionWith;
+}
+
+.transition-text {}
