@@ -20,42 +20,18 @@
 </div>
 <div class="col-md-12">
 	<h3>Zustandsdiagramm</h3>
-  <textarea ng-model="automaton.statusSequence" cols="40" disabled="true"/>
-  <input ng-model="automaton.status"/>
 </div>
 <div class="col-md-6">
 	<h3>Zustandstabelle</h3>
-	<table class="table">
-		<thead>
-			<tr>
-				<th></th>
-				<th>0</th>
-				<th>1</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th scope="row">S</th>
-				<td>A</td>
-				<td></td>
-			</tr>
-			<tr>
-				<th scope="row">A</th>
-				<td>B</td>
-				<td></td>
-			</tr>
-			<tr>
-				<th scope="row">B</th>
-				<td>A</td>
-				<td></td>
-
-			</tr>
-		</tbody>
-	</table>
+	<div c-table automaton="automaton">
+	</div>
 </div>
 <div class="col-md-6">
-	<h3>Zustandsüberführungsfunktion</h3>
+  <!-- <h3>Zustandsüberführungsfunktion</h3>-->
+  <h3>Debugging</h3>
+  <h4>{{automaton.status}}</h4>
+  <p>{{automaton.statusSequence}}</p>
+  <p>count</p><p>{{automaton.count}}</p>
 </div>
 <div class="col-md-6">
-	<h3>asd</h3>
 </div>

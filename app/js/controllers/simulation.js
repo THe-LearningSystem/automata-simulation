@@ -25,21 +25,17 @@ function simulationCtrl($scope){
 
   $scope.run = function(){
     $scope.automaton.setInput($scope.inputWord);
-    console.log('input: '+$scope.inputWord);
     $scope.automaton.run();
-    console.log('result: '+$scope.automaton.status);
   }
 
   $scope.step = function(){
     validateInput();
     $scope.automaton.step();
-    console.log('step: '+$scope.automaton.statusSequence);
   }
 
   $scope.undo = function(){
     validateInput();
     $scope.automaton.undo();
-    console.log('undo: '+$scope.automaton.statusSequence);
   }
 
   $scope.reset = function(){
