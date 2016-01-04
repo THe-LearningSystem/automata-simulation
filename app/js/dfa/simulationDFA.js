@@ -1,4 +1,4 @@
-var DFA = function(config){
+var simulationDFA = function(config){
   var self = this;
  
   self.config = config; 

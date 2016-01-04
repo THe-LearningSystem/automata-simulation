@@ -1,21 +1,27 @@
-#diagramm {
+.automataWrapper {
   border: 1px solid #000; }
 
-.node {
+.stateDiagrammSVG {
+  border: 1px solid #000;
+  width: 100%;
+  height: 300px;
+  min-width: auto; }
+
+.state {
   cursor: context-menu; }
 
-.node:hover .node-circle {
+.state:hover .state-circle {
   fill: #600; }
 
-.node:active .node-circle {
+.state:active .state-circle {
   fill: #F00; }
 
-.node-circle {
+.state-circle {
   fill: #CCC;
   stroke: #666;
   stroke-width: 1; }
 
-.node-text {
+.state-text {
   font-size: 15px; }
 
 .transition {

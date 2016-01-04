@@ -28,9 +28,7 @@
 <nav class="navbar navbar-default">
  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#/simulation">Simulation</a></li>
-        <li class="active"><a href="#/graphdesigner">Graphdesigner</a></li>
-        <li class="active"><a href="#/design-paper">Design-Paper</a></li>
+        <li class="active"><a href="#/dfa">Akzeptor</a></li>
      </ul>
       </div>
 </nav>
@@ -47,17 +45,22 @@
   <script src="bower_components/d3/d3.js"></script>
   <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
   <script src="bower_components/lodash/lodash.js"></script>
+  <script src="bower_components/filesaver/FileSaver.js"></script>
   <!-- endbower -->
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
-  <script src="js/controllers/app.js"></script>
-  <script src="js/controllers/simulation.js"></script>
-  <script src="js/directives/cTable.js"></script>
-  <script src="js/lib/dfa.js"></script>
-  <script src="js/lib/dft.js"></script>
 
+  <script src="js/controllers/app.js"></script>
+  
+  <script src="js/dfa/DFA.js"></script>
+  <script src="js/dfa/graphdesignerDFA.js"></script>
+  <script src="js/dfa/simulationDFA.js"></script>
+
+
+<!--  <script src="js/directives/cTable.js"></script>
+ -->
 
 </body>
 </html>
