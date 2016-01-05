@@ -30,3 +30,6 @@
 .transition-line {
   stroke: #000;
   stroke-width: 2; }
+
+#hidden-file-upload {
+  display: none; }

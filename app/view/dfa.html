@@ -15,10 +15,11 @@
     <button type="button" class="btn btn-default" aria-label="Left Align">
         <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="download()" aria-label="Left Align">
+    <button type="button" class="btn btn-default" ng-click="export()" aria-label="Left Align">
         <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="upload()" aria-label="Left Align">
+    <button type="button" class="btn btn-default import" ng-click="import()" aria-label="Left Align">
+    <input type="file" id="hidden-file-upload">
         <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
     </button>
     <button type="button" class="btn btn-default" ng-click="test()"aria-label="Left Align">
@@ -65,3 +66,7 @@
     <div class="col-md-6">
     
     </div>
+<div class="col-md-12">
+<h3>Debugging</h3>
+<p>Config {{config}}</p>
+</div>

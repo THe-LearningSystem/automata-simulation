@@ -4,6 +4,7 @@ angular
 
 
 function DFACtrl($scope) {
+    //TODO: Better name for the config of the automaton
     $scope.config = {};
     $scope.config.countId = 0;
     //The States are saved like {id:stateId,name:"nameoftheState",x:50,y:50}
@@ -16,12 +17,14 @@ function DFACtrl($scope) {
     $scope.config.transitions = [];
     //the name of the inputWord
     $scope.inputWord = '';
-    //the simulation
+
+
+    //the simulator controlling the simulation
     $scope.simulator = new simulationDFA($scope.config);
-    //the graphdesigner
+    //the graphdesigner controlling the svg diagramm
     $scope.graphdesigner = new graphdesignerDFA($scope.config, "#diagramm");
 
-    //TEst
+    //Creates Test Data
     $scope.test = function() {
         $scope.addState("test", 40, 40);
         $scope.addState("test2", 100, 100);
@@ -44,7 +47,12 @@ function DFACtrl($scope) {
 
     }
 
-
+    /**
+     * Adds a state at the end of the states array
+     * @param {String} stateName 
+     * @param {Float} x         
+     * @param {Float} y         
+     */
     $scope.addState = function(stateName, x, y) {
         $scope.config.states.push({
             id: $scope.config.countId++,
@@ -53,7 +61,12 @@ function DFACtrl($scope) {
             y: y
         });
     }
-
+    /**
+     * Adds a transition at the end of the transitions array
+     * @param {Int} fromState      The id from the fromState
+     * @param {Int} toState        The id from the toState
+     * @param {String} transistonName The name of the Transition
+     */
     $scope.addTransition = function(fromState, toState, transistonName) {
         $scope.config.transitions.push({
             fromState: fromState,
@@ -62,7 +75,7 @@ function DFACtrl($scope) {
         });
     }
 
-
+    //Simulation;
 
     $scope.run = function() {
         $scope.simulator.setInput($scope.inputWord);
@@ -91,22 +104,85 @@ function DFACtrl($scope) {
         }
     }
 
-    $scope.download = function() {
-        console.log();
-       var blob = new Blob([window.JSON.stringify({"states":$scope.config.states,"transitions":$scope.config.transitions})], {
+    /**
+     * Exports the automaton
+     * @return {File} Returns a json file
+     */
+    $scope.export = function() {
+
+        var exportData = {};
+        exportData.countId = $scope.config.countId;
+        exportData.states = $scope.config.states;
+        exportData.startState = $scope.config.startState;
+        exportData.finalStates = $scope.config.finalStates;
+        exportData.transitions = getTransitions();
+        var data = window.JSON.stringify(exportData);
+        var blob = new Blob([data], {
             type: "text/plain;charset=utf-8;",
         });
         saveAs(blob, "dfa.json");
     }
 
-    $scope.upload = function() {
-        console.log("todo")
+    /**
+     * Returns all transistion without the objReference
+     * @return {Array} array of transistion objects
+     */
+    function getTransitions() {
+        var allTransitions = [];
+        _.forEach($scope.config.transitions, function(transition, key) {
+            var tmpTransition = {
+                fromState: transition.fromState,
+                toState: transition.toState,
+                name: transition.name
+            };
+            allTransitions.push(tmpTransition);
+        });
+        return allTransitions;
     }
 
+
+    //Called when the user clicks on the import Button and opens the hidden-file-input
+    d3.select(".import").on("click", function() {
+        document.getElementById("hidden-file-upload").click();
+    });
+    //called when the user uploads a file
+    d3.select("#hidden-file-upload").on("change", function() {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            var uploadFile = this.files[0];
+            var filereader = new window.FileReader();
+            filereader.onload = function() {
+                var txtRes = filereader.result;
+                // TODO better error handling
+                try {
+                    var data = JSON.parse(txtRes);
+                    if (data != undefined) {
+                        console.log(data);
+                        $scope.$apply(function() {
+                            $scope.config = {}
+                            $scope.config = data;
+                            $scope.graphdesigner.drawStates();
+                            $scope.graphdesigner.drawTransitions();
+                            console.log("asd");
+                        });
+
+                    }
+                } catch (err) {
+                    console.log("Error parsing uploaded file\nerror message: " + err.message);
+                    return;
+                }
+            };
+            filereader.readAsText(uploadFile);
+
+        } else {
+            alert("Your browser won't let you save this graph -- try upgrading your browser to IE 10+ or Chrome or Firefox.");
+        }
+
+    });
+
+    //called before the user is quitting the page, that he should save his work
     /*
     window.onbeforeunload = function() {
-        return "Make sure to save your graph locally before leaving :)";
+        return "Make sure to save our work!";
     };
-
     */
 }

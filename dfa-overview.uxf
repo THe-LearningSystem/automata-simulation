@@ -4,15 +4,15 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>310</x>
-      <y>120</y>
+      <x>340</x>
+      <y>80</y>
       <w>210</w>
       <h>190</h>
     </coordinates>
     <panel_attributes>DFA
 --
 -nodes
--transistion
+-transistions
 --
 -addNode()
 -removeNode()
@@ -24,8 +24,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>90</x>
-      <y>380</y>
+      <x>100</x>
+      <y>360</y>
       <w>210</w>
       <h>190</h>
     </coordinates>
@@ -39,8 +39,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>390</x>
-      <y>370</y>
+      <x>570</x>
+      <y>360</y>
       <w>210</w>
       <h>190</h>
     </coordinates>
@@ -74,8 +74,8 @@ Transistion
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>750</x>
-      <y>180</y>
+      <x>920</x>
+      <y>150</y>
       <w>210</w>
       <h>190</h>
     </coordinates>
@@ -91,8 +91,8 @@ Transistion
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1010</x>
-      <y>180</y>
+      <x>1180</x>
+      <y>150</y>
       <w>210</w>
       <h>190</h>
     </coordinates>
@@ -101,6 +101,21 @@ Transistion
 -startnodeid(from)
 -endnodeid(to)
 -name
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>340</x>
+      <y>360</y>
+      <w>210</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>TableDFA
+--
+
 --
 </panel_attributes>
     <additional_attributes/>

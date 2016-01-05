@@ -1,23 +1,30 @@
 "use strict";
 
-
 //GRAPHDESIGNER
 var graphdesignerDFA = function(config,svgSelector) {
+
     var self = this;
+    //The DFA config
     self.config = config;
     //graphdesigner settings
     self.settings = {
-        stateRadius: 25,
+        nodeRadius: 25,
         selected: false
     };
+
     self.svgOuter = d3.select(svgSelector);
     
+
+    //TODO: Bug when moving all the objects.
+    //u can move the whole diagramm and zome in and out
     self.svg = self.svgOuter.call(d3.behavior.zoom().on("zoom", function() {
-           
+     if (!self.settings.selected) {
+                self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+            }      
         }))
         .append("g").attr("id", "svg-items");
 
-    //first draw the transitions -> states are in front of them if they overlap
+    //first draw the transitions -> nodes are in front of them if they overlap
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");
     self.svgStates = self.svg.append("g").attr("id", "states");
 
@@ -38,7 +45,11 @@ var graphdesignerDFA = function(config,svgSelector) {
 
 
 
-    //draw the state with the id on the svg
+    /**
+     * Draws a State 
+     * @param  {[type]} id [description]
+     * @return {Reference}    Returns the reference of the group object
+     */
     self.drawState = function(id) {
         var state = self.config.states[id];
         var group = self.svgStates.append("g")
@@ -48,7 +59,7 @@ var graphdesignerDFA = function(config,svgSelector) {
 
         var circleSelection = group.append("circle")
             .attr("class", "state-circle")
-            .attr("r", self.settings.stateRadius);
+            .attr("r", self.settings.nodeRadius);
 
         var text = group.append("text")
             .text(state.name)
@@ -59,34 +70,40 @@ var graphdesignerDFA = function(config,svgSelector) {
         return group;
     }
 
-    //draw all the states
+    /**
+     * Draw all the States
+     */
     self.drawStates = function() {
-        _.forEach(self.config.states, function(state, key) {
+        _.forEach(self.config.states, function(node, key) {
             self.drawState(key);
         });
     }
 
-    //state drag and drop behaviour
+    //Node drag and drop behaviour
     self.dragState = d3.behavior.drag()
         .on("dragstart", function() {
             self.settings.selected = true;
         })
         .on("drag", function() {
-            //update the shown state
+            //update the shown node
             d3.select(this)
                 .attr("transform", "translate(" + d3.event.x + " " + d3.event.y + ")")
                 .attr("x", d3.event.x);
-            //update the state in the array
+            //update the node in the array
             self.config.states[d3.select(this).attr("object-id")].x = d3.event.x;
             self.config.states[d3.select(this).attr("object-id")].y = d3.event.y;
-            //update the transitions after dragging a state
+            //update the transitions after dragging a node
             self.updateTransitionsAfterStateDrag(d3.select(this).attr("object-id"));
         })
         .on("dragend", function() {
             self.settings.selected = false;
         });
 
-    //draw the transition with the id
+    /**
+     * Draw a Transition
+     * @param  {Int} id 
+     * @return {Reference}  Retruns the reference of the group object
+     */
     self.drawTransition = function(id) {
 
         var transition = self.config.transitions[id];
@@ -101,7 +118,7 @@ var graphdesignerDFA = function(config,svgSelector) {
             "y": y2 - y1
         };
         var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y);
-        var n = self.settings.stateRadius / richtungsVectorLength;
+        var n = self.settings.nodeRadius / richtungsVectorLength;
         var x3 = x1 + n * richtungsvektor.x;
         var y3 = y1 + n * richtungsvektor.y;
         var x4 = x2 - n * richtungsvektor.x;
@@ -129,7 +146,9 @@ var graphdesignerDFA = function(config,svgSelector) {
 
 
 
-    //draw all the transitions
+    /**
+     * Draw all transitions
+     */
     self.drawTransitions = function() {
         _.forEach(self.config.transitions, function(n, key) {
             self.drawTransition(key);
@@ -137,7 +156,10 @@ var graphdesignerDFA = function(config,svgSelector) {
         });
     }
 
-    //update the transitions when a state is moved
+    /**
+     * Update the transitions in the svg after moving a state
+     * @param  {Int} stateId Moved stateId
+     */
     self.updateTransitionsAfterStateDrag = function(stateId) {
         var stateName = self.config.states[stateId].name;
         _.forEach(self.config.transitions, function(n, key) {
@@ -154,7 +176,7 @@ var graphdesignerDFA = function(config,svgSelector) {
                     "y": y2 - y1
                 };
                 var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y);
-                var n = self.settings.stateRadius / richtungsVectorLength;
+                var n = self.settings.nodeRadius / richtungsVectorLength;
                 var x3 = x1 + n * richtungsvektor.x;
                 var y3 = y1 + n * richtungsvektor.y;
                 var x4 = x2 - n * richtungsvektor.x;
@@ -173,7 +195,9 @@ var graphdesignerDFA = function(config,svgSelector) {
 
         });
     }
+
     //BETTER SOLUTION THIS IN THE OBJECT ..
+    //CallListesner for moving the state objects in the svg
     self.callStateListener = function eventListener() {
         d3.selectAll(".state").call(self.dragState);
     }
