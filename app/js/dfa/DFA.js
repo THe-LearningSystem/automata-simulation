@@ -49,7 +49,7 @@ function DFACtrl($scope) {
         //console.log($scope.getArrayStateIdByStateId(100));
         //console.log($scope.getStateById(100));
         //console.log($scope.config.states);
-        $scope.removeState(0);
+        $scope.removeState(1);
         // console.log($scope.config.states);
         //  console.log($scope.getStateById(3));
 
@@ -120,10 +120,12 @@ function DFACtrl($scope) {
             console.log("Their is already a state with the given name");
         } else {
             $scope.getStateById(stateId).name = newStateName;
+
+            //Rename the state on the graphdesigner
+            $scope.graphdesigner.renameState(stateId, newStateName);
         }
 
-        //Rename the state on the graphdesigner
-        $scope.graphdesigner.renameState(stateId, newStateName);
+
     }
 
     /**
@@ -197,8 +199,6 @@ function DFACtrl($scope) {
             toState: toState,
             name: transistonName
         });
-        console.log(id);
-        console.log($scope.getArrayTransitionIdByTransitionId(id));
         //drawTransistion
         $scope.graphdesigner.drawTransition(id);
     }
