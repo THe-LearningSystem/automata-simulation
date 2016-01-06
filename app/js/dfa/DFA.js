@@ -30,17 +30,23 @@ function DFACtrl($scope) {
 
     //Creates Test Data
     $scope.test = function() {
-        $scope.addState("test", 40, 40);
-        $scope.addState("test2", 100, 100);
-        $scope.addState("Yeah", 200, 200);
-        $scope.addState("final", 150, 150);
+        $scope.inputWord = "hey";
+        $scope.addState("SO", 40, 40);
+        $scope.addState("S1", 100, 100);
+        $scope.addState("S2", 200, 200);
+        $scope.addState("S3", 150, 150);
 
 
-        $scope.config.startState = 1;
-        $scope.config.finalStates = 3;
+        $scope.config.startState = 0;
+        $scope.config.finalStates.push(3);
 
-        $scope.addTransition(1, 2, "b");
-        $scope.addTransition(1, 3, "a");
+        $scope.addTransition(0, 1, "h");
+        $scope.addTransition(1, 2, "e");
+        $scope.addTransition(2, 3, "y");
+        $scope.addTransition(3, 0, "-");
+
+
+
 
 
         //console.log($scope.hasStateTransitions(100));
@@ -48,11 +54,11 @@ function DFACtrl($scope) {
         //console.log($scope.getArrayStateIdByStateId(100));
         //console.log($scope.getStateById(100));
         //console.log($scope.config.states);
-        $scope.removeState(1);
+        //$scope.removeState(1);
         // console.log($scope.config.states);
         //  console.log($scope.getStateById(3));
 
-        $scope.renameState(1, "Yeah");
+        //$scope.renameState(1, "Yeah");
         ///  console.log($scope.getStateById(3));
         // console.log($scope.config.transitions);
         // $scope.removeTransition(5, 2, "b");

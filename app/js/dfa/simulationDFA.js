@@ -29,26 +29,29 @@ var simulationDFA = function(config){
   self.step = function(){
     if(self.status == 'stoped'){
       self.reset();
+      //include checks if the self.status is in collection
     } else if (_.include([undefined, 'accepted','not accepted'], self.status)) {
       return;
     }
 
     self.status = 'step';
-
     var nextChar = self.input[self.count++];
     var nextState = _.filter(self.config.transitions, function(transition){
       if (nextChar == undefined ){
         self.status = 'not accepted';
         return;
       }
-      return transition[0] == _.last(self.statusSequence) && transition[1] == nextChar;   
+      //change this!
+      return transition.fromState == _.last(self.statusSequence) && transition.name == nextChar;   
     });
+    console.log(nextState);
+    //if there is no next transition
     if(_.isEmpty(nextState)){
       self.status = 'not accepted';
       return;
     }
     
-    var newStatus = nextState[0][2];
+    var newStatus = nextState[0].toState;
     if(self.input.length == self.count){ 
       if(_.include(self.config.finalStates, newStatus)){
         self.status = 'accepted';
@@ -66,9 +69,12 @@ var simulationDFA = function(config){
   //  TODO: stop simulation and return undefined when endless loops was detected
   self.run = function(){
     while((self.status != 'accepted') && (self.status != 'not accepted')){
+      //wait before step
       self.step();
     }
-    if(self.status == 'accepted') {return true}
+
+    if(self.status == 'accepted') {
+      return true}
     return false;
   }
 
