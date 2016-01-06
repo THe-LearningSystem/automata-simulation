@@ -1,3 +1,5 @@
+"use strict";
+
 angular
     .module('myApp')
     .controller('DFACtrl', DFACtrl);
@@ -22,14 +24,14 @@ function DFACtrl($scope) {
     //the simulator controlling the simulation
     $scope.simulator = new simulationDFA($scope.config);
     //the graphdesigner controlling the svg diagramm
-    $scope.graphdesigner = new graphdesignerDFA($scope.config, "#diagramm");
+    $scope.graphdesigner = new graphdesignerDFA($scope.config, "#diagramm", $scope);
+
 
     //Creates Test Data
     $scope.test = function() {
         $scope.addState("test", 40, 40);
         $scope.addState("test2", 100, 100);
-        $scope.addState("test1", 200, 200);
-
+        $scope.addState("Yeah", 200, 200);
         $scope.addState("final", 150, 150);
 
 
@@ -43,8 +45,34 @@ function DFACtrl($scope) {
         $scope.graphdesigner.drawTransitions();
 
         $scope.graphdesigner.callStateListener();
+        console.log($scope.hasStateTransitions(100));
+        console.log($scope.existStateWithName("Yeah"));
+        console.log($scope.getArrayStateIdByStateId(100));
+        console.log($scope.getStateById(100));
+        console.log($scope.config.states);
+        //$scope.removeState(0);
+        console.log($scope.config.states);
+        console.log($scope.getStateById(3));
 
+        $scope.renameState(3, "Yeah");
+        console.log($scope.getStateById(3));
+        console.log($scope.config.transitions);
+        $scope.removeTransition(5, 2, "b");
+        console.log($scope.config.transitions);
+    }
 
+    /**
+     * Checks if a state exist with the given name
+     * @param  {String} stateName 
+     * @return {Boolean}           
+     */
+    $scope.existStateWithName = function(stateName) {
+        var tmp = false;
+        _.forEach($scope.config.states, function(state) {
+            if (state.name == stateName)
+                return tmp = true;
+        });
+        return tmp;
     }
 
     /**
@@ -60,7 +88,87 @@ function DFACtrl($scope) {
             x: x,
             y: y
         });
+
     }
+
+    /**
+     * Removes the state with the given id
+     * @param  {Int} stateId 
+     */
+    $scope.removeState = function(stateId) {
+        $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
+    }
+
+    /**
+     * Rename a state if the newStatename isnt already used
+     * @param  {Int} stateId      
+     * @param  {State} newStateName 
+     */
+    $scope.renameState = function(stateId, newStateName) {
+        if ($scope.existStateWithName(newStateName)) {
+            console.log("Their is already a state with the given name");
+        } else {
+            $scope.getStateById(stateId).name = newStateName;
+        }
+    }
+
+    /**
+     * Get the array index from the state with the given stateId
+     * @param  {Int} stateId 
+     * @return {Int}         Returns the index and -1 when state with stateId not found
+     */
+    $scope.getArrayStateIdByStateId = function(stateId) {
+        return _.findIndex($scope.config.states, function(state) {
+            if (state.id == stateId) {
+                return state;
+            }
+        });
+    }
+
+    /**
+     * Returns the State with the given stateId
+     * @param  {Int} stateId 
+     * @return {ObjectReference}         Returns the objectreference of the state
+     */
+    $scope.getStateById = function(stateId) {
+
+        return $scope.config.states[$scope.getArrayStateIdByStateId(stateId)];
+    }
+
+    /**
+     * returns if the node has transitions
+     * @param  {Int}  stateId 
+     * @return {Boolean}         
+     */
+    $scope.hasStateTransitions = function(stateId) {
+        var tmp = false;
+        _.forEach($scope.config.transitions, function(transition) {
+            if (transition.fromState == stateId || transition.toState == stateId) {
+                tmp = true;
+
+            }
+        })
+        return tmp;
+    }
+
+    /**
+     * Checks if a transition with the params already exist
+     * @param  {Int}  fromState      Id of the fromstate
+     * @param  {Int}  toState        id from the toState
+     * @param  {Strin}  transitonName The name of the transition
+     * @return {Boolean}                
+     */
+    $scope.isTransitionUnique = function(fromState, toState, transitonName) {
+        var tmp = true;
+        _.forEach($scope.config.transitions, function(transition) {
+            if (transition.fromState == fromState && transition.toState == toState && transistion.name == transistonName) {
+                tmp = false;
+            }
+        })
+        return tmp;
+    }
+
+
     /**
      * Adds a transition at the end of the transitions array
      * @param {Int} fromState      The id from the fromState
@@ -73,6 +181,26 @@ function DFACtrl($scope) {
             toState: toState,
             name: transistonName
         });
+    }
+
+    /**
+     * Removes the transistion
+     * @param {Int} fromState      The id from the fromState
+     * @param {Int} toState        The id from the toState
+     * @param {String} transistonName The name of the Transition
+     */
+    $scope.removeTransition = function(fromState, toState, transistonName) {
+      var id = -1;
+        _.forEach($scope.config.transitions, function(transition, key) {
+            if (transition.fromState == fromState && transition.toState == toState && transition.name == transistonName) {
+                id = key;
+            }
+        })
+        if(id != -1){
+             $scope.config.transitions.splice(id, 1);
+        }else{
+            console.log("Transistion not found");
+        }
     }
 
     //Simulation;

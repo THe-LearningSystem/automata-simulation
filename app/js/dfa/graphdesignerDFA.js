@@ -1,7 +1,7 @@
 "use strict";
 
-//GRAPHDESIGNER
-var graphdesignerDFA = function(config,svgSelector) {
+//GRAPHDESIGNER for the svg diagramm
+var graphdesignerDFA = function(config,svgSelector, $scope) {
 
     var self = this;
     //The DFA config
@@ -43,6 +43,12 @@ var graphdesignerDFA = function(config,svgSelector) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
 
 
+        
+    self.renameState = function(stateId, newStateName) {
+        
+       
+    }
+
 
 
     /**
@@ -55,7 +61,7 @@ var graphdesignerDFA = function(config,svgSelector) {
         var group = self.svgStates.append("g")
             .attr("transform", "translate(" + state.x + " " + state.y + ")")
             .attr("class", "state")
-            .attr("object-id", id);
+            .attr("object-id", state.id); //save the state-id
 
         var circleSelection = group.append("circle")
             .attr("class", "state-circle")
@@ -90,8 +96,17 @@ var graphdesignerDFA = function(config,svgSelector) {
                 .attr("transform", "translate(" + d3.event.x + " " + d3.event.y + ")")
                 .attr("x", d3.event.x);
             //update the node in the array
-            self.config.states[d3.select(this).attr("object-id")].x = d3.event.x;
-            self.config.states[d3.select(this).attr("object-id")].y = d3.event.y;
+            
+            var stateId = d3.select(this).attr("object-id");
+            var stateArrayId = $scope.getArrayStateIdByStateId(stateId);
+
+            $scope.$apply(function(){
+
+            self.config.states[stateArrayId].x = d3.event.x;
+            self.config.states[stateArrayId].y = d3.event.y;
+
+            })
+            
             //update the transitions after dragging a node
             self.updateTransitionsAfterStateDrag(d3.select(this).attr("object-id"));
         })

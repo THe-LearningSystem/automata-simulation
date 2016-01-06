@@ -1,3 +1,6 @@
+"use strict";
+
+//Simulator for the simulation of the automata
 var simulationDFA = function(config){
   var self = this;
  
@@ -14,7 +17,7 @@ var simulationDFA = function(config){
     self.status = 'stoped';
   }
 
-  // Reset the simulation by setting the start stae as first state to the statusSequence and 
+  // Reset the simulation by setting the start state as first state to the statusSequence and 
   // setting the status to 'stop'
   self.reset = function(){
     self.statusSequence = [self.config.startState];
