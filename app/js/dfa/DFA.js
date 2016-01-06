@@ -43,7 +43,6 @@ function DFACtrl($scope) {
         $scope.addTransition(1, 3, "a");
 
 
-        $scope.graphdesigner.callStateListener();
         //console.log($scope.hasStateTransitions(100));
         //console.log($scope.existStateWithName("Yeah"));
         //console.log($scope.getArrayStateIdByStateId(100));
@@ -91,7 +90,8 @@ function DFACtrl($scope) {
         });
         //draw the State after the State is added
         $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(id));
-
+        //the listener is always called after a new node was created
+        $scope.graphdesigner.callStateListener();
     }
 
     /**
