@@ -8,7 +8,8 @@ angular
 function DFACtrl($scope) {
     //TODO: Better name for the config of the automaton
     $scope.config = {};
-    $scope.config.countId = 0;
+    $scope.config.countStateId = 0;
+    $scope.config.countTransitionId = 0;
     //The States are saved like {id:stateId,name:"nameoftheState",x:50,y:50}
     $scope.config.states = [];
     //Only a number representing the id of the state
@@ -41,24 +42,22 @@ function DFACtrl($scope) {
         $scope.addTransition(1, 2, "b");
         $scope.addTransition(1, 3, "a");
 
-        $scope.graphdesigner.drawStates();
-        $scope.graphdesigner.drawTransitions();
 
         $scope.graphdesigner.callStateListener();
-        console.log($scope.hasStateTransitions(100));
-        console.log($scope.existStateWithName("Yeah"));
-        console.log($scope.getArrayStateIdByStateId(100));
-        console.log($scope.getStateById(100));
-        console.log($scope.config.states);
+        //console.log($scope.hasStateTransitions(100));
+        //console.log($scope.existStateWithName("Yeah"));
+        //console.log($scope.getArrayStateIdByStateId(100));
+        //console.log($scope.getStateById(100));
+        //console.log($scope.config.states);
         //$scope.removeState(0);
-        console.log($scope.config.states);
-        console.log($scope.getStateById(3));
+       // console.log($scope.config.states);
+      //  console.log($scope.getStateById(3));
 
-        $scope.renameState(3, "Yeah");
-        console.log($scope.getStateById(3));
-        console.log($scope.config.transitions);
-        $scope.removeTransition(5, 2, "b");
-        console.log($scope.config.transitions);
+        $scope.renameState(1, "Yeah");
+      ///  console.log($scope.getStateById(3));
+       // console.log($scope.config.transitions);
+       // $scope.removeTransition(5, 2, "b");
+       // console.log($scope.config.transitions);
     }
 
     /**
@@ -82,12 +81,16 @@ function DFACtrl($scope) {
      * @param {Float} y         
      */
     $scope.addState = function(stateName, x, y) {
+        var id = $scope.config.countStateId++;
+
         $scope.config.states.push({
-            id: $scope.config.countId++,
+            id: id,
             name: stateName,
             x: x,
             y: y
         });
+        //draw the State after the State is added
+        $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(id));
 
     }
 
@@ -96,6 +99,9 @@ function DFACtrl($scope) {
      * @param  {Int} stateId 
      */
     $scope.removeState = function(stateId) {
+        //first remove the element from the svg after that remove it from the array
+        $scope.graphdesigner.removeState(stateId);
+
         $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
     }
 
@@ -110,6 +116,9 @@ function DFACtrl($scope) {
         } else {
             $scope.getStateById(stateId).name = newStateName;
         }
+
+        //Rename the state on the graphdesigner
+        $scope.graphdesigner.renameState(stateId,newStateName);
     }
 
     /**
@@ -176,10 +185,29 @@ function DFACtrl($scope) {
      * @param {String} transistonName The name of the Transition
      */
     $scope.addTransition = function(fromState, toState, transistonName) {
+        var id = $scope.config.countTransitionId++;
         $scope.config.transitions.push({
+            id: id,
             fromState: fromState,
             toState: toState,
             name: transistonName
+        });
+        console.log(id);
+        console.log($scope.getArrayTransitionIdByTransitionId(id));
+        //drawTransistion
+        $scope.graphdesigner.drawTransition(id);
+    }
+
+    /**
+     * Get the array index from the transition with the given transistionId
+     * @param  {Int} transistionId 
+     * @return {Int}         Returns the index and -1 when state with transistionId not found
+     */
+    $scope.getArrayTransitionIdByTransitionId = function(transistionId) {
+        return _.findIndex($scope.config.transitions, function(transition) {
+            if (transition.id == transistionId) {
+                return transition;
+            }
         });
     }
 
@@ -239,7 +267,7 @@ function DFACtrl($scope) {
     $scope.export = function() {
 
         var exportData = {};
-        exportData.countId = $scope.config.countId;
+        exportData.countStateId = $scope.config.countStateId;
         exportData.states = $scope.config.states;
         exportData.startState = $scope.config.startState;
         exportData.finalStates = $scope.config.finalStates;

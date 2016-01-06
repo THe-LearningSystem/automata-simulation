@@ -43,24 +43,41 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
 
 
-        
+    /**
+     * Renames the state in the svg after the $scope variable was changed
+     * @param  {Int} stateId      
+     * @param  {String} newStateName          
+     */
     self.renameState = function(stateId, newStateName) {
-        
+        var state = self.config.states[$scope.getArrayStateIdByStateId(stateId)];
+        var objReference = state.objReference;
+       objReference.select("text").text(newStateName);
        
     }
+
+    /**
+     * Removes the state with the given id
+     * @param  {Int} stateId 
+     */
+    self.removeState = function(stateId) {
+        var state = self.config.states[$scope.getArrayStateIdByStateId(stateId)];
+        var objReference = state.objReference;
+        objReference.remove();
+    }
+
 
 
 
     /**
      * Draws a State 
-     * @param  {[type]} id [description]
+     * @param  {Int} id The arrayid of the State
      * @return {Reference}    Returns the reference of the group object
      */
     self.drawState = function(id) {
         var state = self.config.states[id];
         var group = self.svgStates.append("g")
             .attr("transform", "translate(" + state.x + " " + state.y + ")")
-            .attr("class", "state")
+            .attr("class", "state "+ "state-"+state.id)
             .attr("object-id", state.id); //save the state-id
 
         var circleSelection = group.append("circle")
@@ -73,17 +90,10 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
             .attr("dominant-baseline", "central")
             .attr("text-anchor", "middle");
 
+            self.config.states[id].objReference = group;
         return group;
     }
 
-    /**
-     * Draw all the States
-     */
-    self.drawStates = function() {
-        _.forEach(self.config.states, function(node, key) {
-            self.drawState(key);
-        });
-    }
 
     //Node drag and drop behaviour
     self.dragState = d3.behavior.drag()
@@ -159,17 +169,6 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
         return group;
     }
 
-
-
-    /**
-     * Draw all transitions
-     */
-    self.drawTransitions = function() {
-        _.forEach(self.config.transitions, function(n, key) {
-            self.drawTransition(key);
-
-        });
-    }
 
     /**
      * Update the transitions in the svg after moving a state
