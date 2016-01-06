@@ -49,15 +49,15 @@ function DFACtrl($scope) {
         //console.log($scope.getArrayStateIdByStateId(100));
         //console.log($scope.getStateById(100));
         //console.log($scope.config.states);
-        //$scope.removeState(0);
-       // console.log($scope.config.states);
-      //  console.log($scope.getStateById(3));
+        $scope.removeState(0);
+        // console.log($scope.config.states);
+        //  console.log($scope.getStateById(3));
 
         $scope.renameState(1, "Yeah");
-      ///  console.log($scope.getStateById(3));
-       // console.log($scope.config.transitions);
-       // $scope.removeTransition(5, 2, "b");
-       // console.log($scope.config.transitions);
+        ///  console.log($scope.getStateById(3));
+        // console.log($scope.config.transitions);
+        // $scope.removeTransition(5, 2, "b");
+        // console.log($scope.config.transitions);
     }
 
     /**
@@ -99,10 +99,15 @@ function DFACtrl($scope) {
      * @param  {Int} stateId 
      */
     $scope.removeState = function(stateId) {
-        //first remove the element from the svg after that remove it from the array
-        $scope.graphdesigner.removeState(stateId);
+        if ($scope.hasStateTransitions(stateId)) {
+            console.log("cant delete state with transitions!");
+        } else {
+            //first remove the element from the svg after that remove it from the array
+            $scope.graphdesigner.removeState(stateId);
 
-        $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
+            $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
+        }
+
     }
 
     /**
@@ -118,7 +123,7 @@ function DFACtrl($scope) {
         }
 
         //Rename the state on the graphdesigner
-        $scope.graphdesigner.renameState(stateId,newStateName);
+        $scope.graphdesigner.renameState(stateId, newStateName);
     }
 
     /**
@@ -218,15 +223,15 @@ function DFACtrl($scope) {
      * @param {String} transistonName The name of the Transition
      */
     $scope.removeTransition = function(fromState, toState, transistonName) {
-      var id = -1;
+        var id = -1;
         _.forEach($scope.config.transitions, function(transition, key) {
             if (transition.fromState == fromState && transition.toState == toState && transition.name == transistonName) {
                 id = key;
             }
         })
-        if(id != -1){
-             $scope.config.transitions.splice(id, 1);
-        }else{
+        if (id != -1) {
+            $scope.config.transitions.splice(id, 1);
+        } else {
             console.log("Transistion not found");
         }
     }

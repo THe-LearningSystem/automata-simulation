@@ -175,16 +175,16 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
      * @param  {Int} stateId Moved stateId
      */
     self.updateTransitionsAfterStateDrag = function(stateId) {
-        var stateName = self.config.states[stateId].name;
+        var stateName = self.config.states[$scope.getArrayStateIdByStateId(stateId)].name;
         _.forEach(self.config.transitions, function(n, key) {
             if (n.fromState == stateId || n.toState == stateId) {
                 var obj = n.objReference;
                 var fromId = n.fromState;
                 var toId = n.toState;
-                var x1 = self.config.states[fromId].x;
-                var y1 = self.config.states[fromId].y;
-                var x2 = self.config.states[toId].x;
-                var y2 = self.config.states[toId].y;
+                var x1 = self.config.states[$scope.getArrayStateIdByStateId(fromId)].x;
+                var y1 = self.config.states[$scope.getArrayStateIdByStateId(fromId)].y;
+                var x2 = self.config.states[$scope.getArrayStateIdByStateId(toId)].x;
+                var y2 = self.config.states[$scope.getArrayStateIdByStateId(toId)].y;
                 var richtungsvektor = {
                     "x": x2 - x1,
                     "y": y2 - y1
