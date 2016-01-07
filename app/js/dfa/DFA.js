@@ -340,7 +340,6 @@ function DFACtrl($scope) {
             delete tmpTransition.objReference;
             allTransitions.push(tmpTransition);
         });
-        console.log(allTransitions);
         return allTransitions;
     }
 
@@ -354,9 +353,7 @@ function DFACtrl($scope) {
             var tmpState = JSON.parse(JSON.stringify(state));
             delete tmpState.objReference;
             allStates.push(tmpState);
-            console.log
         });
-        console.log(allStates);
         return allStates;
     }
 
