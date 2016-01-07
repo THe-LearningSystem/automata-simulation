@@ -1,0 +1,70 @@
+<div class="col-md-12">
+    <h3>Simulation</h3>
+    <button type="button" class="btn btn-default" ng-click="run()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="reset()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="undo()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="step()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="export()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default import" aria-label="Left Align">
+        <input type="file" id="hidden-file-upload">
+        <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="test()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+    </button>
+</div>
+<div class="automataWrapper col-md-12">
+    <div class="col-md-12 statediagramm">
+        <h3>Zustandsdiagramm</h3>
+        <svg id="diagramm" class="stateDiagrammSVG"></svg>
+    </div>
+    <div class="col-md-12">
+        <p>
+            Eingabewort:
+            <input ng-model="inputWord" />
+        </p>
+    </div>
+    <div class="col-md-6 stateTable">
+        <h3>Zustandstabelle</h3>
+        <div automaton="automaton">
+            <button type="button" class="btn btn-default" ng-click="tableplus()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+    </button>
+        </div>
+    </div>
+    <div class="col-md-6 stateNoName">
+        <h3>Zustandsüberführungsfunktion</h3>
+        <p>&Sigma;={
+            <input ng-model="statesigma" />}</p>
+        <p>S={
+            <input ng-model="config.startState" />}</p>
+        <p>&delta;={
+            <input ng-model="statedelta" />}</p>
+        <p>F={
+            <input ng-model="config.finalStates" />}</p>
+    </div>
+</div>
+<div class="col-md-12">
+    <!-- <h3>Zustandsüberführungsfunktion</h3>-->
+    <h3>Debugging</h3>
+    <p>Input {{simulator.input}}</p>
+    <p>Status:{{simulator.status}}</p>
+    <p>Sequence:{{simulator.statusSequence}}</p>
+    <p>count</p>
+    <p>{{simulator.count}}</p>
+    <p>InputWord: {{inputWord}}</p>
+    <p>Config :{{config}}</p>
+</div>

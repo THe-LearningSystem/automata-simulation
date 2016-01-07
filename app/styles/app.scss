@@ -1,45 +1,58 @@
 @import 'bootstrap_variables';
-//Node Settings
-$nodeColor: #CCC;
-$nodeColorHover: #600;
-$nodeColorSelected: #F00;
-$nodeBorderWidth:1;
-$nodeBorderColor:#666;
-$nodeFontSize:15px;
-$nodeFontColor: #000;
+//state Settings
+$stateColor: #CCC;
+$finalStateColor: #FFF;
+$stateColorHover: #600;
+$stateColorSelected: #F00;
+$stateBorderWidth:2;
+$stateBorderColor:#666;
+$stateFontSize:15px;
+$stateFontColor: #000;
 //Transition Settings
 $transitiionColor: #000;
 $transitionFontSize: 15px;
 $transitionFontColor: #000;
 $transitionWith:2;
-#diagramm {
+.automataWrapper {
     border: 1px solid #000;
 }
+.stateDiagrammSVG {
+    border: 1px solid #000;
+    width: 100%;
+    height: 300px;
+    min-width: auto;
+}
 
-//Node
-.node {
+//state
+.state {
     cursor: context-menu;
 }
 
-.node:hover .node-circle {
-    fill: $nodeColorHover;
+.state:hover .state-circle {
+    fill: $stateColorHover;
 }
 
-.node:active .node-circle {
-    fill: $nodeColorSelected;
+.state:active .state-circle {
+    fill: $stateColorSelected;
 }
 
-.node-circle {
-    fill: $nodeColor;
-    stroke: $nodeBorderColor;
-    stroke-width: $nodeBorderWidth;
+.state-circle {
+    fill: $stateColor;
+    stroke: $stateBorderColor;
+    stroke-width: $stateBorderWidth;
 }
 
-.node-text {
-    font-size: $nodeFontSize;
+.final-State {
+    fill: $finalStateColor;
+    stroke: $stateBorderColor;
+    stroke-width: $stateBorderWidth;
 }
 
-.node-text:hover {}
+.state-text {
+    font-size: $stateFontSize;
+}
+
+.state-text:hover {}
 
 //Transition
 .transition {
@@ -52,3 +65,8 @@ $transitionWith:2;
 }
 
 .transition-text {}
+
+
+#hidden-file-upload{
+    display: none;
+}
