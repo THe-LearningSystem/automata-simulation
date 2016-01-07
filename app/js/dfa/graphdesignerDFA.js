@@ -1,7 +1,7 @@
 "use strict";
 
 //GRAPHDESIGNER for the svg diagramm
-var graphdesignerDFA = function(config,svgSelector, $scope) {
+var graphdesignerDFA = function(config, svgSelector, $scope) {
 
     var self = this;
     //The DFA config
@@ -9,23 +9,38 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
     //graphdesigner settings
     self.settings = {
         stateRadius: 25,
-        finalStateRadius:29,
+        finalStateRadius: 29,
         selected: false
     };
 
-    self.updateConfig = function(config){
+    self.updateConfig = function(config) {
         self.config = config;
+        //Clear the content of the svg
+        self.svgTransitions.html("");
+        self.svgStates.html("");
+        //change the scale and the translate to the updatedConfig
+        //TODO: SOlution is not working after moving scale is & translate is resetted
+        //self.svg.attr("transform", "translate(" + self.config.diagrammX+","+self.config.diagrammY + ")" + " scale(" + self.config.diagrammScale + ")");
+
     }
 
     self.svgOuter = d3.select(svgSelector);
-    
+
 
     //TODO: Bug when moving all the objects.
     //u can move the whole diagramm and zome in and out
     self.svg = self.svgOuter.call(d3.behavior.zoom().on("zoom", function() {
-     if (!self.settings.selected) {
-                self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-            }      
+            if (!self.settings.selected) {
+                self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+                console.log(d3.event.translate);
+                $scope.$apply(function() {
+                    self.config.diagrammScale = d3.event.scale;
+                    self.config.diagrammX = d3.event.translate[0];
+                    self.config.diagrammY = d3.event.translate[1];
+                })
+
+
+            }
         }))
         .append("g").attr("id", "svg-items");
 
@@ -56,8 +71,8 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
     self.renameState = function(stateId, newStateName) {
         var state = self.config.states[$scope.getArrayStateIdByStateId(stateId)];
         var objReference = state.objReference;
-       objReference.select("text").text(newStateName);
-       
+        objReference.select("text").text(newStateName);
+
     }
 
     /**
@@ -82,12 +97,12 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
         var state = self.config.states[id];
         var group = self.svgStates.append("g")
             .attr("transform", "translate(" + state.x + " " + state.y + ")")
-            .attr("class", "state "+ "state-"+state.id)
+            .attr("class", "state " + "state-" + state.id)
             .attr("object-id", state.id); //save the state-id
-        if(_.include(self.config.finalStates,state.id)){ 
+        if (_.include(self.config.finalStates, state.id)) {
             var circleSelection = group.append("circle")
-            .attr("class", "final-State")
-            .attr("r", self.settings.finalStateRadius);
+                .attr("class", "final-State")
+                .attr("r", self.settings.finalStateRadius);
         }
 
         var circleSelection = group.append("circle")
@@ -100,7 +115,7 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
             .attr("dominant-baseline", "central")
             .attr("text-anchor", "middle");
 
-            self.config.states[id].objReference = group;
+        self.config.states[id].objReference = group;
         return group;
     }
 
@@ -116,17 +131,17 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
                 .attr("transform", "translate(" + d3.event.x + " " + d3.event.y + ")")
                 .attr("x", d3.event.x);
             //update the node in the array
-            
+
             var stateId = d3.select(this).attr("object-id");
             var stateArrayId = $scope.getArrayStateIdByStateId(stateId);
 
-            $scope.$apply(function(){
+            $scope.$apply(function() {
 
-            self.config.states[stateArrayId].x = d3.event.x;
-            self.config.states[stateArrayId].y = d3.event.y;
+                self.config.states[stateArrayId].x = d3.event.x;
+                self.config.states[stateArrayId].y = d3.event.y;
 
             })
-            
+
             //update the transitions after dragging a node
             self.updateTransitionsAfterStateDrag(d3.select(this).attr("object-id"));
         })
