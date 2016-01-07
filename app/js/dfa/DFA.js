@@ -8,7 +8,13 @@ angular
 function DFACtrl($scope) {
     //TODO: Better name for the config of the automaton
     $scope.config = {};
+    //Settings for the diagramm
+    $scope.config.diagrammScale = 1;
+    $scope.config.diagrammX = 0;
+    $scope.config.diagrammY = 0;
+    //Number of statesIds given to states
     $scope.config.countStateId = 0;
+    //Number of transitionIds given to transitions
     $scope.config.countTransitionId = 0;
     //The States are saved like {id:stateId,name:"nameoftheState",x:50,y:50}
     $scope.config.states = [];
@@ -30,6 +36,7 @@ function DFACtrl($scope) {
 
     //Creates Test Data
     $scope.test = function() {
+        $scope.config.finalStates.push(3);
         $scope.inputWord = "hey";
         $scope.addState("SO", 40, 40);
         $scope.addState("S1", 100, 100);
@@ -38,12 +45,12 @@ function DFACtrl($scope) {
 
 
         $scope.config.startState = 0;
-        $scope.config.finalStates.push(3);
+
 
         $scope.addTransition(0, 1, "h");
         $scope.addTransition(1, 2, "e");
         $scope.addTransition(2, 3, "y");
-        $scope.addTransition(3, 0, "-");
+        $scope.addTransition(3, 0, "o");
 
 
 
@@ -96,6 +103,25 @@ function DFACtrl($scope) {
         });
         //draw the State after the State is added
         $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(id));
+        //the listener is always called after a new node was created
+        $scope.graphdesigner.callStateListener();
+    }
+
+    /**
+     * Adds a state at the end of the states array with a variable id -> used for import
+     * @param {String} stateName 
+     * @param {Float} x         
+     * @param {Float} y         
+     */
+    $scope.addStateWithId = function(stateId, stateName, x, y) {
+        $scope.config.states.push({
+            id: stateId,
+            name: stateName,
+            x: x,
+            y: y
+        });
+        //draw the State after the State is added
+        $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(stateId));
         //the listener is always called after a new node was created
         $scope.graphdesigner.callStateListener();
     }
@@ -197,16 +223,33 @@ function DFACtrl($scope) {
      * @param {Int} toState        The id from the toState
      * @param {String} transistonName The name of the Transition
      */
-    $scope.addTransition = function(fromState, toState, transistonName) {
+    $scope.addTransition = function(fromState, toState, transitonName) {
         var id = $scope.config.countTransitionId++;
         $scope.config.transitions.push({
             id: id,
             fromState: fromState,
             toState: toState,
-            name: transistonName
+            name: transitonName
         });
         //drawTransistion
         $scope.graphdesigner.drawTransition(id);
+    }
+
+    /**
+     * Adds a transition at the end of the transitions array -> for import
+     * @param {Int} fromState      The id from the fromState
+     * @param {Int} toState        The id from the toState
+     * @param {String} transistonName The name of the Transition
+     */
+    $scope.addTransitionWithId = function(transitionId,fromState, toState, transitonName) {
+        $scope.config.transitions.push({
+            id: transitionId,
+            fromState: fromState,
+            toState: toState,
+            name: transitonName
+        });
+        //drawTransistion
+        $scope.graphdesigner.drawTransition(transitionId);
     }
 
     /**
@@ -276,35 +319,45 @@ function DFACtrl($scope) {
      * @return {File} Returns a json file
      */
     $scope.export = function() {
-
-        var exportData = {};
-        exportData.countStateId = $scope.config.countStateId;
-        exportData.states = $scope.config.states;
-        exportData.startState = $scope.config.startState;
-        exportData.finalStates = $scope.config.finalStates;
-        exportData.transitions = getTransitions();
-        var data = window.JSON.stringify(exportData);
-        var blob = new Blob([data], {
-            type: "text/plain;charset=utf-8;",
-        });
-        saveAs(blob, "dfa.json");
-    }
-
-    /**
-     * Returns all transistion without the objReference
-     * @return {Array} array of transistion objects
-     */
+            var exportData = {};
+            exportData = $scope.config;
+            exportData.transitions = getTransitions();
+            exportData.states = getStates();
+            var data = window.JSON.stringify(exportData);
+            var blob = new Blob([data], {
+                type: "text/plain;charset=utf-8;",
+            });
+            saveAs(blob, "dfa.json");
+        }
+        /**
+         * Returns all transition without the objReference
+         * @return {Array} array of transition objects
+         */
     function getTransitions() {
         var allTransitions = [];
         _.forEach($scope.config.transitions, function(transition, key) {
-            var tmpTransition = {
-                fromState: transition.fromState,
-                toState: transition.toState,
-                name: transition.name
-            };
+            var tmpTransition = JSON.parse(JSON.stringify(transition));
+            delete tmpTransition.objReference;
             allTransitions.push(tmpTransition);
         });
+        console.log(allTransitions);
         return allTransitions;
+    }
+
+    /**
+     * Returns all transition without the objReference
+     * @return {Array} array of transition objects
+     */
+    function getStates() {
+        var allStates = [];
+        _.forEach($scope.config.states, function(state, key) {
+            var tmpState = JSON.parse(JSON.stringify(state));
+            delete tmpState.objReference;
+            allStates.push(tmpState);
+            console.log
+        });
+        console.log(allStates);
+        return allStates;
     }
 
 
@@ -323,13 +376,23 @@ function DFACtrl($scope) {
                 try {
                     var data = JSON.parse(txtRes);
                     if (data != undefined) {
-                        console.log(data);
+
                         $scope.$apply(function() {
-                            $scope.config = {}
-                            $scope.config = data;
-                            $scope.graphdesigner.drawStates();
-                            $scope.graphdesigner.drawTransitions();
-                            console.log("asd");
+                                //import the config without states and transitions;
+                            $scope.config = JSON.parse(JSON.stringify(data));
+                            $scope.graphdesigner.updateConfig($scope.config);
+                            $scope.simulator.updateConfig($scope.config);
+                            $scope.config.states = [];
+                            $scope.config.transitions = [];
+                            //import states
+                            _.forEach(data.states, function(state, key) {
+                             $scope.addStateWithId(state.id,state.name,state.x,state.y);
+                            })
+                            //import transistions
+                            _.forEach(data.transitions, function(transition, key) {
+                             $scope.addTransitionWithId(transition.id,transition.fromState,transition.toState, transition.name);
+                            })
+
                         });
 
                     }

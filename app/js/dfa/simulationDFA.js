@@ -10,6 +10,10 @@ var simulationDFA = function(config){
   self.count; // TODO name this more meaningfull
   self.input = ''; // Set this to the empty string so that the simulation can be started
 
+
+  self.updateConfig = function(config){
+    self.config = config;
+  }
   // Sets an word for the simulation
   self.setInput = function(input){
     self.input = input;
@@ -60,6 +64,7 @@ var simulationDFA = function(config){
         self.status = 'not accepted';
       }
     }
+    console.log(newStatus);
     self.statusSequence.push(newStatus);
     return nextState;
   }

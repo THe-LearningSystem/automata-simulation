@@ -8,9 +8,14 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
     self.config = config;
     //graphdesigner settings
     self.settings = {
-        nodeRadius: 25,
+        stateRadius: 25,
+        finalStateRadius:29,
         selected: false
     };
+
+    self.updateConfig = function(config){
+        self.config = config;
+    }
 
     self.svgOuter = d3.select(svgSelector);
     
@@ -79,10 +84,15 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
             .attr("transform", "translate(" + state.x + " " + state.y + ")")
             .attr("class", "state "+ "state-"+state.id)
             .attr("object-id", state.id); //save the state-id
+        if(_.include(self.config.finalStates,state.id)){ 
+            var circleSelection = group.append("circle")
+            .attr("class", "final-State")
+            .attr("r", self.settings.finalStateRadius);
+        }
 
         var circleSelection = group.append("circle")
             .attr("class", "state-circle")
-            .attr("r", self.settings.nodeRadius);
+            .attr("r", self.settings.stateRadius);
 
         var text = group.append("text")
             .text(state.name)
@@ -143,7 +153,7 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
             "y": y2 - y1
         };
         var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y);
-        var n = self.settings.nodeRadius / richtungsVectorLength;
+        var n = self.settings.stateRadius / richtungsVectorLength;
         var x3 = x1 + n * richtungsvektor.x;
         var y3 = y1 + n * richtungsvektor.y;
         var x4 = x2 - n * richtungsvektor.x;
@@ -190,7 +200,7 @@ var graphdesignerDFA = function(config,svgSelector, $scope) {
                     "y": y2 - y1
                 };
                 var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y);
-                var n = self.settings.nodeRadius / richtungsVectorLength;
+                var n = self.settings.stateRadius / richtungsVectorLength;
                 var x3 = x1 + n * richtungsvektor.x;
                 var y3 = y1 + n * richtungsvektor.y;
                 var x4 = x2 - n * richtungsvektor.x;

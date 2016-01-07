@@ -1,9 +1,10 @@
 @import 'bootstrap_variables';
 //state Settings
 $stateColor: #CCC;
+$finalStateColor: #FFF;
 $stateColorHover: #600;
 $stateColorSelected: #F00;
-$stateBorderWidth:1;
+$stateBorderWidth:2;
 $stateBorderColor:#666;
 $stateFontSize:15px;
 $stateFontColor: #000;
@@ -37,6 +38,12 @@ $transitionWith:2;
 
 .state-circle {
     fill: $stateColor;
+    stroke: $stateBorderColor;
+    stroke-width: $stateBorderWidth;
+}
+
+.final-State {
+    fill: $finalStateColor;
     stroke: $stateBorderColor;
     stroke-width: $stateBorderWidth;
 }
