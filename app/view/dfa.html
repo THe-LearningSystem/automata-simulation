@@ -1,10 +1,15 @@
 <div class="col-md-12">
     <h3>Simulation</h3>
-    <button type="button" class="btn btn-default" ng-click="run()" aria-label="Left Align">
+    <!--   <div class="alert alert-success" role="alert"></div>
+    <div class="alert alert-info" role="alert"></div>
+    <div class="alert alert-warning" role="alert"></div> -->
+    <div class="alert alert-danger"role="alert">{{alertDanger}}</div>
+
+    <button type="button" class="btn btn-default btn-play-or-pause" ng-click="playOrPause()" aria-label="Left Align">
         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="reset()" aria-label="Left Align">
-        <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+    <button type="button" class="btn btn-default" ng-click="stop()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
     </button>
     <button type="button" class="btn btn-default" ng-click="undo()" aria-label="Left Align">
         <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
@@ -41,8 +46,8 @@
         <h3>Zustandstabelle</h3>
         <div automaton="automaton">
             <button type="button" class="btn btn-default" ng-click="tableplus()" aria-label="Left Align">
-        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-    </button>
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </button>
         </div>
     </div>
     <div class="col-md-6 stateNoName">

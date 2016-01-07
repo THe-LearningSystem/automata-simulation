@@ -32,7 +32,6 @@ var graphdesignerDFA = function(config, svgSelector, $scope) {
     self.svg = self.svgOuter.call(d3.behavior.zoom().on("zoom", function() {
             if (!self.settings.selected) {
                 self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
-                console.log(d3.event.translate);
                 $scope.$apply(function() {
                     self.config.diagrammScale = d3.event.scale;
                     self.config.diagrammX = d3.event.translate[0];
