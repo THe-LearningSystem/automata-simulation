@@ -116,19 +116,18 @@ var graphdesignerDFA = function(config, svgSelector, $scope) {
         return group;
     }
 
-    self.setStateAsVisited = function(stateId){
-      var stateArrayId = $scope.getArrayStateIdByStateId(stateId);
-      var objReference = self.config.states[stateArrayId].objReference;
-     var circleReference = objReference.select("circle.state-circle");
-     circleReference.classed("visitedState", true);
+    self.setStateAsVisited = function(stateId) {
+        var stateArrayId = $scope.getArrayStateIdByStateId(stateId);
+        var objReference = self.config.states[stateArrayId].objReference;
+        var circleReference = objReference.select("circle.state-circle");
+        circleReference.classed("visitedState", true);
     }
 
-    self.setStateAsUnvisited = function(stateId){
-      var stateArrayId = $scope.getArrayStateIdByStateId(stateId);
-      console.log(stateArrayId);
-      var objReference = self.config.states[stateArrayId].objReference;
-     var circleReference = objReference.select("circle.state-circle");
-    circleReference.classed("visitedState", false);
+    self.setStateAsUnvisited = function(stateId) {
+        var stateArrayId = $scope.getArrayStateIdByStateId(stateId);
+        var objReference = self.config.states[stateArrayId].objReference;
+        var circleReference = objReference.select("circle.state-circle");
+        circleReference.classed("visitedState", false);
     }
 
     //Node drag and drop behaviour
@@ -170,39 +169,44 @@ var graphdesignerDFA = function(config, svgSelector, $scope) {
         var transition = self.config.transitions[id];
         var fromId = transition.fromState;
         var toId = transition.toState;
-        var x1 = self.config.states[fromId].x;
-        var y1 = self.config.states[fromId].y;
-        var x2 = self.config.states[toId].x;
-        var y2 = self.config.states[toId].y;
-        var richtungsvektor = {
-            "x": x2 - x1,
-            "y": y2 - y1
-        };
-        var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y);
-        var n = self.settings.stateRadius / richtungsVectorLength;
-        var x3 = x1 + n * richtungsvektor.x;
-        var y3 = y1 + n * richtungsvektor.y;
-        var x4 = x2 - n * richtungsvektor.x;
-        var y4 = y2 - n * richtungsvektor.y;
+        if (fromId != toId) {
+            var x1 = self.config.states[fromId].x;
+            var y1 = self.config.states[fromId].y;
+            var x2 = self.config.states[toId].x;
+            var y2 = self.config.states[toId].y;
+            var richtungsvektor = {
+                "x": x2 - x1,
+                "y": y2 - y1
+            };
+            var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y);
+            var n = self.settings.stateRadius / richtungsVectorLength;
+            var x3 = x1 + n * richtungsvektor.x;
+            var y3 = y1 + n * richtungsvektor.y;
+            var x4 = x2 - n * richtungsvektor.x;
+            var y4 = y2 - n * richtungsvektor.y;
 
-        var group = self.svgTransitions.append("g")
-            .attr("transform", "translate(" + x3 + " " + y3 + ")")
-            .attr("class", "transition");
+            var group = self.svgTransitions.append("g")
+                .attr("transform", "translate(" + x3 + " " + y3 + ")")
+                .attr("class", "transition");
 
-        var line = group.append("line")
-            .attr("class", "transition-line")
-            .attr("x2", x4 - x3)
-            .attr("y2", y4 - y3)
-            .attr("marker-end", "url(#marker-end-arrow)");
+            var line = group.append("line")
+                .attr("class", "transition-line")
+                .attr("x2", x4 - x3)
+                .attr("y2", y4 - y3)
+                .attr("marker-end", "url(#marker-end-arrow)");
 
-        var text = group.append("text")
-            .attr("class", "transition-text")
-            .text(transition.name)
-            .attr("x", (x4 - x3) / 2)
-            .attr("y", (y4 - y3) / 2);
+            var text = group.append("text")
+                .attr("class", "transition-text")
+                .text(transition.name)
+                .attr("x", (x4 - x3) / 2)
+                .attr("y", (y4 - y3) / 2);
 
-        self.config.transitions[id].objReference = group;
-        return group;
+            self.config.transitions[id].objReference = group;
+            return group;
+        } else {
+            //add a transistion with self Reference
+            
+        }
     }
 
 

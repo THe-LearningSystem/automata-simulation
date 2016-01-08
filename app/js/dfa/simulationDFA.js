@@ -42,18 +42,21 @@ var simulationDFA = function(config, $scope) {
         self.count = 0;
         self.status = 'stoped';
         self.processedWord = '';
+        if (self.lastVisited != null) {
+            $scope.graphdesigner.setStateAsUnvisited(self.lastVisited);
+            self.lastVisited = null;
+        }
     }
 
     // Step through the simulation TODO: more comments
     self.step = function() {
-        console.log("Step" + self.count);
+        console.log("Step" + (self.count+1));
 
 
         //testanimate
         //
-        if(self.lastVisited != null){
-          console.log("TEst");
-          $scope.graphdesigner.setStateAsUnvisited(self.lastVisited);
+        if (self.lastVisited != null) {
+            $scope.graphdesigner.setStateAsUnvisited(self.lastVisited);
         }
         if (self.status == 'stoped') {
             self.reset();
