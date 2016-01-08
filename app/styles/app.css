@@ -29,6 +29,9 @@
 .state-text {
   font-size: 15px; }
 
+.visitedState {
+  fill: #F00; }
+
 .transition {
   cursor: context-menu; }
 

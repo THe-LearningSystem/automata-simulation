@@ -23,7 +23,6 @@ var graphdesignerDFA = function(config, svgSelector, $scope) {
         //self.svg.attr("transform", "translate(" + self.config.diagrammX+","+self.config.diagrammY + ")" + " scale(" + self.config.diagrammScale + ")");
 
     }
-
     self.svgOuter = d3.select(svgSelector);
 
 
@@ -71,7 +70,6 @@ var graphdesignerDFA = function(config, svgSelector, $scope) {
         var state = self.config.states[$scope.getArrayStateIdByStateId(stateId)];
         var objReference = state.objReference;
         objReference.select("text").text(newStateName);
-
     }
 
     /**
@@ -118,6 +116,20 @@ var graphdesignerDFA = function(config, svgSelector, $scope) {
         return group;
     }
 
+    self.setStateAsVisited = function(stateId){
+      var stateArrayId = $scope.getArrayStateIdByStateId(stateId);
+      var objReference = self.config.states[stateArrayId].objReference;
+     var circleReference = objReference.select("circle.state-circle");
+     circleReference.classed("visitedState", true);
+    }
+
+    self.setStateAsUnvisited = function(stateId){
+      var stateArrayId = $scope.getArrayStateIdByStateId(stateId);
+      console.log(stateArrayId);
+      var objReference = self.config.states[stateArrayId].objReference;
+     var circleReference = objReference.select("circle.state-circle");
+    circleReference.classed("visitedState", false);
+    }
 
     //Node drag and drop behaviour
     self.dragState = d3.behavior.drag()

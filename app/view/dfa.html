@@ -42,7 +42,7 @@
             <input ng-model="inputWord" />
         </p>
     </div>
-    <div class="col-md-6 stateTable">
+   <!-- <div class="col-md-6 stateTable">
         <h3>Zustandstabelle</h3>
         <div automaton="automaton">
             <button type="button" class="btn btn-default" ng-click="tableplus()" aria-label="Left Align">
@@ -60,16 +60,16 @@
             <input ng-model="statedelta" />}</p>
         <p>F={
             <input ng-model="config.finalStates" />}</p>
-    </div>
+    </div>-->
 </div>
 <div class="col-md-12">
     <!-- <h3>Zustandsüberführungsfunktion</h3>-->
     <h3>Debugging</h3>
-    <p>Input {{simulator.input}}</p>
     <p>Status:{{simulator.status}}</p>
     <p>Sequence:{{simulator.statusSequence}}</p>
-    <p>count</p>
-    <p>{{simulator.count}}</p>
+    <p>count {{simulator.count}}</p>
     <p>InputWord: {{inputWord}}</p>
+    <p>Prpcessed Word: {{simulator.processedWord}}</p>
+
     <p>Config :{{config}}</p>
 </div>

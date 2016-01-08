@@ -9,17 +9,20 @@ var simulationDFA = function(config, $scope) {
     self.statusSequence = []; // TODO: Is there a better name for that?
     self.count; // TODO name this more meaningfull
     self.input = ''; // Set this to the empty string so that the simulation can be started
+    self.processedWord = '';
 
 
     //animation controls
     self.animationStarted = false;
     self.animationPaused = false;
     self.inAnimation = false;
-    self.loopAnimation = true;
+    self.loopAnimation = false;
     //time between the steps
     self.animationStepTimeOut = 1500;
     //Time between loops when the animation restarts
     self.animationBetweenLoopTimeOut = 1000;
+
+    self.lastVisited = null;
 
 
     self.updateConfig = function(config) {
@@ -38,11 +41,20 @@ var simulationDFA = function(config, $scope) {
         self.statusSequence = [self.config.startState];
         self.count = 0;
         self.status = 'stoped';
+        self.processedWord = '';
     }
 
     // Step through the simulation TODO: more comments
     self.step = function() {
         console.log("Step" + self.count);
+
+
+        //testanimate
+        //
+        if(self.lastVisited != null){
+          console.log("TEst");
+          $scope.graphdesigner.setStateAsUnvisited(self.lastVisited);
+        }
         if (self.status == 'stoped') {
             self.reset();
             //include checks if the self.status is in collection
@@ -67,6 +79,9 @@ var simulationDFA = function(config, $scope) {
         }
 
         var newStatus = nextState[0].toState;
+        $scope.graphdesigner.setStateAsVisited(newStatus);
+        self.lastVisited = newStatus;
+        self.processedWord += nextChar;
         if (self.input.length == self.count) {
             if (_.include(self.config.finalStates, newStatus)) {
                 self.status = 'accepted';
