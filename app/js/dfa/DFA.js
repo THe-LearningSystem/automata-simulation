@@ -27,30 +27,48 @@ function DFACtrl($scope) {
     //the name of the inputWord
     $scope.inputWord = '';
 
+    //Saves if the icons show Play and if its false it shows pause
+    $scope.isInPlay = false;
+    //alerts
+    $scope.alertDanger = 'NO ALERT';
 
+    $scope.dbug = new dbug($scope);
     //the simulator controlling the simulation
-    $scope.simulator = new simulationDFA($scope.config);
+    $scope.simulator = new simulationDFA($scope.config, $scope);
     //the graphdesigner controlling the svg diagramm
     $scope.graphdesigner = new graphdesignerDFA($scope.config, "#diagramm", $scope);
 
+    //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
+    //fix for $apply already in progress
+    $scope.safeApply = function(fn) {
+        var phase = this.$root.$$phase;
+        if (phase == '$apply' || phase == '$digest') {
+            if (fn && (typeof(fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
+    };
 
     //Creates Test Data
     $scope.test = function() {
         $scope.config.finalStates.push(3);
-        $scope.inputWord = "hey";
-        $scope.addState("SO", 40, 40);
-        $scope.addState("S1", 100, 100);
+        $scope.inputWord = "abbbclabc";
+        $scope.addState("SO", 50, 50);
+        $scope.addState("S1", 50, 200);
         $scope.addState("S2", 200, 200);
-        $scope.addState("S3", 150, 150);
+        $scope.addState("S3", 200, 50);
 
 
         $scope.config.startState = 0;
-
-
-        $scope.addTransition(0, 1, "h");
-        $scope.addTransition(1, 2, "e");
-        $scope.addTransition(2, 3, "y");
-        $scope.addTransition(3, 0, "o");
+        $scope.addTransition(0, 1, "a");
+        $scope.addTransition(1, 2, "b");
+        //TODO: transistion referencin on themself-> graphdesigner
+       // $scope.addTransition(1, 1, "b");
+        $scope.addTransition(2, 1, "b");
+        $scope.addTransition(2, 3, "c");
+        $scope.addTransition(3, 0, "l");
 
 
 
@@ -241,7 +259,7 @@ function DFACtrl($scope) {
      * @param {Int} toState        The id from the toState
      * @param {String} transistonName The name of the Transition
      */
-    $scope.addTransitionWithId = function(transitionId,fromState, toState, transitonName) {
+    $scope.addTransitionWithId = function(transitionId, fromState, toState, transitonName) {
         $scope.config.transitions.push({
             id: transitionId,
             fromState: fromState,
@@ -285,7 +303,37 @@ function DFACtrl($scope) {
         }
     }
 
+    /**
+     *  Checks if the automata is playable
+     * @return {Boolean} [description]
+     */
+    $scope.isPlayable = function() {
+        //TODO: validation
+        return true;
+    }
+
     //Simulation;
+
+    $scope.playOrPause = function() {
+        if ($scope.isPlayable) {
+            changeToPlayOrPause();
+            if ($scope.isInPlay) {
+                $scope.simulator.animationPaused = false;
+                $scope.simulator.play();
+            } else {
+                $scope.simulator.pause();
+            }
+
+        } else {
+            $scope.dbug.debugDanger("Kein Automat vorhanden!");
+        }
+
+    }
+
+    $scope.stop = function() {
+        $scope.changeToPlay();
+        $scope.simulator.stop();
+    }
 
     $scope.run = function() {
         $scope.simulator.setInput($scope.inputWord);
@@ -312,6 +360,26 @@ function DFACtrl($scope) {
             $scope.simulator.setInput($scope.inputWord);
             $scope.simulator.reset();
         }
+    }
+    /**
+     * Changes the icon of the playorpause button and the state of isInPlay
+     */
+    function changeToPlayOrPause() {
+        if (!$scope.isInPlay) {
+            //change to Pause
+            d3.select(".glyphicon-play").attr("class", "glyphicon glyphicon-pause");
+
+        } else {
+            //change to Play
+            d3.select(".glyphicon-pause").attr("class", "glyphicon glyphicon-play");
+        }
+        $scope.isInPlay = !$scope.isInPlay;
+
+    }
+
+    $scope.changeToPlay = function(){
+        d3.select(".glyphicon-pause").attr("class", "glyphicon glyphicon-play");
+        $scope.isInPlay = false;
     }
 
     /**
@@ -375,7 +443,7 @@ function DFACtrl($scope) {
                     if (data != undefined) {
 
                         $scope.$apply(function() {
-                                //import the config without states and transitions;
+                            //import the config without states and transitions;
                             $scope.config = JSON.parse(JSON.stringify(data));
                             $scope.graphdesigner.updateConfig($scope.config);
                             $scope.simulator.updateConfig($scope.config);
@@ -383,11 +451,11 @@ function DFACtrl($scope) {
                             $scope.config.transitions = [];
                             //import states
                             _.forEach(data.states, function(state, key) {
-                             $scope.addStateWithId(state.id,state.name,state.x,state.y);
-                            })
-                            //import transistions
+                                    $scope.addStateWithId(state.id, state.name, state.x, state.y);
+                                })
+                                //import transistions
                             _.forEach(data.transitions, function(transition, key) {
-                             $scope.addTransitionWithId(transition.id,transition.fromState,transition.toState, transition.name);
+                                $scope.addTransitionWithId(transition.id, transition.fromState, transition.toState, transition.name);
                             })
 
                         });

@@ -1,7 +1,7 @@
 "use strict";
 
 //Simulator for the simulation of the automata
-var simulationDFA = function(config) {
+var simulationDFA = function(config, $scope) {
     var self = this;
 
     self.config = config;
@@ -9,7 +9,20 @@ var simulationDFA = function(config) {
     self.statusSequence = []; // TODO: Is there a better name for that?
     self.count; // TODO name this more meaningfull
     self.input = ''; // Set this to the empty string so that the simulation can be started
+    self.processedWord = '';
+
+
+    //animation controls
+    self.animationStarted = false;
+    self.animationPaused = false;
     self.inAnimation = false;
+    self.loopAnimation = false;
+    //time between the steps
+    self.animationStepTimeOut = 1500;
+    //Time between loops when the animation restarts
+    self.animationBetweenLoopTimeOut = 1000;
+
+    self.lastVisited = null;
 
 
     self.updateConfig = function(config) {
@@ -28,11 +41,23 @@ var simulationDFA = function(config) {
         self.statusSequence = [self.config.startState];
         self.count = 0;
         self.status = 'stoped';
+        self.processedWord = '';
+        if (self.lastVisited != null) {
+            $scope.graphdesigner.setStateAsUnvisited(self.lastVisited);
+            self.lastVisited = null;
+        }
     }
 
     // Step through the simulation TODO: more comments
     self.step = function() {
-        console.log("Start Step");
+        console.log("Step" + (self.count+1));
+
+
+        //testanimate
+        //
+        if (self.lastVisited != null) {
+            $scope.graphdesigner.setStateAsUnvisited(self.lastVisited);
+        }
         if (self.status == 'stoped') {
             self.reset();
             //include checks if the self.status is in collection
@@ -47,7 +72,7 @@ var simulationDFA = function(config) {
                 self.status = 'not accepted';
                 return;
             }
-            //change this!
+            //get
             return transition.fromState == _.last(self.statusSequence) && transition.name == nextChar;
         });
         //if there is no next transition
@@ -57,6 +82,9 @@ var simulationDFA = function(config) {
         }
 
         var newStatus = nextState[0].toState;
+        $scope.graphdesigner.setStateAsVisited(newStatus);
+        self.lastVisited = newStatus;
+        self.processedWord += nextChar;
         if (self.input.length == self.count) {
             if (_.include(self.config.finalStates, newStatus)) {
                 self.status = 'accepted';
@@ -68,38 +96,71 @@ var simulationDFA = function(config) {
         return nextState;
     }
 
-    function animationHelper() {
-        self.inAnimation = false;
-        console.log("set as false");
-        self.run();
 
-    }
-    // Running the simulation by repeadetly calling step untill status is 'accepted' or
-    // 'not accepted' returning true for 'accepted' and false for 'not accepted'
-    //  TODO: stop simulation and return undefined when endless loops was detected
-    self.run = function() {
-        if((self.status != 'accepted') && (self.status != 'not accepted')) {
-            //wait before step
-
-            if (!self.inAnimation) {
-                self.inAnimation = true;
-                self.step();
-                console.log("test");
-               setTimeout(animationHelper,500);
-               $scope.$apply(function(){
-                  console.log("TEst");
-               });
+    self.play = function() {
+        if (!self.animationPaused) {
+            //start and prepare for the play
+            if (!self.animationStarted) {
+                startAnimation();
+            }
+            //loop through the steps
+            if ((self.status != 'accepted') && (self.status != 'not accepted')) {
+                playAnimation();
             }
 
+            //end the animation & reset it if loop through is activated the animation loop throuh play
+            if (self.status == 'accepted') {
+                endAnimation();
+
+            }
+        }
+    }
+
+    self.pause = function() {
+        self.animationPaused = true;
+    }
+
+    self.stop = function() {
+        self.pause();
+        self.reset();
+
+    }
 
 
+    function startAnimation() {
+        console.log("Animation Started");
+        self.reset();
+        self.animationStarted = true;
+        self.setInput($scope.inputWord);
+        $scope.safeApply(function() {});
+
+    }
+
+    function playAnimation() {
+
+        self.step();
+        $scope.safeApply(function() {});
+        if ((self.status != 'accepted') && (self.status != 'not accepted')) {
+            setTimeout(self.play, self.animationStepTimeOut);
         }
 
-        if (self.status == 'accepted') {
-          console.log("accepted");
-            return true
+    }
+
+    function endAnimation() {
+
+        //start again
+        if (self.loopAnimation) {
+
+            setTimeout(self.play, self.animationBetweenLoopTimeOut);
+            //finish the Animation
+        } else {
+
+            $scope.changeToPlay();
+
         }
-        return false;
+        self.animationStarted = false;
+        $scope.safeApply(function() {});
+
     }
 
     // Undo function to step backwards
