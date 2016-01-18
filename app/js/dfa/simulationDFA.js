@@ -151,11 +151,8 @@ var simulationDFA = function($scope) {
         if (!self.simulationPaused) {
             //start and prepare for the play
             if (!self.simulationStarted) {
-                //The simulation always resets the parameters at the start -> it also sets the inputWord
-                self.reset();
-                self.simulationStarted = true;
-                $scope.graphdesigner.setClassStateAs(_.last(self.statusSequence), true, "visitedState");
-                $scope.safeApply();
+                self.prepareSimulation();
+
             }
 
             //loop through the steps
@@ -184,6 +181,18 @@ var simulationDFA = function($scope) {
         } else {
             return;
         }
+    }
+
+    /**
+     * [prepareSimulation description]
+     * @return {[type]} [description]
+     */
+    self.prepareSimulation = function() {
+        //The simulation always resets the parameters at the start -> it also sets the inputWord
+        self.reset();
+        self.simulationStarted = true;
+        $scope.graphdesigner.setClassStateAs(_.last(self.statusSequence), true, "visitedState");
+        $scope.safeApply();
     }
 
 
@@ -238,6 +247,10 @@ var simulationDFA = function($scope) {
 
     }
 
+    /**
+     * [calcNextStep description]
+     * @return {[type]} [description]
+     */
     self.calcNextStep = function() {
         self.isNextStepCalculated = true;
         self.status = 'step';
@@ -274,12 +287,14 @@ var simulationDFA = function($scope) {
         if (!self.simulationPaused) {
             self.pause();
         }
-        // return if automat is not running
-        if (!(_.include(['step', 'accepted', 'not accepted'], self.status))) {
+        if (!self.simulationStarted) {
+            self.prepareSimulation();
+            self.status = 'step';
+            // return if automat is not running
+        } else if (!(_.include(['step', 'accepted', 'not accepted'], self.status))) {
             //TODO:DEBUG
             return;
-        }
-        if (!_.include(['accepted', 'not accepted'], self.status)) {
+        } else if (!_.include(['accepted', 'not accepted'], self.status)) {
             self.animateNextMove();
         } else {
             $scope.dbug.debugDanger("IS ALREADY LAST STEP");
@@ -298,7 +313,7 @@ var simulationDFA = function($scope) {
         }
         // return if automat is not running
         if (!(_.include(['step', 'accepted', 'not accepted'], self.status))) {
-                      //TODO:DEBUG
+            //TODO:DEBUG
             return;
         }
         self.status = 'step';
