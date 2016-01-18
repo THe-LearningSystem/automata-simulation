@@ -3,8 +3,8 @@
 $stateColor: #CCC;
 $visitedStateColor : #F00;
 $finalStateColor: #FFF;
-$stateColorHover: #600;
-$stateColorSelected: #F00;
+$stateColorHover: #888;
+$stateColorSelected: #444;
 $stateBorderWidth:2;
 $stateBorderColor:#666;
 $stateFontSize:15px;
@@ -53,7 +53,7 @@ $transitionWith:2;
     font-size: $stateFontSize;
 }
 
-.visitedState{
+.visitedState .state-circle{
     fill: $visitedStateColor;
 }
 
@@ -67,6 +67,10 @@ $transitionWith:2;
 .transition-line {
     stroke: $transitiionColor;
     stroke-width: $transitionWith;
+}
+
+.visitedTransition .transition-line{
+    stroke: #F00;
 }
 
 .transition-text {}

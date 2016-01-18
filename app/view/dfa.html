@@ -5,16 +5,16 @@
     <div class="alert alert-warning" role="alert"></div> -->
     <div class="alert alert-danger"role="alert">{{alertDanger}}</div>
 
-    <button type="button" class="btn btn-default btn-play-or-pause" ng-click="playOrPause()" aria-label="Left Align">
+    <button type="button" class="btn btn-default btn-play-or-pause" ng-click="simulator.playOrPause()" aria-label="Left Align">
         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="stop()" aria-label="Left Align">
+    <button type="button" class="btn btn-default" ng-click="simulator.stop()" aria-label="Left Align">
         <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="undo()" aria-label="Left Align">
+    <button type="button" class="btn btn-default" ng-click="simulator.undo()" aria-label="Left Align">
         <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="step()" aria-label="Left Align">
+    <button type="button" class="btn btn-default" ng-click="simulator.step()" aria-label="Left Align">
         <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
     </button>
     <button type="button" class="btn btn-default" aria-label="Left Align">
@@ -27,13 +27,19 @@
         <input type="file" id="hidden-file-upload">
         <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="test()" aria-label="Left Align">
+    <button type="button" class="btn btn-default" ng-click="testData.testDFA()" aria-label="Left Align">
         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
     </button>
 </div>
 <div class="automataWrapper col-md-12">
     <div class="col-md-12 statediagramm">
         <h3>Zustandsdiagramm</h3>
+        <button type="button" class="btn btn-default" ng-click="graphdesigner.addState()" aria-label="Left Align">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default" ng-click="graphdesigner.addTransition()" aria-label="Left Align">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
         <svg id="diagramm" class="stateDiagrammSVG"></svg>
     </div>
     <div class="col-md-12">
@@ -70,6 +76,7 @@
     <p>count {{simulator.count}}</p>
     <p>InputWord: {{inputWord}}</p>
     <p>Processed Word: {{simulator.processedWord}}</p>
+    <p>Simulator: {{simulator}}</p>
 
     <p>Config :{{config}}</p>
 </div>

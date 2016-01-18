@@ -11,10 +11,10 @@
   cursor: context-menu; }
 
 .state:hover .state-circle {
-  fill: #600; }
+  fill: #888; }
 
 .state:active .state-circle {
-  fill: #F00; }
+  fill: #444; }
 
 .state-circle {
   fill: #CCC;
@@ -29,7 +29,7 @@
 .state-text {
   font-size: 15px; }
 
-.visitedState {
+.visitedState .state-circle {
   fill: #F00; }
 
 .transition {
@@ -38,6 +38,9 @@
 .transition-line {
   stroke: #000;
   stroke-width: 2; }
+
+.visitedTransition .transition-line {
+  stroke: #F00; }
 
 #hidden-file-upload {
   display: none; }
