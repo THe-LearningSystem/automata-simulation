@@ -6,6 +6,8 @@ angular
 
 
 function DFACtrl($scope) {
+    //for debug puposes better way for acessing in console?
+    window.debugScope = $scope;
     //Default Values
     $scope.default = {};
     //the default prefix for autonaming for example S0,S1,... after the prefix it saves the id
@@ -82,7 +84,11 @@ function DFACtrl($scope) {
     }
 
     $scope.addStateWithPresets = function(x, y) {
+        if($scope.config.countStateId == 0){
+            $scope.changeStartState(0);
+        }
         $scope.addState($scope.default.statePrefix + $scope.config.countStateId, x, y);
+
     }
 
     /**
@@ -104,11 +110,12 @@ function DFACtrl($scope) {
      */
     $scope.changeStartState = function(stateId) {
         //if there was no startState
-        if(!$scope.config.startState){
+        if ($scope.config.startState == null) {
             $scope.config.startState = stateId;
-        }else{
+        } else {
             //remove oldStartState from graphdesigner,..
-            
+            $scope.graphdesigner.changeStartState(stateId);
+
             $scope.config.startState = stateId;
         }
 

@@ -133,12 +133,33 @@ var graphdesignerDFA = function($scope, svgSelector) {
     }
 
     /**
+     * [changeStartState description]
+     * @param  {[type]} stateId [description]
+     * @return {[type]}         [description]
+     */
+    self.changeStartState = function(stateId){
+        //TODO:
+        //remove old startState
+        var state = $scope.getStateById($scope.config.startState);
+        state.objReference.select(".start-line").remove();
+
+        state = $scope.getStateById(stateId);
+        state.objReference.append("line")
+                .attr("class", "transition-line start-line")
+                .attr("x1", 0)
+                .attr("y1", 0-75)
+                .attr("x2", 0)
+                .attr("y2", 0-self.settings.stateRadius)
+                .attr("marker-end", "url(#marker-end-arrow)");
+    }
+
+    /**
      * Draws a State 
      * @param  {Int} id The arrayid of the State
      * @return {Reference}    Returns the reference of the group object
      */
     self.drawState = function(id) {
-        var state = $scope.config.states[id];
+        var state = $scope.getStateById(id);
         var group = self.svgStates.append("g")
             .attr("transform", "translate(" + state.x + " " + state.y + ")")
             .attr("class", "state " + "state-" + state.id)
@@ -147,6 +168,17 @@ var graphdesignerDFA = function($scope, svgSelector) {
             var circleSelection = group.append("circle")
                 .attr("class", "final-State")
                 .attr("r", self.settings.finalStateRadius);
+        }
+        if($scope.config.startState == id){
+            console.log("ASD");
+            //draw somehing for the startstate
+            var startStateLine = group.append("line")
+                .attr("class", "transition-line start-line")
+                .attr("x1", 0)
+                .attr("y1", 0-75)
+                .attr("x2", 0)
+                .attr("y2", 0-self.settings.stateRadius)
+                .attr("marker-end", "url(#marker-end-arrow)");
         }
 
         var circleSelection = group.append("circle")
