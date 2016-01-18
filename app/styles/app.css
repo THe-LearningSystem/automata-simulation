@@ -10,9 +10,8 @@
 .state {
   cursor: context-menu; }
 
-.state:hover {
-  fill: #000;
-  fill-opacity: 0.1; }
+.state:hover .state-circle {
+  fill: #888; }
 
 .state:active .state-circle {
   fill: #444; }
@@ -20,8 +19,7 @@
 .state-circle {
   fill: #CCC;
   stroke: #666;
-  stroke-width: 2;
-  fill-opacity: 1; }
+  stroke-width: 2; }
 
 .final-State {
   fill: #FFF;

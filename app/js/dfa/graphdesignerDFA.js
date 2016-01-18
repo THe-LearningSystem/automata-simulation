@@ -38,22 +38,23 @@ var graphdesignerDFA = function($scope, svgSelector) {
     //TODO: Bug when moving all the objects.
     //u can move the whole diagramm and zome in and out
     self.svg = self.svgOuter.append("g").attr("id", "svg-items")
-    //SO MUCH PROBLEMS COMMENTING UNTIL BETTER SOLUTION
-/*
-    .call(d3.behavior.zoom().on("zoom", function() {
-        
-        
-            if (!self.dragInitiated && !self.rightClick) {
-                self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
-                $scope.config.diagrammScale = d3.event.scale;
-                $scope.config.diagrammX = d3.event.translate[0];
-                $scope.config.diagrammY = d3.event.translate[1];
-                $scope.safeApply();
+        //SO MUCH PROBLEMS COMMENTING UNTIL BETTER SOLUTION
+        /*
+            .call(d3.behavior.zoom().on("zoom", function() {
+                
+                
+                    if (!self.dragInitiated && !self.rightClick) {
+                        self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+                        $scope.config.diagrammScale = d3.event.scale;
+                        $scope.config.diagrammX = d3.event.translate[0];
+                        $scope.config.diagrammY = d3.event.translate[1];
+                        $scope.safeApply();
 
 
-            }
-            
-        }))*/;
+                    }
+                    
+                }))*/
+    ;
 
     //first draw the transitions -> nodes are in front of them if they overlap
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");

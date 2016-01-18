@@ -1,9 +1,9 @@
 @import 'bootstrap_variables';
 //state Settings
 $stateColor: #CCC;
-$visitedStateColor : #F00;
+$visitedStateColor: #F00;
 $finalStateColor: #FFF;
-$stateColorHover: #000;
+$stateColorHover: #888;
 $stateColorSelected: #444;
 $stateBorderWidth:2;
 $stateBorderColor:#666;
@@ -17,6 +17,7 @@ $transitionWith:2;
 .automataWrapper {
     border: 1px solid #000;
 }
+
 .stateDiagrammSVG {
     border: 1px solid #000;
     width: 100%;
@@ -29,9 +30,8 @@ $transitionWith:2;
     cursor: context-menu;
 }
 
-.state:hover {
+.state:hover .state-circle {
     fill: $stateColorHover;
-    fill-opacity:0.1;
 }
 
 .state:active .state-circle {
@@ -42,7 +42,6 @@ $transitionWith:2;
     fill: $stateColor;
     stroke: $stateBorderColor;
     stroke-width: $stateBorderWidth;
-    fill-opacity:1;
 }
 
 .final-State {
@@ -55,11 +54,11 @@ $transitionWith:2;
     font-size: $stateFontSize;
 }
 
-.visitedState .state-circle{
+.visitedState .state-circle {
     fill: $visitedStateColor;
 }
 
-.selectedForTransition .state-circle{
+.selectedForTransition .state-circle {
     fill: $visitedStateColor;
 }
 
@@ -75,13 +74,12 @@ $transitionWith:2;
     stroke-width: $transitionWith;
 }
 
-.visitedTransition .transition-line{
+.visitedTransition .transition-line {
     stroke: #F00;
 }
 
 .transition-text {}
 
-
-#hidden-file-upload{
+#hidden-file-upload {
     display: none;
 }
