@@ -84,10 +84,11 @@ function DFACtrl($scope) {
     }
 
     $scope.addStateWithPresets = function(x, y) {
-        if($scope.config.countStateId == 0){
+        $scope.addState($scope.default.statePrefix + $scope.config.countStateId, x, y);
+        //if u created a state then make the first state as startState ( default)
+        if ($scope.config.countStateId == 1) {
             $scope.changeStartState(0);
         }
-        $scope.addState($scope.default.statePrefix + $scope.config.countStateId, x, y);
 
     }
 
@@ -109,15 +110,10 @@ function DFACtrl($scope) {
      * @return {[type]} [description]
      */
     $scope.changeStartState = function(stateId) {
-        //if there was no startState
-        if ($scope.config.startState == null) {
-            $scope.config.startState = stateId;
-        } else {
-            //remove oldStartState from graphdesigner,..
-            $scope.graphdesigner.changeStartState(stateId);
+        //change on graphdesigner and others
+        $scope.graphdesigner.changeStartState(stateId);
+        $scope.config.startState = stateId;
 
-            $scope.config.startState = stateId;
-        }
 
     }
 
@@ -136,6 +132,8 @@ function DFACtrl($scope) {
      * @return {[type]} [description]
      */
     $scope.removeFinalState = function(stateId) {
+        //remove from graphdesigner
+
 
 
     }

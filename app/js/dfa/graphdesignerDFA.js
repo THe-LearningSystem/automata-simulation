@@ -137,20 +137,27 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param  {[type]} stateId [description]
      * @return {[type]}         [description]
      */
-    self.changeStartState = function(stateId){
+    self.changeStartState = function(stateId) {
         //TODO:
         //remove old startState
-        var state = $scope.getStateById($scope.config.startState);
-        state.objReference.select(".start-line").remove();
+        if ($scope.config.startState != null) {
+            var state = $scope.getStateById($scope.config.startState);
+            state.objReference.select(".start-line").remove();
+        }
 
-        state = $scope.getStateById(stateId);
-        state.objReference.append("line")
-                .attr("class", "transition-line start-line")
-                .attr("x1", 0)
-                .attr("y1", 0-75)
-                .attr("x2", 0)
-                .attr("y2", 0-self.settings.stateRadius)
-                .attr("marker-end", "url(#marker-end-arrow)");
+        console.log("test");
+        var otherState = $scope.getStateById(stateId);
+        otherState.objReference.append("line")
+            .attr("class", "transition-line start-line")
+            .attr("x1", 0)
+            .attr("y1", 0 - 75)
+            .attr("x2", 0)
+            .attr("y2", 0 - self.settings.stateRadius)
+            .attr("marker-end", "url(#marker-end-arrow)");
+    }
+
+    self.removeFinalState = function(stateId) {
+
     }
 
     /**
@@ -168,17 +175,6 @@ var graphdesignerDFA = function($scope, svgSelector) {
             var circleSelection = group.append("circle")
                 .attr("class", "final-State")
                 .attr("r", self.settings.finalStateRadius);
-        }
-        if($scope.config.startState == id){
-            console.log("ASD");
-            //draw somehing for the startstate
-            var startStateLine = group.append("line")
-                .attr("class", "transition-line start-line")
-                .attr("x1", 0)
-                .attr("y1", 0-75)
-                .attr("x2", 0)
-                .attr("y2", 0-self.settings.stateRadius)
-                .attr("marker-end", "url(#marker-end-arrow)");
         }
 
         var circleSelection = group.append("circle")
