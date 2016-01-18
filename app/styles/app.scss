@@ -3,7 +3,7 @@
 $stateColor: #CCC;
 $visitedStateColor : #F00;
 $finalStateColor: #FFF;
-$stateColorHover: #888;
+$stateColorHover: #000;
 $stateColorSelected: #444;
 $stateBorderWidth:2;
 $stateBorderColor:#666;
@@ -29,8 +29,9 @@ $transitionWith:2;
     cursor: context-menu;
 }
 
-.state:hover .state-circle {
+.state:hover {
     fill: $stateColorHover;
+    fill-opacity:0.1;
 }
 
 .state:active .state-circle {
@@ -41,6 +42,7 @@ $transitionWith:2;
     fill: $stateColor;
     stroke: $stateBorderColor;
     stroke-width: $stateBorderWidth;
+    fill-opacity:1;
 }
 
 .final-State {
@@ -54,6 +56,10 @@ $transitionWith:2;
 }
 
 .visitedState .state-circle{
+    fill: $visitedStateColor;
+}
+
+.selectedForTransition .state-circle{
     fill: $visitedStateColor;
 }
 

@@ -11,10 +11,10 @@
     <button type="button" class="btn btn-default" ng-click="simulator.stop()" aria-label="Left Align">
         <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="simulator.undo()" aria-label="Left Align">
+    <button type="button" class="btn btn-default" ng-click="simulator.stepBackward()" aria-label="Left Align">
         <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="simulator.step()" aria-label="Left Align">
+    <button type="button" class="btn btn-default" ng-click="simulator.stepForward()" aria-label="Left Align">
         <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
     </button>
     <button type="button" class="btn btn-default" aria-label="Left Align">
@@ -73,7 +73,7 @@
     <h3>Debugging</h3>
     <p>Status:{{simulator.status}}</p>
     <p>Sequence:{{simulator.statusSequence}}</p>
-    <p>count {{simulator.count}}</p>
+    <p>count {{simulator.madeSteps}}</p>
     <p>InputWord: {{inputWord}}</p>
     <p>Processed Word: {{simulator.processedWord}}</p>
     <p>Simulator: {{simulator}}</p>

@@ -16,7 +16,6 @@ var testData = function($scope) {
         $scope.config.startState = 0;
         $scope.addTransition(0, 1, "a");
         $scope.addTransition(1, 2, "b");
-        $scope.addTransition(2, 1, "b");
         $scope.addTransition(2, 3, "c");
         $scope.addTransition(3, 0, "l");
 

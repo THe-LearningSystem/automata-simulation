@@ -103,6 +103,14 @@ function DFACtrl($scope) {
      * @return {[type]} [description]
      */
     $scope.changeStartState = function(stateId) {
+        //if there was no startState
+        if(!$scope.config.startState){
+            $scope.config.startState = stateId;
+        }else{
+            //remove oldStartState from graphdesigner,..
+            
+            $scope.config.startState = stateId;
+        }
 
     }
 
@@ -110,6 +118,9 @@ function DFACtrl($scope) {
      * Add a state as final State
      */
     $scope.addFinalState = function(stateId) {
+        //wenn noch nicht vorhanden
+        //
+        $scope.config.finalStates.push(stateId);
 
     }
 
@@ -118,6 +129,7 @@ function DFACtrl($scope) {
      * @return {[type]} [description]
      */
     $scope.removeFinalState = function(stateId) {
+
 
     }
 

@@ -4,7 +4,7 @@ var dbug = function($scope) {
 
     self.debugDanger = function(Msg) {
     	$scope.alertDanger = Msg;
-    	console.log("ASD");
+    	console.log(Msg);
 
     }
 }

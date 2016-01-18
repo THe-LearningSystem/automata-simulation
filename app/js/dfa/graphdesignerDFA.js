@@ -37,18 +37,23 @@ var graphdesignerDFA = function($scope, svgSelector) {
 
     //TODO: Bug when moving all the objects.
     //u can move the whole diagramm and zome in and out
-    self.svg = self.svgOuter.call(d3.behavior.zoom().on("zoom", function() {
-            if (!self.settings.selected) {
+    self.svg = self.svgOuter.append("g").attr("id", "svg-items")
+    //SO MUCH PROBLEMS COMMENTING UNTIL BETTER SOLUTION
+/*
+    .call(d3.behavior.zoom().on("zoom", function() {
+        
+        
+            if (!self.dragInitiated && !self.rightClick) {
                 self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
                 $scope.config.diagrammScale = d3.event.scale;
-                $scope.config.diagrammX = d3.event.x;
-                $scope.config.diagrammY = d3.event.y;
+                $scope.config.diagrammX = d3.event.translate[0];
+                $scope.config.diagrammY = d3.event.translate[1];
                 $scope.safeApply();
 
 
             }
-        }))
-        .append("g").attr("id", "svg-items");
+            
+        }))*/;
 
     //first draw the transitions -> nodes are in front of them if they overlap
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");
@@ -69,7 +74,9 @@ var graphdesignerDFA = function($scope, svgSelector) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
 
 
-
+    /**
+     * AddState function for the icon
+     */
     self.addState = function() {
         self.resetAdds();
         self.inAddState = true;
@@ -81,6 +88,9 @@ var graphdesignerDFA = function($scope, svgSelector) {
         });
     }
 
+    /**
+     * Addtransition function for the icon
+     */
     self.addTransition = function() {
         self.resetAdds();
         self.inAddTransition = true;
@@ -90,6 +100,10 @@ var graphdesignerDFA = function($scope, svgSelector) {
 
     }
 
+    /**
+     *  Ressett addclicklistener ( addTransition and addstate)
+     * @return {[type]} [description]
+     */
     self.resetAdds = function() {
         self.svgOuter.on("click", null);
         self.inAddTransition = false;
@@ -148,17 +162,31 @@ var graphdesignerDFA = function($scope, svgSelector) {
         return group;
     }
 
-    //for animation
-    self.setStateAs = function(stateId, state) {
+    /**
+     * Adds or remove a class to a state ( only the svg state)
+     * @param {Int} stateId 
+     * @param {Boolean} state   
+     * @param {String} className  
+     */
+    self.setClassStateAs = function(stateId, state, className) {
         var objReference = $scope.getStateById(stateId).objReference;
-        objReference.classed("visitedState", state);
+        objReference.classed(className, state);
     }
 
+    /**
+     * [setTransitionAs description]
+     * @param {[type]} transitionId [description]
+     * @param {[type]} state        [description]
+     */
     self.setTransitionAs = function(transitionId, state) {
         var objReference = $scope.getTransitionById(transitionId).objReference;
         objReference.classed("visitedTransition", state);
     }
 
+    /**
+     * [stateMenu description]
+     * @return {[type]} [description]
+     */
     self.stateMenu = function() {
         //prevent the normal right click menu
         d3.event.preventDefault();
@@ -169,42 +197,65 @@ var graphdesignerDFA = function($scope, svgSelector) {
     self.dragState = d3.behavior.drag()
 
     .on("dragstart", function() {
-            self.settings.selected = true;
-            if (self.inAddTransition) {
-                if (!self.selectedState) {
-                    self.selectedState = d3.select(this);
-                } else {
-                    $scope.addTransition(self.selectedState.attr("object-id"), d3.select(this).attr("object-id"), "c");
-                    self.selectedState = null;
-                    self.resetAdds();
+            if (d3.event.sourceEvent.which == 1) {
+                self.dragInitiated = true;
+                //if we are in a addTransition action
+                if (self.inAddTransition) {
+                    //if there is no selectedState
+                    if (!self.selectedState) {
+                        self.selectedState = d3.select(this);
+                        self.setClassStateAs(self.selectedState.attr("object-id"), true, "selectedForTransition");
+                    } else {
+                        $scope.addTransition(self.selectedState.attr("object-id"), d3.select(this).attr("object-id"), "c");
+                        self.setClassStateAs(self.selectedState.attr("object-id"), false, "selectedForTransition");
+                        self.selectedState = null;
+                        self.resetAdds();
 
+
+                    }
                 }
+            } else {
+                //open context menu
+                self.rightClick = true;
             }
         })
         .on("drag", function() {
-            var x = d3.event.x;
-            var y = d3.event.y;
-            //update the shown node
-            d3.select(this)
-                .attr("transform", "translate(" + x + " " + y + ")");
-            //update the node in the array
+            //cant move when inAddTransition action
+            if (self.dragInitiated && !self.inAddTransition) {
+                var x = d3.event.x;
+                var y = d3.event.y;
+                //update the shown node
+                d3.select(this)
+                    .attr("transform", "translate(" + x + " " + y + ")");
+                //update the node in the array
 
-            var stateId = d3.select(this).attr("object-id");
-            var tmpState = $scope.getStateById(stateId);
-            //update the state coordinates in the dataobject
-            tmpState.x = x;
-            tmpState.y = y;
+                var stateId = d3.select(this).attr("object-id");
+                var tmpState = $scope.getStateById(stateId);
+                //update the state coordinates in the dataobject
+                tmpState.x = x;
+                tmpState.y = y;
 
-            //update the transitions after dragging a node
-            self.updateTransitionsAfterStateDrag(d3.select(this).attr("object-id"));
+                //update the transitions after dragging a node
+                self.updateTransitionsAfterStateDrag(d3.select(this).attr("object-id"));
+            }
 
         })
         .on("dragend", function() {
-            self.settings.selected = false;
-            //Apply the canges after the dragend ->optimisation
-            $scope.safeApply();
+            if (self.dragInitiated) {
+                self.dragInitiated = false;
+                //Apply the canges after the dragend ->optimisation
+                $scope.safeApply();
+            } else if (self.rightClick) {
+                self.rightClick = false;
+            }
+
         });
 
+    /**
+     * [getTransitionCoordinates description]
+     * @param  {[type]} transitionId [description]
+     * @return {[type]}              [description]
+     */
     self.getTransitionCoordinates = function(transitionId) {
         var transition = $scope.getTransitionById(transitionId);
         var fromState = $scope.getStateById(transition.fromState);
@@ -292,6 +343,10 @@ var graphdesignerDFA = function($scope, svgSelector) {
         }
     }
 
+    /**
+     * [bezierLine description]
+     * @type {[type]}
+     */
     self.bezierLine = d3.svg.line()
         .x(function(d) {
             return d[0];
@@ -301,6 +356,12 @@ var graphdesignerDFA = function($scope, svgSelector) {
         })
         .interpolate("basis");
 
+    /**
+     * [selfTransition description]
+     * @param  {[type]} x [description]
+     * @param  {[type]} y [description]
+     * @return {[type]}   [description]
+     */
     self.selfTransition = function(x, y) {
         return self.bezierLine([
             [x, y],

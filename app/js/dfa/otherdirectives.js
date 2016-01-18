@@ -4,7 +4,7 @@
      * Exports the automaton
      * @return {File} Returns a json file
      */
-    $scope.export = function() {
+    function export = function() {
         var exportData = {};
         exportData = $scope.config;
         exportData.transitions = getTransitions();
