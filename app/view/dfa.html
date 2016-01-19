@@ -30,6 +30,9 @@
         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
     </button>
 </div>
+
+
+
 <div class="automataWrapper col-md-12">
     <div class="col-md-12 statediagramm">
         <h3>Zustandsdiagramm</h3>
@@ -58,7 +61,10 @@
             <input ng-model="inputWord" />
         </p>
     </div>
-    <!-- <div class="col-md-6 stateTable">
+    <div class="col-md-6 stateTable">
+
+
+   <div class="col-md-6 stateTable">
         <h3>Zustandstabelle</h3>
         <div automaton="automaton">
             <button type="button" class="btn btn-default" ng-click="tableplus()" aria-label="Left Align">
@@ -66,18 +72,29 @@
             </button>
         </div>
     </div>
+
+
     <div class="col-md-6 stateNoName">
         <h3>Zustandsüberführungsfunktion</h3>
-        <p>&Sigma;={
-            <input ng-model="statesigma" />}</p>
-        <p>S={
-            <input ng-model="config.startState" />}</p>
-        <p>&delta;={
-            <input ng-model="statedelta" />}</p>
-        <p>F={
-            <input ng-model="config.finalStates" />}</p>
-    </div>-->
+        <p>&Sigma; = {
+            <input ng-model="statetransitionfunction.functionData.transitions" />}
+        </p>
+        <p>S = {
+            <input ng-model="statetransitionfunction.functionData.states" />}
+        </p>
+        <p>&delta; = {
+            <textarea class="statetransitionfunction" rows = "1" ng-model="statetransitionfunction.functionData.statetransitionfunction"> </textarea>}
+        </p>
+        <p>S<sub>0</sub>= {
+            <input ng-model="statetransitionfunction.functionData.startState" />}
+        </p>
+        <p>F = {
+            <input ng-model="statetransitionfunction.functionData.finalStates" />}
+        </p>
+    </div>
 </div>
+
+
 <div class="col-md-12">
     <!-- <h3>Zustandsüberführungsfunktion</h3>-->
     <h3>Debugging</h3>

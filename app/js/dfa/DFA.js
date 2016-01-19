@@ -49,9 +49,12 @@ function DFACtrl($scope) {
     //the simulator controlling the simulation
     $scope.simulator = new simulationDFA($scope);
     //the graphdesigner controlling the svg diagramm
+
     $scope.graphdesigner = new graphdesignerDFA($scope, "#diagramm");
     //for the testdata
     $scope.testData = new testData($scope);
+    //the statetransitionfunction controlling the statetransitionfunction-table
+    $scope.statetransitionfunction = new statetransitionfunctionDFA($scope);
 
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
     //fix for $apply already in progress
@@ -65,6 +68,7 @@ function DFACtrl($scope) {
             this.$apply(fn);
         }
     };
+
 
 
     //STATE FUNCTIONS START
@@ -107,6 +111,9 @@ function DFACtrl($scope) {
         var id = $scope.config.countStateId++;
 
         $scope.addStateWithId(id, stateName, x, y);
+
+        //makes an update of the Statetransitionsfunction and its contents
+        $scope.statetransitionfunction.update();
     }
 
     /**
@@ -118,8 +125,6 @@ function DFACtrl($scope) {
         //change on graphdesigner and others
         $scope.graphdesigner.changeStartState(stateId);
         $scope.config.startState = stateId;
-
-
     }
 
     /**
@@ -138,9 +143,18 @@ function DFACtrl($scope) {
      */
     $scope.removeFinalState = function(stateId) {
         //remove from graphdesigner
-
-
-
+        $scope.config.states.push({
+            id: id,
+            name: stateName,
+            x: x,
+            y: y
+        });
+        //draw the State after the State is added
+        $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(id));
+        //the listener is always called after a new node was created
+        $scope.graphdesigner.callStateListener();
+        //makes an update of the Statetransitionsfunction and its contents
+        $scope.statetransitionfunction.update();
     }
 
     /**
@@ -272,8 +286,11 @@ function DFACtrl($scope) {
         });
         //drawTransistion
         $scope.graphdesigner.drawTransition(id);
+        //makes an update of the Statetransitionsfunction and its contents
+        $scope.statetransitionfunction.update();
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
+        
     }
 
     /**
