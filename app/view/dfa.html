@@ -3,8 +3,7 @@
     <!--   <div class="alert alert-success" role="alert"></div>
     <div class="alert alert-info" role="alert"></div>
     <div class="alert alert-warning" role="alert"></div> -->
-    <div class="alert alert-danger"role="alert">{{alertDanger}}</div>
-
+    <div class="alert alert-danger" role="alert">{{alertDanger}}</div>
     <button type="button" class="btn btn-default btn-play-or-pause" ng-click="simulator.playOrPause()" aria-label="Left Align">
         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
     </button>
@@ -41,6 +40,17 @@
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         </button>
         <svg id="diagramm" class="stateDiagrammSVG"></svg>
+        <div class="pop-up-background">
+            <div id="stateContext">
+                <div class="pop-up-content">
+                    <div class="close">CLOSE</div>
+                    <div class="pop-up-main-content">
+                        <div id="stateContextContent" class="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-12">
         <p>
@@ -48,7 +58,7 @@
             <input ng-model="inputWord" />
         </p>
     </div>
-   <!-- <div class="col-md-6 stateTable">
+    <!-- <div class="col-md-6 stateTable">
         <h3>Zustandstabelle</h3>
         <div automaton="automaton">
             <button type="button" class="btn btn-default" ng-click="tableplus()" aria-label="Left Align">
@@ -77,6 +87,5 @@
     <p>InputWord: {{inputWord}}</p>
     <p>Processed Word: {{simulator.processedWord}}</p>
     <p>Simulator: {{simulator}}</p>
-
     <p>Config :{{config}}</p>
 </div>

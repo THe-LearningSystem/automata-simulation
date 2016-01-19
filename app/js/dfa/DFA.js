@@ -83,6 +83,11 @@ function DFACtrl($scope) {
         return tmp;
     }
 
+    /**
+     * [addStateWithPresets description]
+     * @param {[type]} x [description]
+     * @param {[type]} y [description]
+     */
     $scope.addStateWithPresets = function(x, y) {
         $scope.addState($scope.default.statePrefix + $scope.config.countStateId, x, y);
         //if u created a state then make the first state as startState ( default)
@@ -122,7 +127,7 @@ function DFACtrl($scope) {
      */
     $scope.addFinalState = function(stateId) {
         //wenn noch nicht vorhanden
-        //
+        
         $scope.config.finalStates.push(stateId);
 
     }

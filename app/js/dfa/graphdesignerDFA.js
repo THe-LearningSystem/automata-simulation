@@ -59,6 +59,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
     //first draw the transitions -> nodes are in front of them if they overlap
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");
     self.svgStates = self.svg.append("g").attr("id", "states");
+    self.stateContext = d3.select("#stateContext");
 
 
     //DEFS
@@ -145,7 +146,6 @@ var graphdesignerDFA = function($scope, svgSelector) {
             state.objReference.select(".start-line").remove();
         }
 
-        console.log("test");
         var otherState = $scope.getStateById(stateId);
         otherState.objReference.append("line")
             .attr("class", "transition-line start-line")
@@ -246,6 +246,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
             } else {
                 //open context menu
                 self.rightClick = true;
+                self.stateContext.style("visibility","visible");
+                $("div#stateContext").show();
             }
         })
         .on("drag", function() {
@@ -441,4 +443,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
     self.callStateListener = function eventListener() {
         d3.selectAll(".state").call(self.dragState);
     }
+
+    $("div.close").click(function(){
+    console.log("ASD");
+});
 }
