@@ -6,6 +6,15 @@ angular
 
 
 function DFACtrl($scope) {
+    //for debug puposes better way for acessing in console?
+    window.debugScope = $scope;
+    //Default Values
+    $scope.default = {};
+    //the default prefix for autonaming for example S0,S1,... after the prefix it saves the id
+    $scope.default.statePrefix = 'S';
+
+    //AUTOMATA CONFIG START
+
     //TODO: Better name for the config of the automaton
     $scope.config = {};
     //Settings for the diagramm
@@ -24,19 +33,25 @@ function DFACtrl($scope) {
     $scope.config.finalStates = [];
     //the transitions are saved like{fromState:stateId, toState:stateId, name:"transitionName"}
     $scope.config.transitions = [];
+
+    //AUTOMATA CONFIG END
+
     //the name of the inputWord
     $scope.inputWord = '';
 
-    //Saves if the icons show Play and if its false it shows pause
-    $scope.isInPlay = false;
+
     //alerts
     $scope.alertDanger = 'NO ALERT';
 
+
+    //Create a dbug objects for better dbugs(info, alert, danger)
     $scope.dbug = new dbug($scope);
     //the simulator controlling the simulation
-    $scope.simulator = new simulationDFA($scope.config, $scope);
+    $scope.simulator = new simulationDFA($scope);
     //the graphdesigner controlling the svg diagramm
-    $scope.graphdesigner = new graphdesignerDFA($scope.config, "#diagramm", $scope);
+    $scope.graphdesigner = new graphdesignerDFA($scope, "#diagramm");
+    //for the testdata
+    $scope.testData = new testData($scope);
 
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
     //fix for $apply already in progress
@@ -51,44 +66,8 @@ function DFACtrl($scope) {
         }
     };
 
-    //Creates Test Data
-    $scope.test = function() {
-        $scope.config.finalStates.push(3);
-        $scope.inputWord = "abbbclabc";
-        $scope.addState("SO", 50, 50);
-        $scope.addState("S1", 50, 200);
-        $scope.addState("S2", 200, 200);
-        $scope.addState("S3", 200, 50);
 
-
-        $scope.config.startState = 0;
-        $scope.addTransition(0, 1, "a");
-        $scope.addTransition(1, 2, "b");
-        //TODO: transistion referencin on themself-> graphdesigner
-       // $scope.addTransition(1, 1, "b");
-        $scope.addTransition(2, 1, "b");
-        $scope.addTransition(2, 3, "c");
-        $scope.addTransition(3, 0, "l");
-
-
-
-
-
-        //console.log($scope.hasStateTransitions(100));
-        //console.log($scope.existStateWithName("Yeah"));
-        //console.log($scope.getArrayStateIdByStateId(100));
-        //console.log($scope.getStateById(100));
-        //console.log($scope.config.states);
-        //$scope.removeState(1);
-        // console.log($scope.config.states);
-        //  console.log($scope.getStateById(3));
-
-        //$scope.renameState(1, "Yeah");
-        ///  console.log($scope.getStateById(3));
-        // console.log($scope.config.transitions);
-        // $scope.removeTransition(5, 2, "b");
-        // console.log($scope.config.transitions);
-    }
+    //STATE FUNCTIONS START
 
     /**
      * Checks if a state exist with the given name
@@ -105,6 +84,20 @@ function DFACtrl($scope) {
     }
 
     /**
+     * [addStateWithPresets description]
+     * @param {[type]} x [description]
+     * @param {[type]} y [description]
+     */
+    $scope.addStateWithPresets = function(x, y) {
+        $scope.addState($scope.default.statePrefix + $scope.config.countStateId, x, y);
+        //if u created a state then make the first state as startState ( default)
+        if ($scope.config.countStateId == 1) {
+            $scope.changeStartState(0);
+        }
+
+    }
+
+    /**
      * Adds a state at the end of the states array
      * @param {String} stateName 
      * @param {Float} x         
@@ -113,16 +106,41 @@ function DFACtrl($scope) {
     $scope.addState = function(stateName, x, y) {
         var id = $scope.config.countStateId++;
 
-        $scope.config.states.push({
-            id: id,
-            name: stateName,
-            x: x,
-            y: y
-        });
-        //draw the State after the State is added
-        $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(id));
-        //the listener is always called after a new node was created
-        $scope.graphdesigner.callStateListener();
+        $scope.addStateWithId(id, stateName, x, y);
+    }
+
+    /**
+     * Changes the start state to the given state id
+     * 
+     * @return {[type]} [description]
+     */
+    $scope.changeStartState = function(stateId) {
+        //change on graphdesigner and others
+        $scope.graphdesigner.changeStartState(stateId);
+        $scope.config.startState = stateId;
+
+
+    }
+
+    /**
+     * Add a state as final State
+     */
+    $scope.addFinalState = function(stateId) {
+        //wenn noch nicht vorhanden
+        
+        $scope.config.finalStates.push(stateId);
+
+    }
+
+    /**
+     * Remove a state from the final states
+     * @return {[type]} [description]
+     */
+    $scope.removeFinalState = function(stateId) {
+        //remove from graphdesigner
+
+
+
     }
 
     /**
@@ -217,6 +235,9 @@ function DFACtrl($scope) {
         return tmp;
     }
 
+
+    //TRANSITIONS
+
     /**
      * Checks if a transition with the params already exist
      * @param  {Int}  fromState      Id of the fromstate
@@ -251,6 +272,8 @@ function DFACtrl($scope) {
         });
         //drawTransistion
         $scope.graphdesigner.drawTransition(id);
+        //fix changes wont update after addTransisiton from the graphdesigner
+        $scope.safeApply();
     }
 
     /**
@@ -271,16 +294,26 @@ function DFACtrl($scope) {
     }
 
     /**
-     * Get the array index from the transition with the given transistionId
-     * @param  {Int} transistionId 
+     * Get the array index from the transition with the given transitionId
+     * @param  {Int} transitionId 
      * @return {Int}         Returns the index and -1 when state with transistionId not found
      */
-    $scope.getArrayTransitionIdByTransitionId = function(transistionId) {
+    $scope.getArrayTransitionIdByTransitionId = function(transitionId) {
         return _.findIndex($scope.config.transitions, function(transition) {
-            if (transition.id == transistionId) {
+            if (transition.id == transitionId) {
                 return transition;
             }
         });
+    }
+
+    /**
+     * Returns the transition of the given transitionId
+     * @param  {Int} transitionId 
+     * @return {ObjectReference}         Returns the objectreference of the state
+     */
+    $scope.getTransitionById = function(transitionId) {
+
+        return $scope.config.transitions[$scope.getArrayTransitionIdByTransitionId(transitionId)];
     }
 
     /**
@@ -302,182 +335,4 @@ function DFACtrl($scope) {
             console.log("Transistion not found");
         }
     }
-
-    /**
-     *  Checks if the automata is playable
-     * @return {Boolean} [description]
-     */
-    $scope.isPlayable = function() {
-        //TODO: validation
-        return true;
-    }
-
-    //Simulation;
-
-    $scope.playOrPause = function() {
-        if ($scope.isPlayable) {
-            changeToPlayOrPause();
-            if ($scope.isInPlay) {
-                $scope.simulator.animationPaused = false;
-                $scope.simulator.play();
-            } else {
-                $scope.simulator.pause();
-            }
-
-        } else {
-            $scope.dbug.debugDanger("Kein Automat vorhanden!");
-        }
-
-    }
-
-    $scope.stop = function() {
-        $scope.changeToPlay();
-        $scope.simulator.stop();
-    }
-
-    $scope.run = function() {
-        $scope.simulator.setInput($scope.inputWord);
-        $scope.simulator.run();
-    }
-
-    $scope.step = function() {
-        validateInput();
-        $scope.simulator.step();
-    }
-
-    $scope.undo = function() {
-        validateInput();
-        $scope.simulator.undo();
-    }
-
-    $scope.reset = function() {
-        validateInput();
-        $scope.simulator.reset();
-    }
-
-    function validateInput() {
-        if ($scope.simulator.input != $scope.inputWord) {
-            $scope.simulator.setInput($scope.inputWord);
-            $scope.simulator.reset();
-        }
-    }
-    /**
-     * Changes the icon of the playorpause button and the state of isInPlay
-     */
-    function changeToPlayOrPause() {
-        if (!$scope.isInPlay) {
-            //change to Pause
-            d3.select(".glyphicon-play").attr("class", "glyphicon glyphicon-pause");
-
-        } else {
-            //change to Play
-            d3.select(".glyphicon-pause").attr("class", "glyphicon glyphicon-play");
-        }
-        $scope.isInPlay = !$scope.isInPlay;
-
-    }
-
-    $scope.changeToPlay = function(){
-        d3.select(".glyphicon-pause").attr("class", "glyphicon glyphicon-play");
-        $scope.isInPlay = false;
-    }
-
-    /**
-     * Exports the automaton
-     * @return {File} Returns a json file
-     */
-    $scope.export = function() {
-            var exportData = {};
-            exportData = $scope.config;
-            exportData.transitions = getTransitions();
-            exportData.states = getStates();
-            var data = window.JSON.stringify(exportData);
-            var blob = new Blob([data], {
-                type: "text/plain;charset=utf-8;",
-            });
-            saveAs(blob, "dfa.json");
-        }
-        /**
-         * Returns all transition without the objReference
-         * @return {Array} array of transition objects
-         */
-    function getTransitions() {
-        var allTransitions = [];
-        _.forEach($scope.config.transitions, function(transition, key) {
-            var tmpTransition = JSON.parse(JSON.stringify(transition));
-            delete tmpTransition.objReference;
-            allTransitions.push(tmpTransition);
-        });
-        return allTransitions;
-    }
-
-    /**
-     * Returns all transition without the objReference
-     * @return {Array} array of transition objects
-     */
-    function getStates() {
-        var allStates = [];
-        _.forEach($scope.config.states, function(state, key) {
-            var tmpState = JSON.parse(JSON.stringify(state));
-            delete tmpState.objReference;
-            allStates.push(tmpState);
-        });
-        return allStates;
-    }
-
-
-    //Called when the user clicks on the import Button and opens the hidden-file-input
-    d3.select(".import").on("click", function() {
-        document.getElementById("hidden-file-upload").click();
-    });
-    //called when the user uploads a file
-    d3.select("#hidden-file-upload").on("change", function() {
-        if (window.File && window.FileReader && window.FileList && window.Blob) {
-            var uploadFile = this.files[0];
-            var filereader = new window.FileReader();
-            filereader.onload = function() {
-                var txtRes = filereader.result;
-                // TODO better error handling
-                try {
-                    var data = JSON.parse(txtRes);
-                    if (data != undefined) {
-
-                        $scope.$apply(function() {
-                            //import the config without states and transitions;
-                            $scope.config = JSON.parse(JSON.stringify(data));
-                            $scope.graphdesigner.updateConfig($scope.config);
-                            $scope.simulator.updateConfig($scope.config);
-                            $scope.config.states = [];
-                            $scope.config.transitions = [];
-                            //import states
-                            _.forEach(data.states, function(state, key) {
-                                    $scope.addStateWithId(state.id, state.name, state.x, state.y);
-                                })
-                                //import transistions
-                            _.forEach(data.transitions, function(transition, key) {
-                                $scope.addTransitionWithId(transition.id, transition.fromState, transition.toState, transition.name);
-                            })
-
-                        });
-
-                    }
-                } catch (err) {
-                    console.log("Error parsing uploaded file\nerror message: " + err.message);
-                    return;
-                }
-            };
-            filereader.readAsText(uploadFile);
-
-        } else {
-            alert("Your browser won't let you save this graph -- try upgrading your browser to IE 10+ or Chrome or Firefox.");
-        }
-
-    });
-
-    //called before the user is quitting the page, that he should save his work
-    /*
-    window.onbeforeunload = function() {
-        return "Make sure to save our work!";
-    };
-    */
 }
