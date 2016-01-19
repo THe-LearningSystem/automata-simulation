@@ -4,8 +4,8 @@
 var graphdesignerDFA = function($scope, svgSelector) {
 
     var self = this;
-    var stretch = 50;
-    var stretchOther = 100;
+    var stretchX = 40;
+    var stretchY = 18;
     //UI
     //prevents that the user can do more than one action
     self.inAction = false;
@@ -20,6 +20,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
         finalStateRadius: 29,
         selected: false
     };
+    self.stateSelfReferenceNumber = Math.sin(45 * (Math.PI / 180)) * self.settings.stateRadius;
+
 
     self.updateConfig = function(config) {
         self.config = config;
@@ -246,7 +248,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
             } else {
                 //open context menu
                 self.rightClick = true;
-                self.stateContext.style("visibility","visible");
+                self.stateContext.style("visibility", "visible");
                 $("div#stateContext").show();
             }
         })
@@ -306,16 +308,61 @@ var graphdesignerDFA = function($scope, svgSelector) {
             x2 = x2 - n * richtungsvektor.x,
             y2 = y2 - n * richtungsvektor.y;
         var coordObj = {
-            "x1": x1,
-            "y1": y1,
-            "x2": x2,
-            "y2": y2,
-            "xDiff": x2 - x1,
-            "yDiff": y2 - y1
+            x1: x1,
+            y1: y1,
+            x2: x2,
+            y2: y2,
+            xDiff: x2 - x1,
+            yDiff: y2 - y1,
+            xMid: (x1 + x2) / 2,
+            yMid: (y1 + y2) / 2
         }
 
         return coordObj;
 
+    }
+
+    /**
+     * [getTransitionCurveData description]
+     * @param  {[type]} coordObj [description]
+     * @return {[type]}          [description]
+     */
+    self.getTransitionCurveData = function(coordObj) {
+        var vecA = {
+            x: coordObj.xMid - coordObj.x1,
+            y: coordObj.yMid - coordObj.y1,
+            z: 0
+        };
+
+        var vecB = {
+            x: 0,
+            y: 0,
+            z: 1
+        };
+
+        coordObj.movingPoint = crossPro(vecA, vecB);
+        coordObj.movingPoint = expandVector(coordObj.movingPoint, 0.2);
+
+        coordObj.xMidPoint = coordObj.movingPoint.x + coordObj.xMid;
+        coordObj.yMidPoint = coordObj.movingPoint.y + coordObj.yMid;
+        return coordObj;
+    }
+
+    function crossPro(a, b) {
+
+        var vecC = {
+            x: a.y * b.z,
+            y: -a.x * b.z
+
+        };
+        return vecC;
+    }
+
+    function expandVector(a, factor) {
+        return {
+            x: a.x * factor,
+            y: a.y * factor
+        };
     }
 
     /**
@@ -329,21 +376,25 @@ var graphdesignerDFA = function($scope, svgSelector) {
         //if it is not a self Reference
         if (transition.fromState != transition.toState) {
             var coordObj = self.getTransitionCoordinates(transitionId);
+            self.getTransitionCurveData(coordObj);
             var group = self.svgTransitions.append("g")
-                .attr("transform", "translate(" + coordObj.x1 + " " + coordObj.y1 + ")")
                 .attr("class", "transition");
 
-            var line = group.append("line")
-                .attr("class", "transition-line")
-                .attr("x2", coordObj.xDiff)
-                .attr("y2", coordObj.yDiff)
+            var line = group.append("path")
+                .attr("class", "transition-line curvedLine")
+                .attr("d", self.transitionCurve(coordObj))
+                .attr("stroke", "red")
+                .attr("stroke-width", 1)
+                .attr("fill", "none")
+                /*.attr("x2", coordObj.xDiff)
+                .attr("y2", coordObj.yDiff)*/
                 .attr("marker-end", "url(#marker-end-arrow)");
 
             var text = group.append("text")
                 .attr("class", "transition-text")
                 .text(transition.name)
-                .attr("x", (coordObj.xDiff) / 2)
-                .attr("y", (coordObj.yDiff) / 2);
+                .attr("x", (coordObj.xMidPoint))
+                .attr("y", (coordObj.yMidPoint));
 
             $scope.config.transitions[transitionId].objReference = group;
             return group;
@@ -353,7 +404,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
             var y = $scope.config.states[stateId].y;
 
             var group = self.svgTransitions.append("g")
-                //.attr("transform", "translate(" + x3 + " " + y3 + ")")
+                .attr("transform", "translate(0 0)")
                 .attr("class", "transition");
 
             var line = group.append('path')
@@ -366,7 +417,9 @@ var graphdesignerDFA = function($scope, svgSelector) {
 
             var text = group.append("text")
                 .attr("class", "transition-text")
-                .text(transition.name);
+                .text(transition.name)
+                .attr("x", x - self.settings.stateRadius - 50)
+                .attr("y", y);
 
             $scope.config.transitions[transitionId].objReference = group;
             return group;
@@ -395,10 +448,20 @@ var graphdesignerDFA = function($scope, svgSelector) {
      */
     self.selfTransition = function(x, y) {
         return self.bezierLine([
-            [x, y],
-            [x - stretchOther, y + stretch],
-            [x - stretch, y + stretchOther],
-            [x, y]
+            [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
+            [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY],
+            [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY],
+            [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]
+        ]);
+    }
+
+    self.transitionCurve = function(coordObj) {
+        self.getTransitionCurveData(coordObj);
+        return self.bezierLine([
+            [coordObj.x1, coordObj.y1],
+            [coordObj.xMidPoint, coordObj.yMidPoint],
+            [coordObj.xMidPoint, coordObj.yMidPoint],
+            [coordObj.x2, coordObj.y2]
         ]);
     }
 
@@ -414,25 +477,24 @@ var graphdesignerDFA = function($scope, svgSelector) {
                 if (n.fromState != n.toState) {
                     var obj = n.objReference;
                     var coordObj = self.getTransitionCoordinates(n.id);
-
-
-                    obj.attr("transform", "translate(" + coordObj.x1 + " " + coordObj.y1 + ")");
-
-                    obj.select("line")
-                        .attr("x2", coordObj.xDiff)
-                        .attr("y2", coordObj.yDiff);
-
+                    obj.select(".transition-line").attr("d", self.transitionCurve(coordObj));
 
                     obj.select("text")
-                        .attr("x", (coordObj.xDiff) / 2)
-                        .attr("y", (coordObj.yDiff) / 2);
+                        .attr("x", coordObj.xMidPoint)
+                        .attr("y", coordObj.yMidPoint);
 
                 } else {
                     var moveStateId = n.fromState;
                     var x = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].x;
                     var y = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].y;
                     //update Transistion with self reference
-                    var obj = n.objReference.select(".transition-line").attr("d", self.selfTransition(x, y));
+                    var obj = n.objReference;
+
+                    obj.select(".transition-line")
+                        .attr("d", self.selfTransition(x, y));
+
+                    obj.select("text").attr("x", x - self.settings.stateRadius - 50)
+                        .attr("y", y);;
                 }
             }
         });
@@ -444,7 +506,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
         d3.selectAll(".state").call(self.dragState);
     }
 
-    $("div.close").click(function(){
-    console.log("ASD");
-});
+    $("div.close").click(function() {
+        console.log("ASD");
+    });
 }
