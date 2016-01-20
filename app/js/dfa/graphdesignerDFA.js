@@ -489,10 +489,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
                     var y = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].y;
                     //update Transistion with self reference
                     var obj = n.objReference;
-
                     obj.select(".transition-line")
                         .attr("d", self.selfTransition(x, y));
-
                     obj.select("text").attr("x", x - self.settings.stateRadius - 50)
                         .attr("y", y);;
                 }
