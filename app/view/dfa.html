@@ -1,0 +1,108 @@
+<div class="col-md-12">
+    <h3>Simulation</h3>
+    <!--   <div class="alert alert-success" role="alert"></div>
+    <div class="alert alert-info" role="alert"></div>
+    <div class="alert alert-warning" role="alert"></div> -->
+    <div class="alert alert-danger" role="alert">{{alertDanger}}</div>
+    <button type="button" class="btn btn-default btn-play-or-pause" ng-click="simulator.playOrPause()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="simulator.stop()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="simulator.stepBackward()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="simulator.stepForward()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="export()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default import" aria-label="Left Align">
+        <input type="file" id="hidden-file-upload">
+        <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="testData.testDFA()" aria-label="Left Align">
+        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+    </button>
+</div>
+
+
+
+<div class="automataWrapper col-md-12">
+    <div class="col-md-12 statediagramm">
+        <h3>Zustandsdiagramm</h3>
+        <button type="button" class="btn btn-default" ng-click="graphdesigner.addState()" aria-label="Left Align">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default" ng-click="graphdesigner.addTransition()" aria-label="Left Align">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+        <svg id="diagramm" class="stateDiagrammSVG"></svg>
+        <div class="pop-up-background">
+            <div id="stateContext">
+                <div class="pop-up-content">
+                    <div class="close">CLOSE</div>
+                    <div class="pop-up-main-content">
+                        <div id="stateContextContent" class="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <p>
+            Eingabewort:
+            <input ng-model="inputWord" />
+        </p>
+    </div>
+    <div class="col-md-6 stateTable">
+
+
+   <div class="col-md-6 stateTable">
+        <h3>Zustandstabelle</h3>
+        <div automaton="automaton">
+            <button type="button" class="btn btn-default" ng-click="tableplus()" aria-label="Left Align">
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 stateNoName">
+        <h3>Zustandsüberführungsfunktion</h3>
+        <p>&Sigma; = {
+            <input ng-model="statetransitionfunction.functionData.transitions" />}
+        </p>
+        <p>S = {
+            <input ng-model="statetransitionfunction.functionData.states" />}
+        </p>
+        <p>&delta; = {
+            <textarea class="statetransitionfunction" rows = "1" ng-model="statetransitionfunction.functionData.statetransitionfunction"> </textarea>}
+        </p>
+        <p>S<sub>0</sub>= {
+            <input ng-model="statetransitionfunction.functionData.startState" />}
+        </p>
+        <p>F = {
+            <input ng-model="statetransitionfunction.functionData.finalStates" />}
+        </p>
+    </div>
+</div>
+
+
+<div class="col-md-12">
+    <!-- <h3>Zustandsüberführungsfunktion</h3>-->
+    <h3>Debugging</h3>
+    <p>Status:{{simulator.status}}</p>
+    <p>Sequence:{{simulator.statusSequence}}</p>
+    <p>count {{simulator.madeSteps}}</p>
+    <p>InputWord: {{inputWord}}</p>
+    <p>Processed Word: {{simulator.processedWord}}</p>
+    <p>Simulator: {{simulator}}</p>
+    <p>Config :{{config}}</p>
+</div>

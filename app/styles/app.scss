@@ -1,0 +1,125 @@
+@import 'bootstrap_variables';
+//state Settings
+$stateColor: #CCC;
+$visitedStateColor: #F00;
+$finalStateColor: #FFF;
+$stateColorHover: #888;
+$stateColorSelected: #444;
+$stateBorderWidth:2;
+$stateBorderColor:#666;
+$stateFontSize:15px;
+$stateFontColor: #000;
+//Transition Settings
+$transitiionColor: #000;
+$transitionFontSize: 15px;
+$transitionFontColor: #000;
+$transitionWith:2;
+.automataWrapper {
+    border: 1px solid #000;
+}
+
+.stateDiagrammSVG {
+    border: 1px solid #000;
+    width: 100%;
+    height: 300px;
+    min-width: auto;
+}
+
+//state
+.state {
+    cursor: context-menu;
+}
+
+.state:hover .state-circle {
+    fill: $stateColorHover;
+}
+
+.state:active .state-circle {
+    fill: $stateColorSelected;
+}
+
+.state-circle {
+    fill: $stateColor;
+    stroke: $stateBorderColor;
+    stroke-width: $stateBorderWidth;
+}
+
+.final-State {
+    fill: $finalStateColor;
+    stroke: $stateBorderColor;
+    stroke-width: $stateBorderWidth;
+}
+
+.state-text {
+    font-size: $stateFontSize;
+}
+
+#stateContext {
+    background-color: #000;
+    visibility: hidden;
+    left: 50%;
+    margin-left: -400px;
+    max-width: 800px;
+    position: absolute;
+    top: 20px;
+    width: 90%;
+    z-index: 100;
+}
+
+.pop-up-background {
+    background: rgba(255, 255, 255, .8);
+    cursor: pointer;
+    display: none;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.pop-up-content {
+    background: #fff;
+    -webkit-box-shadow: 0px 1px 10px 2px #ccc;
+    -moz-box-shadow: 0px 1px 10px 2px #ccc;
+    box-shadow: 0px 1px 10px 2px #ccc;
+    min-height: 30px;
+    padding: 24px;
+}
+
+.pop-up .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 99;
+}
+
+.visitedState .state-circle {
+    fill: $visitedStateColor;
+}
+
+.selectedForTransition .state-circle {
+    fill: $visitedStateColor;
+}
+
+.state-text:hover {}
+
+//Transition
+.transition {
+    cursor: context-menu;
+}
+
+.transition-line {
+    stroke: $transitiionColor;
+    stroke-width: $transitionWith;
+}
+
+.visitedTransition .transition-line {
+    stroke: #F00;
+}
+
+.transition-text {}
+
+#hidden-file-upload {
+    display: none;
+}
