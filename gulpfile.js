@@ -18,7 +18,8 @@ var paths = {
   images: 'app/images/**/*',
   dist: './dist',
   index: './app/index.html',
-  all: './app/**/*.*'
+  all: './app/**/*.*',
+  test: './app/tests/spec/*.*'
 }
 
 var pipes = {};
