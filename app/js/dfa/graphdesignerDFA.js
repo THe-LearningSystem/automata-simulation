@@ -30,34 +30,42 @@ var graphdesignerDFA = function($scope, svgSelector) {
         self.svgTransitions.html("");
         self.svgStates.html("");
         //change the scale and the translate to the updatedConfig
-        //TODO: SOlution is not working after moving scale is & translate is resetted
-        //self.svg.attr("transform", "translate(" +$scope.config.diagrammX+","+$scope.config.diagrammY + ")" + " scale(" +$scope.config.diagrammScale + ")");
+        self.svg.attr("transform", "translate(" + $scope.config.diagrammX + "," + $scope.config.diagrammY + ")" + " scale(" + $scope.config.diagrammScale + ")");
+        zoom.scale($scope.config.diagrammScale);
+        zoom.translate([$scope.config.diagrammX, $scope.config.diagrammY]);
 
     }
     self.svgOuter = d3.select(svgSelector);
 
+    self.svgZoom = function() {
+        if (!self.dragInitiated && !self.rightClick) {
+            self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+            $scope.config.diagrammScale = d3.event.scale;
+            $scope.config.diagrammX = d3.event.translate[0];
+            $scope.config.diagrammY = d3.event.translate[1];
+            $scope.safeApply();
+        }
+    }
 
+    self.rescale = function() {
+        self.svg.attr("transform", "translate( 0 0 )" + " scale( 1 )");
+        $scope.config.diagrammScale = 1;
+        $scope.config.diagrammX = 0;
+        $scope.config.diagrammY = 0;
+        $scope.safeApply();
+        zoom.scale(1);
+        zoom.translate([0, 0]);
+    }
 
+    var zoom = d3.behavior.zoom();
+    zoom.translate([0, 0]);
     //TODO: Bug when moving all the objects.
     //u can move the whole diagramm and zome in and out
-    self.svg = self.svgOuter.append("g").attr("id", "svg-items")
-        //SO MUCH PROBLEMS COMMENTING UNTIL BETTER SOLUTION
-        /*
-            .call(d3.behavior.zoom().on("zoom", function() {
-                
-                
-                    if (!self.dragInitiated && !self.rightClick) {
-                        self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
-                        $scope.config.diagrammScale = d3.event.scale;
-                        $scope.config.diagrammX = d3.event.translate[0];
-                        $scope.config.diagrammY = d3.event.translate[1];
-                        $scope.safeApply();
+    self.svg = self.svgOuter.call(zoom.on("zoom", self.svgZoom)).append("g").attr("id", "svg-items");
 
 
-                    }
-                    
-                }))*/
-    ;
+
+
 
     //first draw the transitions -> nodes are in front of them if they overlap
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");
@@ -239,7 +247,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
     self.setTransitionClassAs = function(transitionId, state, className) {
         var objReference = $scope.getTransitionById(transitionId).objReference;
         objReference.classed(className, state);
-        if (state && className =='animated-transition') {
+        if (state && className == 'animated-transition') {
             objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow-animated)");
         } else {
             objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow)");
@@ -267,10 +275,10 @@ var graphdesignerDFA = function($scope, svgSelector) {
                     //if there is no selectedState
                     if (!self.selectedState) {
                         self.selectedState = d3.select(this);
-                        self.setClassStateAs(self.selectedState.attr("object-id"), true, "selectedForTransition");
+                        self.setStateClassAs(self.selectedState.attr("object-id"), true, "selectedForTransition");
                     } else {
                         $scope.addTransition(parseInt(self.selectedState.attr("object-id")), parseInt(d3.select(this).attr("object-id")), "c");
-                        self.setClassStateAs(self.selectedState.attr("object-id"), false, "selectedForTransition");
+                        self.setStateClassAs(self.selectedState.attr("object-id"), false, "selectedForTransition");
                         self.selectedState = null;
                         self.resetAdds();
                     }
@@ -311,7 +319,9 @@ var graphdesignerDFA = function($scope, svgSelector) {
             } else if (self.rightClick) {
                 self.rightClick = false;
             }
-
+            //fixes that the whole svg moves with the next move on the svg ( stupid workaround) BETTER SOLUTION?
+            zoom.scale($scope.config.diagrammScale);
+            zoom.translate([$scope.config.diagrammX, $scope.config.diagrammY]);
         });
 
     /**
