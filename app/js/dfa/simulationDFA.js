@@ -9,7 +9,7 @@ var simulationDFA = function($scope) {
     //time between the steps
     self.stepTimeOut = 1500;
     //Time between loops when the animation restarts
-    self.loopTimeOut = 1000;
+    self.loopTimeOut = 2000;
     //if the simulation is paused
     self.simulationPaused = false;
 
@@ -19,13 +19,13 @@ var simulationDFA = function($scope) {
     self.reset = function() {
         //remove graphdesigner animations
         if (self.currentState != null) {
-            $scope.graphdesigner.setClassStateAs(self.currentState, false, "visitedState");
+            $scope.graphdesigner.setStateClassAs(self.currentState, false, "animated-state");
         }
         if (self.nextState != null) {
-            $scope.graphdesigner.setClassStateAs(self.nextState, false, "visitedState");
+            $scope.graphdesigner.setStateClassAs(self.nextState, false, "animated-state");
         }
         if (self.transition != null) {
-            $scope.graphdesigner.setTransitionAs(self.transition.id, false);
+            $scope.graphdesigner.setTransitionClassAs(self.transition.id, false, "animated-transition");
         }
         //Animation Settings
         //saves the currentStateId -> for animating
@@ -74,36 +74,42 @@ var simulationDFA = function($scope) {
     self.stop = function() {
         self.pause();
         self.reset();
+        //enable inputField after simulation
+        d3.select(".inputWord").attr("disabled", null);
     }
 
     /**
      * Play the simulation
      */
     self.play = function() {
+
         //if the simulation is paused then return
         if (!self.simulationPaused) {
+            //disable inputField during simulation
+            d3.select(".inputWord").attr("disabled", true);
             //start and prepare for the play
             if (!self.simulationStarted) {
                 self.prepareSimulation();
-            }
-            //loop through the steps
-            if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
-                self.animateNextMove();
-                $scope.safeApply(function() {});
+            } else {
+                //loop through the steps
                 if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
-                    setTimeout(self.play, self.stepTimeOut);
+                    self.animateNextMove();
+                    $scope.safeApply(function() {});
+                    if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
+                        setTimeout(self.play, self.stepTimeOut);
+                    }
                 }
-            }
-            //end the animation & reset it if loop through is activated the animation loop throuh play
-            if (!self.isNextStepCalculated && self.status == 'accepted') {
-                if (self.loopSimulation) {
-                    setTimeout(self.play, self.loopTimeOut);
-                    //finish the Animation
-                } else {
-                    self.changeToPlay();
+                //end the animation & reset it if loop through is activated the animation loop throuh play
+                if (!self.isNextStepCalculated && self.status == 'accepted') {
+                    if (self.loopSimulation) {
+                        setTimeout(self.play, self.loopTimeOut);
+                        //finish the Animation
+                    } else {
+                        self.changeToPlay();
+                    }
+                    self.simulationStarted = false;
+                    $scope.safeApply(function() {});
                 }
-                self.simulationStarted = false;
-                $scope.safeApply(function() {});
             }
         } else {
             return;
@@ -117,8 +123,9 @@ var simulationDFA = function($scope) {
         //The simulation always resets the parameters at the start -> it also sets the inputWord
         self.reset();
         self.simulationStarted = true;
-        $scope.graphdesigner.setClassStateAs(_.last(self.statusSequence), true, "visitedState");
+        $scope.graphdesigner.setStateClassAs(_.last(self.statusSequence), true, "animated-state");
         $scope.safeApply();
+        setTimeout(self.play, self.loopTimeOut);
     }
 
     /**
@@ -132,17 +139,17 @@ var simulationDFA = function($scope) {
         //First: Paint the transition & wait
         if (!self.animatedTransition) {
             self.animatedTransition = true;
-            $scope.graphdesigner.setTransitionAs(self.transition.id, true);
+            $scope.graphdesigner.setTransitionClassAs(self.transition.id, true, "animated-transition");
 
             //Second: Paint the nextstate & wait
         } else if (!self.animatedNextState && self.animatedTransition) {
             self.animatedNextState = true;
-            $scope.graphdesigner.setClassStateAs(self.nextState, true, "visitedState");
+            $scope.graphdesigner.setStateClassAs(self.nextState, true, "animated-state");
 
             //Third: clear transition & currentStatecolor and set currentState = nexsttate and wait
         } else if (self.animatedTransition && self.animatedNextState) {
-            $scope.graphdesigner.setTransitionAs(self.transition.id, false);
-            $scope.graphdesigner.setClassStateAs(self.currentState, false, "visitedState");
+            $scope.graphdesigner.setTransitionClassAs(self.transition.id, false, "animated-transition");
+            $scope.graphdesigner.setStateClassAs(self.currentState, false, "animated-state");
 
             self.currentState = self.nextState;
             //after the step was animated it adds a step to the madeSteps
@@ -250,10 +257,10 @@ var simulationDFA = function($scope) {
     self.animateLastMove = function() {
         console.log(self.animatedTransition + " " + self.animatedNextState);
         if (self.animatedTransition && self.animatedNextState) {
-            $scope.graphdesigner.setClassStateAs(self.nextState, false, "visitedState");
+            $scope.graphdesigner.setStateClassAs(self.nextState, false, "animated-state");
             self.animatedNextState = false;
         } else if (self.animatedTransition) {
-            $scope.graphdesigner.setTransitionAs(self.transition.id, false);
+            $scope.graphdesigner.setTransitionClassAs(self.transition.id, false, "animated-transition");
             self.animatedTransition = false;
         } else {
             self.calcLastStep();
@@ -281,13 +288,13 @@ var simulationDFA = function($scope) {
         self.transition = self.transition[0];
         //First: Paint the transition & wait
         self.animatedTransition = true;
-        $scope.graphdesigner.setTransitionAs(self.transition.id, true);
+        $scope.graphdesigner.setTransitionClassAs(self.transition.id, true, "animated-transition");
         var tmp = self.currentState;
         self.currentState = self.transition.fromState;
         self.nextState = tmp;
         //Second: Paint the nextstate & wait
         self.animatedNextState = true;
-        $scope.graphdesigner.setClassStateAs(self.currentState, true, "visitedState");
+        $scope.graphdesigner.setStateClassAs(self.currentState, true, "animated-state");
         self.madeSteps--;
         self.statusSequence.splice(-1, 1);
         self.processedWord = self.processedWord.slice(0, -1);

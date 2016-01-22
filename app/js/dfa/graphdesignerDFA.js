@@ -4,7 +4,7 @@
 var graphdesignerDFA = function($scope, svgSelector) {
 
     var self = this;
-    
+
     //prevents that the user can do more than one action
     self.inAction = false;
     //if this is true, then it calls the addClickfunction after the next
@@ -77,6 +77,16 @@ var graphdesignerDFA = function($scope, svgSelector) {
         .attr('orient', 'auto')
         .append('svg:path')
         .attr('d', 'M0,0 L0,6 L9,3 z');
+    self.defs.append('svg:marker')
+        .attr('id', 'marker-end-arrow-animated')
+        .attr('refX', 8)
+        .attr('refY', 3)
+        .attr('markerWidth', 10)
+        .attr('markerHeight', 10)
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .attr('d', 'M0,0 L0,6 L9,3 z');
+
 
 
     /**
@@ -216,7 +226,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param {Boolean} state   
      * @param {String} className  
      */
-    self.setClassStateAs = function(stateId, state, className) {
+    self.setStateClassAs = function(stateId, state, className) {
         var objReference = $scope.getStateById(stateId).objReference;
         objReference.classed(className, state);
     }
@@ -226,9 +236,14 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param {[type]} transitionId [description]
      * @param {[type]} state        [description]
      */
-    self.setTransitionAs = function(transitionId, state) {
+    self.setTransitionClassAs = function(transitionId, state, className) {
         var objReference = $scope.getTransitionById(transitionId).objReference;
-        objReference.classed("visitedTransition", state);
+        objReference.classed(className, state);
+        if (state && className =='animated-transition') {
+            objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow-animated)");
+        } else {
+            objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow)");
+        }
     }
 
     /**
@@ -258,8 +273,6 @@ var graphdesignerDFA = function($scope, svgSelector) {
                         self.setClassStateAs(self.selectedState.attr("object-id"), false, "selectedForTransition");
                         self.selectedState = null;
                         self.resetAdds();
-
-
                     }
                 }
             } else {

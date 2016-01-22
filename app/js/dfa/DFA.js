@@ -11,23 +11,31 @@ var DFA = function($scope) {
 
     //AUTOMATA CONFIG START
     //TODO: Better name for the config of the automaton
-    $scope.config = {};
+
+    //Default Config for the automaton
+    $scope.default.config = {};
     //Settings for the diagramm
-    $scope.config.diagrammScale = 1;
-    $scope.config.diagrammX = 0;
-    $scope.config.diagrammY = 0;
+    $scope.default.config.diagrammScale = 1;
+    $scope.default.config.diagrammX = 0;
+    $scope.default.config.diagrammY = 0;
     //Number of statesIds given to states
-    $scope.config.countStateId = 0;
+    $scope.default.config.countStateId = 0;
     //Number of transitionIds given to transitions
-    $scope.config.countTransitionId = 0;
+    $scope.default.config.countTransitionId = 0;
     //The States are saved like {id:stateId,name:"nameoftheState",x:50,y:50}
-    $scope.config.states = [];
+    $scope.default.config.states = [];
     //Only a number representing the id of the state
-    $scope.config.startState = null;
+    $scope.default.config.startState = null;
     //An array of numbers representing the ids of the finalStates
-    $scope.config.finalStates = [];
+    $scope.default.config.finalStates = [];
     //the transitions are saved like{fromState:stateId, toState:stateId, name:"transitionName"}
-    $scope.config.transitions = [];
+    $scope.default.config.transitions = [];
+
+
+
+    //Config Object
+    $scope.config = cloneObject($scope.default.config);
+
     //AUTOMATA CONFIG END
 
     //the name of the inputWord
@@ -41,7 +49,7 @@ var DFA = function($scope) {
     //the simulator controlling the simulation
     $scope.simulator = new simulationDFA($scope);
     //the graphdesigner controlling the svg diagramm
-    $scope.graphdesigner = new graphdesignerDFA($scope, "#diagramm");
+    $scope.graphdesigner = new graphdesignerDFA($scope, "#diagramm-svg");
     //the statetransitionfunction controlling the statetransitionfunction-table
     $scope.statetransitionfunction = new statetransitionfunctionDFA($scope);
 
@@ -61,6 +69,13 @@ var DFA = function($scope) {
         }
     };
 
+    /**
+     * Removes the current automata and the inputWord
+     */
+    $scope.removeConfig = function() {
+        $scope.graphdesigner.clearSvgContent();
+        $scope.config = cloneObject($scope.default.config);
+    }
 
 
     //STATE FUNCTIONS START
@@ -218,7 +233,7 @@ var DFA = function($scope) {
             $scope.graphdesigner.changeStartState(stateId);
             //change the startState then
             $scope.config.startState = stateId;
-        }else{
+        } else {
             //TODO: BETTER DEBUG
         }
     }
