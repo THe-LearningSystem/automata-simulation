@@ -9,7 +9,7 @@ $stateFontColor: #000;
 //final state
 $finalStateColor: #FFF;
 $finalStateBorderColor: $stateBorderColor;
-$finalStateBorderWidth:3;
+$finalStateBorderWidth:2;
 //Hover
 $stateColorHover: #000;
 $stateColorHoverOpacity:0.4;
@@ -95,7 +95,7 @@ $animatedTransitionFontColor: #F00;
     stroke-width: $stateBorderWidth;
 }
 
-.final-State {
+.final-state {
     fill: $finalStateColor;
     stroke: $finalStateBorderColor;
     stroke-width: $finalStateBorderWidth;

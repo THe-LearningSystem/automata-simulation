@@ -266,6 +266,8 @@ var DFA = function($scope) {
     $scope.addFinalState = function(stateId) {
         if (!$scope.isStateAFinalState(stateId)) {
             $scope.config.finalStates.push(stateId);
+            //add to the graphdesigner
+            $scope.graphdesigner.addFinalState(stateId);
         } else {
             //TODO: BETTER DEBUG
         }
@@ -276,7 +278,10 @@ var DFA = function($scope) {
      * @return {[type]} [description]
      */
     $scope.removeFinalState = function(stateId) {
+        //remove from graphdesigner
+        $scope.graphdesigner.removeFinalState(stateId);
         $scope.config.finalStates.splice($scope.getFinalStateIndexByStateId(stateId), 1);
+
     }
 
     //TRANSITIONS

@@ -154,14 +154,35 @@ var graphdesignerDFA = function($scope, svgSelector) {
         objReference.remove();
     }
 
-
+    /**
+     * [renameTransition description]
+     * @param  {[type]} transitionId      [description]
+     * @param  {[type]} newTransitionName [description]
+     * @return {[type]}                   [description]
+     */
     self.renameTransition = function(transitionId, newTransitionName) {
 
     }
 
-
+    /**
+     * [removeTransition description]
+     * @param  {[type]} transitionId [description]
+     * @return {[type]}              [description]
+     */
     self.removeTransition = function(transitionId) {
 
+    }
+
+    self.addFinalState = function(stateId) {
+        var state = $scope.getStateById(stateId);
+        state.objReference.insert("circle", ".state-circle")
+            .attr("class", "final-state")
+            .attr("r", self.settings.finalStateRadius);
+    }
+
+    self.removeFinalState = function(stateId) {
+        var state = $scope.getStateById(stateId);
+        state.objReference.select(".final-state").remove();
     }
 
 
@@ -189,10 +210,6 @@ var graphdesignerDFA = function($scope, svgSelector) {
             .attr("marker-end", "url(#marker-end-arrow)");
     }
 
-    self.removeFinalState = function(stateId) {
-
-    }
-
     /**
      * Draws a State 
      * @param  {Int} id The arrayid of the State
@@ -204,11 +221,6 @@ var graphdesignerDFA = function($scope, svgSelector) {
             .attr("transform", "translate(" + state.x + " " + state.y + ")")
             .attr("class", "state " + "state-" + state.id)
             .attr("object-id", state.id); //save the state-id
-        if (_.include($scope.config.finalStates, state.id)) {
-            var circleSelection = group.append("circle")
-                .attr("class", "final-State")
-                .attr("r", self.settings.finalStateRadius);
-        }
 
         var circleSelection = group.append("circle")
             .attr("class", "state-circle")
