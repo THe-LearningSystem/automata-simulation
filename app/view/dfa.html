@@ -37,13 +37,13 @@
         <h3>Zustandsdiagramm</h3>
         <div id="diagramm">
             <div id="diagramm-buttons">
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.addState()" aria-label="Left Align">
+                <button type="button" class="btn btn-default" ng-click="graphdesigner.addStateEventListener()" aria-label="Left Align">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.addTransition()" aria-label="Left Align">
+                <button type="button" class="btn btn-default" ng-click="graphdesigner.addTransitionEventListener()" aria-label="Left Align">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.delete()" aria-label="Left Align">
+                <button type="button" class="btn btn-default" ng-click="graphdesigner.removeEventListener()" aria-label="Left Align">
                     <span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </button>
                 <button type="button" class="btn btn-default" ng-click="graphdesigner.rescale()" aria-label="Left Align">

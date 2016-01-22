@@ -188,8 +188,6 @@ var DFA = function($scope) {
         });
         //draw the State after the State is added
         $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(stateId));
-        //the listener is always called after a new node was created
-        $scope.graphdesigner.callStateListener();
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
     }
