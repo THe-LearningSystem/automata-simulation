@@ -4,9 +4,7 @@
 var graphdesignerDFA = function($scope, svgSelector) {
 
     var self = this;
-    var stretchX = 40;
-    var stretchY = 18;
-    //UI
+    
     //prevents that the user can do more than one action
     self.inAction = false;
     //if this is true, then it calls the addClickfunction after the next
@@ -20,11 +18,14 @@ var graphdesignerDFA = function($scope, svgSelector) {
         finalStateRadius: 29,
         selected: false
     };
+    //is for the selfReference
+    var stretchX = 40;
+    var stretchY = 18;
+
     self.stateSelfReferenceNumber = Math.sin(45 * (Math.PI / 180)) * self.settings.stateRadius;
 
 
-    self.updateConfig = function(config) {
-        self.config = config;
+    self.clearSvgContent = function(config) {
         //Clear the content of the svg
         self.svgTransitions.html("");
         self.svgStates.html("");
@@ -135,6 +136,18 @@ var graphdesignerDFA = function($scope, svgSelector) {
         objReference.remove();
     }
 
+
+    self.renameTransition = function(transitionId, newTransitionName) {
+
+    }
+
+
+    self.removeTransition = function(transitionId) {
+
+    }
+
+
+
     /**
      * [changeStartState description]
      * @param  {[type]} stateId [description]
@@ -181,6 +194,10 @@ var graphdesignerDFA = function($scope, svgSelector) {
 
         var circleSelection = group.append("circle")
             .attr("class", "state-circle")
+            .attr("r", self.settings.stateRadius);
+
+        var hoverCircle = group.append("circle")
+            .attr("class", "state-circle hover-circle")
             .attr("r", self.settings.stateRadius);
 
         var text = group.append("text")
@@ -237,7 +254,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
                         self.selectedState = d3.select(this);
                         self.setClassStateAs(self.selectedState.attr("object-id"), true, "selectedForTransition");
                     } else {
-                        $scope.addTransition(self.selectedState.attr("object-id"), d3.select(this).attr("object-id"), "c");
+                        $scope.addTransition(parseInt(self.selectedState.attr("object-id")), parseInt(d3.select(this).attr("object-id")), "c");
                         self.setClassStateAs(self.selectedState.attr("object-id"), false, "selectedForTransition");
                         self.selectedState = null;
                         self.resetAdds();

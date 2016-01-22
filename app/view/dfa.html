@@ -30,19 +30,21 @@
         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
     </button>
 </div>
-
-
-
 <div class="automataWrapper col-md-12">
-    <div class="col-md-12 statediagramm">
+    <div class="col-md-12">
         <h3>Zustandsdiagramm</h3>
-        <button type="button" class="btn btn-default" ng-click="graphdesigner.addState()" aria-label="Left Align">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        </button>
-        <button type="button" class="btn btn-default" ng-click="graphdesigner.addTransition()" aria-label="Left Align">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        </button>
-        <svg id="diagramm" class="stateDiagrammSVG"></svg>
+        <div id="statediagramm">
+            <div id="statediagramm-buttons">
+                <button type="button" class="btn btn-default" ng-click="graphdesigner.addState()" aria-label="Left Align">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" ng-click="graphdesigner.addTransition()" aria-label="Left Align">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+            </div>
+            <svg id="diagramm" class="stateDiagrammSVG">
+            </svg>
+        </div>
         <div class="pop-up-background">
             <div id="stateContext">
                 <div class="pop-up-content">
@@ -62,47 +64,41 @@
         </p>
     </div>
     <div class="col-md-6 stateTable">
-
-
-   <div class="col-md-6 stateTable">
-        <h3>Zustandstabelle</h3>
-        <div automaton="automaton">
-            <button type="button" class="btn btn-default" ng-click="tableplus()" aria-label="Left Align">
-                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-            </button>
+        <div class="col-md-6 stateTable">
+            <h3>Zustandstabelle</h3>
+            <div automaton="automaton">
+                <button type="button" class="btn btn-default" ng-click="tableplus()" aria-label="Left Align">
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6 stateNoName">
+            <h3>Zustandsüberführungsfunktion</h3>
+            <p>&Sigma; = {
+                <input ng-model="statetransitionfunction.functionData.transitions" />}
+            </p>
+            <p>S = {
+                <input ng-model="statetransitionfunction.functionData.states" />}
+            </p>
+            <p>&delta; = {
+                <textarea class="statetransitionfunction" rows="1" ng-model="statetransitionfunction.functionData.statetransitionfunction"> </textarea>}
+            </p>
+            <p>S<sub>0</sub>= {
+                <input ng-model="statetransitionfunction.functionData.startState" />}
+            </p>
+            <p>F = {
+                <input ng-model="statetransitionfunction.functionData.finalStates" />}
+            </p>
         </div>
     </div>
-
-
-    <div class="col-md-6 stateNoName">
-        <h3>Zustandsüberführungsfunktion</h3>
-        <p>&Sigma; = {
-            <input ng-model="statetransitionfunction.functionData.transitions" />}
-        </p>
-        <p>S = {
-            <input ng-model="statetransitionfunction.functionData.states" />}
-        </p>
-        <p>&delta; = {
-            <textarea class="statetransitionfunction" rows = "1" ng-model="statetransitionfunction.functionData.statetransitionfunction"> </textarea>}
-        </p>
-        <p>S<sub>0</sub>= {
-            <input ng-model="statetransitionfunction.functionData.startState" />}
-        </p>
-        <p>F = {
-            <input ng-model="statetransitionfunction.functionData.finalStates" />}
-        </p>
+    <div class="col-md-12">
+        <!-- <h3>Zustandsüberführungsfunktion</h3>-->
+        <h3>Debugging</h3>
+        <p>Status:{{simulator.status}}</p>
+        <p>Sequence:{{simulator.statusSequence}}</p>
+        <p>count {{simulator.madeSteps}}</p>
+        <p>InputWord: {{inputWord}}</p>
+        <p>Processed Word: {{simulator.processedWord}}</p>
+        <p>Simulator: {{simulator}}</p>
+        <p>Config :{{config}}</p>
     </div>
-</div>
-
-
-<div class="col-md-12">
-    <!-- <h3>Zustandsüberführungsfunktion</h3>-->
-    <h3>Debugging</h3>
-    <p>Status:{{simulator.status}}</p>
-    <p>Sequence:{{simulator.statusSequence}}</p>
-    <p>count {{simulator.madeSteps}}</p>
-    <p>InputWord: {{inputWord}}</p>
-    <p>Processed Word: {{simulator.processedWord}}</p>
-    <p>Simulator: {{simulator}}</p>
-    <p>Config :{{config}}</p>
-</div>

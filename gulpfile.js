@@ -19,7 +19,7 @@ var paths = {
   dist: './dist',
   index: './app/index.html',
   all: './app/**/*.*',
-  test: './app/tests/spec/*.*'
+  tests: 'unit-tests/spec/*.js'
 }
 
 var pipes = {};
@@ -131,8 +131,16 @@ gulp.task('live', function(){
     port: 9000,
     livereload: true,
   });
-    gulp.watch(paths.sass,['sass']);
+  gulp.watch(paths.sass,['sass']);
   gulp.watch(paths.all, function(obj) {
+    if (obj.type === 'changed') {
+      console.log(obj.path+' changed');
+      gulp.src(obj.path, {base: './app/'})
+      .pipe(connect.reload());
+    }
+  });
+  //watch unit test changes0
+  gulp.watch(paths.tests, function(obj) {
     if (obj.type === 'changed') {
       console.log(obj.path+' changed');
       gulp.src(obj.path, {base: './app/'})

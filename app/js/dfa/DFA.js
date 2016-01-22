@@ -1,11 +1,7 @@
 "use strict";
 
-angular
-    .module('myApp')
-    .controller('DFACtrl', DFACtrl);
-
-
-function DFACtrl($scope) {
+//Simulator for the simulation of the automata
+var DFA = function($scope) {
     //for debug puposes better way for acessing in console?
     window.debugScope = $scope;
     //Default Values
@@ -14,7 +10,6 @@ function DFACtrl($scope) {
     $scope.default.statePrefix = 'S';
 
     //AUTOMATA CONFIG START
-
     //TODO: Better name for the config of the automaton
     $scope.config = {};
     //Settings for the diagramm
@@ -33,28 +28,25 @@ function DFACtrl($scope) {
     $scope.config.finalStates = [];
     //the transitions are saved like{fromState:stateId, toState:stateId, name:"transitionName"}
     $scope.config.transitions = [];
-
     //AUTOMATA CONFIG END
 
     //the name of the inputWord
     $scope.inputWord = '';
 
-
     //alerts
     $scope.alertDanger = 'NO ALERT';
-
 
     //Create a dbug objects for better dbugs(info, alert, danger)
     $scope.dbug = new dbug($scope);
     //the simulator controlling the simulation
     $scope.simulator = new simulationDFA($scope);
     //the graphdesigner controlling the svg diagramm
-
     $scope.graphdesigner = new graphdesignerDFA($scope, "#diagramm");
-    //for the testdata
-    $scope.testData = new testData($scope);
     //the statetransitionfunction controlling the statetransitionfunction-table
     $scope.statetransitionfunction = new statetransitionfunctionDFA($scope);
+
+    //for the testdata
+    $scope.testData = new testData($scope);
 
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
     //fix for $apply already in progress
@@ -88,126 +80,31 @@ function DFACtrl($scope) {
     }
 
     /**
-     * [addStateWithPresets description]
-     * @param {[type]} x [description]
-     * @param {[type]} y [description]
+     * Checks if a state exist with the given id
+     * @param  {Id} stateId 
+     * @return {Boolean}           
      */
-    $scope.addStateWithPresets = function(x, y) {
-        $scope.addState($scope.default.statePrefix + $scope.config.countStateId, x, y);
-        //if u created a state then make the first state as startState ( default)
-        if ($scope.config.countStateId == 1) {
-            $scope.changeStartState(0);
+    $scope.existStateWithId = function(stateId) {
+        for (var i = 0; i < $scope.config.states.length; i++) {
+            if ($scope.config.states[i].id == stateId)
+                return true;
         }
-
+        return false;
     }
 
     /**
-     * Adds a state at the end of the states array
-     * @param {String} stateName 
-     * @param {Float} x         
-     * @param {Float} y         
+     * returns if the node has transitions
+     * @param  {Int}  stateId 
+     * @return {Boolean}         
      */
-    $scope.addState = function(stateName, x, y) {
-        var id = $scope.config.countStateId++;
-
-        $scope.addStateWithId(id, stateName, x, y);
-
-        //makes an update of the Statetransitionsfunction and its contents
-        $scope.statetransitionfunction.update();
-    }
-
-    /**
-     * Changes the start state to the given state id
-     * 
-     * @return {[type]} [description]
-     */
-    $scope.changeStartState = function(stateId) {
-        //change on graphdesigner and others
-        $scope.graphdesigner.changeStartState(stateId);
-        $scope.config.startState = stateId;
-    }
-
-    /**
-     * Add a state as final State
-     */
-    $scope.addFinalState = function(stateId) {
-        //wenn noch nicht vorhanden
-        
-        $scope.config.finalStates.push(stateId);
-
-    }
-
-    /**
-     * Remove a state from the final states
-     * @return {[type]} [description]
-     */
-    $scope.removeFinalState = function(stateId) {
-        //remove from graphdesigner
-        $scope.config.states.push({
-            id: id,
-            name: stateName,
-            x: x,
-            y: y
-        });
-        //draw the State after the State is added
-        $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(id));
-        //the listener is always called after a new node was created
-        $scope.graphdesigner.callStateListener();
-        //makes an update of the Statetransitionsfunction and its contents
-        $scope.statetransitionfunction.update();
-    }
-
-    /**
-     * Adds a state at the end of the states array with a variable id -> used for import
-     * @param {String} stateName 
-     * @param {Float} x         
-     * @param {Float} y         
-     */
-    $scope.addStateWithId = function(stateId, stateName, x, y) {
-        $scope.config.states.push({
-            id: stateId,
-            name: stateName,
-            x: x,
-            y: y
-        });
-        //draw the State after the State is added
-        $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(stateId));
-        //the listener is always called after a new node was created
-        $scope.graphdesigner.callStateListener();
-    }
-
-    /**
-     * Removes the state with the given id
-     * @param  {Int} stateId 
-     */
-    $scope.removeState = function(stateId) {
-        if ($scope.hasStateTransitions(stateId)) {
-            console.log("cant delete state with transitions!");
-        } else {
-            //first remove the element from the svg after that remove it from the array
-            $scope.graphdesigner.removeState(stateId);
-
-            $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
-        }
-
-    }
-
-    /**
-     * Rename a state if the newStatename isnt already used
-     * @param  {Int} stateId      
-     * @param  {State} newStateName 
-     */
-    $scope.renameState = function(stateId, newStateName) {
-        if ($scope.existStateWithName(newStateName)) {
-            console.log("Their is already a state with the given name");
-        } else {
-            $scope.getStateById(stateId).name = newStateName;
-
-            //Rename the state on the graphdesigner
-            $scope.graphdesigner.renameState(stateId, newStateName);
-        }
-
-
+    $scope.hasStateTransitions = function(stateId) {
+        var tmp = false;
+        _.forEach($scope.config.transitions, function(transition) {
+            if (transition.fromState == stateId || transition.toState == stateId) {
+                tmp = true;
+            }
+        })
+        return tmp;
     }
 
     /**
@@ -226,7 +123,7 @@ function DFACtrl($scope) {
     /**
      * Returns the State with the given stateId
      * @param  {Int} stateId 
-     * @return {ObjectReference}         Returns the objectreference of the state
+     * @return {ObjectReference}         Returns the objectreference of the state undefined if not found
      */
     $scope.getStateById = function(stateId) {
 
@@ -234,21 +131,138 @@ function DFACtrl($scope) {
     }
 
     /**
-     * returns if the node has transitions
-     * @param  {Int}  stateId 
-     * @return {Boolean}         
+     * Add a state with default name
+     * @param {Float} x         
+     * @param {Float} y  
      */
-    $scope.hasStateTransitions = function(stateId) {
-        var tmp = false;
-        _.forEach($scope.config.transitions, function(transition) {
-            if (transition.fromState == stateId || transition.toState == stateId) {
-                tmp = true;
-
-            }
-        })
-        return tmp;
+    $scope.addStateWithPresets = function(x, y) {
+        $scope.addState($scope.default.statePrefix + $scope.config.countStateId, x, y);
+        //if u created a state then make the first state as startState ( default)
+        if ($scope.config.countStateId == 1) {
+            $scope.changeStartState(0);
+        }
     }
 
+    /**
+     * Adds a state at the end of the states array
+     * @param {String} stateName 
+     * @param {Float} x         
+     * @param {Float} y         
+     */
+    $scope.addState = function(stateName, x, y) {
+        if (!$scope.existStateWithName(stateName)) {
+            $scope.addStateWithId($scope.config.countStateId++, stateName, x, y);
+        } else {
+            //TODO: BETTER DEBUG     
+        }
+    }
+
+    /**
+     * Adds a state at the end of the states array with a variable id -> used for import
+     * !!!dont use at other places!!!!! ONLY FOR IMPORT
+     * @param {String} stateName 
+     * @param {Float} x         
+     * @param {Float} y         
+     */
+    $scope.addStateWithId = function(stateId, stateName, x, y) {
+        $scope.config.states.push({
+            id: stateId,
+            name: stateName,
+            x: x,
+            y: y
+        });
+        //draw the State after the State is added
+        $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(stateId));
+        //the listener is always called after a new node was created
+        $scope.graphdesigner.callStateListener();
+        //fix changes wont update after addTransisiton from the graphdesigner
+        $scope.safeApply();
+    }
+
+    /**
+     * Removes the state with the given id
+     * @param  {Int} stateId 
+     */
+    $scope.removeState = function(stateId) {
+        if ($scope.hasStateTransitions(stateId)) {
+            //TODO: BETTER DEBUG
+        } else {
+            //first remove the element from the svg after that remove it from the array
+            $scope.graphdesigner.removeState(stateId);
+            $scope.config.countStateId--;
+            $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
+        }
+    }
+
+    /**
+     * Rename a state if the newStatename isnt already used
+     * @param  {Int} stateId      
+     * @param  {State} newStateName 
+     */
+    $scope.renameState = function(stateId, newStateName) {
+        if ($scope.existStateWithName(newStateName)) {
+            //TODO: BETTER DEBUG
+        } else {
+            $scope.getStateById(stateId).name = newStateName;
+            //Rename the state on the graphdesigner
+            $scope.graphdesigner.renameState(stateId, newStateName);
+        }
+    }
+
+    /**
+     * Changes the start state to the given state id
+     */
+    $scope.changeStartState = function(stateId) {
+        if ($scope.existStateWithId(stateId)) {
+            //change on graphdesigner and others
+            $scope.graphdesigner.changeStartState(stateId);
+            //change the startState then
+            $scope.config.startState = stateId;
+        }else{
+            //TODO: BETTER DEBUG
+        }
+    }
+
+    /**
+     * Returns the Index of the saved FinalState
+     * @param  {Int} stateId 
+     * @return {Int}
+     */
+    $scope.getFinalStateIndexByStateId = function(stateId) {
+        return _.indexOf($scope.config.finalStates, stateId);
+    }
+
+    /**
+     * Returns if the state is a finalState
+     * @param  {Int} stateId 
+     * @return {Boolean}         
+     */
+    $scope.isStateAFinalState = function(stateId) {
+        for (var i = 0; i < $scope.config.finalStates.length; i++) {
+            if ($scope.config.finalStates[i] == stateId)
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Add a state as final State if it isnt already added and if their is a state with such a id
+     */
+    $scope.addFinalState = function(stateId) {
+        if (!$scope.isStateAFinalState(stateId)) {
+            $scope.config.finalStates.push(stateId);
+        } else {
+            //TODO: BETTER DEBUG
+        }
+    }
+
+    /**
+     * Remove a state from the final states
+     * @return {[type]} [description]
+     */
+    $scope.removeFinalState = function(stateId) {
+        $scope.config.finalStates.splice($scope.getFinalStateIndexByStateId(stateId), 1);
+    }
 
     //TRANSITIONS
 
@@ -259,16 +273,16 @@ function DFACtrl($scope) {
      * @param  {Strin}  transitonName The name of the transition
      * @return {Boolean}                
      */
-    $scope.isTransitionUnique = function(fromState, toState, transitonName) {
-        var tmp = true;
-        _.forEach($scope.config.transitions, function(transition) {
-            if (transition.fromState == fromState && transition.toState == toState && transistion.name == transistonName) {
-                tmp = false;
+    $scope.existTransition = function(fromState, toState, transitonName) {
+        var tmp = false;
+        for (var i = 0; i < $scope.config.transitions.length; i++) {
+            var transition = $scope.config.transitions[i];
+            if (transition.fromState == fromState && transition.toState == toState && transition.name == transitonName) {
+                tmp = true;
             }
-        })
+        }
         return tmp;
     }
-
 
     /**
      * Adds a transition at the end of the transitions array
@@ -277,24 +291,19 @@ function DFACtrl($scope) {
      * @param {String} transistonName The name of the Transition
      */
     $scope.addTransition = function(fromState, toState, transitonName) {
-        var id = $scope.config.countTransitionId++;
-        $scope.config.transitions.push({
-            id: id,
-            fromState: fromState,
-            toState: toState,
-            name: transitonName
-        });
-        //drawTransistion
-        $scope.graphdesigner.drawTransition(id);
-        //makes an update of the Statetransitionsfunction and its contents
-        $scope.statetransitionfunction.update();
-        //fix changes wont update after addTransisiton from the graphdesigner
-        $scope.safeApply();
-        
+        //can only create the transition if it is unique-> not for the ndfa
+        //there must be a fromState and toState, before adding a transition
+        if (!$scope.existTransition(fromState, toState, transitonName) && $scope.existStateWithId(fromState) &&
+            $scope.existStateWithId(toState)) {
+            $scope.addTransitionWithId($scope.config.countTransitionId++, fromState, toState, transitonName);
+        } else {
+            //TODO: BETTER DEBUG
+        }
     }
 
     /**
-     * Adds a transition at the end of the transitions array -> for import
+     * Adds a transition at the end of the transitions array -> for import 
+     * !!!dont use at other places!!!!! ONLY FOR IMPORT
      * @param {Int} fromState      The id from the fromState
      * @param {Int} toState        The id from the toState
      * @param {String} transistonName The name of the Transition
@@ -308,6 +317,8 @@ function DFACtrl($scope) {
         });
         //drawTransistion
         $scope.graphdesigner.drawTransition(transitionId);
+        //fix changes wont update after addTransisiton from the graphdesigner
+        $scope.safeApply();
     }
 
     /**
@@ -329,27 +340,33 @@ function DFACtrl($scope) {
      * @return {ObjectReference}         Returns the objectreference of the state
      */
     $scope.getTransitionById = function(transitionId) {
-
         return $scope.config.transitions[$scope.getArrayTransitionIdByTransitionId(transitionId)];
     }
 
     /**
      * Removes the transistion
-     * @param {Int} fromState      The id from the fromState
-     * @param {Int} toState        The id from the toState
-     * @param {String} transistonName The name of the Transition
+     * @param {Int} transitionId      The id from the transition
      */
-    $scope.removeTransition = function(fromState, toState, transistonName) {
-        var id = -1;
-        _.forEach($scope.config.transitions, function(transition, key) {
-            if (transition.fromState == fromState && transition.toState == toState && transition.name == transistonName) {
-                id = key;
-            }
-        })
-        if (id != -1) {
-            $scope.config.transitions.splice(id, 1);
+    $scope.removeTransition = function(transitionId) {
+        //first remove the element from the svg after that remove it from the array
+        $scope.graphdesigner.removeTransition(transitionId);
+        $scope.config.countTransitionId--;
+        $scope.config.transitions.splice($scope.getArrayTransitionIdByTransitionId(transitionId), 1);
+    }
+
+    /**
+     * Renames a transition if is uniqe with the new name
+     * @param  {Int} transitionId     
+     * @param  {String} newTransitionName 
+     */
+    $scope.renameTransition = function(transitionId, newTransitionName) {
+        var transition = $scope.getTransitionById(transitionId);
+        if (!$scope.existTransition(transition.fromState, transition.toState, newTransitionName)) {
+            $scope.getTransitionById(transitionId).name = newTransitionName;
+            //Rename the state on the graphdesigner
+            $scope.graphdesigner.renameTransition(transitionId, newTransitionName);
         } else {
-            console.log("Transistion not found");
+            //TODO: BETTER DEBUG
         }
     }
 }

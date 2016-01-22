@@ -1,6 +1,18 @@
 .automataWrapper {
   border: 1px solid #000; }
 
+#stateDiagramm {
+  border: 1px solid #000;
+  width: 100%;
+  height: 300px;
+  min-width: auto; }
+
+#stateDiagramm-buttons {
+  border: 1px solid #000;
+  width: 100%;
+  height: 300px;
+  min-width: auto; }
+
 .stateDiagrammSVG {
   border: 1px solid #000;
   width: 100%;
@@ -28,6 +40,25 @@
 
 .state-text {
   font-size: 15px; }
+
+.visitedState .state-circle {
+  fill: #F00; }
+
+.selectedForTransition .state-circle {
+  fill: #F00; }
+
+.transition {
+  cursor: context-menu; }
+
+.transition-line {
+  stroke: #000;
+  stroke-width: 2; }
+
+.visitedTransition .transition-line {
+  stroke: #F00; }
+
+#hidden-file-upload {
+  display: none; }
 
 #stateContext {
   background-color: #000;
@@ -64,25 +95,3 @@
   top: 10px;
   right: 10px;
   z-index: 99; }
-
-.visitedState .state-circle {
-  fill: #F00; }
-
-.selectedForTransition .state-circle {
-  fill: #F00; }
-
-.transition {
-  cursor: context-menu; }
-
-.transition-line {
-  stroke: #000;
-  stroke-width: 2; }
-
-.visitedTransition .transition-line {
-  stroke: #F00; }
-
-#hidden-file-upload {
-  display: none; }
-
-.statetransitionfunction {
-  height: auto; }
