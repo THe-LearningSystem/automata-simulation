@@ -8,10 +8,10 @@
     <button type="button" class="btn btn-default" ng-click="simulator.stepBackward()" aria-label="Left Align">
         <span class="glyphicon glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-default" ng-click="simulator.stepForward()" aria-label="Left Align">
-        <span class="glyphicon glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
+    <button type="button" class="btn btn-default" ng-click=" simulator.stepForward()" aria-label="Left Align ">
+        <span class="glyphicon glyphicon glyphicon-fast-forward " aria-hidden="true "></span>
     </button>
-    <button type="button" class="btn btn-default" aria-label="Left Align">
+    <button type="button " class="btn btn-default " ng-click="simulator.settings()"aria-label="Left Align">
         <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
     </button>
     Input:
@@ -31,6 +31,18 @@
     <button type="button" class="btn btn-default" ng-click="testData.testDFA()" aria-label="Left Align">
         <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
     </button>
+</div>
+<div class="col-md-12" ng-show="simulator.simulationSettings">
+    <p> Loop:
+        <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
+    </p>
+    <p> StepTimeOut:
+        <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
+        </p>
+        <p>Looptimeout
+        <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
+
+    </p>
 </div>
 <div class="automataWrapper col-md-12">
     <div class="col-md-12">
@@ -58,7 +70,7 @@
                     <input id="state-input-name" ng-model="graphdesigner.input.stateName">
                 </p>
                 <p>StartState:
-                    <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState" >
+                    <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">
                 </p>
                 </p>
                 <p>FinalState:

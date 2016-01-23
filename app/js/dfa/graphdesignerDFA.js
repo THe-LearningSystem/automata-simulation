@@ -381,7 +381,6 @@ var graphdesignerDFA = function($scope, svgSelector) {
                 }
                 //IF RIGHT CLICK
             } else if (d3.event.sourceEvent.which == 3) {
-
                 //open context menu
                 self.rightClick = true;
                 self.showStateContext = true;

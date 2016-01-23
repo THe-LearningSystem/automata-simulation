@@ -12,6 +12,12 @@ var simulationDFA = function($scope) {
     self.loopTimeOut = 2000;
     //if the simulation is paused
     self.simulationPaused = false;
+    //simulationsettings
+    self.simulationSettings = false;
+
+    self.settings = function() {
+        self.simulationSettings = !self.simulationSettings;
+    }
 
     /**
      * Should reset the simulation
@@ -85,8 +91,6 @@ var simulationDFA = function($scope) {
 
         //if the simulation is paused then return
         if (!self.simulationPaused) {
-            //disable inputField during simulation
-            d3.select(".inputWord").attr("disabled", true);
             //start and prepare for the play
             if (!self.simulationStarted) {
                 self.prepareSimulation();
@@ -120,6 +124,8 @@ var simulationDFA = function($scope) {
      * Prepare the simulation ( set startSettings)
      */
     self.prepareSimulation = function() {
+        //disable inputField during simulation
+        d3.select(".inputWord").attr("disabled", true);
         //The simulation always resets the parameters at the start -> it also sets the inputWord
         self.reset();
         self.simulationStarted = true;
