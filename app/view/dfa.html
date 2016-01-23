@@ -52,7 +52,22 @@
             </div>
             <svg id="diagramm-svg">
             </svg>
-            <div id="state-context">ASD</div>
+            <div id="state-context" ng-show="graphdesigner.showStateContext">
+                <h2>State</h2>
+                <p> Name:
+                    <input id="state-input-name" ng-model="graphdesigner.input.stateName">
+                </p>
+                <p>StartState:
+                    <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState" >
+                </p>
+                </p>
+                <p>FinalState:
+                    <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
+                </p>
+                <button type="button" class="btn btn-default" ng-click="graphdesigner.saveState()" aria-label="Left Align">
+                    SAVE
+                </button>
+            </div>
         </div>
     </div>
     <div class="col-md-6">

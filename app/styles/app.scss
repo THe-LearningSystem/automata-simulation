@@ -58,7 +58,8 @@ $animatedTransitionFontColor: #F00;
 }
 
 #state-context {
-    display:none;
+    //display:none;
+    padding:5px;
     position: absolute;
     right: 0px;
     width: 300px;

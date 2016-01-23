@@ -200,6 +200,14 @@ var DFA = function($scope) {
         if ($scope.hasStateTransitions(stateId)) {
             //TODO: BETTER DEBUG
         } else {
+            //if the state is a final state move this state from the final states
+            if ($scope.isStateAFinalState(stateId)) {
+                $scope.removeFinalState(stateId);
+            }
+            //if state is a start State remove the state from the startState
+            if ($scope.config.startState == stateId) {
+                $scope.config.startState = null;
+            }
             //first remove the element from the svg after that remove it from the array
             $scope.graphdesigner.removeState(stateId);
             $scope.config.countStateId--;
@@ -234,6 +242,17 @@ var DFA = function($scope) {
         } else {
             //TODO: BETTER DEBUG
         }
+    }
+
+    /**
+     * Removes the start state 
+     */
+    $scope.removeStartState = function() {
+        //change on graphdesigner and others
+        $scope.graphdesigner.removeStartState();
+        //change the startState
+        $scope.config.startState = null;
+
     }
 
     /**

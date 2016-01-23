@@ -3,6 +3,7 @@
 // Declare app level module which depends on views, and components
 var autoSim = angular.module('AutoSim', [
   'ngRoute',
+  'ui.bootstrap'
 ]).
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/dfa',{

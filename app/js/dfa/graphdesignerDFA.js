@@ -11,6 +11,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
     self.inAddState = false;
     self.inAddTransition = false;
     self.selectedState = null;
+    self.showStateContext = false;
 
     //graphdesigner settings
     self.settings = {
@@ -187,6 +188,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
 
     self.removeEventListener = function() {
         self.resetAdds();
+        self.inAction = true;
+        self.inRemove = true;
     }
 
 
@@ -267,6 +270,11 @@ var graphdesignerDFA = function($scope, svgSelector) {
             .attr("marker-end", "url(#marker-end-arrow)");
     }
 
+    self.removeStartState = function(stateId){
+            var state = $scope.getStateById($scope.config.startState);
+            state.objReference.select(".start-line").remove();
+    }
+
     /**
      * Draws a State 
      * @param  {Int} id The arrayid of the State
@@ -315,7 +323,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param {[type]} state        [description]
      */
     self.setTransitionClassAs = function(transitionId, state, className) {
-        var objReference = $scope.getTransitionById(transitionId).objReference;
+        var trans = $scope.getTransitionById(transitionId);
+        var objReference = self.getTransition(trans.fromState, trans.toState).objReference;
         objReference.classed(className, state);
         if (state && className == 'animated-transition') {
             objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow-animated)");
@@ -331,13 +340,27 @@ var graphdesignerDFA = function($scope, svgSelector) {
     self.stateMenu = function() {
         //prevent the normal right click menu
         d3.event.preventDefault();
-
     }
+
+    self.saveState = function() {
+        $scope.renameState(self.input.state.id, self.input.stateName);
+        if (self.input.startState) {
+            $scope.changeStartState(self.input.state.id);
+        }else{
+            $scope.removeStartState();
+        }
+        if (self.input.finalState) {
+            $scope.addFinalState(self.input.state.id);
+        } else {
+            $scope.removeFinalState(self.input.state.id);
+        }
+        self.showStateContext = false;
+    }
+
 
     //Node drag and drop behaviour
     self.dragState = d3.behavior.drag()
-
-    .on("dragstart", function() {
+        .on("dragstart", function() {
             //IF LEFT CLICK
             if (d3.event.sourceEvent.which == 1) {
                 //if we are in a addTransition action
@@ -351,15 +374,28 @@ var graphdesignerDFA = function($scope, svgSelector) {
                         self.setStateClassAs(self.selectedState.attr("object-id"), false, "selectedForTransition");
                         self.selectedState = null;
                     }
+                } else if (self.inRemove) {
+                    $scope.removeState(parseInt(d3.select(this).attr("object-id")));
                 } else {
                     self.dragInitiated = true;
                 }
                 //IF RIGHT CLICK
             } else if (d3.event.sourceEvent.which == 3) {
+
                 //open context menu
                 self.rightClick = true;
-                self.stateContext.style("visibility", "visible");
-                $("div#stateContext").show();
+                self.showStateContext = true;
+
+                //get the selected state
+                var state = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
+                //save the state values in the state context as default value
+                self.input = {};
+                self.input.state = state;
+                self.input.stateName = state.name;
+                self.input.startState = $scope.config.startState == state.id;
+                self.input.finalState = $scope.isStateAFinalState(state.id);
+                $scope.safeApply();
+
             }
         })
         .on("drag", function() {
@@ -398,10 +434,13 @@ var graphdesignerDFA = function($scope, svgSelector) {
             if (self.selectedState == null) {
                 self.resetAdds();
             }
+            if (self.inRemove) {
+                self.resetAdds();
+                self.inRemove = false;
+            }
             //fixes that the whole svg moves with the next move on the svg ( stupid workaround) BETTER SOLUTION?
             zoom.scale($scope.config.diagrammScale);
             zoom.translate([$scope.config.diagrammX, $scope.config.diagrammY]);
-
         });
 
     /**
@@ -482,6 +521,44 @@ var graphdesignerDFA = function($scope, svgSelector) {
             x: a.x * factor,
             y: a.y * factor
         };
+    }
+
+    /**
+     * [bezierLine description]
+     * @type {[type]}
+     */
+    self.bezierLine = d3.svg.line()
+        .x(function(d) {
+            return d[0];
+        })
+        .y(function(d) {
+            return d[1];
+        })
+        .interpolate("basis");
+
+    /**
+     * [selfTransition description]
+     * @param  {[type]} x [description]
+     * @param  {[type]} y [description]
+     * @return {[type]}   [description]
+     */
+    self.selfTransition = function(x, y) {
+        return self.bezierLine([
+            [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
+            [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY],
+            [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY],
+            [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]
+        ]);
+    }
+
+    self.transitionCurve = function(coordObj) {
+        self.getTransitionCurveData(coordObj);
+        return self.bezierLine([
+            [coordObj.x1, coordObj.y1],
+            [coordObj.xMidPoint, coordObj.yMidPoint],
+            [coordObj.xMidPoint, coordObj.yMidPoint],
+            [coordObj.x2, coordObj.y2]
+        ]);
     }
 
     /**
@@ -568,43 +645,6 @@ var graphdesignerDFA = function($scope, svgSelector) {
         }
     }
 
-    /**
-     * [bezierLine description]
-     * @type {[type]}
-     */
-    self.bezierLine = d3.svg.line()
-        .x(function(d) {
-            return d[0];
-        })
-        .y(function(d) {
-            return d[1];
-        })
-        .interpolate("basis");
-
-    /**
-     * [selfTransition description]
-     * @param  {[type]} x [description]
-     * @param  {[type]} y [description]
-     * @return {[type]}   [description]
-     */
-    self.selfTransition = function(x, y) {
-        return self.bezierLine([
-            [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
-            [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY],
-            [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY],
-            [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]
-        ]);
-    }
-
-    self.transitionCurve = function(coordObj) {
-        self.getTransitionCurveData(coordObj);
-        return self.bezierLine([
-            [coordObj.x1, coordObj.y1],
-            [coordObj.xMidPoint, coordObj.yMidPoint],
-            [coordObj.xMidPoint, coordObj.yMidPoint],
-            [coordObj.x2, coordObj.y2]
-        ]);
-    }
 
     /**
      * Update the transitions in the svg after moving a state
