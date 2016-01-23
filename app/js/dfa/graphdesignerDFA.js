@@ -270,9 +270,9 @@ var graphdesignerDFA = function($scope, svgSelector) {
             .attr("marker-end", "url(#marker-end-arrow)");
     }
 
-    self.removeStartState = function(stateId){
-            var state = $scope.getStateById($scope.config.startState);
-            state.objReference.select(".start-line").remove();
+    self.removeStartState = function(stateId) {
+        var state = $scope.getStateById($scope.config.startState);
+        state.objReference.select(".start-line").remove();
     }
 
     /**
@@ -346,7 +346,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
         $scope.renameState(self.input.state.id, self.input.stateName);
         if (self.input.startState) {
             $scope.changeStartState(self.input.state.id);
-        }else{
+        } else {
             $scope.removeStartState();
         }
         if (self.input.finalState) {
@@ -474,6 +474,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
             xMid: (x1 + x2) / 2,
             yMid: (y1 + y2) / 2
         }
+        coordObj.distance = Math.sqrt(coordObj.xDiff * coordObj.xDiff + coordObj.yDiff * coordObj.yDiff);
+
 
         return coordObj;
 
@@ -498,7 +500,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
         };
 
         coordObj.movingPoint = crossPro(vecA, vecB);
-        coordObj.movingPoint = expandVector(coordObj.movingPoint, 0.2);
+        coordObj.movingPoint = expandVector(coordObj.movingPoint, 40 * (1 / coordObj.distance));
 
         coordObj.xMidPoint = coordObj.movingPoint.x + coordObj.xMid;
         coordObj.yMidPoint = coordObj.movingPoint.y + coordObj.yMid;
@@ -550,14 +552,28 @@ var graphdesignerDFA = function($scope, svgSelector) {
         ]);
     }
 
-    self.transitionCurve = function(coordObj) {
+    /**
+     * [transitionCurve description]
+     * @param  {[type]} coordObj     [description]
+     * @param  {[type]} justStraight [description]
+     * @return {[type]}              [description]
+     */
+    self.transitionCurve = function(coordObj, justStraight) {
         self.getTransitionCurveData(coordObj);
-        return self.bezierLine([
-            [coordObj.x1, coordObj.y1],
-            [coordObj.xMidPoint, coordObj.yMidPoint],
-            [coordObj.xMidPoint, coordObj.yMidPoint],
-            [coordObj.x2, coordObj.y2]
-        ]);
+        var array = null;
+        if (!justStraight) {
+            array = [
+                [coordObj.x1, coordObj.y1],
+                [coordObj.xMidPoint, coordObj.yMidPoint],
+                [coordObj.x2, coordObj.y2]
+            ];
+        } else {
+            array = [
+                [coordObj.x1, coordObj.y1],
+                [coordObj.x2, coordObj.y2]
+            ];
+        }
+        return self.bezierLine(array);
     }
 
     /**
@@ -576,10 +592,21 @@ var graphdesignerDFA = function($scope, svgSelector) {
                 self.getTransitionCurveData(coordObj);
                 var group = self.svgTransitions.append("g")
                     .attr("class", "transition");
+                var curveData = null;
+                //if there is a transition in the other direction
+                if (self.existDrawnTransition(transition.toState, transition.fromState)) {
+                    curveData = self.transitionCurve(coordObj, false);
 
+                    var otherCoordObj = self.getTransitionCoordinates(transition.toState, transition.fromState);
+                    var otherCurveData = self.transitionCurve(otherCoordObj, false);
+                    var otherTrans = self.getTransition(transition.toState, transition.fromState);
+                    otherTrans.objReference.select(".transition-line").attr("d", otherCurveData);
+                } else {
+                    curveData = self.transitionCurve(coordObj, true);
+                }
                 var line = group.append("path")
                     .attr("class", "transition-line curvedLine")
-                    .attr("d", self.transitionCurve(coordObj))
+                    .attr("d", curveData)
                     .attr("stroke", "red")
                     .attr("stroke-width", 1)
                     .attr("fill", "none")
@@ -653,11 +680,16 @@ var graphdesignerDFA = function($scope, svgSelector) {
         var stateName = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)].name;
         _.forEach(self.drawnTransitions, function(n, key) {
             if (n.fromState == stateId || n.toState == stateId) {
-
+                //if its not a selfreference
                 if (n.fromState != n.toState) {
                     var obj = n.objReference;
                     var coordObj = self.getTransitionCoordinates(n.fromState, n.toState);
-                    obj.select(".transition-line").attr("d", self.transitionCurve(coordObj));
+                    
+                    if (self.existDrawnTransition(n.toState, n.fromState)) {
+                        obj.select(".transition-line").attr("d", self.transitionCurve(coordObj,false));
+                    } else {
+                        obj.select(".transition-line").attr("d", self.transitionCurve(coordObj,true));
+                    }
 
                     obj.select("text")
                         .attr("x", coordObj.xMidPoint)
