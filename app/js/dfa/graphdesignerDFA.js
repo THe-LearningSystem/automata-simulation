@@ -136,9 +136,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
             var width = self.svgOuter.style("width").replace("px", "");;
             var height = self.svgOuter.style("height").replace("px", "");;
             //xGrid
-            console.log(width);
             for (var i = 0; i < width; i +=self.gridSpace) {
-                console.log(i);
                 self.svgGrid
                     .append("line")
                     .attr("class", "grid-line xgrid-line")
@@ -157,13 +155,11 @@ var graphdesignerDFA = function($scope, svgSelector) {
                     .attr("x2", width)
                     .attr("y2", i);
             }
-            console.log("ASD");
         } else {
             //undraw Grid
             self.svgGrid.html("");
         }
         self.isGrid = !self.isGrid;
-        console.log(self.isGrid);
 
     }
 
