@@ -11,7 +11,7 @@
     <button type="button" class="btn btn-default" ng-click=" simulator.stepForward()" aria-label="Left Align ">
         <span class="glyphicon glyphicon glyphicon-fast-forward " aria-hidden="true "></span>
     </button>
-    <button type="button " class="btn btn-default " ng-click="simulator.settings()"aria-label="Left Align">
+    <button type="button " class="btn btn-default " ng-click="simulator.settings()" aria-label="Left Align">
         <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
     </button>
     Input:
@@ -38,10 +38,9 @@
     </p>
     <p> StepTimeOut:
         <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
-        </p>
-        <p>Looptimeout
+    </p>
+    <p>Looptimeout
         <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
-
     </p>
 </div>
 <div class="automataWrapper col-md-12">
@@ -57,6 +56,9 @@
                 </button>
                 <button type="button" class="btn btn-default" ng-click="graphdesigner.removeEventListener()" aria-label="Left Align">
                     <span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default" ng-click="graphdesigner.drawGrid()" aria-label="Left Align">
+                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
                 </button>
                 <button type="button" class="btn btn-default" ng-click="graphdesigner.rescale()" aria-label="Left Align">
                     <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>

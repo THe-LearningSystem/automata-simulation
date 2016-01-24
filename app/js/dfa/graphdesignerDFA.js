@@ -76,6 +76,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
         self.drawnTransitions = [];
 
     }
+
+
     self.svgOuter = d3.select(svgSelector)
         //prevents the normal rightclickcontextmenu
         .on("contextmenu", function() {
@@ -117,12 +119,53 @@ var graphdesignerDFA = function($scope, svgSelector) {
         .append("g")
         .attr("id", "svg-items");
 
-
+    self.svgGrid = self.svg.append("g").attr("id", "grid");
     //first draw the transitions -> nodes are in front of them if they overlap
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");
     self.svgStates = self.svg.append("g").attr("id", "states");
+
+
     self.stateContext = d3.select("#stateContext");
 
+    self.gridSpace = 50;
+    self.isGrid = false;
+    self.drawGrid = function() {
+
+        if (!self.isGrid) {
+            //draw Grid
+            var width = self.svgOuter.style("width").replace("px", "");;
+            var height = self.svgOuter.style("height").replace("px", "");;
+            //xGrid
+            console.log(width);
+            for (var i = 0; i < width; i +=self.gridSpace) {
+                console.log(i);
+                self.svgGrid
+                    .append("line")
+                    .attr("class", "grid-line xgrid-line")
+                    .attr("x1", i )
+                    .attr("y1", 0)
+                    .attr("x2", i)
+                    .attr("y2", height);
+            }
+            //yGrid
+            for (var i = 0; i < height; i +=self.gridSpace) {
+                self.svgGrid
+                    .append("line")
+                    .attr("class", "grid-line ygrid-line")
+                    .attr("x1", 0)
+                    .attr("y1", i)
+                    .attr("x2", width)
+                    .attr("y2", i);
+            }
+            console.log("ASD");
+        } else {
+            //undraw Grid
+            self.svgGrid.html("");
+        }
+        self.isGrid = !self.isGrid;
+        console.log(self.isGrid);
+
+    }
 
     //DEFS
     self.defs = self.svg.append('svg:defs');
@@ -347,7 +390,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
         if (self.input.startState) {
             $scope.changeStartState(self.input.state.id);
         } else {
-            $scope.removeStartState();
+            if (self.id == $scope.config.startState)
+                $scope.removeStartState();
         }
         if (self.input.finalState) {
             $scope.addFinalState(self.input.state.id);
@@ -500,7 +544,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
         };
 
         coordObj.movingPoint = crossPro(vecA, vecB);
-        coordObj.movingPoint = expandVector(coordObj.movingPoint, 40 * (1 / coordObj.distance));
+        coordObj.movingPoint = expandVector(coordObj.movingPoint, 70 * (1 / coordObj.distance * 1.1));
 
         coordObj.xMidPoint = coordObj.movingPoint.x + coordObj.xMid;
         coordObj.yMidPoint = coordObj.movingPoint.y + coordObj.yMid;
@@ -684,11 +728,11 @@ var graphdesignerDFA = function($scope, svgSelector) {
                 if (n.fromState != n.toState) {
                     var obj = n.objReference;
                     var coordObj = self.getTransitionCoordinates(n.fromState, n.toState);
-                    
+
                     if (self.existDrawnTransition(n.toState, n.fromState)) {
-                        obj.select(".transition-line").attr("d", self.transitionCurve(coordObj,false));
+                        obj.select(".transition-line").attr("d", self.transitionCurve(coordObj, false));
                     } else {
-                        obj.select(".transition-line").attr("d", self.transitionCurve(coordObj,true));
+                        obj.select(".transition-line").attr("d", self.transitionCurve(coordObj, true));
                     }
 
                     obj.select("text")

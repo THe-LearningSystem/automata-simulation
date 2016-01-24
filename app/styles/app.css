@@ -4,7 +4,7 @@
 #diagramm {
   border: 1px solid #000;
   width: 100%;
-  height: 300px;
+  height: 500px;
   min-width: auto;
   position: relative; }
 
@@ -14,7 +14,7 @@
 
 #diagramm-svg {
   width: 100%;
-  height: 300px;
+  height: 500px;
   min-width: auto;
   position: absolute; }
 
@@ -22,7 +22,7 @@
   padding: 5px;
   position: absolute;
   right: 0px;
-  width: 300px;
+  width: auto;
   height: 100%;
   background-color: #888; }
 
@@ -31,6 +31,10 @@
 
 #marker-end-arrow-animated {
   fill: #F00; }
+
+.grid-line {
+  stroke: #000;
+  stroke-width: 2; }
 
 .state {
   cursor: context-menu; }

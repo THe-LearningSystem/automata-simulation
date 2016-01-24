@@ -248,10 +248,13 @@ var DFA = function($scope) {
      * Removes the start state 
      */
     $scope.removeStartState = function() {
-        //change on graphdesigner and others
-        $scope.graphdesigner.removeStartState();
-        //change the startState
-        $scope.config.startState = null;
+        //can only del
+        if ($scope.config.startState == startId) {
+            //change on graphdesigner and others
+            $scope.graphdesigner.removeStartState();
+            //change the startState
+            $scope.config.startState = null;
+        }
 
     }
 
