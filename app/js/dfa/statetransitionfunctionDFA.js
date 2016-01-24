@@ -104,11 +104,8 @@ var statetransitionfunctionDFA = function($scope){
 
     self.changeStartState = function() {
         var arrayStates = [];
-        console.log(self.functionData.startState.length);
-
         for (var i = 0; i < self.functionData.startState.length; i++) {
             arrayStates[i] = self.functionData.startState.charAt(i);
         };
-        console.log(arrayStates);
     }
 }

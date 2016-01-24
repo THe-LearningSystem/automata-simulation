@@ -127,7 +127,8 @@ var graphdesignerDFA = function($scope, svgSelector) {
 
     self.stateContext = d3.select("#stateContext");
 
-    self.gridSpace = 50;
+    self.gridSpace = 100;
+    self.gridSnapDistance = 20;
     self.isGrid = false;
     self.drawGrid = function() {
 
@@ -136,17 +137,17 @@ var graphdesignerDFA = function($scope, svgSelector) {
             var width = self.svgOuter.style("width").replace("px", "");;
             var height = self.svgOuter.style("height").replace("px", "");;
             //xGrid
-            for (var i = 0; i < width; i +=self.gridSpace) {
+            for (var i = 0; i < width; i += self.gridSpace) {
                 self.svgGrid
                     .append("line")
                     .attr("class", "grid-line xgrid-line")
-                    .attr("x1", i )
+                    .attr("x1", i)
                     .attr("y1", 0)
                     .attr("x2", i)
                     .attr("y2", height);
             }
             //yGrid
-            for (var i = 0; i < height; i +=self.gridSpace) {
+            for (var i = 0; i < height; i += self.gridSpace) {
                 self.svgGrid
                     .append("line")
                     .attr("class", "grid-line ygrid-line")
@@ -443,6 +444,27 @@ var graphdesignerDFA = function($scope, svgSelector) {
                 if (self.dragInitiated && !self.inAddTransition) {
                     var x = d3.event.x;
                     var y = d3.event.y;
+
+                    var snapPointX = x - (x % self.gridSpace);
+                    var snapPointY = y - (y % self.gridSpace);
+
+                    //check first snapping Point (top left)
+                    if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
+                        x = snapPointX;
+                        y = snapPointY;
+                        //second snapping point (top right)
+                    } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
+                        x = snapPointX + self.gridSpace;
+                        y = snapPointY;
+                        //third snapping point (bot left)
+                    } else if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
+                        x = snapPointX;
+                        y = snapPointY + self.gridSpace;
+                        //fourth snapping point (bot right)
+                    } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
+                        x = snapPointX + self.gridSpace;
+                        y = snapPointY + self.gridSpace;
+                    }
                     //update the shown node
                     d3.select(this)
                         .attr("transform", "translate(" + x + " " + y + ")");
@@ -703,8 +725,6 @@ var graphdesignerDFA = function($scope, svgSelector) {
             var drawnTransition = self.getTransition(transition.fromState, transition.toState);
             drawnTransition.names.push(transition.name);
             //drawn the new name to the old transition
-            console.log("added transitionname");
-            console.log(drawnTransition);
             drawnTransition.objReference.select(".transition-text").text(self.getTransitionNames(drawnTransition.names));
 
 
