@@ -78,6 +78,8 @@ var DFA = function($scope) {
     }
 
 
+
+
     //STATE FUNCTIONS START
 
     /**

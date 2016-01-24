@@ -89,19 +89,10 @@
     </div>
     <div class="col-md-6">
         <h3>Zustandsüberführungsfunktion</h3>
-        <p>&Sigma; = {
-            <input ng-model="statetransitionfunction.functionData.transitions" />}
-        </p>
-        <p>S = {
-            <input ng-model="statetransitionfunction.functionData.states" />}
-        </p>
+        <p>&Sigma; = { {{statetransitionfunction.functionData.transitions}} }</p>
+        <p>S = { {{statetransitionfunction.functionData.states}} }</p>
         <p>&delta; = {
-            <textarea class="statetransitionfunction" rows="1" ng-model="statetransitionfunction.functionData.statetransitionfunction"> </textarea>}
-        </p>
-        <p>S<sub>0</sub>= {
-            <input ng-model="statetransitionfunction.functionData.startState" />}
-        </p>
-        <p>F = {
-            <input ng-model="statetransitionfunction.functionData.finalStates" />}
-        </p>
+            <p ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction">{{x}}</p> &#125;</p>
+        <p>S<sub>0</sub>= { {{statetransitionfunction.functionData.startState}} }</p>
+        <p>F = { {{statetransitionfunction.functionData.finalStates}} }</p>
     </div>
