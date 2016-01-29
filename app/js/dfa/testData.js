@@ -5,12 +5,13 @@ var testData = function($scope) {
     self = this;
 
     self.testDFA = function() {
-        $scope.config.finalStates.push(3);
+
         $scope.inputWord = "abc";
         $scope.addStateWithPresets(50, 50);
         $scope.addStateWithPresets(50, 200);
         $scope.addStateWithPresets(200, 200);
         $scope.addStateWithPresets( 200, 50);
+        $scope.addFinalState(3);
 
 
         $scope.addTransition(0, 1, "a");

@@ -1,37 +1,93 @@
 @import 'bootstrap_variables';
+//svg diagramm variables
 //state Settings
 $stateColor: #CCC;
-$visitedStateColor: #F00;
-$finalStateColor: #FFF;
-$stateColorHover: #888;
-$stateColorSelected: #444;
 $stateBorderWidth:2;
 $stateBorderColor:#666;
 $stateFontSize:15px;
 $stateFontColor: #000;
+//final state
+$finalStateColor: #FFF;
+$finalStateBorderColor: $stateBorderColor;
+$finalStateBorderWidth:2;
+//Hover
+$stateColorHover: #000;
+$stateColorHoverOpacity:0.4;
+$stateColorSelected: #444;
+$selectForAddTransitionColor:#F00;
+//animated state for the simulation
+$animatedStateColor:#F00;
+
 //Transition Settings
-$transitiionColor: #000;
+$transitionColor: #000;
 $transitionFontSize: 15px;
 $transitionFontColor: #000;
-$transitionWith:2;
+$transitionWidth:2;
+//animated transition
+$animatedTransitionWidth:2.5;
+$animatedTransitionColor:#F00;
+$animatedTransitionFontColor: #F00;
+
+//svg diagramm
 .automataWrapper {
     border: 1px solid #000;
 }
 
-.stateDiagrammSVG {
-    border: 1px solid #000;
-    width: 100%;
-    height: 300px;
-    min-width: auto;
+#stateDiagramm {
+
 }
 
-//state
+#diagramm {
+    border: 1px solid #000;
+    width: 100%;
+    height: 500px;
+    min-width: auto;
+    position: relative;
+}
+
+#diagramm-buttons {
+    position: absolute;
+    z-index: 5;
+}
+
+#diagramm-svg {
+    width: 100%;
+    height: 500px;
+    min-width: auto;
+    position: absolute;
+}
+
+#state-context {
+    //display:none;
+    padding:5px;
+    position: absolute;
+    right: 0px;
+    width: auto;
+    height: 100%;
+    background-color: #888;
+}
+
+//normal arrow
+#marker-end-arrow{
+    fill:#000;
+}
+//animated arrow for the simulation
+#marker-end-arrow-animated{
+    fill:#F00;
+}
+//grid
+.grid-line{
+        stroke: $transitionColor;
+    stroke-width: $transitionWidth;
+}
+//states
 .state {
     cursor: context-menu;
 }
 
-.state:hover .state-circle {
+.state:hover .hover-circle {
     fill: $stateColorHover;
+    fill-opacity:$stateColorHoverOpacity;
 }
 
 .state:active .state-circle {
@@ -44,62 +100,23 @@ $transitionWith:2;
     stroke-width: $stateBorderWidth;
 }
 
-.final-State {
+.final-state {
     fill: $finalStateColor;
-    stroke: $stateBorderColor;
-    stroke-width: $stateBorderWidth;
+    stroke: $finalStateBorderColor;
+    stroke-width: $finalStateBorderWidth;
 }
 
 .state-text {
     font-size: $stateFontSize;
 }
 
-#stateContext {
-    background-color: #000;
-    visibility: hidden;
-    left: 50%;
-    margin-left: -400px;
-    max-width: 800px;
-    position: absolute;
-    top: 20px;
-    width: 90%;
-    z-index: 100;
-}
-
-.pop-up-background {
-    background: rgba(255, 255, 255, .8);
-    cursor: pointer;
-    display: none;
-    height: 100%;
-    left: 0;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 100;
-}
-
-.pop-up-content {
-    background: #fff;
-    -webkit-box-shadow: 0px 1px 10px 2px #ccc;
-    -moz-box-shadow: 0px 1px 10px 2px #ccc;
-    box-shadow: 0px 1px 10px 2px #ccc;
-    min-height: 30px;
-    padding: 24px;
-}
-
-.pop-up .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 99;
-}
-
-.visitedState .state-circle {
-    fill: $visitedStateColor;
+//animated state for the simulation
+.animated-state .state-circle {
+    fill: $animatedStateColor;
 }
 
 .selectedForTransition .state-circle {
-    fill: $visitedStateColor;
+    fill: $selectForAddTransitionColor;
 }
 
 .state-text:hover {}
@@ -110,16 +127,21 @@ $transitionWith:2;
 }
 
 .transition-line {
-    stroke: $transitiionColor;
-    stroke-width: $transitionWith;
+    stroke: $transitionColor;
+    stroke-width: $transitionWidth;
 }
 
-.visitedTransition .transition-line {
-    stroke: #F00;
+//animated transition for the simulation
+.animated-transition .transition-line {
+    stroke: $animatedTransitionColor;
+    stroke-width: $animatedTransitionWidth;
 }
 
-.transition-text {}
+.transition-text {
 
+}
+
+//ECT
 #hidden-file-upload {
     display: none;
 }

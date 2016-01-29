@@ -1,17 +1,47 @@
 .automataWrapper {
   border: 1px solid #000; }
 
-.stateDiagrammSVG {
+#diagramm {
   border: 1px solid #000;
   width: 100%;
-  height: 300px;
-  min-width: auto; }
+  height: 500px;
+  min-width: auto;
+  position: relative; }
+
+#diagramm-buttons {
+  position: absolute;
+  z-index: 5; }
+
+#diagramm-svg {
+  width: 100%;
+  height: 500px;
+  min-width: auto;
+  position: absolute; }
+
+#state-context {
+  padding: 5px;
+  position: absolute;
+  right: 0px;
+  width: auto;
+  height: 100%;
+  background-color: #888; }
+
+#marker-end-arrow {
+  fill: #000; }
+
+#marker-end-arrow-animated {
+  fill: #F00; }
+
+.grid-line {
+  stroke: #000;
+  stroke-width: 2; }
 
 .state {
   cursor: context-menu; }
 
-.state:hover .state-circle {
-  fill: #888; }
+.state:hover .hover-circle {
+  fill: #000;
+  fill-opacity: 0.4; }
 
 .state:active .state-circle {
   fill: #444; }
@@ -21,7 +51,7 @@
   stroke: #666;
   stroke-width: 2; }
 
-.final-State {
+.final-state {
   fill: #FFF;
   stroke: #666;
   stroke-width: 2; }
@@ -29,43 +59,7 @@
 .state-text {
   font-size: 15px; }
 
-#stateContext {
-  background-color: #000;
-  visibility: hidden;
-  left: 50%;
-  margin-left: -400px;
-  max-width: 800px;
-  position: absolute;
-  top: 20px;
-  width: 90%;
-  z-index: 100; }
-
-.pop-up-background {
-  background: rgba(255, 255, 255, 0.8);
-  cursor: pointer;
-  display: none;
-  height: 100%;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100; }
-
-.pop-up-content {
-  background: #fff;
-  -webkit-box-shadow: 0px 1px 10px 2px #ccc;
-  -moz-box-shadow: 0px 1px 10px 2px #ccc;
-  box-shadow: 0px 1px 10px 2px #ccc;
-  min-height: 30px;
-  padding: 24px; }
-
-.pop-up .close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 99; }
-
-.visitedState .state-circle {
+.animated-state .state-circle {
   fill: #F00; }
 
 .selectedForTransition .state-circle {
@@ -78,11 +72,9 @@
   stroke: #000;
   stroke-width: 2; }
 
-.visitedTransition .transition-line {
-  stroke: #F00; }
+.animated-transition .transition-line {
+  stroke: #F00;
+  stroke-width: 2.5; }
 
 #hidden-file-upload {
   display: none; }
-
-.statetransitionfunction {
-  height: auto; }

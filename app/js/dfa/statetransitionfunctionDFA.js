@@ -8,10 +8,20 @@ var statetransitionfunctionDFA = function($scope){
     self.functionData.startState = '';
     self.functionData.finalStates = '';
    	self.functionData.transitions = '';
-   	self.functionData.statetransitionfunction = '';
+   	self.functionData.statetransitionfunction = [];
 
 
-    self.update = function(){
+    $scope.$watchCollection('config', function() {
+        self.updateFunction();
+    });
+
+
+    $scope.$watch('statetransitionfunction.functionData.startState', function() {
+        self.changeStartState();
+    });
+
+
+    self.updateFunction = function(){
     	var arrayAlphabet = [];
     	var stringAlphabet = '';
     	var stringStates = '';
@@ -26,7 +36,7 @@ var statetransitionfunctionDFA = function($scope){
     	for (var i = 0; i < $scope.config.transitions.length; i++) {
     		arrayAlphabet[i] = $scope.config.transitions[i].name;
     	}
-    	arrayAlphabet = jQuery.unique(arrayAlphabet);
+    	arrayAlphabet = _.uniq(arrayAlphabet);
     	for (var i = 0; i < arrayAlphabet.length; i++) {
     		stringAlphabet = stringAlphabet + arrayAlphabet[i];
     		if (i < arrayAlphabet.length - 1) {
@@ -62,14 +72,9 @@ var statetransitionfunctionDFA = function($scope){
     		tmp = $scope.getStateById(stateTransition.toState);
     		stringStateTransitions = stringStateTransitions + tmp.name + ')';
 			
-			stringAllStateTransitions = stringAllStateTransitions + stringStateTransitions + '\n';
+			self.functionData.statetransitionfunction.push(stringStateTransitions);
     		}
     	}
-
-    	self.functionData.textareaRows = i;
-    	// console.log(self.functionData.textareaRows);
-    	self.functionData.statetransitionfunction = stringAllStateTransitions;
-
 
 
     	//Update of Startstate
@@ -94,5 +99,13 @@ var statetransitionfunctionDFA = function($scope){
     	}
 
     	self.functionData.finalStates = stringFinalStates;
+    }
+
+
+    self.changeStartState = function() {
+        var arrayStates = [];
+        for (var i = 0; i < self.functionData.startState.length; i++) {
+            arrayStates[i] = self.functionData.startState.charAt(i);
+        };
     }
 }

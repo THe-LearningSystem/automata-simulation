@@ -1,8 +1,9 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-var myApp = angular.module('myApp', [
+var autoSim = angular.module('AutoSim', [
   'ngRoute',
+  'ui.bootstrap'
 ]).
 config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/dfa',{
@@ -11,6 +12,6 @@ config(['$routeProvider', function($routeProvider) {
     })
   $routeProvider.otherwise({redirectTo: '/dfa'});
 }]);
-myApp.controller('DFACtrl',['$scope','$log',function($scope,$log){
+autoSim.controller('DFACtrl',['$scope','$log',function($scope,$log){
     
 }])

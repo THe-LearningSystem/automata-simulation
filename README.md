@@ -1,2 +1,3 @@
-#MyApp
-Ti-praxis project 
+#Automata Simulation
+
+
