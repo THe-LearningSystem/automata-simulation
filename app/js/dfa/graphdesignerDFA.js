@@ -105,6 +105,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         $scope.safeApply();
         svgOuterZoomAndDrag.scale($scope.defaultConfig.diagrammScale);
         svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagrammX, $scope.defaultConfig.diagrammY]);
+        self.drawGrid();
     };
 
 
@@ -150,14 +151,15 @@ function GraphdesignerDFA($scope, svgSelector) {
             }
         });
 
+    //the html element where we put the svgGrid into
+    self.svgGrid = self.svgOuter.append("g").attr("id", "grid");
 
-
+    //inner svg
     self.svg = self.svgOuter
         .append("g")
         .attr("id", "svg-items");
 
-    //the html element where we put the svgGrid into
-    self.svgGrid = self.svgOuter.append("g").attr("id", "grid");
+
     //first draw the transitions -> nodes are in front of them if they overlap
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");
     self.svgStates = self.svg.append("g").attr("id", "states");
@@ -180,30 +182,32 @@ function GraphdesignerDFA($scope, svgSelector) {
             var width = self.svgOuter.style("width").replace("px", "");
             var height = self.svgOuter.style("height").replace("px", "");
             var thickness = 1 * $scope.config.diagrammScale * 0.5;
-            var xOffset = ($scope.config.diagrammX % ( self.gridSpace* $scope.config.diagrammScale));
-            var yOffset = ($scope.config.diagrammY % ( self.gridSpace* $scope.config.diagrammScale)) ;
+            var xOffset = ($scope.config.diagrammX % (self.gridSpace * $scope.config.diagrammScale));
+            var yOffset = ($scope.config.diagrammY % (self.gridSpace * $scope.config.diagrammScale));
+            var i;
             //xGrid
-            for (var i = 0; i * $scope.config.diagrammScale < width; i += self.gridSpace * $scope.config.diagrammScale) {
+            for (i = xOffset; i < width; i += self.gridSpace * $scope.config.diagrammScale) {
 
                 self.svgGrid
                     .append("line")
                     .attr("stroke-width", thickness)
                     .attr("class", "grid-line xgrid-line")
-                    .attr("x1", (i + xOffset))
+                    .attr("x1", i)
                     .attr("y1", 0)
-                    .attr("x2", (i + xOffset))
+                    .attr("x2", i)
                     .attr("y2", height);
             }
+            console.log(width+" "+i );
             //yGrid
-            for (i = 0; i * $scope.config.diagrammScale < height; i += self.gridSpace * $scope.config.diagrammScale) {
+            for (i = yOffset; i < height; i += self.gridSpace * $scope.config.diagrammScale) {
                 self.svgGrid
                     .append("line")
                     .attr("stroke-width", thickness)
                     .attr("class", "grid-line ygrid-line")
                     .attr("x1", 0)
-                    .attr("y1", (i + yOffset))
+                    .attr("y1", i )
                     .attr("x2", width)
-                    .attr("y2", (i + yOffset));
+                    .attr("y2", i);
             }
 
         } else {
