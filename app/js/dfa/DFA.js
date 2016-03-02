@@ -5,32 +5,34 @@ function DFA($scope) {
     //for debug puposes better way for acessing in console?
     window.debugScope = $scope;
     //define scope
-    
+
     //Default Config for the automaton
-    var defaultConfig = {};
+    $scope.defaultConfig = {};
     //the default prefix for autonaming for example S0,S1,... after the prefix it saves the id
-    defaultConfig.statePrefix = 'S';
+    $scope.defaultConfig.statePrefix = 'S';
+    //Suffix after a transition name on the graphdesigner
+    $scope.defaultConfig.transitionNameSuffix = '|';
     //Settings for the diagramm
-    defaultConfig.diagrammScale = 1;
-    defaultConfig.diagrammX = 0;
-    defaultConfig.diagrammY = 0;
+    $scope.defaultConfig.diagrammScale = 1;
+    $scope.defaultConfig.diagrammX = 0;
+    $scope.defaultConfig.diagrammY = 0;
     //Number of statesIds given to states
-    defaultConfig.countStateId = 0;
+    $scope.defaultConfig.countStateId = 0;
     //Number of transitionIds given to transitions
-    defaultConfig.countTransitionId = 0;
+    $scope.defaultConfig.countTransitionId = 0;
     //The States are saved like {id:stateId,name:"nameoftheState",x:50,y:50}
-    defaultConfig.states = [];
+    $scope.defaultConfig.states = [];
     //Only a number representing the id of the state
-    defaultConfig.startState = null;
+    $scope.defaultConfig.startState = null;
     //An array of numbers representing the ids of the finalStates
-    defaultConfig.finalStates = [];
+    $scope.defaultConfig.finalStates = [];
     //the transitions are saved like{fromState:stateId, toState:stateId, name:"transitionName"}
-    defaultConfig.transitions = [];
+    $scope.defaultConfig.transitions = [];
 
 
 
     //Config Object
-    $scope.config = cloneObject(defaultConfig);
+    $scope.config = cloneObject($scope.defaultConfig);
 
     //AUTOMATA CONFIG END
 
@@ -69,8 +71,11 @@ function DFA($scope) {
      * Removes the current automata and the inputWord
      */
     $scope.removeConfig = function () {
-        $scope.graphdesigner.clearSvgContent();
+        //get the new config
         $scope.config = cloneObject($scope.defaultConfig);
+        //clear the svgContent
+        $scope.graphdesigner.clearSvgContent();
+
     };
 
 
@@ -107,7 +112,7 @@ function DFA($scope) {
 
     /**
      * returns if the node has transitions
-     * @param  {Int}  stateId 
+     * @param  {number}  stateId 
      * @return {Boolean}         
      */
     $scope.hasStateTransitions = function (stateId) {
@@ -122,8 +127,8 @@ function DFA($scope) {
 
     /**
      * Get the array index from the state with the given stateId
-     * @param  {Int} stateId 
-     * @return {Int}         Returns the index and -1 when state with stateId not found
+     * @param  {number} stateId 
+     * @return {number}         Returns the index and -1 when state with stateId not found
      */
     $scope.getArrayStateIdByStateId = function (stateId) {
         return _.findIndex($scope.config.states, function (state) {
@@ -135,8 +140,8 @@ function DFA($scope) {
 
     /**
      * Returns the State with the given stateId
-     * @param  {Int} stateId 
-     * @return {ObjectReference}         Returns the objectreference of the state undefined if not found
+     * @param  {number} stateId 
+     * @return {object}        Returns the objectreference of the state undefined if not found
      */
     $scope.getStateById = function (stateId) {
 
@@ -145,8 +150,8 @@ function DFA($scope) {
 
     /**
      * Returns the State with the given stateName
-     * @param  {Int} stateId 
-     * @return {ObjectReference}         Returns the objectreference of the state undefined if not found
+     * @param  {number} stateId 
+     * @return {object}        Returns the objectreference of the state undefined if not found
      */
     $scope.getStateByName = function (stateName) {
 
@@ -156,8 +161,8 @@ function DFA($scope) {
     };
     /**
      * Add a state with default name
-     * @param {Float} x         
-     * @param {Float} y  
+     * @param {number} x         
+     * @param {number} y  
      */
     $scope.addStateWithPresets = function (x, y) {
         $scope.addState($scope.config.statePrefix + $scope.config.countStateId, x, y);
@@ -170,8 +175,8 @@ function DFA($scope) {
     /**
      * Adds a state at the end of the states array
      * @param {String} stateName 
-     * @param {Float} x         
-     * @param {Float} y         
+     * @param {number} x         
+     * @param {number} y         
      */
     $scope.addState = function (stateName, x, y) {
         if (!$scope.existStateWithName(stateName)) {
@@ -185,8 +190,8 @@ function DFA($scope) {
      * Adds a state at the end of the states array with a variable id -> used for import
      * !!!dont use at other places!!!!! ONLY FOR IMPORT
      * @param {String} stateName 
-     * @param {Float} x         
-     * @param {Float} y         
+     * @param {number} x         
+     * @param {number} y         
      */
     $scope.addStateWithId = function (stateId, stateName, x, y) {
         $scope.config.states.push({
@@ -203,7 +208,7 @@ function DFA($scope) {
 
     /**
      * Removes the state with the given id
-     * @param  {Int} stateId 
+     * @param  {number} stateId 
      */
     $scope.removeState = function (stateId) {
         if ($scope.hasStateTransitions(stateId)) {
@@ -226,7 +231,7 @@ function DFA($scope) {
 
     /**
      * Rename a state if the newStatename isnt already used
-     * @param  {Int} stateId      
+     * @param  {number} stateId      
      * @param  {State} newStateName 
      */
     $scope.renameState = function (stateId, newStateName) {
@@ -269,8 +274,8 @@ function DFA($scope) {
 
     /**
      * Returns the Index of the saved FinalState
-     * @param  {Int} stateId 
-     * @return {Int}
+     * @param  {number} stateId 
+     * @return {number}
      */
     $scope.getFinalStateIndexByStateId = function (stateId) {
         return _.indexOf($scope.config.finalStates, stateId);
@@ -278,7 +283,7 @@ function DFA($scope) {
 
     /**
      * Returns if the state is a finalState
-     * @param  {Int} stateId 
+     * @param  {number} stateId 
      * @return {Boolean}         
      */
     $scope.isStateAFinalState = function (stateId) {
@@ -317,8 +322,8 @@ function DFA($scope) {
 
     /**
      * Checks if a transition with the params already exist
-     * @param  {Int}  fromState      Id of the fromstate
-     * @param  {Int}  toState        id from the toState
+     * @param  {number}  fromState      Id of the fromstate
+     * @param  {number}  toState        id from the toState
      * @param  {Strin}  transitonName The name of the transition
      * @return {Boolean}                
      */
@@ -335,8 +340,8 @@ function DFA($scope) {
 
     /**
      * Adds a transition at the end of the transitions array
-     * @param {Int} fromState      The id from the fromState
-     * @param {Int} toState        The id from the toState
+     * @param {number} fromState      The id from the fromState
+     * @param {number} toState        The id from the toState
      * @param {String} transistonName The name of the Transition
      */
     $scope.addTransition = function (fromState, toState, transitonName) {
@@ -353,8 +358,8 @@ function DFA($scope) {
     /**
      * Adds a transition at the end of the transitions array -> for import 
      * !!!dont use at other places!!!!! ONLY FOR IMPORT
-     * @param {Int} fromState      The id from the fromState
-     * @param {Int} toState        The id from the toState
+     * @param {number} fromState      The id from the fromState
+     * @param {number} toState        The id from the toState
      * @param {String} transistonName The name of the Transition
      */
     $scope.addTransitionWithId = function (transitionId, fromState, toState, transitonName) {
@@ -372,8 +377,8 @@ function DFA($scope) {
 
     /**
      * Get the array index from the transition with the given transitionId
-     * @param  {Int} transitionId 
-     * @return {Int}         Returns the index and -1 when state with transistionId not found
+     * @param  {number} transitionId 
+     * @return {number}         Returns the index and -1 when state with transistionId not found
      */
     $scope.getArrayTransitionIdByTransitionId = function (transitionId) {
         return _.findIndex($scope.config.transitions, function (transition) {
@@ -385,8 +390,8 @@ function DFA($scope) {
 
     /**
      * Returns the transition of the given transitionId
-     * @param  {Int} transitionId 
-     * @return {ObjectReference}         Returns the objectreference of the state
+     * @param  {number} transitionId 
+     * @return {object}        Returns the objectreference of the state
      */
     $scope.getTransitionById = function (transitionId) {
         return $scope.config.transitions[$scope.getArrayTransitionIdByTransitionId(transitionId)];
@@ -394,7 +399,7 @@ function DFA($scope) {
 
     /**
      * Removes the transistion
-     * @param {Int} transitionId      The id from the transition
+     * @param {number} transitionId      The id from the transition
      */
     $scope.removeTransition = function (transitionId) {
         //first remove the element from the svg after that remove it from the array
@@ -405,7 +410,7 @@ function DFA($scope) {
 
     /**
      * Renames a transition if is uniqe with the new name
-     * @param  {Int} transitionId     
+     * @param  {number} transitionId     
      * @param  {String} newTransitionName 
      */
     $scope.renameTransition = function (transitionId, newTransitionName) {
