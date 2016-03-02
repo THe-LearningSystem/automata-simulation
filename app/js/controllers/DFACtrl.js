@@ -1,7 +1,7 @@
 "use strict";
 
 angular
-    .module('AutoSim')
+    .module('automata-simulation')
     .controller('DFACtrl', DFACtrl);
 
 

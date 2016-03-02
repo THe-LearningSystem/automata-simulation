@@ -1,0 +1,7 @@
+@import 'bootstrap_variables';
+//fix icon patj
+$icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
+
+@import '../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap';
+
+@import 'ownstyle.scss';

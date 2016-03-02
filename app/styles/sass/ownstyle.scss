@@ -1,0 +1,122 @@
+@import 'bootstrap_variables';
+//svg diagramm variables
+//state Settings
+$stateColor: #CCC;
+$stateBorderWidth:2;
+$stateBorderColor:#666;
+$stateFontSize:15px;
+$stateFontColor: #000;
+//final state
+$finalStateColor: #FFF;
+$finalStateBorderColor: $stateBorderColor;
+$finalStateBorderWidth:2;
+//Hover
+$stateColorHover: #000;
+$stateColorHoverOpacity:0.4;
+$stateColorSelected: #444;
+$selectForAddTransitionColor:#F00;
+//animated state for the simulation
+$animatedStateColor:#F00;
+//Transition Settings
+$transitionColor: #000;
+$transitionFontSize: 15px;
+$transitionFontColor: #000;
+$transitionWidth:2;
+//animated transition
+$animatedTransitionWidth:2.5;
+$animatedTransitionColor:#F00;
+$animatedTransitionFontColor: #F00;
+//svg diagramm
+.automataWrapper {
+    border: 1px solid #000;
+}
+#stateDiagramm {}
+#diagramm {
+    border: 1px solid #000;
+    width: 100%;
+    height: 500px;
+    min-width: auto;
+    position: relative;
+}
+#diagramm-buttons {
+    position: absolute;
+    z-index: 5;
+}
+#diagramm-svg {
+    width: 100%;
+    height: 500px;
+    min-width: auto;
+    position: absolute;
+}
+#state-context {
+    //display:none;
+    padding: 5px;
+    position: absolute;
+    right: 0px;
+    width: auto;
+    height: 100%;
+    background-color: #888;
+}
+//normal arrow
+#marker-end-arrow {
+    fill: #000;
+}
+//animated arrow for the simulation
+#marker-end-arrow-animated {
+    fill: #F00;
+}
+//grid
+.grid-line {
+    stroke: $transitionColor;
+    stroke-width: $transitionWidth;
+}
+//states
+.state {
+    cursor: context-menu;
+}
+.state:hover .hover-circle {
+    fill: $stateColorHover;
+    fill-opacity: $stateColorHoverOpacity;
+}
+.state:active .state-circle {
+    fill: $stateColorSelected;
+}
+.state-circle {
+    fill: $stateColor;
+    stroke: $stateBorderColor;
+    stroke-width: $stateBorderWidth;
+}
+.final-state {
+    fill: $finalStateColor;
+    stroke: $finalStateBorderColor;
+    stroke-width: $finalStateBorderWidth;
+}
+.state-text {
+    font-size: $stateFontSize;
+}
+//animated state for the simulation
+.animated-state .state-circle {
+    fill: $animatedStateColor;
+}
+.selectedForTransition .state-circle {
+    fill: $selectForAddTransitionColor;
+}
+.state-text:hover {}
+//Transition
+.transition {
+    cursor: context-menu;
+}
+.transition-line {
+    stroke: $transitionColor;
+    stroke-width: $transitionWidth;
+}
+//animated transition for the simulation
+.animated-transition .transition-line {
+    stroke: $animatedTransitionColor;
+    stroke-width: $animatedTransitionWidth;
+}
+.transition-text {}
+//ECT
+#hidden-file-upload {
+    display: none;
+}

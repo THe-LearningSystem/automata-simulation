@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-var autoSim = angular.module('AutoSim', [
+var autoSim = angular.module('automata-simulation', [
   'ngRoute',
   'ui.bootstrap'
 ]).
