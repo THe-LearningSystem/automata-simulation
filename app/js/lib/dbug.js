@@ -1,5 +1,5 @@
 "use strict";
-var dbug = function($scope) {
+var Dbug = function($scope) {
 	var self = this;
 
     self.debugDanger = function(Msg) {

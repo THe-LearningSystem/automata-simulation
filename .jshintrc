@@ -1,0 +1,21 @@
+{
+    "globals": {
+        "window": false,
+        "angular": false,
+        "_": false,
+        "GraphdesignerDFA": false,
+        "SimulationDFA": false,
+        "TableDFA": false,
+        "StatetransitionfunctionDFA": false,
+        "Dbug": false,
+        "TestData": false,
+        "cloneObject": false,
+        "d3": false,
+        "jquery": false,
+        "$": false,
+        "console": false,
+        "setTimeout": false,
+        "DPA": false,
+        "DFA":false
+    }
+}

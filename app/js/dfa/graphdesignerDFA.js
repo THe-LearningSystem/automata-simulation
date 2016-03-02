@@ -1,7 +1,6 @@
-"use strict";
-
 //GRAPHDESIGNER for the svg diagramm
-var graphdesignerDFA = function($scope, svgSelector) {
+function GraphdesignerDFA($scope, svgSelector) {
+    "use strict";
 
     var self = this;
 
@@ -28,7 +27,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
     //if there is already a transition with the right fromState and toState, thenn only add myname to the names array
     self.drawnTransitions = [];
 
-    self.existDrawnTransition = function(fromState, toState) {
+    self.existDrawnTransition = function (fromState, toState) {
 
         var tmp = false;
         for (var i = 0; i < self.drawnTransitions.length; i++) {
@@ -38,25 +37,25 @@ var graphdesignerDFA = function($scope, svgSelector) {
             }
         }
         return tmp;
-    }
+    };
 
-    self.getTransition = function(fromState, toState) {
+    self.getTransition = function (fromState, toState) {
         for (var i = 0; i < self.drawnTransitions.length; i++) {
             var transition = self.drawnTransitions[i];
             if (transition.fromState == fromState && transition.toState == toState) {
                 return transition;
             }
         }
-    }
+    };
 
-    self.getTransitionNames = function(names) {
+    self.getTransitionNames = function (names) {
         var tmpString = '';
         for (var i = 0; i < names.length; i++) {
             tmpString += names[i] + " | ";
         }
         tmpString = tmpString.slice(0, -2);
         return tmpString;
-    }
+    };
 
     //has all the drawn States
     //{id:0, objectReference:} ??
@@ -65,7 +64,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
     self.stateSelfReferenceNumber = Math.sin(45 * (Math.PI / 180)) * self.settings.stateRadius;
 
 
-    self.clearSvgContent = function(config) {
+    self.clearSvgContent = function (config) {
         //Clear the content of the svg
         self.svgTransitions.html("");
         self.svgStates.html("");
@@ -75,16 +74,16 @@ var graphdesignerDFA = function($scope, svgSelector) {
         zoom.translate([$scope.config.diagrammX, $scope.config.diagrammY]);
         self.drawnTransitions = [];
 
-    }
+    };
 
 
     self.svgOuter = d3.select(svgSelector)
         //prevents the normal rightclickcontextmenu
-        .on("contextmenu", function() {
+        .on("contextmenu", function () {
             d3.event.preventDefault();
-        })
+        });
 
-    self.svgZoom = function() {
+    self.svgZoom = function () {
         //LEFTCLICK
         if (d3.event.sourceEvent.which == 1) {
             if (!self.dragInitiated && !self.rightClick) {
@@ -98,9 +97,9 @@ var graphdesignerDFA = function($scope, svgSelector) {
         } else if (d3.event.sourceEvent.which == 3) {
 
         }
-    }
+    };
 
-    self.rescale = function() {
+    self.rescale = function () {
         self.svg.attr("transform", "translate( 0 0 )" + " scale( 1 )");
         $scope.config.diagrammScale = 1;
         $scope.config.diagrammX = 0;
@@ -108,7 +107,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
         $scope.safeApply();
         zoom.scale(1);
         zoom.translate([0, 0]);
-    }
+    };
 
     var zoom = d3.behavior.zoom();
     zoom.translate([0, 0]);
@@ -130,12 +129,12 @@ var graphdesignerDFA = function($scope, svgSelector) {
     self.gridSpace = 100;
     self.gridSnapDistance = 20;
     self.isGrid = false;
-    self.drawGrid = function() {
+    self.drawGrid = function () {
 
         if (!self.isGrid) {
             //draw Grid
-            var width = self.svgOuter.style("width").replace("px", "");;
-            var height = self.svgOuter.style("height").replace("px", "");;
+            var width = self.svgOuter.style("width").replace("px", "");
+            var height = self.svgOuter.style("height").replace("px", "");
             //xGrid
             for (var i = 0; i < width; i += self.gridSpace) {
                 self.svgGrid
@@ -147,7 +146,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
                     .attr("y2", height);
             }
             //yGrid
-            for (var i = 0; i < height; i += self.gridSpace) {
+            for (i = 0; i < height; i += self.gridSpace) {
                 self.svgGrid
                     .append("line")
                     .attr("class", "grid-line ygrid-line")
@@ -162,7 +161,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
         }
         self.isGrid = !self.isGrid;
 
-    }
+    };
 
     //DEFS
     self.defs = self.svg.append('svg:defs');
@@ -190,47 +189,47 @@ var graphdesignerDFA = function($scope, svgSelector) {
      *  Ressett addclicklistener ( addTransition and addstate)
      * @return {[type]} [description]
      */
-    self.resetAdds = function() {
-        if (self.selectedState != null) {
+    self.resetAdds = function () {
+        if (self.selectedState !== null) {
             self.setStateClassAs(self.selectedState.attr("object-id"), false, "selectedForTransition");
             self.selectedState = null;
         }
         self.svgOuter.on("click", null);
         self.inAddTransition = false;
         self.inAddState = false;
-    }
+    };
 
 
     /**
      * AddState function for the icon
      */
-    self.addStateEventListener = function() {
+    self.addStateEventListener = function () {
         self.resetAdds();
         self.inAction = true;
         self.inAddState = true;
         //add listener
-        self.svgOuter.on("click", function() {
+        self.svgOuter.on("click", function () {
             $scope.addStateWithPresets(d3.mouse(this)[0] - $scope.config.diagrammX, d3.mouse(this)[1] - $scope.config.diagrammY);
             self.inAddState = false;
             self.svgOuter.on("click", null);
         });
-    }
+    };
 
     /**
      * Addtransition function for the icon
      */
-    self.addTransitionEventListener = function() {
+    self.addTransitionEventListener = function () {
         self.resetAdds();
         self.inAction = true;
         self.inAddTransition = true;
-        self.svgOuter.on("click", function() {});
-    }
+        self.svgOuter.on("click", function () {});
+    };
 
-    self.removeEventListener = function() {
+    self.removeEventListener = function () {
         self.resetAdds();
         self.inAction = true;
         self.inRemove = true;
-    }
+    };
 
 
     /**
@@ -238,21 +237,21 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param  {Int} stateId      
      * @param  {String} newStateName          
      */
-    self.renameState = function(stateId, newStateName) {
+    self.renameState = function (stateId, newStateName) {
         var state = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)];
         var objReference = state.objReference;
         objReference.select("text").text(newStateName);
-    }
+    };
 
     /**
      * Removes the state with the given id
      * @param  {Int} stateId 
      */
-    self.removeState = function(stateId) {
+    self.removeState = function (stateId) {
         var state = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)];
         var objReference = state.objReference;
         objReference.remove();
-    }
+    };
 
     /**
      * [renameTransition description]
@@ -260,30 +259,30 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param  {[type]} newTransitionName [description]
      * @return {[type]}                   [description]
      */
-    self.renameTransition = function(transitionId, newTransitionName) {
+    self.renameTransition = function (transitionId, newTransitionName) {
 
-    }
+    };
 
     /**
      * [removeTransition description]
      * @param  {[type]} transitionId [description]
      * @return {[type]}              [description]
      */
-    self.removeTransition = function(transitionId) {
+    self.removeTransition = function (transitionId) {
 
-    }
+    };
 
-    self.addFinalState = function(stateId) {
+    self.addFinalState = function (stateId) {
         var state = $scope.getStateById(stateId);
         state.objReference.insert("circle", ".state-circle")
             .attr("class", "final-state")
             .attr("r", self.settings.finalStateRadius);
-    }
+    };
 
-    self.removeFinalState = function(stateId) {
+    self.removeFinalState = function (stateId) {
         var state = $scope.getStateById(stateId);
         state.objReference.select(".final-state").remove();
-    }
+    };
 
 
 
@@ -292,10 +291,10 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param  {[type]} stateId [description]
      * @return {[type]}         [description]
      */
-    self.changeStartState = function(stateId) {
+    self.changeStartState = function (stateId) {
         //TODO:
         //remove old startState
-        if ($scope.config.startState != null) {
+        if ($scope.config.startState !== null) {
             var state = $scope.getStateById($scope.config.startState);
             state.objReference.select(".start-line").remove();
         }
@@ -308,19 +307,19 @@ var graphdesignerDFA = function($scope, svgSelector) {
             .attr("x2", 0)
             .attr("y2", 0 - self.settings.stateRadius)
             .attr("marker-end", "url(#marker-end-arrow)");
-    }
+    };
 
-    self.removeStartState = function(stateId) {
+    self.removeStartState = function (stateId) {
         var state = $scope.getStateById($scope.config.startState);
         state.objReference.select(".start-line").remove();
-    }
+    };
 
     /**
      * Draws a State 
      * @param  {Int} id The arrayid of the State
      * @return {Reference}    Returns the reference of the group object
      */
-    self.drawState = function(id) {
+    self.drawState = function (id) {
         var state = $scope.getStateById(id);
         var group = self.svgStates.append("g")
             .attr("transform", "translate(" + state.x + " " + state.y + ")")
@@ -344,7 +343,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
         $scope.config.states[id].objReference = group.on('contextmenu', self.stateMenu);
         d3.selectAll(".state").call(self.dragState);
         return group;
-    }
+    };
 
     /**
      * Adds or remove a class to a state ( only the svg state)
@@ -352,17 +351,17 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param {Boolean} state   
      * @param {String} className  
      */
-    self.setStateClassAs = function(stateId, state, className) {
+    self.setStateClassAs = function (stateId, state, className) {
         var objReference = $scope.getStateById(stateId).objReference;
         objReference.classed(className, state);
-    }
+    };
 
     /**
      * [setTransitionAs description]
      * @param {[type]} transitionId [description]
      * @param {[type]} state        [description]
      */
-    self.setTransitionClassAs = function(transitionId, state, className) {
+    self.setTransitionClassAs = function (transitionId, state, className) {
         var trans = $scope.getTransitionById(transitionId);
         var objReference = self.getTransition(trans.fromState, trans.toState).objReference;
         objReference.classed(className, state);
@@ -371,18 +370,18 @@ var graphdesignerDFA = function($scope, svgSelector) {
         } else {
             objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow)");
         }
-    }
+    };
 
     /**
      * [stateMenu description]
      * @return {[type]} [description]
      */
-    self.stateMenu = function() {
+    self.stateMenu = function () {
         //prevent the normal right click menu
         d3.event.preventDefault();
-    }
+    };
 
-    self.saveState = function() {
+    self.saveState = function () {
         $scope.renameState(self.input.state.id, self.input.stateName);
         if (self.input.startState) {
             $scope.changeStartState(self.input.state.id);
@@ -396,12 +395,12 @@ var graphdesignerDFA = function($scope, svgSelector) {
             $scope.removeFinalState(self.input.state.id);
         }
         self.showStateContext = false;
-    }
+    };
 
 
     //Node drag and drop behaviour
     self.dragState = d3.behavior.drag()
-        .on("dragstart", function() {
+        .on("dragstart", function () {
             //IF LEFT CLICK
             if (d3.event.sourceEvent.which == 1) {
                 //if we are in a addTransition action
@@ -438,7 +437,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
 
             }
         })
-        .on("drag", function() {
+        .on("drag", function () {
             if (d3.event.sourceEvent.which == 1) {
                 //cant move when inAddTransition action
                 if (self.dragInitiated && !self.inAddTransition) {
@@ -484,7 +483,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
             }
 
         })
-        .on("dragend", function() {
+        .on("dragend", function () {
             if (self.dragInitiated) {
                 self.dragInitiated = false;
                 //Apply the canges after the dragend ->optimisation
@@ -492,7 +491,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
             } else if (d3.event.sourceEvent.which == 3) {
                 self.rightClick = false;
             }
-            if (self.selectedState == null) {
+            if (self.selectedState === null) {
                 self.resetAdds();
             }
             if (self.inRemove) {
@@ -509,7 +508,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param  {[type]} transitionId [description]
      * @return {[type]}              [description]
      */
-    self.getTransitionCoordinates = function(fromStateId, toStateId) {
+    self.getTransitionCoordinates = function (fromStateId, toStateId) {
         var fromState = $scope.getStateById(fromStateId);
         var toState = $scope.getStateById(toStateId);
         var x1 = fromState.x;
@@ -522,10 +521,10 @@ var graphdesignerDFA = function($scope, svgSelector) {
         };
         var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y),
             n = self.settings.stateRadius / richtungsVectorLength;
-        x1 = x1 + n * richtungsvektor.x,
-            y1 = y1 + n * richtungsvektor.y,
-            x2 = x2 - n * richtungsvektor.x,
-            y2 = y2 - n * richtungsvektor.y;
+        x1 = x1 + n * richtungsvektor.x;
+        y1 = y1 + n * richtungsvektor.y;
+        x2 = x2 - n * richtungsvektor.x;
+        y2 = y2 - n * richtungsvektor.y;
         var coordObj = {
             x1: x1,
             y1: y1,
@@ -535,20 +534,20 @@ var graphdesignerDFA = function($scope, svgSelector) {
             yDiff: y2 - y1,
             xMid: (x1 + x2) / 2,
             yMid: (y1 + y2) / 2
-        }
+        };
         coordObj.distance = Math.sqrt(coordObj.xDiff * coordObj.xDiff + coordObj.yDiff * coordObj.yDiff);
 
 
         return coordObj;
 
-    }
+    };
 
     /**
      * [getTransitionCurveData description]
      * @param  {[type]} coordObj [description]
      * @return {[type]}          [description]
      */
-    self.getTransitionCurveData = function(coordObj) {
+    self.getTransitionCurveData = function (coordObj) {
         var vecA = {
             x: coordObj.xMid - coordObj.x1,
             y: coordObj.yMid - coordObj.y1,
@@ -567,7 +566,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
         coordObj.xMidPoint = coordObj.movingPoint.x + coordObj.xMid;
         coordObj.yMidPoint = coordObj.movingPoint.y + coordObj.yMid;
         return coordObj;
-    }
+    };
 
     function crossPro(a, b) {
 
@@ -591,10 +590,10 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @type {[type]}
      */
     self.bezierLine = d3.svg.line()
-        .x(function(d) {
+        .x(function (d) {
             return d[0];
         })
-        .y(function(d) {
+        .y(function (d) {
             return d[1];
         })
         .interpolate("basis");
@@ -605,14 +604,14 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param  {[type]} y [description]
      * @return {[type]}   [description]
      */
-    self.selfTransition = function(x, y) {
+    self.selfTransition = function (x, y) {
         return self.bezierLine([
             [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
             [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY],
             [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY],
             [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]
         ]);
-    }
+    };
 
     /**
      * [transitionCurve description]
@@ -620,7 +619,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
      * @param  {[type]} justStraight [description]
      * @return {[type]}              [description]
      */
-    self.transitionCurve = function(coordObj, justStraight) {
+    self.transitionCurve = function (coordObj, justStraight) {
         self.getTransitionCurveData(coordObj);
         var array = null;
         if (!justStraight) {
@@ -636,23 +635,24 @@ var graphdesignerDFA = function($scope, svgSelector) {
             ];
         }
         return self.bezierLine(array);
-    }
+    };
 
     /**
      * Draw a Transition
      * @param  {Int} id 
      * @return {Reference}  Retruns the reference of the group object
      */
-    self.drawTransition = function(transitionId) {
+    self.drawTransition = function (transitionId) {
         var arrayTransitionId = $scope.getArrayTransitionIdByTransitionId(transitionId);
         var transition = $scope.config.transitions[arrayTransitionId];
         //if there is not a transition with the same from and toState
         if (!self.existDrawnTransition(transition.fromState, transition.toState)) {
             //if it is not a self Reference
+            var group, line, text;
             if (transition.fromState != transition.toState) {
                 var coordObj = self.getTransitionCoordinates(transition.fromState, transition.toState);
                 self.getTransitionCurveData(coordObj);
-                var group = self.svgTransitions.append("g")
+                group = self.svgTransitions.append("g")
                     .attr("class", "transition");
                 var curveData = null;
                 //if there is a transition in the other direction
@@ -666,7 +666,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
                 } else {
                     curveData = self.transitionCurve(coordObj, true);
                 }
-                var line = group.append("path")
+                line = group.append("path")
                     .attr("class", "transition-line curvedLine")
                     .attr("d", curveData)
                     .attr("stroke", "red")
@@ -676,7 +676,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
                     .attr("y2", coordObj.yDiff)*/
                     .attr("marker-end", "url(#marker-end-arrow)");
 
-                var text = group.append("text")
+                text = group.append("text")
                     .attr("class", "transition-text")
                     .text(transition.name)
                     .attr("x", (coordObj.xMidPoint))
@@ -695,11 +695,11 @@ var graphdesignerDFA = function($scope, svgSelector) {
                 var x = $scope.config.states[stateId].x;
                 var y = $scope.config.states[stateId].y;
 
-                var group = self.svgTransitions.append("g")
+                group = self.svgTransitions.append("g")
                     .attr("transform", "translate(0 0)")
                     .attr("class", "transition");
 
-                var line = group.append('path')
+                line = group.append('path')
                     .attr("class", "transition-line")
                     .attr("d", self.selfTransition(x, y))
                     .attr("stroke", "red")
@@ -707,7 +707,7 @@ var graphdesignerDFA = function($scope, svgSelector) {
                     .attr("fill", "none")
                     .attr("marker-end", "url(#marker-end-arrow)");
 
-                var text = group.append("text")
+                text = group.append("text")
                     .attr("class", "transition-text")
                     .text(transition.name)
                     .attr("x", x - self.settings.stateRadius - 50)
@@ -729,20 +729,21 @@ var graphdesignerDFA = function($scope, svgSelector) {
 
 
         }
-    }
+    };
 
 
     /**
      * Update the transitions in the svg after moving a state
      * @param  {Int} stateId Moved stateId
      */
-    self.updateTransitionsAfterStateDrag = function(stateId) {
+    self.updateTransitionsAfterStateDrag = function (stateId) {
         var stateName = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)].name;
-        _.forEach(self.drawnTransitions, function(n, key) {
+        _.forEach(self.drawnTransitions, function (n, key) {
             if (n.fromState == stateId || n.toState == stateId) {
                 //if its not a selfreference
+                var obj;
                 if (n.fromState != n.toState) {
-                    var obj = n.objReference;
+                    obj = n.objReference;
                     var coordObj = self.getTransitionCoordinates(n.fromState, n.toState);
 
                     if (self.existDrawnTransition(n.toState, n.fromState)) {
@@ -760,17 +761,17 @@ var graphdesignerDFA = function($scope, svgSelector) {
                     var x = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].x;
                     var y = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].y;
                     //update Transistion with self reference
-                    var obj = n.objReference;
+                    obj = n.objReference;
                     obj.select(".transition-line")
                         .attr("d", self.selfTransition(x, y));
                     obj.select("text").attr("x", x - self.settings.stateRadius - 50)
-                        .attr("y", y);;
+                        .attr("y", y);
                 }
             }
         });
-    }
+    };
 
-    $("div.close").click(function() {
+    $("div.close").click(function () {
         console.log("ASD");
     });
 }
