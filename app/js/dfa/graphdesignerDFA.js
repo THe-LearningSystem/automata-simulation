@@ -88,8 +88,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.svgStates.html("");
         //change the scale and the translate to the updatedConfig
         self.svg.attr("transform", "translate(" + $scope.config.diagrammX + "," + $scope.config.diagrammY + ")" + " scale(" + $scope.config.diagrammScale + ")");
-        zoom.scale($scope.config.diagrammScale);
-        zoom.translate([$scope.config.diagrammX, $scope.config.diagrammY]);
+        svgOuterZoomAndDrag.scale($scope.config.diagrammScale);
+        svgOuterZoomAndDrag.translate([$scope.config.diagrammX, $scope.config.diagrammY]);
         $scope.drawnTransitions = [];
 
     };
@@ -103,43 +103,56 @@ function GraphdesignerDFA($scope, svgSelector) {
         $scope.config.diagrammX = $scope.defaultConfig.diagrammX;
         $scope.config.diagrammY = $scope.defaultConfig.diagrammY;
         $scope.safeApply();
-        zoom.scale($scope.defaultConfig.diagrammScale);
-        zoom.translate([$scope.defaultConfig.diagrammX, $scope.defaultConfig.diagrammY]);
+        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagrammScale);
+        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagrammX, $scope.defaultConfig.diagrammY]);
     };
 
 
-    //prevents the normal rightclickcontextmenu
-    self.svgOuter = d3.select(svgSelector)
-    .on("contextmenu", function () {
-        d3.event.preventDefault();
-    });
 
-    /*
-    self.svgZoom = function () {
-        //LEFTCLICK
-        if (d3.event.sourceEvent.which == 1) {
-            if (!self.dragInitiated && !self.rightClick) {
-                self.svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+
+
+    self.maxZoomOut = 2.5;
+    self.maxZoomIn = 0.5;
+    var svgOuterZoomAndDrag = d3.behavior
+        .zoom()
+        .scaleExtent([self.maxZoomIn, self.maxZoomOut])
+        .on("zoom", function () {
+            //dont translate on right click (3)
+            if (d3.event.sourceEvent.which == 1) {
+                console.log("SvgOuterZoomAndTranslate");
+                self.svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
                 $scope.config.diagrammScale = d3.event.scale;
                 $scope.config.diagrammX = d3.event.translate[0];
                 $scope.config.diagrammY = d3.event.translate[1];
                 $scope.safeApply();
 
+                //update Grid
+                self.drawGrid();
             }
-            //RIGHT CLICK
-        } else if (d3.event.sourceEvent.which == 3) {
 
-        }
+        });
 
-    };*/
 
-    var zoom = d3.behavior.zoom();
-    zoom.translate([0, 0]);
-    //TODO: Bug when moving all the objects.
-    //u can move the whole diagramm and zome in and out
+    //prevents the normal rightclickcontextmenu and add zoo
+    self.svgOuter = d3.select(svgSelector)
+        .call(svgOuterZoomAndDrag).on("contextmenu", function () {
+            d3.event.preventDefault();
+            if (!self.rightClick) {
+                console.log("RICHT click svouter");
+                if (self.stateWithActiveMenu !== null && self.stateWithActiveMenu !== undefined) {
+                    self.setStateClassAs(self.stateWithActiveMenu.id, false, "selectedForTransition");
+                    self.stateWithActiveMenu = null;
+                    self.showStateContext = false;
+                }
+                $scope.safeApply();
+            } else {
+                self.rightClick = false;
+            }
+        });
+
+
+
     self.svg = self.svgOuter
-    /*
-        .call(zoom.on("zoom", self.svgZoom))*/
         .append("g")
         .attr("id", "svg-items");
 
@@ -161,37 +174,49 @@ function GraphdesignerDFA($scope, svgSelector) {
      * Draw the Grid
      */
     self.drawGrid = function () {
-        if (!self.isGrid) {
+        if (self.isGrid) {
             //draw Grid
             self.svgGrid.html("");
             var width = self.svgOuter.style("width").replace("px", "");
             var height = self.svgOuter.style("height").replace("px", "");
+            var thickness = 1 * $scope.config.diagrammScale * 0.5;
+            var xOffset = ($scope.config.diagrammX % ( self.gridSpace* $scope.config.diagrammScale));
+            var yOffset = ($scope.config.diagrammY % ( self.gridSpace* $scope.config.diagrammScale)) ;
             //xGrid
-            for (var i = 0; i * $scope.config.diagrammScale < width; i += self.gridSpace) {
+            for (var i = 0; i * $scope.config.diagrammScale < width; i += self.gridSpace * $scope.config.diagrammScale) {
+
                 self.svgGrid
                     .append("line")
+                    .attr("stroke-width", thickness)
                     .attr("class", "grid-line xgrid-line")
-                    .attr("x1", i * $scope.config.diagrammScale)
+                    .attr("x1", (i + xOffset))
                     .attr("y1", 0)
-                    .attr("x2", i * $scope.config.diagrammScale)
+                    .attr("x2", (i + xOffset))
                     .attr("y2", height);
             }
             //yGrid
-            for (i = 0; i * $scope.config.diagrammScale < height; i += self.gridSpace) {
+            for (i = 0; i * $scope.config.diagrammScale < height; i += self.gridSpace * $scope.config.diagrammScale) {
                 self.svgGrid
                     .append("line")
+                    .attr("stroke-width", thickness)
                     .attr("class", "grid-line ygrid-line")
                     .attr("x1", 0)
-                    .attr("y1", i * $scope.config.diagrammScale)
+                    .attr("y1", (i + yOffset))
                     .attr("x2", width)
-                    .attr("y2", i * $scope.config.diagrammScale);
+                    .attr("y2", (i + yOffset));
             }
+
         } else {
             //undraw Grid
             self.svgGrid.html("");
         }
-        self.isGrid = !self.isGrid;
+    };
 
+    self.toggleGrid = function () {
+        console.log("toggle");
+        self.isGrid = !self.isGrid;
+        console.log(self.isGrid);
+        self.drawGrid();
     };
 
     //DEFS
@@ -330,7 +355,7 @@ function GraphdesignerDFA($scope, svgSelector) {
             .attr("y2", 0 - self.settings.stateRadius)
             .attr("marker-end", "url(#marker-end-arrow)");
     };
-    
+
     /**
      * removes the stateId
      * @param {number} stateId
@@ -366,7 +391,8 @@ function GraphdesignerDFA($scope, svgSelector) {
             .attr("dominant-baseline", "central")
             .attr("text-anchor", "middle");
 
-        $scope.config.states[id].objReference = group.on('contextmenu', self.stateMenu);
+        $scope.config.states[id].objReference = group;
+        group.on('contextmenu', self.stateMenu);
         d3.selectAll(".state").call(self.dragState);
         return group;
     };
@@ -395,8 +421,27 @@ function GraphdesignerDFA($scope, svgSelector) {
 
 
     self.stateMenu = function () {
-        //prevent the normal right click menu
-        d3.event.preventDefault();
+        //open context menu
+        self.rightClick = true;
+        self.showStateContext = true;
+        //get the selected state
+        if (self.stateWithActiveMenu !== undefined && self.stateWithActiveMenu !== null) {
+            self.setStateClassAs(self.stateWithActiveMenu.id, false, "selectedForTransition");
+        }
+        self.stateWithActiveMenu = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
+        console.log(self.stateWithActiveMenu);
+        self.setStateClassAs(self.stateWithActiveMenu.id, true, "selectedForTransition");
+
+
+
+
+        //save the state values in the state context as default value
+        self.input = {};
+        self.input.state = self.stateWithActiveMenu;
+        self.input.stateName = self.stateWithActiveMenu.name;
+        self.input.startState = $scope.config.startState == self.stateWithActiveMenu.id;
+        self.input.finalState = $scope.isStateAFinalState(self.stateWithActiveMenu.id);
+        $scope.safeApply();
     };
 
     self.saveState = function () {
@@ -419,8 +464,11 @@ function GraphdesignerDFA($scope, svgSelector) {
     //Node drag and drop behaviour
     self.dragState = d3.behavior.drag()
         .on("dragstart", function () {
-            //IF LEFT CLICK
+            //stops the svgouter to get called
+            d3.event.sourceEvent.stopPropagation();
+
             if (d3.event.sourceEvent.which == 1) {
+                console.log("DRAGSTATESTART");
                 //if we are in a addTransition action
                 if (self.inAddTransition) {
                     //if there is no selectedState, then select a state ( =>fromState)
@@ -437,26 +485,11 @@ function GraphdesignerDFA($scope, svgSelector) {
                 } else {
                     self.dragInitiated = true;
                 }
-                //IF RIGHT CLICK
-            } else if (d3.event.sourceEvent.which == 3) {
-                //open context menu
-                self.rightClick = true;
-                self.showStateContext = true;
-
-                //get the selected state
-                var state = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
-                //save the state values in the state context as default value
-                self.input = {};
-                self.input.state = state;
-                self.input.stateName = state.name;
-                self.input.startState = $scope.config.startState == state.id;
-                self.input.finalState = $scope.isStateAFinalState(state.id);
-                $scope.safeApply();
-
             }
         })
         .on("drag", function () {
             if (d3.event.sourceEvent.which == 1) {
+
                 //cant move when inAddTransition action
                 if (self.dragInitiated && !self.inAddTransition) {
                     var x = d3.event.x;
@@ -495,30 +528,31 @@ function GraphdesignerDFA($scope, svgSelector) {
 
                     //update the transitions after dragging a node
                     self.updateTransitionsAfterStateDrag(d3.select(this).attr("object-id"));
-                } else if (d3.event.sourceEvent.which == 3) {
-
                 }
             }
 
         })
         .on("dragend", function () {
-            if (self.dragInitiated) {
-                self.dragInitiated = false;
-                //Apply the canges after the dragend ->optimisation
-                $scope.safeApply();
-            } else if (d3.event.sourceEvent.which == 3) {
-                self.rightClick = false;
+            if (d3.event.sourceEvent.which == 1) {
+                console.log("DRAGSTATEEND");
+                if (self.dragInitiated) {
+                    self.dragInitiated = false;
+                    //Apply the canges after the dragend ->optimisation
+                    $scope.safeApply();
+                } else if (d3.event.sourceEvent.which == 3) {
+                    self.rightClick = false;
+                }
+                if (self.selectedState === null) {
+                    self.resetAdds();
+                }
+                if (self.inRemove) {
+                    self.resetAdds();
+                    self.inRemove = false;
+                }
+                //fixes that the whole svg moves with the next move on the svg ( stupid workaround) BETTER SOLUTION?
+                svgOuterZoomAndDrag.scale($scope.config.diagrammScale);
+                svgOuterZoomAndDrag.translate([$scope.config.diagrammX, $scope.config.diagrammY]);
             }
-            if (self.selectedState === null) {
-                self.resetAdds();
-            }
-            if (self.inRemove) {
-                self.resetAdds();
-                self.inRemove = false;
-            }
-            //fixes that the whole svg moves with the next move on the svg ( stupid workaround) BETTER SOLUTION?
-            zoom.scale($scope.config.diagrammScale);
-            zoom.translate([$scope.config.diagrammX, $scope.config.diagrammY]);
         });
 
     /**

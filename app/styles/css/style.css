@@ -5852,8 +5852,7 @@ button.close {
   fill: #F00; }
 
 .grid-line {
-  stroke: #000;
-  stroke-width: 2; }
+  stroke: #000; }
 
 .state {
   cursor: context-menu; }

@@ -141,7 +141,7 @@ gulp.task('live', function () {
         port: 9000,
         livereload: true,
     });
-    gulp.watch(paths.sass, ['sass']);
+    gulp.watch(paths.sass, ['styles']);
     gulp.watch(paths.all, function (obj) {
         if (obj.type === 'changed') {
             console.log(obj.path + ' changed');
