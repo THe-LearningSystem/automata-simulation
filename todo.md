@@ -1,6 +1,7 @@
 #Todo
 
 ##General
+* Logo
 * Language german and english with selection and language files
 * add GetStateByName to DFA API
 * write all for better OOP
