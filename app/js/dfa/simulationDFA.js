@@ -1,7 +1,6 @@
-"use strict";
-
 //Simulator for the simulation of the automata
-var simulationDFA = function($scope) {
+function SimulationDFA($scope) {
+    "use strict";
     var self = this;
 
     //if the simulation loops (start at the end again)
@@ -15,22 +14,22 @@ var simulationDFA = function($scope) {
     //simulationsettings
     self.simulationSettings = false;
 
-    self.settings = function() {
+    self.settings = function () {
         self.simulationSettings = !self.simulationSettings;
-    }
+    };
 
     /**
      * Should reset the simulation
      */
-    self.reset = function() {
+    self.reset = function () {
         //remove graphdesigner animations
-        if (self.currentState != null) {
+        if (self.currentState !== null) {
             $scope.graphdesigner.setStateClassAs(self.currentState, false, "animated-state");
         }
-        if (self.nextState != null) {
+        if (self.nextState !== null) {
             $scope.graphdesigner.setStateClassAs(self.nextState, false, "animated-state");
         }
-        if (self.transition != null) {
+        if (self.transition !== null) {
             $scope.graphdesigner.setTransitionClassAs(self.transition.id, false, "animated-transition");
         }
         //Animation Settings
@@ -62,32 +61,32 @@ var simulationDFA = function($scope) {
         self.nextChar = '';
         //the status is stopped at when resetted
         self.status = 'stopped';
-    }
+    };
 
     /**
      * Pause the simulation
      */
-    self.pause = function() {
+    self.pause = function () {
         if (!self.simulationPaused) {
             self.simulationPaused = true;
             self.changeToPlay();
         }
-    }
+    };
 
     /**
      * Stops the simulation
      */
-    self.stop = function() {
+    self.stop = function () {
         self.pause();
         self.reset();
         //enable inputField after simulation
         d3.select(".inputWord").attr("disabled", null);
-    }
+    };
 
     /**
      * Play the simulation
      */
-    self.play = function() {
+    self.play = function () {
 
         //if the simulation is paused then return
         if (!self.simulationPaused) {
@@ -98,7 +97,7 @@ var simulationDFA = function($scope) {
                 //loop through the steps
                 if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
                     self.animateNextMove();
-                    $scope.safeApply(function() {});
+                    $scope.safeApply(function () {});
                     if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
                         setTimeout(self.play, self.stepTimeOut);
                     }
@@ -112,18 +111,18 @@ var simulationDFA = function($scope) {
                         self.changeToPlay();
                     }
                     self.simulationStarted = false;
-                    $scope.safeApply(function() {});
+                    $scope.safeApply(function () {});
                 }
             }
         } else {
             return;
         }
-    }
+    };
 
     /**
      * Prepare the simulation ( set startSettings)
      */
-    self.prepareSimulation = function() {
+    self.prepareSimulation = function () {
         //disable inputField during simulation
         d3.select(".inputWord").attr("disabled", true);
         //The simulation always resets the parameters at the start -> it also sets the inputWord
@@ -132,12 +131,12 @@ var simulationDFA = function($scope) {
         $scope.graphdesigner.setStateClassAs(_.last(self.statusSequence), true, "animated-state");
         $scope.safeApply();
         setTimeout(self.play, self.loopTimeOut);
-    }
+    };
 
     /**
      * animate the next Move (a step has more than three moves)
      */
-    self.animateNextMove = function() {
+    self.animateNextMove = function () {
         if (!self.isNextStepCalculated) {
             self.calcNextStep();
         }
@@ -179,20 +178,20 @@ var simulationDFA = function($scope) {
             self.statusSequence.push(self.currentState);
         }
 
-    }
+    };
 
     /**
      * calcs the next step
      */
-    self.calcNextStep = function() {
+    self.calcNextStep = function () {
         self.isNextStepCalculated = true;
         self.status = 'step';
         self.nextChar = self.inputWord[self.madeSteps];
 
         //get the next transition
-        self.transition = _.filter($scope.config.transitions, function(transition) {
+        self.transition = _.filter($scope.config.transitions, function (transition) {
             //if there is no next char then the word is not accepted
-            if (self.nextChar == undefined) {
+            if (self.nextChar === undefined) {
                 self.status = 'not accepted';
                 return;
             }
@@ -208,12 +207,12 @@ var simulationDFA = function($scope) {
         //save transition and nextState for the animation
         self.transition = self.transition[0];
         self.nextState = self.transition.toState;
-    }
+    };
 
     /**
      * pause the simulation and then stepForward steps to the nextAnimation ( not a whole step)
      */
-    self.stepForward = function() {
+    self.stepForward = function () {
         if (!self.simulationPaused) {
             self.pause();
         }
@@ -229,14 +228,14 @@ var simulationDFA = function($scope) {
         } else {
             $scope.dbug.debugDanger("IS ALREADY LAST STEP");
         }
-    }
+    };
 
 
     /**
      * pause the simulation and then steps back to the lastAnimation ( not a whole step)
      * @return {[type]} [description]
      */
-    self.stepBackward = function() {
+    self.stepBackward = function () {
         if (!self.simulationPaused) {
             self.pause();
         }
@@ -248,19 +247,19 @@ var simulationDFA = function($scope) {
         self.status = 'step';
 
         // Reset if no more undoing is impossible n-> not right at the moment
-        if (!self.animatedTransition && !self.animatedNextState && self.madeSteps == 0) {
+        if (!self.animatedTransition && !self.animatedNextState && self.madeSteps === 0) {
             self.reset();
         } else {
             // Decrease count and remove last element from statusSequence
             self.animateLastMove();
         }
-    }
+    };
 
     /**
      * animates the last move if there is no lastmove, then calcLastStep
      * @return {[type]} [description]
      */
-    self.animateLastMove = function() {
+    self.animateLastMove = function () {
         console.log(self.animatedTransition + " " + self.animatedNextState);
         if (self.animatedTransition && self.animatedNextState) {
             $scope.graphdesigner.setStateClassAs(self.nextState, false, "animated-state");
@@ -272,19 +271,19 @@ var simulationDFA = function($scope) {
             self.calcLastStep();
         }
 
-    }
+    };
 
     /**
      * calc the last step
      */
-    self.calcLastStep = function() {
+    self.calcLastStep = function () {
         self.nextChar = self.processedWord.slice(-1);
         console.log(self.nextChar + " " + self.statusSequence[self.statusSequence.length - 2]);
 
         //get the gone way back
-        self.transition = _.filter($scope.config.transitions, function(transition) {
+        self.transition = _.filter($scope.config.transitions, function (transition) {
             //if there is no next char then the word is not accepted
-            if (self.nextChar == undefined) {
+            if (self.nextChar === undefined) {
                 self.status = 'not accepted';
                 return;
             }
@@ -304,13 +303,23 @@ var simulationDFA = function($scope) {
         self.madeSteps--;
         self.statusSequence.splice(-1, 1);
         self.processedWord = self.processedWord.slice(0, -1);
-    }
+    };
 
+//TODO: better name
+    self.checkTransition = function (transition, nextChar,statusSequence) {
+        //if there is no next char then the word is not accepted
+        if (nextChar === undefined) {
+            return;
+        }
+        //get the nextState
+        return transition.fromState == _.last(statusSequence) && transition.name == nextChar;
+    };
+    
     /**
      * checks if a word is accepted from the automata
      * @return {Boolean} [description]
      */
-    self.check = function() {
+    self.check = function () {
         //init needed variables
         var accepted = false;
         var statusSequence = [];
@@ -319,17 +328,10 @@ var simulationDFA = function($scope) {
         var madeSteps = 0;
         var transition = null;
 
-        while (status == '') {
+        while (self.status === '') {
             nextChar = $scope.inputWord[madeSteps];
             //get the next transition
-            transition = _.filter($scope.config.transitions, function(transition) {
-                //if there is no next char then the word is not accepted
-                if (nextChar == undefined) {
-                    return;
-                }
-                //get the nextState
-                return transition.fromState == _.last(statusSequence) && transition.name == nextChar;
-            });
+            transition = _.filter($scope.config.transitions,self.checkTransition(transition,nextChar,statusSequence) );
             //if there is no next transition, then the word is not accepted
             if (_.isEmpty(transition)) {
                 break;
@@ -350,7 +352,7 @@ var simulationDFA = function($scope) {
             }
         }
         return accepted;
-    }
+    };
 
 
     //BUTTONS NEED DIRECTIVES
@@ -358,15 +360,15 @@ var simulationDFA = function($scope) {
      *  Checks if the automata is playable ( has min. 1 states and 1 transition and automat has a start and a finalstate)
      * @return {Boolean} [description]
      */
-    self.isPlayable = function() {
-        return $scope.config.states.length >= 1 && $scope.config.transitions.length >= 1 && $scope.config.startState != null && $scope.config.finalStates.length >= 1;
-    }
+    self.isPlayable = function () {
+        return $scope.config.states.length >= 1 && $scope.config.transitions.length >= 1 && $scope.config.startState !== null && $scope.config.finalStates.length >= 1;
+    };
 
     /**
      * [playOrPause description]
      * @return {[type]} [description]
      */
-    self.playOrPause = function() {
+    self.playOrPause = function () {
         //the automat needs to be playable
         if (self.isPlayable()) {
             //change the icon and the state to Play or Pause
@@ -382,7 +384,7 @@ var simulationDFA = function($scope) {
             $scope.dbug.debugDanger("Kein Automat vorhanden!");
         }
 
-    }
+    };
 
     //Saves if the icons show Play and if its false it shows pause
     self.isInPlay = false;
@@ -408,9 +410,9 @@ var simulationDFA = function($scope) {
      * [changeToPlay description]
      * @return {[type]} [description]
      */
-    self.changeToPlay = function() {
+    self.changeToPlay = function () {
         d3.select(".glyphicon-pause").attr("class", "glyphicon glyphicon-play");
         self.isInPlay = false;
-    }
+    };
 
 }

@@ -1,6 +1,5 @@
-"use strict";
-
-var statetransitionfunctionDFA = function($scope){
+function StatetransitionfunctionDFA($scope){
+    "use strict";
 
 	var self = this;
     self.functionData = {};

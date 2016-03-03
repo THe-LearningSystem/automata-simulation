@@ -1,13 +1,21 @@
 {
-  "globalstrict": true,
-  "globals": {
-    "angular": false,
-    "describe": false,
-    "it": false,
-    "expect": false,
-    "beforeEach": false,
-    "afterEach": false,
-    "module": false,
-    "inject": false
-  }
+    "globals": {
+        "window": false,
+        "angular": false,
+        "_": false,
+        "GraphdesignerDFA": false,
+        "SimulationDFA": false,
+        "TableDFA": false,
+        "StatetransitionfunctionDFA": false,
+        "Dbug": false,
+        "TestData": false,
+        "cloneObject": false,
+        "d3": false,
+        "jquery": false,
+        "$": false,
+        "console": false,
+        "setTimeout": false,
+        "DPA": false,
+        "DFA":false
+    }
 }

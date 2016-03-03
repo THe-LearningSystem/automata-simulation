@@ -57,32 +57,16 @@
                 <button type="button" class="btn btn-default" ng-click="graphdesigner.removeEventListener()" aria-label="Left Align">
                     <span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.toggleGrid()" aria-label="Left Align">
+                <button type="button" class="btn btn-default" ng-click="graphdesigner.drawGrid()" aria-label="Left Align">
                     <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.scaleAndTranslateToDefault()" aria-label="Left Align">
+                <button type="button" class="btn btn-default" ng-click="graphdesigner.rescale()" aria-label="Left Align">
                     <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
                 </button>
             </div>
             <svg id="diagramm-svg">
             </svg>
             <div id="state-context" ng-show="graphdesigner.showStateContext">
-                <h2>State</h2>
-                <p> Name:
-                    <input id="state-input-name" ng-model="graphdesigner.input.stateName">
-                </p>
-                <p>StartState:
-                    <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">
-                </p>
-                </p>
-                <p>FinalState:
-                    <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
-                </p>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.saveState()" aria-label="Left Align">
-                    SAVE
-                </button>
-            </div>
-            <div id="transition-context" ng-show="graphdesigner.showTransitionContext">
                 <h2>State</h2>
                 <p> Name:
                     <input id="state-input-name" ng-model="graphdesigner.input.stateName">

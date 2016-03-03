@@ -1,11 +1,11 @@
-"use strict";
+
 
 //GRAPHDESIGNER for the svg diagramm
-var testData = function($scope) {
-    self = this;
+function TestData($scope) {
+    "use strict";
+    var self = this;
 
     self.testDFA = function() {
-
         $scope.inputWord = "abc";
         $scope.addStateWithPresets(50, 50);
         $scope.addStateWithPresets(50, 200);
@@ -19,6 +19,6 @@ var testData = function($scope) {
         $scope.addTransition(2, 3, "c");
         $scope.addTransition(3, 0, "l");
 
-    }
+    };
 
 }
