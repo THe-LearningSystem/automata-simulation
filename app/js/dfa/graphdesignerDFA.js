@@ -136,7 +136,7 @@ function GraphdesignerDFA($scope, svgSelector) {
 
     //prevents the normal rightclickcontextmenu and add zoo
     self.svgOuter = d3.select(svgSelector)
-        .call(svgOuterZoomAndDrag).on("contextmenu", function () {
+        .call(svgOuterZoomAndDrag).on("dblclick.zoom", null).on("contextmenu", function () {
             d3.event.preventDefault();
             if (!self.rightClick) {
                 console.log("RICHT click svouter");
@@ -197,7 +197,6 @@ function GraphdesignerDFA($scope, svgSelector) {
                     .attr("x2", i)
                     .attr("y2", height);
             }
-            console.log(width+" "+i );
             //yGrid
             for (i = yOffset; i < height; i += self.gridSpace * $scope.config.diagrammScale) {
                 self.svgGrid
@@ -205,7 +204,7 @@ function GraphdesignerDFA($scope, svgSelector) {
                     .attr("stroke-width", thickness)
                     .attr("class", "grid-line ygrid-line")
                     .attr("x1", 0)
-                    .attr("y1", i )
+                    .attr("y1", i)
                     .attr("x2", width)
                     .attr("y2", i);
             }
@@ -266,7 +265,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.inAddState = true;
         //add listener
         self.svgOuter.on("click", function () {
-            $scope.addStateWithPresets(d3.mouse(this)[0] - $scope.config.diagrammX, d3.mouse(this)[1] - $scope.config.diagrammY);
+            $scope.addStateWithPresets((d3.mouse(this)[0] + $scope.config.diagrammX)* $scope.config.diagrammScale,
+                                       (d3.mouse(this)[1] + $scope.config.diagrammY)* $scope.config.diagrammScale);
             self.inAddState = false;
             self.svgOuter.on("click", null);
         });
@@ -461,6 +461,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         } else {
             $scope.removeFinalState(self.input.state.id);
         }
+        self.setStateClassAs(self.stateWithActiveMenu.id, false, "selectedForTransition");
+        self.stateWithActiveMenu = null;
         self.showStateContext = false;
     };
 
