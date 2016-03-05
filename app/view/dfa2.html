@@ -1,0 +1,101 @@
+<div class="top-nav">
+
+
+</div>
+<div class="top-menu">
+
+    <div class="button-group">
+
+        <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="Zoom In"></menubutton>
+        <menubutton glyphicon="zoom-out" action="graphdesigner.zoomOut()" tttext="Zoom Out"></menubutton>
+        <menubutton glyphicon="resize-small" action="graphdesigner.scaleAndTranslateToDefault()"></menubutton>
+    </div>
+    <div class="button-group">
+        <menubutton glyphicon="trash" action="graphdesigner.remove()" ng-disable="graphdesigner.showStateMenu"></menubutton>
+    </div>
+    <div class="button-group">
+        <menubutton glyphicon="cloud-upload" action="import()"></menubutton>
+        <menubutton glyphicon="cloud-download" action="export()"></menubutton>
+    </div>
+    <div class="button-group">
+
+    </div>
+    <div class="button-group">
+        <menubutton glyphicon="plus" action="graphdesigner.addState()"></menubutton>
+        <menubutton glyphicon="plus" action="graphdesigner.addTransition()"></menubutton>
+        <menubutton glyphicon="trash" action="removeConfig()"></menubutton>
+    </div>
+</div>
+
+<div class="left-menu">
+    <menuitem title="Simulation">
+        <menubutton glyphicon="play" action="simulator.playOrPause()"></menubutton>
+        <menubutton glyphicon="stop" action="simulator.stop()"></menubutton>
+        <menubutton glyphicon="fast-backward" action="simulator.stepBackward()"></menubutton>
+        <menubutton glyphicon="fast-forward" action="simulator.stepForward()"></menubutton>
+        <p>Input:
+            <input class="inputWord" ng-model="inputWord" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></p>
+
+    </menuitem>
+    <menuitem title="Simulation Settings">
+
+        <p> Loop:
+            <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
+        </p>
+        <p> StepTimeOut:
+            <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
+        </p>
+        <p>Looptimeout
+            <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
+        </p>
+    </menuitem>
+    <menuitem title="Developer">
+        <menubutton glyphicon="wrench" action="testData.testDFA()"></menubutton>
+    </menuitem>
+</div>
+<div class="mid-wrapper">
+    <div class="diagramm">
+        <svg id="diagramm-svg">
+        </svg>
+    </div>
+    <div class="bot-content">
+        <div class="bot-left">
+
+        </div>
+        <div class="bot-right">
+            <h3>Zustandsüberführungsfunktion</h3>
+            <p>&Sigma; = { {{statetransitionfunction.functionData.transitions}} }</p>
+            <p>S = { {{statetransitionfunction.functionData.states}} }</p>
+            <p>&delta; = {
+                <p ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction">{{x}}</p> &#125;</p>
+            <p>S<sub>0</sub>= { {{statetransitionfunction.functionData.startState}} }</p>
+            <p>F = { {{statetransitionfunction.functionData.finalStates}} }</p>
+        </div>
+    </div>
+</div>
+<div class="right-menu">
+
+
+    <menuitem title="DiagrammSettings" ng-show="!graphdesigner.showStateMenu">
+        <p> Grid:
+            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">
+        </p>
+    </menuitem>
+    <!--Diagramm Settigns -->
+    <menuitem title="StateMenu" ng-show="graphdesigner.showStateMenu">
+        <p> Name:
+            <input id="state-input-name" ng-model="graphdesigner.input.stateName">
+        </p>
+        <p>StartState:
+            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">
+        </p>
+        </p>
+        <p>FinalState:
+            <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
+        </p>
+        Remove save
+        <button type="button" class="btn btn-default" ng-click="graphdesigner.saveState()" aria-label="Left Align">
+            SAVE
+        </button>
+    </menuitem>
+</div>

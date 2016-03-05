@@ -12,7 +12,12 @@ function SimulationDFA($scope) {
     //if the simulation is paused
     self.simulationPaused = false;
     //simulationsettings
-    self.simulationSettings = false;
+    self.simulationSettings = true;
+    
+    //
+    self.currentState = null;
+    self.nextState = null;
+    self.transition = null;
 
     self.settings = function () {
         self.simulationSettings = !self.simulationSettings;

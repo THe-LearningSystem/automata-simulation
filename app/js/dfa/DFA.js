@@ -33,6 +33,7 @@ function DFA($scope) {
 
     //Config Object
     $scope.config = cloneObject($scope.defaultConfig);
+    $scope.config.name = "NewName";
 
     //AUTOMATA CONFIG END
 
@@ -161,15 +162,17 @@ function DFA($scope) {
     };
     /**
      * Add a state with default name
-     * @param {number} x         
-     * @param {number} y  
+     * @param {number} x 
+     * @param {number} y 
+     * @returns {object} the created object
      */
     $scope.addStateWithPresets = function (x, y) {
-        $scope.addState($scope.config.statePrefix + $scope.config.countStateId, x, y);
+        var obj = $scope.addState($scope.config.statePrefix + $scope.config.countStateId, x, y);
         //if u created a state then make the first state as startState ( default)
         if ($scope.config.countStateId == 1) {
             $scope.changeStartState(0);
         }
+        return obj;
     };
 
     /**
@@ -177,12 +180,14 @@ function DFA($scope) {
      * @param {String} stateName 
      * @param {number} x         
      * @param {number} y         
+     * @returns {object} the created object
      */
     $scope.addState = function (stateName, x, y) {
         if (!$scope.existStateWithName(stateName)) {
-            $scope.addStateWithId($scope.config.countStateId++, stateName, x, y);
+           return $scope.addStateWithId($scope.config.countStateId++, stateName, x, y);
         } else {
-            //TODO: BETTER DEBUG     
+            //TODO: BETTER DEBUG  
+            return null;
         }
     };
 
@@ -191,10 +196,11 @@ function DFA($scope) {
      * !!!dont use at other places!!!!! ONLY FOR IMPORT
      * @param {String} stateName 
      * @param {number} x         
-     * @param {number} y         
+     * @param {number} y   
+     * @returns {object} the created object
      */
     $scope.addStateWithId = function (stateId, stateName, x, y) {
-        $scope.config.states.push({
+       var addedStateId = $scope.config.states.push({
             id: stateId,
             name: stateName,
             x: x,
@@ -204,8 +210,9 @@ function DFA($scope) {
         $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(stateId));
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
+        return $scope.getStateById(addedStateId-1);
     };
-
+    
     /**
      * Removes the state with the given id
      * @param  {number} stateId 

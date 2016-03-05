@@ -7,10 +7,10 @@ function TestData($scope) {
 
     self.testDFA = function() {
         $scope.inputWord = "abc";
-        $scope.addStateWithPresets(50, 50);
-        $scope.addStateWithPresets(50, 200);
-        $scope.addStateWithPresets(200, 200);
-        $scope.addStateWithPresets( 200, 50);
+        $scope.addStateWithPresets(100, 100);
+        $scope.addStateWithPresets(100, 300);
+        $scope.addStateWithPresets(300, 300);
+        $scope.addStateWithPresets( 300, 100);
         $scope.addFinalState(3);
 
 
