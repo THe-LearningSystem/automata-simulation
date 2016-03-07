@@ -1,11 +1,33 @@
 <div class="top-nav">
-
+    <ul ng-controller="LangCtrl">
+        <li><a href="" ng-click="changeLang('en_US')">Englisch</a></li>
+        <li><a href="" ng-click="changeLang('de_DE')">German</a></li>
+    </ul>
 
 </div>
 <div class="top-menu">
 
     <div class="button-group">
+        <!-- Simple dropdown -->
+        <span uib-dropdown on-toggle="toggled(open)">
 
+        <a href id="simple-dropdown" uib-dropdown-toggle>
+                   {{config.diagramm.scale*100 | number:0}}%   <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+        </a>
+
+        <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+            <li><a ng-click="graphdesigner.zoomTo(25)">25%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(50)">50%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(75)">75%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(100)">100%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(125)">125%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(150)">150%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(200)">200%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(250)">250%</a></li>
+            </li>
+
+        </ul>
+        </span>
         <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="Zoom In"></menubutton>
         <menubutton glyphicon="zoom-out" action="graphdesigner.zoomOut()" tttext="Zoom Out"></menubutton>
         <menubutton glyphicon="resize-small" action="graphdesigner.scaleAndTranslateToDefault()"></menubutton>
@@ -28,7 +50,7 @@
 </div>
 
 <div class="left-menu">
-    <menuitem title="Simulation">
+    <menuitemextendable title="Simulation">
         <menubutton glyphicon="play" action="simulator.playOrPause()"></menubutton>
         <menubutton glyphicon="stop" action="simulator.stop()"></menubutton>
         <menubutton glyphicon="fast-backward" action="simulator.stepBackward()"></menubutton>
@@ -36,8 +58,8 @@
         <p>Input:
             <input class="inputWord" ng-model="inputWord" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></p>
 
-    </menuitem>
-    <menuitem title="Simulation Settings">
+    </menuitemextendable>
+    <menuitemextendable title="Simulation Settings">
 
         <p> Loop:
             <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
@@ -48,10 +70,13 @@
         <p>Looptimeout
             <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
         </p>
-    </menuitem>
-    <menuitem title="Developer">
-        <menubutton glyphicon="wrench" action="testData.testDFA()"></menubutton>
-    </menuitem>
+    </menuitemextendable>
+    <menuitemextendable title="Developer">
+        <menubutton glyphicon="wrench" action="testData.testDFA()">
+
+        </menubutton>
+        DiagrammValues: X:{{config}}
+    </menuitemextendable>
 </div>
 <div class="mid-wrapper">
     <div class="diagramm">

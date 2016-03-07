@@ -80,8 +80,6 @@ function GraphdesignerDFA($scope, svgSelector) {
         return tmpString;
     };
 
-
-
     /**
      * Clears the svgContent, resets scale and translate and delete drawnTransitionContent
      */
@@ -90,49 +88,85 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.svgTransitions.html("");
         self.svgStates.html("");
         //change the scale and the translate to the updatedConfig
-        self.svg.attr("transform", "translate(" + $scope.config.diagrammX + "," + $scope.config.diagrammY + ")" + " scale(" + $scope.config.diagrammScale + ")");
-        svgOuterZoomAndDrag.scale($scope.config.diagrammScale);
-        svgOuterZoomAndDrag.translate([$scope.config.diagrammX, $scope.config.diagrammY]);
+        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.config.diagramm.scale);
+        svgOuterZoomAndDrag.translate([$scope.config.diagramm.x, $scope.config.diagramm.y]);
         $scope.drawnTransitions = [];
 
     };
+
+    /****ZOOMHANDLER START***/
+    //amount the user can zoom out
+    self.zoomMax = 2.5;
+    //amount the user can zoom in
+    self.zoomMin = 0.5;
+    self.zoomValue = 0.1;
+
+    self.zoomIn = function () {
+        $scope.config.diagramm.scale = ($scope.config.diagramm.scale + self.zoomValue) > self.zoomMax ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale + self.zoomValue) * 100) / 100;
+        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
+        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
+    };
+    self.zoomOut = function () {
+
+        $scope.config.diagramm.scale = ($scope.config.diagramm.scale - self.zoomValue) <= self.zoomMin ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale - self.zoomValue) * 100) / 100;
+        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
+        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
+
+    };
+
+    self.zoomTo = function (value) {
+        console.log("zoomtedto");
+        $scope.config.diagramm.scale = value / 100;
+        $scope.safeApply();
+        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
+        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
+    };
+
+
 
     /**
      * Scale and Translate the Svg to the default Value
      */
     self.scaleAndTranslateToDefault = function () {
-        self.svg.attr("transform", "translate( " + $scope.defaultConfig.diagrammX + " " + $scope.defaultConfig.diagrammY + " )" + " scale( " + $scope.defaultConfig.diagrammScale + " )");
-        $scope.config.diagrammScale = $scope.defaultConfig.diagrammScale;
-        $scope.config.diagrammX = $scope.defaultConfig.diagrammX;
-        $scope.config.diagrammY = $scope.defaultConfig.diagrammY;
+        $scope.config.diagramm.scale = $scope.defaultConfig.diagramm.scale;
+        $scope.config.diagramm.x = $scope.defaultConfig.diagramm.x;
+        $scope.config.diagramm.y = $scope.defaultConfig.diagramm.y;
+        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
+        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
         $scope.safeApply();
-        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagrammScale);
-        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagrammX, $scope.defaultConfig.diagrammY]);
-        self.drawGrid();
     };
 
 
 
 
-    //amount the user can zoom out
-    self.maxZoomOut = 2.5;
-    //amount the user can zoom in
-    self.maxZoomIn = 0.5;
+
     //the svgouterzoom and drag listener
     var svgOuterZoomAndDrag = d3.behavior
         .zoom()
-        .scaleExtent([self.maxZoomIn, self.maxZoomOut])
+        .scaleExtent([self.zoomMin, self.zoomMax])
         .on("zoom", function () {
             //dont translate on right click (3)
             if (d3.event.sourceEvent.which !== 3) {
-                self.svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-                $scope.config.diagrammScale = d3.event.scale;
-                $scope.config.diagrammX = d3.event.translate[0];
-                $scope.config.diagrammY = d3.event.translate[1];
+                var newScale = Math.floor(d3.event.scale * 100) / 100;
+
+                $scope.config.diagramm.scale = newScale;
+                $scope.config.diagramm.x = d3.event.translate[0];
+                $scope.config.diagramm.y = d3.event.translate[1];
                 $scope.safeApply();
+                self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
+
+
+
+
+
+
                 //update Grid
-                self.drawGrid();
-            }else{
+            } else {
                 console.log("rightclick!");
             }
         });
@@ -142,7 +176,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     self.svgOuter = d3.select(svgSelector)
         .call(svgOuterZoomAndDrag)
         //prevents doubleclick zoom
-        .on("dblclick.zoom",null)
+        .on("dblclick.zoom", null)
         //adds our custom context menu on rightclick
         .on("contextmenu", function () {
             d3.event.preventDefault();
@@ -185,11 +219,11 @@ function GraphdesignerDFA($scope, svgSelector) {
     self.gridSnapDistance = 20;
     //is Grid drawn
     self.isGrid = true;
-    
+
     //watcher for the grid when changed -> updateGrid
-    $scope.$watch('graphdesigner.isGrid',function(){
+    $scope.$watch('[graphdesigner.isGrid , config.diagramm]', function () {
         self.drawGrid();
-    });
+    }, true);
 
     /**
      * Draw the Grid
@@ -200,12 +234,12 @@ function GraphdesignerDFA($scope, svgSelector) {
             self.svgGrid.html("");
             var width = self.svgOuter.style("width").replace("px", "");
             var height = self.svgOuter.style("height").replace("px", "");
-            var thickness = 1 * $scope.config.diagrammScale * 0.5;
-            var xOffset = ($scope.config.diagrammX % (self.gridSpace * $scope.config.diagrammScale));
-            var yOffset = ($scope.config.diagrammY % (self.gridSpace * $scope.config.diagrammScale));
+            var thickness = 1 * $scope.config.diagramm.scale * 0.5;
+            var xOffset = ($scope.config.diagramm.x % (self.gridSpace * $scope.config.diagramm.scale));
+            var yOffset = ($scope.config.diagramm.y % (self.gridSpace * $scope.config.diagramm.scale));
             var i;
             //xGrid
-            for (i = xOffset; i < width; i += self.gridSpace * $scope.config.diagrammScale) {
+            for (i = xOffset; i < width; i += self.gridSpace * $scope.config.diagramm.scale) {
                 self.svgGrid
                     .append("line")
                     .attr("stroke-width", thickness)
@@ -216,7 +250,7 @@ function GraphdesignerDFA($scope, svgSelector) {
                     .attr("y2", height);
             }
             //yGrid
-            for (i = yOffset; i < height; i += self.gridSpace * $scope.config.diagrammScale) {
+            for (i = yOffset; i < height; i += self.gridSpace * $scope.config.diagramm.scale) {
                 self.svgGrid
                     .append("line")
                     .attr("stroke-width", thickness)
@@ -279,8 +313,9 @@ function GraphdesignerDFA($scope, svgSelector) {
         //add listener that the selectedstate follows the mouse
         self.svgOuter.on("mousemove", function () {
             //move the state (only moved visually not saved)
-            self.selectedState.objReference.attr("transform", "translate(" + ((d3.event.offsetX - $scope.config.diagrammX)) + " " +
-                ((d3.event.offsetY - $scope.config.diagrammY)) + ")");
+            self.selectedState.objReference.attr("transform", "translate(" + ((d3.mouse(this)[0])) + " " +
+                ((d3.mouse(this)[1])) + ")");
+            console.log("update");
         });
         //create a new selectedState in a position not viewable
         self.selectedState = $scope.addStateWithPresets(-10000, -10000);
@@ -291,8 +326,8 @@ function GraphdesignerDFA($scope, svgSelector) {
             self.selectedState.objReference.classed("state-in-creation", false);
             //update the stateData
 
-            self.selectedState.x = d3.event.offsetX;
-            self.selectedState.y = d3.event.offsetX;
+            self.selectedState.x = (d3.mouse(this)[0]);
+            self.selectedState.y = (d3.mouse(this)[1]);
             //remove mousemove listener
             self.svgOuter.on("mousemove", null);
             //overwrite the click listener
@@ -817,7 +852,7 @@ function GraphdesignerDFA($scope, svgSelector) {
                 //the text of the transition
                 text = group.append("text")
                 .attr("class", "transition-text")
-                .attr("fill","black")
+                .attr("fill", "black")
                 .text(transition.name);
             //if it is not a self Reference
             if (transition.fromState != transition.toState) {
@@ -865,8 +900,9 @@ function GraphdesignerDFA($scope, svgSelector) {
                 names: [transition.name],
                 objReference: group
             });
-            group.on('click', self.transitionClick).on("mouseover",function(){
-                console.log("transover");});
+            group.on('click', self.transitionClick).on("mouseover", function () {
+                console.log("transover");
+            });
             return group;
             //if there is already a transition with the same fromState and toState then the current
         } else {

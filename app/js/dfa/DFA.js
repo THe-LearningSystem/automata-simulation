@@ -12,10 +12,12 @@ function DFA($scope) {
     $scope.defaultConfig.statePrefix = 'S';
     //Suffix after a transition name on the graphdesigner
     $scope.defaultConfig.transitionNameSuffix = '|';
-    //Settings for the diagramm
-    $scope.defaultConfig.diagrammScale = 1;
-    $scope.defaultConfig.diagrammX = 0;
-    $scope.defaultConfig.diagrammY = 0;
+    $scope.defaultConfig.diagramm = {
+        x: 0,
+        y: 0,
+        scale: 1,
+        updatedWithZoomBehavior:false
+    };
     //Number of statesIds given to states
     $scope.defaultConfig.countStateId = 0;
     //Number of transitionIds given to transitions
@@ -184,7 +186,7 @@ function DFA($scope) {
      */
     $scope.addState = function (stateName, x, y) {
         if (!$scope.existStateWithName(stateName)) {
-           return $scope.addStateWithId($scope.config.countStateId++, stateName, x, y);
+            return $scope.addStateWithId($scope.config.countStateId++, stateName, x, y);
         } else {
             //TODO: BETTER DEBUG  
             return null;
@@ -200,7 +202,7 @@ function DFA($scope) {
      * @returns {object} the created object
      */
     $scope.addStateWithId = function (stateId, stateName, x, y) {
-       var addedStateId = $scope.config.states.push({
+        var addedStateId = $scope.config.states.push({
             id: stateId,
             name: stateName,
             x: x,
@@ -210,9 +212,9 @@ function DFA($scope) {
         $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(stateId));
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
-        return $scope.getStateById(addedStateId-1);
+        return $scope.getStateById(addedStateId - 1);
     };
-    
+
     /**
      * Removes the state with the given id
      * @param  {number} stateId 
