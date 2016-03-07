@@ -57,11 +57,11 @@ autoSim.directive("menubutton", function () {
 autoSim.directive("menuitemextendable", function () {
 
     return {
-        restrict: 'EA',
+        restrict: 'E',
         replace: true,
         transclude: true,
         controller: function ($scope) {
-            $scope.extended = true; 
+            $scope.extended = true;
         },
         scope: {
             title: '@',
@@ -74,17 +74,71 @@ autoSim.directive("menuitemextendable", function () {
 autoSim.directive("menuitem", function () {
 
     return {
-        restrict: 'EA',
+        restrict: 'E',
         replace: true,
         transclude: true,
         scope: {
             title: '@',
         },
-        template: '<div class="menu-item"><p class="title">{{title}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
+        template: '<div class="menu-item"><p class="title">{{title}}</p><div class="content" ng-transclude></div></div>'
 
     };
 
 });
+
+autoSim.directive("automatontable", function () {
+    return {
+        restrict: 'E',
+        scope: {
+            automaton: '='
+        },
+        link: function ($scope, element, attrs) {
+            var dfa = $scope.automaton;
+            $scope.alphabet = dfa.alphabet;
+            $scope.transitions = dfa.transitions;
+            //fromid
+            //arr
+            $scope.$watchCollection('automaton', function () {
+                $scope.states = [];
+                for (var i = 0; i < dfa.states.length; i++) {
+                    var tmpState = dfa.states[i];
+                    var tmpObject = {};
+                    tmpObject.id = tmpState.id;
+                    tmpObject.name = tmpState.name;
+                    tmpObject.trans = [];
+                    //
+                    for (var alphabetCounter = 0; alphabetCounter < dfa.alphabet.length; alphabetCounter++) {
+                        var tmpTransitionName = dfa.alphabet[alphabetCounter];
+                        var foundedTransition = null;
+                        for (var transitionCounter = 0; transitionCounter < dfa.transitions.length; transitionCounter++) {
+                            var tmpTransition = dfa.transitions[transitionCounter];
+                            if (tmpTransition.fromState === tmpState.id && tmpTransition.name === tmpTransitionName) {
+                                console.log("Found");
+                                foundedTransition = tmpTransition;
+                            }
+                        }
+                        var trans = {};
+                        trans.alphabet = tmpTransitionName;
+                        if (foundedTransition !== null) {
+                            var tmpToState = $scope.$parent.getStateById(foundedTransition.toState);
+                            trans.State = tmpToState.name;
+                        } else {
+                            trans.State = "";
+                        }
+                        tmpObject.trans.push(trans);
+                    }
+                    $scope.states.push(tmpObject);
+                }
+                console.log($scope.states);
+            });
+        },
+        templateUrl: 'templates/automatontable.html'
+    };
+});
+
+
+
+//Language Controller
 autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $translate) {
     $scope.changeLang = function (key) {
         $translate.use(key).then(function (key) {
