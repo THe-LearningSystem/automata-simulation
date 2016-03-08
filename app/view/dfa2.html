@@ -51,7 +51,7 @@
 </div>
 
 <div class="left-menu">
-    <menuitemextendable title="SIM.TITLE">
+    <menuitemextendable titlename="SIM.TITLE">
         <menubutton glyphicon="play" action="simulator.playOrPause()" tttext="SIM.PLAYPAUSE"></menubutton>
         <menubutton glyphicon="stop" action="simulator.stop()" tttext="SIM.STOP"></menubutton>
         <menubutton glyphicon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
@@ -60,7 +60,7 @@
             <input class="inputWord" ng-model="inputWord" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></p>
 
     </menuitemextendable>
-    <menuitemextendable title="SIM_SET.TITLE">
+    <menuitemextendable titlename="SIM_SET.TITLE">
 
         <p> {{"SIM_SET.LOOP" | translate}}
             <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
@@ -72,7 +72,7 @@
             <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
         </p>
     </menuitemextendable>
-    <menuitemextendable title="DEV.TITLE">
+    <menuitemextendable titlename="DEV.TITLE">
         <menubutton glyphicon="wrench" action="testData.testDFA()">
 
         </menubutton>
@@ -102,14 +102,14 @@
 </div>
 <div class="right-menu">
 
-    <menuitem title="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu">
+    <menuitem titlename="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu">
         <p> {{"DIA_SET.GRID" | translate}}
 
             <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">
         </p>
     </menuitem>
     <!--Diagramm Settigns -->
-    <menuitem title="DIA_SET.TITLE" ng-show="graphdesigner.showStateMenu">
+    <menuitem titlename="DIA_SET.TITLE" ng-show="graphdesigner.showStateMenu">
         <p> {{"STATE_SET.NAME" | translate}}
             <input id="state-input-name" ng-model="graphdesigner.input.stateName">
         </p>
@@ -122,5 +122,5 @@
         </p>
 
     </menuitem>
-    <menuitem title="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
+    <menuitem titlename="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
 </div>
