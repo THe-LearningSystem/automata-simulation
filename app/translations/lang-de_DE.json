@@ -1,4 +1,18 @@
 {
-    "APP_TITLE" : "Automaten Simulation"
+    "APP_TITLE": "Automaten Simulation",
+    "TTTEXT_ZOOM_IN": "Vergrößern",
+
+    "SIM": {
+        "TITLE": "Simulation",
+        "INPUT": "Eingabewort"
+    },
+
+    "SIM_SET": {
+        "TITLE": "Simulationseinstellungen"
+    },
+    
+    "DEV": {
+        "TITLE": "Entwickler"
+    }
 
 }

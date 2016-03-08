@@ -1,3 +1,13 @@
 {
-    "APP_TITLE" : "Automata Simulation"
+    "APP_TITLE": "Automata Simulation",
+    "TTTEXT_ZOOM_IN": "Zoom In",
+
+    "SIM": {
+        "TITLE": "Simulation",
+        "INPUT": "Input"
+    },
+    
+    "SIM_SET": {
+        "TITLE": "Simulation Settings"
+    }
 }
