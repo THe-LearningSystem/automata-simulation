@@ -51,7 +51,7 @@ function DFA($scope) {
     $scope.dbug = new Dbug($scope);
     //the simulator controlling the simulation
     $scope.simulator = new SimulationDFA($scope);
-    //
+    // the table where states and transitions are shown
     $scope.table = new TableDFA($scope);
     //the graphdesigner controlling the svg diagramm
     $scope.graphdesigner = new GraphdesignerDFA($scope, "#diagramm-svg");
@@ -85,8 +85,12 @@ function DFA($scope) {
 
     };
 
-    //ALPHABET
-
+   
+    /**
+     * Adds a char to the input alphabet if the char is not available
+     * @param   {value} value the char, which is to be added
+     * @returns {[[Type]]} [[Description]]
+     */
     $scope.addToAlphabet = function (value) {
         if (!_.some($scope.config.alphabet, function (a) {
                 return a === value;
