@@ -148,10 +148,61 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
 }]);
 
 
-autoSim.directive("importautomaton",function(){
-    
+autoSim.directive("importautomaton", function () {
+
 });
 
-autoSim.directive("exportautomaton",function(){
-    
-});
+autoSim.controller("portationCtrl", ['$scope', function ($scope) {
+    $scope.export = function () {
+        console.log("test");
+        /**
+         * Returns all transition without the objReference
+         * @return {Array} array of transition objects
+         */
+        function getTransitions() {
+            var allTransitions = [];
+            _.forEach($scope.config.transitions, function (transition, key) {
+                var tmpTransition = JSON.parse(JSON.stringify(transition));
+                delete tmpTransition.objReference;
+                allTransitions.push(tmpTransition);
+            });
+            return allTransitions;
+        }
+
+        /**
+         * Returns all transition without the objReference
+         * @return {Array} array of transition objects
+         */
+        function getStates() {
+            var allStates = [];
+            _.forEach($scope.config.states, function (state, key) {
+                var tmpState = JSON.parse(JSON.stringify(state));
+                delete tmpState.objReference;
+                allStates.push(tmpState);
+            });
+            return allStates;
+        }
+
+
+        var exportData = {};
+        exportData = $scope.config;
+        exportData.transitions = getTransitions();
+        exportData.states = getStates();
+        var data = window.JSON.stringify(exportData);
+        var blob = new Blob([data], {
+            type: "text/plain;charset=utf-8;",
+        });
+        saveAs(blob, $scope.config.name + ".json");
+    };
+
+    $scope.import = function () {
+        //Called when the user clicks on the import Button and opens the hidden-file-input
+
+        angular.element('#hidden-file-upload').trigger('click');
+        console.log($scope);
+        //called when the user uploads a file
+        
+        
+
+    };
+}]);

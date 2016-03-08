@@ -35,8 +35,10 @@
     <div class="button-group">
         <menubutton glyphicon="trash" action="graphdesigner.remove()" ng-disable="graphdesigner.showStateMenu"></menubutton>
     </div>
-    <div class="button-group">
-        <menubutton glyphicon="cloud-upload" action="import()"></menubutton>
+    <div class="button-group" ng-controller="portationCtrl">
+        <menubutton glyphicon="cloud-upload" action="import()">
+      
+        </menubutton>      <input type="file" id="hidden-file-upload">
         <menubutton glyphicon="cloud-download" action="export()"></menubutton>
     </div>
     <div class="button-group">
@@ -119,7 +121,7 @@
             <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
         </p>
     </menuitem>
-  <menuitem title="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
+    <menuitem title="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
 
     </menuitem>
 </div>
