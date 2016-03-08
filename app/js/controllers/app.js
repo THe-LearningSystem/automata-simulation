@@ -50,7 +50,7 @@ autoSim.directive("menubutton", function () {
             action: '&',
             tttext: '@'
         },
-        template: '<button type="button" class="menu-button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext}}"><span class="glyphicon glyphicon-{{glyphicon}}" aria-hidden="true"> </span> </button>'
+        template: '<button type="button" class="menu-button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}"><span class="glyphicon glyphicon-{{glyphicon}}" aria-hidden="true"> </span> </button>'
     };
 });
 
@@ -66,7 +66,7 @@ autoSim.directive("menuitemextendable", function () {
         scope: {
             title: '@',
         },
-        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true" ng-show="extended"></span><span class="glyphicon glyphicon-triangle-right" aria-hidden="true" ng-show="!extended"></span>{{title}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
+        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true" ng-show="extended"></span><span class="glyphicon glyphicon-triangle-right" aria-hidden="true" ng-show="!extended"></span>{{title | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
 
     };
 

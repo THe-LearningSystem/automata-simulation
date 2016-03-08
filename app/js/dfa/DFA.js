@@ -52,7 +52,7 @@ function DFA($scope) {
     //the graphdesigner controlling the svg diagramm
     $scope.graphdesigner = new GraphdesignerDFA($scope, "#diagramm-svg");
     //the statetransitionfunction controlling the statetransitionfunction-table
-    //$scope.statetransitionfunction = new StatetransitionfunctionDFA($scope);
+    $scope.statetransitionfunction = new StatetransitionfunctionDFA($scope);
 
     //for the testdata
     $scope.testData = new TestData($scope);
