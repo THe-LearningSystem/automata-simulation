@@ -12,6 +12,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     self.preventSvgOuterClick = false;
     self.selectedTransition = null;
     self.showStateMenu = false;
+    self.showTransitionMenu = false;
     self.selectedStateName = "selectedForTransition";
 
     //graphdesigner settings
@@ -88,9 +89,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.svgTransitions.html("");
         self.svgStates.html("");
         //change the scale and the translate to the updatedConfig
-        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.config.diagramm.scale);
-        svgOuterZoomAndDrag.translate([$scope.config.diagramm.x, $scope.config.diagramm.y]);
+        self.updataZoomBehavior();
         $scope.drawnTransitions = [];
 
     };
@@ -104,16 +103,12 @@ function GraphdesignerDFA($scope, svgSelector) {
 
     self.zoomIn = function () {
         $scope.config.diagramm.scale = ($scope.config.diagramm.scale + self.zoomValue) > self.zoomMax ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale + self.zoomValue) * 100) / 100;
-        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
-        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
+        self.updataZoomBehavior();
     };
     self.zoomOut = function () {
 
         $scope.config.diagramm.scale = ($scope.config.diagramm.scale - self.zoomValue) <= self.zoomMin ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale - self.zoomValue) * 100) / 100;
-        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
-        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
+        self.updataZoomBehavior();
 
     };
 
@@ -121,11 +116,14 @@ function GraphdesignerDFA($scope, svgSelector) {
         console.log("zoomtedto");
         $scope.config.diagramm.scale = value / 100;
         $scope.safeApply();
+        self.updataZoomBehavior();
+    };
+
+    self.updupdataZoomBehaviorateZoom = function () {
         self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
         svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
         svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
     };
-
 
 
     /**
@@ -135,10 +133,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         $scope.config.diagramm.scale = $scope.defaultConfig.diagramm.scale;
         $scope.config.diagramm.x = $scope.defaultConfig.diagramm.x;
         $scope.config.diagramm.y = $scope.defaultConfig.diagramm.y;
-        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
-        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
         $scope.safeApply();
+        self.updataZoomBehavior();
     };
 
 
@@ -159,13 +155,6 @@ function GraphdesignerDFA($scope, svgSelector) {
                 $scope.config.diagramm.y = d3.event.translate[1];
                 $scope.safeApply();
                 self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
-
-
-
-
-
-
-                //update Grid
             } else {
                 console.log("rightclick!");
             }
@@ -281,6 +270,24 @@ function GraphdesignerDFA($scope, svgSelector) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
     self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow-animated')
+        .attr('refX', 8)
+        .attr('refY', 3)
+        .attr('markerWidth', 10)
+        .attr('markerHeight', 10)
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .attr('d', 'M0,0 L0,6 L9,3 z');
+    self.defs.append('svg:marker')
+        .attr('id', 'marker-end-arrow-hover')
+        .attr('refX', 8)
+        .attr('refY', 3)
+        .attr('markerWidth', 10)
+        .attr('markerHeight', 10)
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .attr('d', 'M0,0 L0,6 L9,3 z');
+    self.defs.append('svg:marker')
+        .attr('id', 'marker-end-arrow-active')
         .attr('refX', 8)
         .attr('refY', 3)
         .attr('markerWidth', 10)
@@ -600,19 +607,27 @@ function GraphdesignerDFA($scope, svgSelector) {
         }
     };
 
+    self.setArrowMarkerTo = function (transLine, suffix) {
+
+        if (suffix !== '') {
+            transLine.select('.transition-line').attr("marker-end", "url(#marker-end-arrow-" + suffix + ")");
+        } else {
+            transLine.select('.transition-line').attr("marker-end", "url(#marker-end-arrow)");
+        }
+    };
+
 
     /**
      * Opens the StateMenu
      */
     self.openStateMenu = function (d, i) {
 
+        self.closeStateMenu();
+        self.closeTransitionMenu();
+
         self.preventSvgOuterClick = true;
         self.showStateMenu = true;
 
-        //remove old state selected visualisation
-        if (self.selectedState !== null) {
-            self.toggleState(self.selectedState.id, false);
-        }
         self.selectedState = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
         //add new state as selected
         self.toggleState(self.selectedState.id, true);
@@ -624,32 +639,47 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.input.startState = $scope.config.startState == self.selectedState.id;
         self.input.finalState = $scope.isStateAFinalState(self.selectedState.id);
         $scope.safeApply();
+        self.stateMenuListener = [];
+        $scope.$watch('graphdesigner.input.startState', function () {
+            if (self.selectedState !== null) {
+                if (self.input.startState) {
+                    $scope.changeStartState(self.input.state.id);
+                } else {
+                    if (self.selectedState.id == $scope.config.startState)
+                        $scope.removeStartState();
+                }
+            }
+        });
+        $scope.$watch('graphdesigner.input.finalState', function () {
+            if (self.selectedState !== null) {
+                if (self.input.finalState) {
+                    $scope.addFinalState(self.input.state.id);
+                } else {
+                    $scope.removeFinalState(self.input.state.id);
+                }
+            }
+        });
+        $scope.$watch('graphdesigner.input.stateName', function () {
+            if (self.selectedState !== null)
+                $scope.renameState(self.input.state.id, self.input.stateName);
+        });
+    };
+
+
+    self.closeStateMenu = function () {
+        //remove old state selected visualisation
+        if (self.selectedState !== null) {
+            self.toggleState(self.selectedState.id, false);
+        }
+        self.showStateMenu = false;
     };
 
     self.toggleState = function (stateId, bool) {
-        self.setStateClassAs(stateId, bool, self.selectedStateName);
+        self.setStateClassAs(stateId, bool, "active");
         if (bool === false) {
             self.selectedState = null;
         }
 
-    };
-
-    self.saveState = function () {
-        $scope.renameState(self.input.state.id, self.input.stateName);
-        if (self.input.startState) {
-            $scope.changeStartState(self.input.state.id);
-        } else {
-            if (self.selectedState.id == $scope.config.startState)
-                $scope.removeStartState();
-        }
-        if (self.input.finalState) {
-            $scope.addFinalState(self.input.state.id);
-        } else {
-            $scope.removeFinalState(self.input.state.id);
-        }
-        self.setStateClassAs(self.selectedState.id, false, "selectedForTransition");
-        self.stateWithActiveMenu = null;
-        self.showStateMenu = false;
     };
 
 
@@ -846,9 +876,18 @@ function GraphdesignerDFA($scope, svgSelector) {
                 .attr("fill", "white"),
                 //the line itself with the arrow
                 line = group.append("path")
-                .attr("class", "transition-line curvedLine")
-                .attr("fill", "none")
+                .attr("class", "transition-line")
+                .attr("fill", "white")
                 .attr("marker-end", "url(#marker-end-arrow)"),
+
+                lineClickArea = group.append("path")
+                .attr("class", "transition-line-click")
+                .attr("stroke-width", 20)
+                .attr("stroke", "transparent")
+                .attr("fill", "none"),
+                lineHover = group.append("path")
+                .attr("class", "transition-line-hover")
+                .attr("marker-end", "url(#marker-end-arrow-hover)"),
                 //the text of the transition
                 text = group.append("text")
                 .attr("class", "transition-text")
@@ -875,7 +914,6 @@ function GraphdesignerDFA($scope, svgSelector) {
                     otherTrans.objReference.select(".transition-text")
                         .attr("x", (otherCoordObj.xMidPoint))
                         .attr("y", (otherCoordObj.yMidPoint));
-
                 } else {
                     text.attr("x", (coordObj.xMid))
                         .attr("y", (coordObj.yMid));
@@ -883,6 +921,8 @@ function GraphdesignerDFA($scope, svgSelector) {
                 //get the curve data ( depends if there is a transition in the oposite direction)
                 curveData = self.transitionCurve(coordObj, !self.existDrawnTransition(transition.toState, transition.fromState));
                 line.attr("d", curveData);
+                lineHover.attr("d", curveData);
+                lineClickArea.attr("d", curveData);
                 //if it is a selfreference
             } else {
                 var stateId = $scope.getArrayStateIdByStateId(transition.fromState);
@@ -894,15 +934,18 @@ function GraphdesignerDFA($scope, svgSelector) {
                     .attr("y", y);
             }
             //add the drawnTransition
-            $scope.drawnTransitions.push({
+            group.attr("object-id", $scope.drawnTransitions.push({
                 fromState: transition.fromState,
                 toState: transition.toState,
                 names: [transition.name],
                 objReference: group
-            });
-            group.on('click', self.transitionClick).on("mouseover", function () {
-                console.log("transover");
-            });
+            }) - 1);
+            group.on('click', self.openTransitionMenu)
+                .on("mouseover", function () {
+                    d3.select(this).select('.transition-line-hover').attr("style", "opacity:0.6");
+                }).on("mouseleave", function () {
+                    d3.select(this).select('.transition-line-hover').attr("style", "");
+                });
             return group;
             //if there is already a transition with the same fromState and toState then the current
         } else {
@@ -916,8 +959,28 @@ function GraphdesignerDFA($scope, svgSelector) {
         }
     };
 
-    self.transitionClick = function () {
+    self.openTransitionMenu = function () {
+        self.closeStateMenu();
+        self.closeTransitionMenu();
+        self.preventSvgOuterClick = true;
+        self.showTransitionMenu = true;
         console.log("click transition");
+
+        self.selectedTransition = d3.select(this);
+        self.selectedTransition.classed("active", true);
+        self.setArrowMarkerTo(d3.select(this), "active");
+        $scope.safeApply();
+
+    };
+
+    self.closeTransitionMenu = function () {
+        self.showTransitionMenu = false;
+        if (self.selectedTransition !== null) {
+            self.setArrowMarkerTo(self.selectedTransition, "");
+            self.selectedTransition.classed("active", false);
+            self.selectedTransition = null;
+
+        }
     };
 
     /**

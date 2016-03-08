@@ -50,7 +50,7 @@
 </div>
 
 <div class="left-menu">
-    <menuitemextendable title="Simulation">
+    <menuitemextendable title="TEST">
         <menubutton glyphicon="play" action="simulator.playOrPause()"></menubutton>
         <menubutton glyphicon="stop" action="simulator.stop()"></menubutton>
         <menubutton glyphicon="fast-backward" action="simulator.stepBackward()"></menubutton>
@@ -101,7 +101,7 @@
 <div class="right-menu">
 
 
-    <menuitem title="DiagrammSettings" ng-show="!graphdesigner.showStateMenu">
+    <menuitem title="DiagrammSettings" ng-show="!graphdesigner.showStateMenu && !graphdesigner.showTransitionMenu">
         <p> Grid:
             <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">
         </p>
@@ -118,9 +118,8 @@
         <p>FinalState:
             <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
         </p>
-        Remove save
-        <button type="button" class="btn btn-default" ng-click="graphdesigner.saveState()" aria-label="Left Align">
-            SAVE
-        </button>
+    </menuitem>
+  <menuitem title="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
+
     </menuitem>
 </div>
