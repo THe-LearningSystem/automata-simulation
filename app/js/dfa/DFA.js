@@ -16,7 +16,7 @@ function DFA($scope) {
         x: 0,
         y: 0,
         scale: 1,
-        updatedWithZoomBehavior:false
+        updatedWithZoomBehavior: false
     };
     //Number of statesIds given to states
     $scope.defaultConfig.countStateId = 0;
@@ -30,6 +30,8 @@ function DFA($scope) {
     $scope.defaultConfig.finalStates = [];
     //the transitions are saved like{fromState:stateId, toState:stateId, name:"transitionName"}
     $scope.defaultConfig.transitions = [];
+    //alphabet
+    $scope.defaultConfig.alphabet = [];
 
 
 
@@ -81,7 +83,18 @@ function DFA($scope) {
 
     };
 
+    //ALPHABET
 
+    $scope.addToAlphabet = function (value) {
+        if (!_.some($scope.config.alphabet, function (a) {
+                return a === value;
+            })) {
+            $scope.config.alphabet.push(value);
+        } else {
+
+        }
+
+    };
 
 
     //STATE FUNCTIONS START
@@ -359,6 +372,7 @@ function DFA($scope) {
         if (!$scope.existTransition(fromState, toState, transitonName) && $scope.existStateWithId(fromState) &&
             $scope.existStateWithId(toState)) {
             $scope.addTransitionWithId($scope.config.countTransitionId++, fromState, toState, transitonName);
+            $scope.addToAlphabet(transitonName);
         } else {
             //TODO: BETTER DEBUG
         }
