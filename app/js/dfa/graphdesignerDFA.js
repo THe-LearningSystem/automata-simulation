@@ -635,6 +635,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.input.stateName = self.selectedState.name;
         self.input.startState = $scope.config.startState == self.selectedState.id;
         self.input.finalState = $scope.isStateAFinalState(self.selectedState.id);
+        self.input.renamedError = false;
         $scope.safeApply();
         self.stateMenuListener = [];
         $scope.$watch('graphdesigner.input.startState', function () {
@@ -656,9 +657,10 @@ function GraphdesignerDFA($scope, svgSelector) {
                 }
             }
         });
-        $scope.$watch('graphdesigner.input.stateName', function () {
+        $scope.$watch('graphdesigner.input.stateName', function (newValue,oldValue) {
             if (self.selectedState !== null)
-                $scope.renameState(self.input.state.id, self.input.stateName);
+                    self.input.renamedError = !$scope.renameState(self.input.state.id, newValue);
+            
         });
     };
 

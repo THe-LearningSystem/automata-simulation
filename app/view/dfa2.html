@@ -110,17 +110,21 @@
     </menuitem>
     <!--Diagramm Settigns -->
     <menuitem titlename="DIA_SET.TITLE" ng-show="graphdesigner.showStateMenu">
-        <p> {{"STATE_SET.NAME" | translate}}
+        <div> {{"STATE_SET.NAME" | translate}}
             <input id="state-input-name" ng-model="graphdesigner.input.stateName">
-        </p>
-        <p>{{"STATE_SET.STARTSTATE" | translate}}
-            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">
-        </p>
-        </p>
-        <p>{{"STATE_SET.FINALSTATE" | translate}}
+
+        </div>
+        <span class="alert alert-danger" ng-show="graphdesigner.input.renamedError">{{"STATE_SET.ALREAD_EXIST" | translate}}</span>
+        
+        <div>{{ "STATE_SET.STARTSTATE" | translate}}
+            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> </div>
+
+
+        <div>{{ "STATE_SET.FINALSTATE" | translate}}
             <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
-        </p>
+        </div>
 
     </menuitem>
     <menuitem titlename="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
+    </menuitem>
 </div>

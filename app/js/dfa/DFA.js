@@ -261,17 +261,19 @@ function DFA($scope) {
 
     /**
      * Rename a state if the newStatename isnt already used
-     * @param  {number} stateId      
-     * @param  {State} newStateName 
+     * @param  {number}  stateId      
+     * @param  {State}   newStateName 
+     * @returns {boolean} true if success false if no succes
      */
     $scope.renameState = function (stateId, newStateName) {
         if ($scope.existStateWithName(newStateName)) {
             //TODO: BETTER DEBUG
+            return false;
         } else {
-            console.log($scope.existStateWithName(newStateName));
             $scope.getStateById(stateId).name = newStateName;
             //Rename the state on the graphdesigner
             $scope.graphdesigner.renameState(stateId, newStateName);
+            return true;
         }
     };
 
