@@ -11,9 +11,9 @@ $finalStateColor: #FFF;
 $finalStateBorderColor: $stateBorderColor;
 $finalStateBorderWidth:2;
 //Hover
-$stateColorHover: #000;
+$stateHoverColor: #000;
+$stateActiveColor: #F00;
 $stateColorHoverOpacity:0.4;
-$stateColorSelected: #444;
 $selectForAddTransitionColor:#F00;
 //animated state for the simulation
 $animatedStateColor:#F00;
@@ -22,6 +22,8 @@ $transitionColor: #000;
 $transitionFontSize: 15px;
 $transitionFontColor: #000;
 $transitionWidth:2.5;
+$transitionHoverColor:#AAA;
+$transitionActiveColor:#F00;
 //animated transition
 $animatedTransitionWidth:2.5;
 $animatedTransitionColor:#F00;
@@ -61,9 +63,15 @@ $animatedTransitionFontColor: #F00;
 #marker-end-arrow {
     fill: #000;
 }
+#marker-end-arrow-hover {
+    fill: $transitionHoverColor;
+}
+#marker-end-arrow-active {
+    fill: $transitionActiveColor;
+}
 //animated arrow for the simulation
 #marker-end-arrow-animated {
-    fill: #F00;
+    fill: $animatedTransitionColor;
 }
 //grid
 .grid-line {
@@ -73,12 +81,15 @@ $animatedTransitionFontColor: #F00;
 .state {
     cursor: context-menu;
 }
+.state:hover {
+    cursor: pointer;
+}
 .state:hover .hover-circle {
-    fill: $stateColorHover;
+    fill: $stateHoverColor;
     fill-opacity: $stateColorHoverOpacity;
 }
-.state:active .state-circle {
-    fill: $stateColorSelected;
+.active .state-circle {
+    fill: $stateActiveColor;
 }
 .state-circle {
     fill: $stateColor;
@@ -106,18 +117,32 @@ $animatedTransitionFontColor: #F00;
 }
 //Transition
 .transition {
+    stroke: $transitionColor;
     cursor: context-menu;
 }
+.transition:hover {
+    cursor: pointer;
+}
+.transition.active .transition-line {
+    stroke: $transitionActiveColor;
+}
 .transition-line {
-    stroke: $transitionColor;
     stroke-width: $transitionWidth;
+}
+.transition-line-hover {
+    stroke-width: $transitionWidth;
+    stroke: $transitionHoverColor;
+    fill: $transitionHoverColor;
+    opacity:0;
 }
 //animated transition for the simulation
 .animated-transition .transition-line {
     stroke: $animatedTransitionColor;
     stroke-width: $animatedTransitionWidth;
 }
-.transition-text {}
+.transition-text {
+    font-size: 15px
+}
 //ECT
 #hidden-file-upload {
     display: none;
@@ -137,7 +162,7 @@ $animatedTransitionFontColor: #F00;
     background-color: white;
 }
 .top-menu {
-    padding:0 0 0 200px;
+    padding: 0 0 0 200px;
     height: 30px;
     background-color: whitesmoke;
     border-top: 1px solid #e0e0e0;
@@ -169,21 +194,18 @@ $animatedTransitionFontColor: #F00;
     padding: 5px;
     background-color: #e0e0e0;
 }
-
-.menu-button{
-    background-color:transparent;
-    border:1px solid whitesmoke;
+.menu-button {
+    background-color: transparent;
+    border: 1px solid whitesmoke;
     margin: 5px 1px;
 }
-
-.menu-button:hover{
-    border:1px solid #e0e0e0;
+.menu-button:hover {
+    border: 1px solid #e0e0e0;
 }
-
-.button-group{
-    padding:0 5px;
-    float:left;
-    border-right:1px solid #e0e0e0;
+.button-group {
+    padding: 0 5px;
+    float: left;
+    border-right: 1px solid #e0e0e0;
 }
 .menu-item .content {
     padding: 5px;
@@ -214,4 +236,3 @@ $animatedTransitionFontColor: #F00;
     width: 50%;
     float: right;
 }
-
