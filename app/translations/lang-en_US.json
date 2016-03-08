@@ -1,13 +1,57 @@
 {
     "APP_TITLE": "Automata Simulation",
-    "TTTEXT_ZOOM_IN": "Zoom In",
+
+    "NAVBAR": {
+        "TTTEXT_ZOOM_IN": "Zoom In",
+        "TTTEXT_ZOOM_OUT": "Zoom Out",
+        "TTTEXT_RESCALE": "Rescale",
+        "TTTEXT_EXPORT": "Export",
+        "TTTEXT_IMPORT": "Import",
+        "TTTEXT_ADDSTATE": "Add State",
+        "TTTEXT_ADDTRANS": "Add Transition",
+        "TTTEXT_REMALL": "Delete All"
+    },
+
 
     "SIM": {
         "TITLE": "Simulation",
-        "INPUT": "Input"
+        "INPUT": "Inputword",
+        "PLAYPAUSE": "Start/Pause",
+        "STOP": "Stop",
+        "STEPBACKWARD": "Step Backward",
+        "STEPFORWARD": "Step Forward"
+    },
+
+
+    "SIM_SET": {
+        "TITLE": "Simulation Settings",
+        "LOOP": "Loop",
+        "STO": "StepTimeOut",
+        "LTO": "LoopTimeOut"
+    },
+
+
+    "DEV": {
+        "TITLE": "Developer"
+    },
+
+
+    "DIA_SET": {
+        "TITLE": "Diagramm Settings",
+        "GRID": "Grid"
+    },
+
+
+    "STATE_SET": {
+        "TITLE": "StateMenu",
+        "NAME": "Name",
+        "STARTSTATE": "StartState",
+        "FINALSTATE": "FinalState",
+        "SAVE": "Save"
     },
     
-    "SIM_SET": {
-        "TITLE": "Simulation Settings"
+    
+    "STF": {
+        "TITLE": "Statetransitionfunction"
     }
 }

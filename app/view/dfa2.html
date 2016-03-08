@@ -28,52 +28,51 @@
 
         </ul>
         </span>
-        <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="TTTEXT_ZOOM_IN"></menubutton>
-        <menubutton glyphicon="zoom-out" action="graphdesigner.zoomOut()" tttext="Zoom Out"></menubutton>
-        <menubutton glyphicon="resize-small" action="graphdesigner.scaleAndTranslateToDefault()"></menubutton>
+        <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
+        <menubutton glyphicon="zoom-out" action="graphdesigner.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
+        <menubutton glyphicon="resize-small" action="graphdesigner.scaleAndTranslateToDefault()" tttext="NAVBAR.TTTEXT_RESCALE"></menubutton>
     </div>
     <div class="button-group">
         <menubutton glyphicon="trash" action="graphdesigner.remove()" ng-disable="graphdesigner.showStateMenu"></menubutton>
     </div>
+
     <div class="button-group" ng-controller="portationCtrl">
-        <menubutton glyphicon="cloud-upload" action="import()">
-      
-        </menubutton>      <input type="file" id="hidden-file-upload">
-        <menubutton glyphicon="cloud-download" action="export()"></menubutton>
+        <menubutton glyphicon="open" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
+        <menubutton glyphicon="save" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"></menubutton>
     </div>
     <div class="button-group">
 
     </div>
     <div class="button-group">
-        <menubutton glyphicon="plus" action="graphdesigner.addState()"></menubutton>
-        <menubutton glyphicon="plus" action="graphdesigner.addTransition()"></menubutton>
-        <menubutton glyphicon="trash" action="removeConfig()"></menubutton>
+        <menubutton glyphicon="plus" action="graphdesigner.addState()" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+        <menubutton glyphicon="plus" action="graphdesigner.addTransition()" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+        <menubutton glyphicon="trash" action="removeConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
 </div>
 
 <div class="left-menu">
     <menuitemextendable title="SIM.TITLE">
-        <menubutton glyphicon="play" action="simulator.playOrPause()"></menubutton>
-        <menubutton glyphicon="stop" action="simulator.stop()"></menubutton>
-        <menubutton glyphicon="fast-backward" action="simulator.stepBackward()"></menubutton>
-        <menubutton glyphicon="fast-forward" action="simulator.stepForward()"></menubutton>
+        <menubutton glyphicon="play" action="simulator.playOrPause()" tttext="SIM.PLAYPAUSE"></menubutton>
+        <menubutton glyphicon="stop" action="simulator.stop()" tttext="SIM.STOP"></menubutton>
+        <menubutton glyphicon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
+        <menubutton glyphicon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         <p>{{"SIM.INPUT" | translate}}
             <input class="inputWord" ng-model="inputWord" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></p>
 
     </menuitemextendable>
     <menuitemextendable title="SIM_SET.TITLE">
 
-        <p> Loop:
+        <p> {{"SIM_SET.LOOP" | translate}}
             <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
         </p>
-        <p> StepTimeOut:
+        <p> {{"SIM_SET.STO" | translate}}
             <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
         </p>
-        <p>Looptimeout
+        <p>{{"SIM_SET.LTO" | translate}}
             <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
         </p>
     </menuitemextendable>
-    <menuitemextendable title="Developer">
+    <menuitemextendable title="DEV.TITLE">
         <menubutton glyphicon="wrench" action="testData.testDFA()">
 
         </menubutton>
@@ -89,8 +88,9 @@
         <div class="bot-content bot-left">
             <automatontable automaton="config"></automatontable>
         </div>
-        <div class="bot-content bot-right">
-            <h3>Zustandsüberführungsfunktion</h3>
+        <div class="bot-right">
+            <h3>{{"STF.TITLE" | translate}}</h3>
+
             <p>&Sigma; = { {{statetransitionfunction.functionData.transitions}} }</p>
             <p>S = { {{statetransitionfunction.functionData.states}} }</p>
             <p>&delta; = {
@@ -102,26 +102,25 @@
 </div>
 <div class="right-menu">
 
+    <menuitem title="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu">
+        <p> {{"DIA_SET.GRID" | translate}}
 
-    <menuitem title="DiagrammSettings" ng-show="!graphdesigner.showStateMenu && !graphdesigner.showTransitionMenu">
-        <p> Grid:
             <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">
         </p>
     </menuitem>
     <!--Diagramm Settigns -->
-    <menuitem title="StateMenu" ng-show="graphdesigner.showStateMenu">
-        <p> Name:
+    <menuitem title="DIA_SET.TITLE" ng-show="graphdesigner.showStateMenu">
+        <p> {{"STATE_SET.NAME" | translate}}
             <input id="state-input-name" ng-model="graphdesigner.input.stateName">
         </p>
-        <p>StartState:
+        <p>{{"STATE_SET.STARTSTATE" | translate}}
             <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">
         </p>
         </p>
-        <p>FinalState:
+        <p>{{"STATE_SET.FINALSTATE" | translate}}
             <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
         </p>
-    </menuitem>
-    <menuitem title="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
 
     </menuitem>
+    <menuitem title="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
 </div>

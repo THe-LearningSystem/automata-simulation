@@ -80,7 +80,7 @@ autoSim.directive("menuitem", function () {
         scope: {
             title: '@',
         },
-        template: '<div class="menu-item"><p class="title">{{title}}</p><div class="content" ng-transclude></div></div>'
+        template: '<div class="menu-item"><p class="title">{{title | translate}}</p><div class="content" ng-transclude></div></div>'
 
     };
 
