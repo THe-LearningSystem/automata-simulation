@@ -89,7 +89,6 @@ function DFA($scope) {
     /**
      * Adds a char to the input alphabet if the char is not available
      * @param   {value} value the char, which is to be added
-     * @returns {[[Type]]} [[Description]]
      */
     $scope.addToAlphabet = function (value) {
         if (!_.some($scope.config.alphabet, function (a) {
