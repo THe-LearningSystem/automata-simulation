@@ -2,7 +2,7 @@ describe('Simulation Automata', function() {
     var scope,
         controller;
     beforeEach(function() {
-        module('AutoSim');
+        module('automata-simulation');
     });
 
 
@@ -52,8 +52,8 @@ describe('Simulation Automata', function() {
 
             it('State should be returned back by id', function() {
                 scope.addState("S0", 10, 10);
-                expect(scope.getStateById(0)).toBeDefined();;
-                expect(scope.getStateById(2)).not.toBeDefined();;
+                expect(scope.getStateById(0)).toBeDefined();
+                expect(scope.getStateById(2)).not.toBeDefined();
             });
 
             it('State should be uniqe', function() {

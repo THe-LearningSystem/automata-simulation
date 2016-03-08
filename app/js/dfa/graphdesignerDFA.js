@@ -205,7 +205,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     //the distance when the state is snapped to the next SnappingPoint (Rectangle form)
     self.gridSnapDistance = 20;
     //is Grid drawn
-    self.isGrid = true;
+    self.isGrid = false;
 
     //watcher for the grid when changed -> updateGrid
     $scope.$watch('[graphdesigner.isGrid , config.diagramm]', function () {

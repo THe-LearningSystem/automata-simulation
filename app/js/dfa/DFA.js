@@ -112,8 +112,11 @@ function DFA($scope) {
     $scope.existStateWithName = function (stateName) {
         var tmp = false;
         _.forEach($scope.config.states, function (state) {
-            if (state.name == stateName)
-                return true;
+            console.log(state.name);
+            if (state.name == stateName){
+                tmp = true;
+                return;
+            }
         });
         return tmp;
     };
@@ -265,6 +268,7 @@ function DFA($scope) {
         if ($scope.existStateWithName(newStateName)) {
             //TODO: BETTER DEBUG
         } else {
+            console.log($scope.existStateWithName(newStateName));
             $scope.getStateById(stateId).name = newStateName;
             //Rename the state on the graphdesigner
             $scope.graphdesigner.renameState(stateId, newStateName);
