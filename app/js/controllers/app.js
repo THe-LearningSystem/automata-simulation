@@ -50,7 +50,7 @@ autoSim.directive("menubutton", function () {
             action: '&',
             tttext: '@'
         },
-        template: '<button type="button" class="menu-button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext}}"><span class="glyphicon glyphicon-{{glyphicon}}" aria-hidden="true"> </span> </button>'
+        template: '<button type="button" class="menu-button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}"><span class="glyphicon glyphicon-{{glyphicon}}" aria-hidden="true"> </span> </button>'
     };
 });
 
@@ -66,7 +66,7 @@ autoSim.directive("menuitemextendable", function () {
         scope: {
             title: '@',
         },
-        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true" ng-show="extended"></span><span class="glyphicon glyphicon-triangle-right" aria-hidden="true" ng-show="!extended"></span>{{title}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
+        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true" ng-show="extended"></span><span class="glyphicon glyphicon-triangle-right" aria-hidden="true" ng-show="!extended"></span>{{title | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
 
     };
 
@@ -113,7 +113,6 @@ autoSim.directive("automatontable", function () {
                         for (var transitionCounter = 0; transitionCounter < dfa.transitions.length; transitionCounter++) {
                             var tmpTransition = dfa.transitions[transitionCounter];
                             if (tmpTransition.fromState === tmpState.id && tmpTransition.name === tmpTransitionName) {
-                                console.log("Found");
                                 foundedTransition = tmpTransition;
                             }
                         }
@@ -129,7 +128,6 @@ autoSim.directive("automatontable", function () {
                     }
                     $scope.states.push(tmpObject);
                 }
-                console.log($scope.states);
             });
         },
         templateUrl: 'templates/automatontable.html'
@@ -148,3 +146,12 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
         });
     };
 }]);
+
+
+autoSim.directive("importautomaton",function(){
+    
+});
+
+autoSim.directive("exportautomaton",function(){
+    
+});

@@ -320,7 +320,6 @@ function GraphdesignerDFA($scope, svgSelector) {
             //move the state (only moved visually not saved)
             self.selectedState.objReference.attr("transform", "translate(" + ((d3.mouse(this)[0])) + " " +
                 ((d3.mouse(this)[1])) + ")");
-            console.log("update");
         });
         //create a new selectedState in a position not viewable
         self.selectedState = $scope.addStateWithPresets(-10000, -10000);

@@ -28,7 +28,7 @@
 
         </ul>
         </span>
-        <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="Zoom In"></menubutton>
+        <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="TTTEXT_ZOOM_IN"></menubutton>
         <menubutton glyphicon="zoom-out" action="graphdesigner.zoomOut()" tttext="Zoom Out"></menubutton>
         <menubutton glyphicon="resize-small" action="graphdesigner.scaleAndTranslateToDefault()"></menubutton>
     </div>
@@ -50,16 +50,16 @@
 </div>
 
 <div class="left-menu">
-    <menuitemextendable title="TEST">
+    <menuitemextendable title="SIM.TITLE">
         <menubutton glyphicon="play" action="simulator.playOrPause()"></menubutton>
         <menubutton glyphicon="stop" action="simulator.stop()"></menubutton>
         <menubutton glyphicon="fast-backward" action="simulator.stepBackward()"></menubutton>
         <menubutton glyphicon="fast-forward" action="simulator.stepForward()"></menubutton>
-        <p>Input:
+        <p>{{"SIM.INPUT" | translate}}
             <input class="inputWord" ng-model="inputWord" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></p>
 
     </menuitemextendable>
-    <menuitemextendable title="Simulation Settings">
+    <menuitemextendable title="SIM_SET.TITLE">
 
         <p> Loop:
             <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
@@ -92,7 +92,7 @@
             <p>&Sigma; = { {{statetransitionfunction.functionData.transitions}} }</p>
             <p>S = { {{statetransitionfunction.functionData.states}} }</p>
             <p>&delta; = {
-                <p ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction">{{x}}</p> &#125;</p>
+                <p ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index">{{x}}</p> &#125;</p>
             <p>S<sub>0</sub>= { {{statetransitionfunction.functionData.startState}} }</p>
             <p>F = { {{statetransitionfunction.functionData.finalStates}} }</p>
         </div>
