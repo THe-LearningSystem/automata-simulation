@@ -174,10 +174,8 @@ function GraphdesignerDFA($scope, svgSelector) {
     self.addSvgOuterClickListener = function () {
         self.svgOuter.on("click", function () {
             if (!self.preventSvgOuterClick) {
-                if (self.selectedState !== null) {
-                    self.toggleState(self.selectedState.id, false);
-                }
-                self.showStateMenu = false;
+                self.closeStateMenu();
+                self.closeTransitionMenu();
                 $scope.safeApply();
             } else {
                 //remove clickbool
