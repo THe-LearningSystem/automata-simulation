@@ -65,7 +65,7 @@
         <p> {{"SIM_SET.LOOP" | translate}}
             <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
         </p>
-        <p> {{"SIM_SET.STO" | translate}}
+        <p> {{"SIM_SET.STO" | translate}} SLIDER
             <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
         </p>
         <p>{{"SIM_SET.LTO" | translate}}
@@ -76,7 +76,9 @@
         <menubutton glyphicon="wrench" action="testData.testDFA()">
 
         </menubutton>
-        DiagrammValues: X:{{config}}
+        <p>DiagrammValues: {{config}}</p>
+        <p>DrawnTransitions:{{drawnTransitions}}</p>
+        <p>{{graphdesigner.input.transitions}}</p>
     </menuitemextendable>
 </div>
 <div class="mid-wrapper">
@@ -123,4 +125,13 @@
 
     </menuitem>
     <menuitem titlename="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
+        <ul>
+            <li ng-repeat="(key, value) in graphdesigner.input.transitions">
+                <p>{{"STATE_SET.STARTSTATE" | translate}}:{{value.fromState}}</p>
+                <p>{{"STATE_SET.STARTSTATE" | translate}}:
+                    <input type="text" ng-model="value.name"></p>
+                <p>{{"STATE_SET.NEXTSTATE" | translate}}:{{value.toState}}</p>
+            </li>
+        </ul>
+    </menuitem>
 </div>

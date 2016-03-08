@@ -61,6 +61,10 @@ function DFA($scope) {
     //for the testdata
     $scope.testData = new TestData($scope);
 
+    
+    $scope.updateALL = function(){
+        
+    };
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
     //fix for $apply already in progress
     $scope.safeApply = function (fn) {
@@ -424,6 +428,24 @@ function DFA($scope) {
     $scope.getTransitionById = function (transitionId) {
         return $scope.config.transitions[$scope.getArrayTransitionIdByTransitionId(transitionId)];
     };
+    
+        /**
+     * Checks if a transition with the params already exist
+     * @param  {number}  fromState      Id of the fromstate
+     * @param  {number}  toState        id from the toState
+     * @param  {Strin}  transitonName The name of the transition
+     * @return {Boolean}                
+     */
+    $scope.getTransition = function (fromState, toState, transitonName) {
+        for (var i = 0; i < $scope.config.transitions.length; i++) {
+            var transition = $scope.config.transitions[i];
+            if (transition.fromState == fromState && transition.toState == toState && transition.name == transitonName) {
+                return transition;
+            }
+        }
+        return undefined;
+    };
+
 
     /**
      * Removes the transistion
