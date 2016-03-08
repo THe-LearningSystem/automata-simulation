@@ -51,6 +51,8 @@ function DFA($scope) {
     $scope.dbug = new Dbug($scope);
     //the simulator controlling the simulation
     $scope.simulator = new SimulationDFA($scope);
+    //
+    $scope.table = new TableDFA($scope);
     //the graphdesigner controlling the svg diagramm
     $scope.graphdesigner = new GraphdesignerDFA($scope, "#diagramm-svg");
     //the statetransitionfunction controlling the statetransitionfunction-table
