@@ -48,7 +48,8 @@
         "NAME": "Name",
         "STARTSTATE": "Startzustand",
         "FINALSTATE": "Endzustand",
-        "SAVE": "Speichern"
+        "SAVE": "Speichern",
+        "ALREADY_EXIST": "Zustandsname bereits verwendet!"
     },
     
     

@@ -65,7 +65,7 @@
         <p> {{"SIM_SET.LOOP" | translate}}
             <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
         </p>
-        <p> {{"SIM_SET.STO" | translate}}
+        <p> {{"SIM_SET.STO" | translate}} SLIDER
             <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
         </p>
         <p>{{"SIM_SET.LTO" | translate}}
@@ -76,7 +76,9 @@
         <menubutton glyphicon="wrench" action="testData.testDFA()">
 
         </menubutton>
-        DiagrammValues: X:{{config}}
+        <p>DiagrammValues: {{config}}</p>
+        <p>DrawnTransitions:{{drawnTransitions}}</p>
+        <p>{{graphdesigner.input}}</p>
     </menuitemextendable>
 </div>
 <div class="mid-wrapper">
@@ -104,8 +106,10 @@
 
     <menuitem titlename="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu && !graphdesigner.showTransitionMenu">
         <p> {{"DIA_SET.GRID" | translate}}
-
             <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">
+        </p>
+    <p> {{"DIA_SET.SNAPPING" | translate}}
+            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">
         </p>
     </menuitem>
     <!--Diagramm Settigns -->
@@ -114,7 +118,7 @@
             <input id="state-input-name" ng-model="graphdesigner.input.stateName">
 
         </div>
-        <span class="alert alert-danger" ng-show="graphdesigner.input.renamedError">{{"STATE_SET.ALREAD_EXIST" | translate}}</span>
+        <span class="alert alert-danger" ng-show="graphdesigner.input.renamedError">{{"STATE_SET.ALREADY_EXIST" | translate}}</span>
         
         <div>{{ "STATE_SET.STARTSTATE" | translate}}
             <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> </div>
@@ -126,5 +130,13 @@
 
     </menuitem>
     <menuitem titlename="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
+        <ul>
+            <li ng-repeat="(key, value) in graphdesigner.input.transitions">
+                <p>{{"STATE_SET.STARTSTATE" | translate}}:{{value.fromState}}</p>
+                <p>{{"STATE_SET.STARTSTATE" | translate}}:
+                    <input type="text" ng-model="value.name"></p>
+                <p>{{"STATE_SET.NEXTSTATE" | translate}}:{{value.toState}}</p>
+            </li>
+        </ul>
     </menuitem>
 </div>
