@@ -106,17 +106,21 @@ $animatedTransitionFontColor: #F00;
     font-size: $stateFontSize;
 }
 //animated state for the simulation
-.animated-currentstate .state-circle {
-    color:$animatedCurrentStateColor;
+//svg
+.animated-currentstate-svg .state-circle {
     fill: $animatedCurrentStateColor;
 }
-.animated-nextstate .state-circle {
-    color:$animatedNextStateColor;
+.animated-nextstate-svg .state-circle {
     fill: $animatedNextStateColor;
 }
-
-.selectedForTransition .state-circle {
-    fill: $selectForAddTransitionColor;
+//others
+.animated-currentstate {
+    color:$animatedCurrentStateColor;
+}
+.animated-nextstate {
+    color:$animatedNextStateColor;
+}
+.selectedForTransition {
 }
 .state-text:hover {}
 .in-creation {
@@ -146,6 +150,9 @@ $animatedTransitionFontColor: #F00;
 .animated-transition .transition-line {
     stroke: $animatedTransitionColor;
     stroke-width: $animatedTransitionWidth;
+}
+.animated-transition {
+    color: $animatedTransitionColor;
 }
 .transition-text {
     font-size: 15px

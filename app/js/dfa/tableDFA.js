@@ -20,7 +20,7 @@ function TableDFA($scope) {
             
             
             var tmp;
-            if($scope.simulator.animated.transition.name === transitionName){
+            if($scope.simulator.animated.transition && $scope.simulator.animated.transition.name === transitionName){
                 tmp = '<span class="animated-transition">'+transitionName+'</span>';
             }else{
                 tmp = transitionName;
@@ -59,7 +59,7 @@ function TableDFA($scope) {
 
                     console.log($scope.simulator.animated.transition + " First");
                     console.log(foundTransition.id + " Second");
-                    if ($scope.simulator.animated.transition == foundTransition.id) {
+                    if ($scope.simulator.animated.nextState == tmpToState.id) {
                         trans.State = '<span class="animated-nextstate">' + tmpToState.name + '</span>';
                     } else {
                         trans.State = tmpToState.name;

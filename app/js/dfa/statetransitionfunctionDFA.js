@@ -68,7 +68,7 @@ function StatetransitionfunctionDFA($scope) {
             if ($scope.config.transitions[i] !== undefined) {
                 var stateTransition = $scope.config.transitions[i];
                 var tmp = '';
-                if ($scope.simulator.animated.transition === stateTransition.id) {
+                if ($scope.simulator.animated.transition && $scope.simulator.animated.transition.id === stateTransition.id) {
                     stringStateTransitions = '( <span class="animated-currentstate">' + $scope.getStateById(stateTransition.fromState).name + '</span>, <span class="animated-transition">';
                     stringStateTransitions += stateTransition.name + '</span>, <span class="animated-nextstate">';
                     stringStateTransitions += $scope.getStateById(stateTransition.toState).name + '</span>)';

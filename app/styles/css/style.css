@@ -5886,16 +5886,17 @@ button.close {
 .state-text {
   font-size: 15px; }
 
-.animated-currentstate .state-circle {
-  color: #F00;
+.animated-currentstate-svg .state-circle {
   fill: #F00; }
 
-.animated-nextstate .state-circle {
-  color: #F00;
+.animated-nextstate-svg .state-circle {
   fill: #F00; }
 
-.selectedForTransition .state-circle {
-  fill: #F00; }
+.animated-currentstate {
+  color: #F00; }
+
+.animated-nextstate {
+  color: #F00; }
 
 .in-creation {
   opacity: 0.5; }
@@ -5922,6 +5923,9 @@ button.close {
 .animated-transition .transition-line {
   stroke: #F00;
   stroke-width: 2.5; }
+
+.animated-transition {
+  color: #F00; }
 
 .transition-text {
   font-size: 15px; }

@@ -151,7 +151,7 @@ function SimulationDFA($scope) {
         //First: Paint the transition & wait
         if (!self.animatedTransition) {
             self.animatedTransition = true;
-            self.animated.transition = self.transition.id;
+            self.animated.transition = self.transition;
 
             //Second: Paint the nextstate & wait
         } else if (!self.animatedNextState && self.animatedTransition) {
@@ -301,7 +301,7 @@ function SimulationDFA($scope) {
         self.transition = self.transition[0];
         //First: Paint the transition & wait
         self.animatedTransition = true;
-        self.animated.transition = self.transition.id;
+        self.animated.transition = self.transition;
         var tmp = self.currentState;
         self.currentState = self.transition.fromState;
         self.nextState = tmp;

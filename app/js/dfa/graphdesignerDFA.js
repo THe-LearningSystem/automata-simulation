@@ -1085,10 +1085,10 @@ function GraphdesignerDFA($scope, svgSelector) {
     $scope.$watch('simulator.animated.currentState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
-                self.setStateClassAs(oldValue, false, "animated-currentstate");
+                self.setStateClassAs(oldValue, false, "animated-currentstate-svg");
             }
             if (newValue !== null) {
-                self.setStateClassAs(newValue, true, "animated-currentstate");
+                self.setStateClassAs(newValue, true, "animated-currentstate-svg");
             }
         }
     });
@@ -1096,10 +1096,10 @@ function GraphdesignerDFA($scope, svgSelector) {
     $scope.$watch('simulator.animated.transition', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
-                self.setTransitionClassAs(oldValue, false, "animated-transition");
+                self.setTransitionClassAs(oldValue.id, false, "animated-transition");
             }
             if (newValue !== null) {
-                self.setTransitionClassAs(newValue, true, "animated-transition");
+                self.setTransitionClassAs(newValue.id, true, "animated-transition");
             }
         }
     });
@@ -1107,10 +1107,10 @@ function GraphdesignerDFA($scope, svgSelector) {
     $scope.$watch('simulator.animated.nextState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             if (oldValue !== null && $scope.simulator.animated.currentState !== oldValue) {
-                self.setStateClassAs(oldValue, false, "animated-nextstate");
+                self.setStateClassAs(oldValue, false, "animated-nextstate-svg");
             }
             if (newValue !== null) {
-                self.setStateClassAs(newValue, true, "animated-nextstate");
+                self.setStateClassAs(newValue, true, "animated-nextstate-svg");
             }
         }
     });
