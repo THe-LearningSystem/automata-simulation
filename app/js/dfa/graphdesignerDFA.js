@@ -493,7 +493,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     };
 
 
-    self.renameTransition = function (fromState,toState,transitionId, newTransitionName) {
+    self.renameTransition = function (fromState, toState, transitionId, newTransitionName) {
 
     };
 
@@ -1054,4 +1054,43 @@ function GraphdesignerDFA($scope, svgSelector) {
             }
         });
     };
+
+    /**************
+     **SIMULATION**
+     *************/
+
+
+    $scope.$watch('simulator.animated.currentState', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            if (oldValue !== null) {
+                self.setStateClassAs(oldValue, false, "animated-state");
+            }
+            if (newValue !== null) {
+                self.setStateClassAs(newValue, true, "animated-state");
+            }
+        }
+    });
+
+    $scope.$watch('simulator.animated.transition', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            if (oldValue !== null) {
+                self.setTransitionClassAs(oldValue, false, "animated-transition");
+            }
+            if (newValue !== null) {
+                self.setTransitionClassAs(newValue, true, "animated-transition");
+            }
+        }
+    });
+
+    $scope.$watch('simulator.animated.nextState', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            if (oldValue !== null && $scope.simulator.animated.currentState !== oldValue) {
+                self.setStateClassAs(oldValue, false, "animated-state");
+            }
+            if (newValue !== null) {
+                self.setStateClassAs(newValue, true, "animated-state");
+            }
+        }
+    });
+
 }
