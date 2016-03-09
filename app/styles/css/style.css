@@ -5848,6 +5848,12 @@ button.close {
 #marker-end-arrow {
   fill: #000; }
 
+#marker-end-arrow-hover {
+  fill: #AAA; }
+
+#marker-end-arrow-active {
+  fill: #F00; }
+
 #marker-end-arrow-animated {
   fill: #F00; }
 
@@ -5857,12 +5863,15 @@ button.close {
 .state {
   cursor: context-menu; }
 
+.state:hover {
+  cursor: pointer; }
+
 .state:hover .hover-circle {
   fill: #000;
   fill-opacity: 0.4; }
 
-.state:active .state-circle {
-  fill: #444; }
+.active .state-circle {
+  fill: #F00; }
 
 .state-circle {
   fill: #CCC;
@@ -5887,15 +5896,30 @@ button.close {
   opacity: 0.5; }
 
 .transition {
+  stroke: #000;
   cursor: context-menu; }
 
+.transition:hover {
+  cursor: pointer; }
+
+.transition.active .transition-line {
+  stroke: #F00; }
+
 .transition-line {
-  stroke: #000;
   stroke-width: 2.5; }
+
+.transition-line-hover {
+  stroke-width: 2.5;
+  stroke: #AAA;
+  fill: #AAA;
+  opacity: 0; }
 
 .animated-transition .transition-line {
   stroke: #F00;
   stroke-width: 2.5; }
+
+.transition-text {
+  font-size: 15px; }
 
 #hidden-file-upload {
   display: none; }
@@ -5966,20 +5990,23 @@ button.close {
   top: 80px;
   bottom: 150px; }
 
-.bot-content {
+.bot-content-wrapper {
   position: absolute;
   background-color: whitesmoke;
   right: 200px;
   left: 200px;
   bottom: 0px;
-  border-top: 1px solid #e0e0e0;
-  min-height: 150px;
-  max-height: 200px;
+  border-top: 1px solid #e0e0e0; }
+
+.bot-content {
+  padding: 0 10px;
+  height: 250px;
   overflow-y: scroll; }
 
 .bot-left {
   float: left;
-  width: 50%; }
+  width: 50%;
+  border-right: 1px solid #e0e0e0; }
 
 .bot-right {
   width: 50%;

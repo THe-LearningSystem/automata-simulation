@@ -28,54 +28,57 @@
 
         </ul>
         </span>
-        <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="TTTEXT_ZOOM_IN"></menubutton>
-        <menubutton glyphicon="zoom-out" action="graphdesigner.zoomOut()" tttext="Zoom Out"></menubutton>
-        <menubutton glyphicon="resize-small" action="graphdesigner.scaleAndTranslateToDefault()"></menubutton>
+        <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
+        <menubutton glyphicon="zoom-out" action="graphdesigner.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
+        <menubutton glyphicon="resize-small" action="graphdesigner.scaleAndTranslateToDefault()" tttext="NAVBAR.TTTEXT_RESCALE"></menubutton>
     </div>
     <div class="button-group">
         <menubutton glyphicon="trash" action="graphdesigner.remove()" ng-disable="graphdesigner.showStateMenu"></menubutton>
     </div>
-    <div class="button-group">
-        <menubutton glyphicon="cloud-upload" action="import()"></menubutton>
-        <menubutton glyphicon="cloud-download" action="export()"></menubutton>
+
+    <div class="button-group" ng-controller="portationCtrl">
+        <menubutton glyphicon="open" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
+        <menubutton glyphicon="save" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"></menubutton>
     </div>
     <div class="button-group">
 
     </div>
     <div class="button-group">
-        <menubutton glyphicon="plus" action="graphdesigner.addState()"></menubutton>
-        <menubutton glyphicon="plus" action="graphdesigner.addTransition()"></menubutton>
-        <menubutton glyphicon="trash" action="removeConfig()"></menubutton>
+        <menubutton glyphicon="plus" action="graphdesigner.addState()" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+        <menubutton glyphicon="plus" action="graphdesigner.addTransition()" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+        <menubutton glyphicon="trash" action="removeConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
 </div>
 
 <div class="left-menu">
-    <menuitemextendable title="SIM.TITLE">
-        <menubutton glyphicon="play" action="simulator.playOrPause()"></menubutton>
-        <menubutton glyphicon="stop" action="simulator.stop()"></menubutton>
-        <menubutton glyphicon="fast-backward" action="simulator.stepBackward()"></menubutton>
-        <menubutton glyphicon="fast-forward" action="simulator.stepForward()"></menubutton>
+    <menuitemextendable titlename="SIM.TITLE">
+        <menubutton glyphicon="play" action="simulator.playOrPause()" tttext="SIM.PLAYPAUSE"></menubutton>
+        <menubutton glyphicon="stop" action="simulator.stop()" tttext="SIM.STOP"></menubutton>
+        <menubutton glyphicon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
+        <menubutton glyphicon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         <p>{{"SIM.INPUT" | translate}}
             <input class="inputWord" ng-model="inputWord" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></p>
 
     </menuitemextendable>
-    <menuitemextendable title="SIM_SET.TITLE">
+    <menuitemextendable titlename="SIM_SET.TITLE">
 
-        <p> Loop:
+        <p> {{"SIM_SET.LOOP" | translate}}
             <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
         </p>
-        <p> StepTimeOut:
+        <p> {{"SIM_SET.STO" | translate}} SLIDER
             <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
         </p>
-        <p>Looptimeout
+        <p>{{"SIM_SET.LTO" | translate}}
             <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
         </p>
     </menuitemextendable>
-    <menuitemextendable title="Developer">
+    <menuitemextendable titlename="DEV.TITLE">
         <menubutton glyphicon="wrench" action="testData.testDFA()">
 
         </menubutton>
-        DiagrammValues: X:{{config}}
+        <p>DiagrammValues: {{config}}</p>
+        <p>DrawnTransitions:{{drawnTransitions}}</p>
+        <p>{{graphdesigner.input}}</p>
     </menuitemextendable>
 </div>
 <div class="mid-wrapper">
@@ -83,17 +86,31 @@
         <svg id="diagramm-svg">
         </svg>
     </div>
-    <div class="bot-content">
-        <div class="bot-left">
-            <h3>Zustandstabelle</h3>
-            <automatontable automaton="config"></automatontable>
+    <div class="bot-content-wrapper">
+        <div class="bot-content bot-left">
+            <h3>{{"TABLE.TITLE" | translate}}</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>/</th>
+                        <th ng-repeat="char in config.alphabet">{{char}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="(key, value) in table.states" ng-class="value.class">
+                        <th>{{value.name}}</th>
+                        <td ng-repeat="name in value.trans track by $index" ng-bind-html="name.State | to_trusted"></td>
+                    </tr>
+                </tbody>
+            </table>
+>>>>>>> master
         </div>
-        <div class="bot-right">
-            <h3>Zustandsüberführungsfunktion</h3>
+        <div class="bot-content bot-right">
+            <h3>{{"STF.TITLE" | translate}}</h3>
+
             <p>&Sigma; = { {{statetransitionfunction.functionData.transitions}} }</p>
             <p>S = { {{statetransitionfunction.functionData.states}} }</p>
-            <p>&delta; = {
-                <p ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index">{{x}}</p> &#125;</p>
+            <p>&delta; = {<span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted">{{$last ? '' : ', '}} </span>}</p>
             <p>S<sub>0</sub>= { {{statetransitionfunction.functionData.startState}} }</p>
             <p>F = { {{statetransitionfunction.functionData.finalStates}} }</p>
         </div>
@@ -101,27 +118,40 @@
 </div>
 <div class="right-menu">
 
-
-    <menuitem title="DiagrammSettings" ng-show="!graphdesigner.showStateMenu">
-        <p> Grid:
+    <menuitem titlename="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu && !graphdesigner.showTransitionMenu">
+        <p> {{"DIA_SET.GRID" | translate}}
             <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">
+        </p>
+        <p> {{"DIA_SET.SNAPPING" | translate}}
+            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">
         </p>
     </menuitem>
     <!--Diagramm Settigns -->
-    <menuitem title="StateMenu" ng-show="graphdesigner.showStateMenu">
-        <p> Name:
+    <menuitem titlename="DIA_SET.TITLE" ng-show="graphdesigner.showStateMenu">
+        <div> {{"STATE_SET.NAME" | translate}}
             <input id="state-input-name" ng-model="graphdesigner.input.stateName">
-        </p>
-        <p>StartState:
-            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">
-        </p>
-        </p>
-        <p>FinalState:
+
+        </div>
+        <span class="alert alert-danger" ng-show="graphdesigner.input.renamedError">{{"STATE_SET.ALREADY_EXIST" | translate}}</span>
+
+        <div>{{ "STATE_SET.STARTSTATE" | translate}}
+            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> </div>
+
+
+        <div>{{ "STATE_SET.FINALSTATE" | translate}}
             <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
-        </p>
-        Remove save
-        <button type="button" class="btn btn-default" ng-click="graphdesigner.saveState()" aria-label="Left Align">
-            SAVE
-        </button>
+        </div>
+
+    </menuitem>
+    <menuitem titlename="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
+        <ul>
+            <li ng-repeat="(key, value) in graphdesigner.input.transitions">
+                <p>{{"STATE_SET.STARTSTATE" | translate}}:{{value.fromState}}</p>
+                <p>{{"STATE_SET.STARTSTATE" | translate}}:
+                    <input type="text" ng-model="value.name">
+                </p>
+                <p>{{"STATE_SET.NEXTSTATE" | translate}}:{{value.toState}}</p>
+            </li>
+        </ul>
     </menuitem>
 </div>

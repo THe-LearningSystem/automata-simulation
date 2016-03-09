@@ -1,18 +1,61 @@
 {
     "APP_TITLE": "Automaten Simulation",
-    "TTTEXT_ZOOM_IN": "Vergrößern",
+
+    
+    "NAVBAR": {
+        "TTTEXT_ZOOM_IN": "Vergrößern",
+        "TTTEXT_ZOOM_OUT": "Verkleinern",
+        "TTTEXT_RESCALE": "Reskalieren",
+        "TTTEXT_EXPORT": "Exportieren",
+        "TTTEXT_IMPORT": "Importieren",
+        "TTTEXT_ADDSTATE": "Zustand hinzufügen",
+        "TTTEXT_ADDTRANS": "Übergang hinzufügen",
+        "TTTEXT_REMALL": "Alles löschen"
+    },
+
 
     "SIM": {
         "TITLE": "Simulation",
-        "INPUT": "Eingabewort"
+        "INPUT": "Eingabewort",
+        "PLAYPAUSE": "Start/Pause",
+        "STOP": "Stop",
+        "STEPBACKWARD": "Schritt zurück",
+        "STEPFORWARD": "Schritt vorwärts"
     },
+
 
     "SIM_SET": {
-        "TITLE": "Simulationseinstellungen"
+        "TITLE": "Simulationseinstellungen",
+        "LOOP": "Schleife",
+        "STO": "Schrittgeschwindigkeit",
+        "LTO": "Schleifengeschwindigkeit"
+    },
+
+
+    "DEV": {
+        "TITLE": "Entwicklung"
+    },
+
+
+    "DIA_SET": {
+        "TITLE": "Diagrammeinstellungen",
+        "GRID": "Gitter"
+    },
+
+
+    "STATE_SET": {
+        "TITLE": "Zustandsmenü",
+        "NAME": "Name",
+        "STARTSTATE": "Startzustand",
+        "FINALSTATE": "Endzustand",
+        "SAVE": "Speichern",
+        "ALREADY_EXIST": "Zustandsname bereits verwendet!"
+    },
+    "TABLE":{
+        "TITLE": "Zustandstabelle"
     },
     
-    "DEV": {
-        "TITLE": "Entwickler"
+    "STF": {
+        "TITLE": "Zustandsübergangsfunktion"
     }
-
 }

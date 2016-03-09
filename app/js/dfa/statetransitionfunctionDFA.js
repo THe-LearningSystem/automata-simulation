@@ -8,17 +8,13 @@ function StatetransitionfunctionDFA($scope) {
     self.functionData.finalStates = '';
     self.functionData.transitions = '';
     self.functionData.statetransitionfunction = [];
+    //ADD Listener
+    $scope.updateListeners.push(self);
 
 
-    $scope.$watchCollection('config', function () {
+    self.test = function () {
         self.updateFunction();
-    });
-
-
-    $scope.$watch('statetransitionfunction.functionData.startState', function () {
-        self.changeStartState();
-    });
-
+    };
 
     self.updateFunction = function () {
         var arrayAlphabet = [];
@@ -101,12 +97,9 @@ function StatetransitionfunctionDFA($scope) {
         }
 
         self.functionData.finalStates = stringFinalStates;
-    };
 
-
-    self.changeStartState = function () {
         var arrayStates = [];
-        for (var i = 0; i < self.functionData.startState.length; i++) {
+        for (i = 0; i < self.functionData.startState.length; i++) {
             arrayStates[i] = self.functionData.startState.charAt(i);
         }
     };

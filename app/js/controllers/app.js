@@ -64,9 +64,9 @@ autoSim.directive("menuitemextendable", function () {
             $scope.extended = true;
         },
         scope: {
-            title: '@',
+            titlename: '@',
         },
-        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true" ng-show="extended"></span><span class="glyphicon glyphicon-triangle-right" aria-hidden="true" ng-show="!extended"></span>{{title | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
+        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true" ng-show="extended"></span><span class="glyphicon glyphicon-triangle-right" aria-hidden="true" ng-show="!extended"></span>{{titlename | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
 
     };
 
@@ -78,70 +78,14 @@ autoSim.directive("menuitem", function () {
         replace: true,
         transclude: true,
         scope: {
-            title: '@',
+            titlename: '@',
         },
-        template: '<div class="menu-item"><p class="title">{{title}}</p><div class="content" ng-transclude></div></div>'
+        template: '<div class="menu-item"><p class="title">{{titlename | translate}}</p><div class="content" ng-transclude></div></div>'
 
     };
 
 });
 
-autoSim.directive("automatontable", function () {
-    return {
-        restrict: 'E',
-        scope: {
-            automaton: '='
-        },
-        link: function ($scope, element, attrs) {
-            var dfa = $scope.automaton;
-            $scope.alphabet = dfa.alphabet;
-            $scope.transitions = dfa.transitions;
-
-            $scope.$watchCollection('automaton', function () {
-                $scope.states = [];
-                
-                // iterates over all States
-                for (var i = 0; i < dfa.states.length; i++) {
-                    var tmpState = dfa.states[i];
-                    var tmpObject = {};
-                    tmpObject.id = tmpState.id;
-                    tmpObject.name = tmpState.name;
-                    tmpObject.trans = [];
-                    
-                    // iterates over all aplphabet 
-                    for (var alphabetCounter = 0; alphabetCounter < dfa.alphabet.length; alphabetCounter++) {
-                        var tmpTransitionName = dfa.alphabet[alphabetCounter];
-                        var foundTransition = null;
-                        
-                        // iterates over the available transitions and saves found transitions
-                        for (var transitionCounter = 0; transitionCounter < dfa.transitions.length; transitionCounter++) {
-                            var tmpTransition = dfa.transitions[transitionCounter];
-                            if (tmpTransition.fromState === tmpState.id && tmpTransition.name === tmpTransitionName) {
-                                foundTransition = tmpTransition;
-                            }
-                        }
-                        
-                        var trans = {};
-                        trans.alphabet = tmpTransitionName;
-                        
-                        // saves the found Transition in "Trans.State"
-                        if (foundTransition !== null) {
-                            var tmpToState = $scope.$parent.getStateById(foundTransition.toState);
-                            trans.State = tmpToState.name;
-                        } else {
-                            trans.State = "";
-                        }
-                        
-                        tmpObject.trans.push(trans);
-                    }
-                    $scope.states.push(tmpObject);
-                }
-                console.log($scope.states);
-            });
-        },
-        templateUrl: 'templates/automatontable.html'
-    };
-});
 
 
 
@@ -155,3 +99,72 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
         });
     };
 }]);
+
+
+autoSim.directive("importautomaton", function () {
+
+});
+
+autoSim.controller("portationCtrl", ['$scope', function ($scope) {
+    $scope.export = function () {
+        console.log("test");
+        /**
+         * Returns all transition without the objReference
+         * @return {Array} array of transition objects
+         */
+        function getTransitions() {
+            var allTransitions = [];
+            _.forEach($scope.config.transitions, function (transition, key) {
+                var tmpTransition = JSON.parse(JSON.stringify(transition));
+                delete tmpTransition.objReference;
+                allTransitions.push(tmpTransition);
+            });
+            return allTransitions;
+        }
+
+        /**
+         * Returns all transition without the objReference
+         * @return {Array} array of transition objects
+         */
+        function getStates() {
+            var allStates = [];
+            _.forEach($scope.config.states, function (state, key) {
+                var tmpState = JSON.parse(JSON.stringify(state));
+                delete tmpState.objReference;
+                allStates.push(tmpState);
+            });
+            return allStates;
+        }
+
+
+        var exportData = {};
+        exportData = $scope.config;
+        exportData.transitions = getTransitions();
+        exportData.states = getStates();
+        var data = window.JSON.stringify(exportData);
+        var blob = new Blob([data], {
+            type: "text/plain;charset=utf-8;",
+        });
+        saveAs(blob, $scope.config.name + ".json");
+    };
+
+    $scope.import = function () {
+        //Called when the user clicks on the import Button and opens the hidden-file-input
+
+        angular.element('#hidden-file-upload').trigger('click');
+        console.log($scope);
+        //called when the user uploads a file
+
+
+
+    };
+}]);
+
+
+
+//from: http://stackoverflow.com/questions/19415394/with-ng-bind-html-unsafe-removed-how-do-i-inject-html
+autoSim.filter('to_trusted', ['$sce', function($sce){
+        return function(text) {
+            return $sce.trustAsHtml(text);
+        };
+    }]);
