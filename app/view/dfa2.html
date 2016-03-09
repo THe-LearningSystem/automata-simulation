@@ -93,17 +93,16 @@
                 <thead>
                     <tr>
                         <th>/</th>
-                        <th ng-repeat="char in config.alphabet">{{char}}</th>
+                        <th ng-repeat="char in config.alphabet" ng-bind-html="char | to_trusted"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="(key, value) in table.states" ng-class="value.class">
-                        <th>{{value.name}}</th>
+                        <th ng-bind-html="value.name | to_trusted"></th>
                         <td ng-repeat="name in value.trans track by $index" ng-bind-html="name.State | to_trusted"></td>
                     </tr>
                 </tbody>
             </table>
->>>>>>> master
         </div>
         <div class="bot-content bot-right">
             <h3>{{"STF.TITLE" | translate}}</h3>

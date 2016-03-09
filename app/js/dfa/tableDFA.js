@@ -13,7 +13,6 @@ function TableDFA($scope) {
             var tmpState = dfa.states[i];
             var tmpObject = {};
             tmpObject.id = tmpState.id;
-            tmpObject.name = tmpState.name;
             tmpObject.trans = [];
 
             // iterates over all aplphabet 
@@ -36,9 +35,23 @@ function TableDFA($scope) {
                 // saves the found Transition in "Trans.State"
                 if (foundTransition !== null) {
                     var tmpToState = $scope.getStateById(foundTransition.toState);
-                    trans.State = tmpToState.name;
+
+                    console.log($scope.simulator.animated.transition + " First");
+                    console.log(foundTransition.id + " Second");
+                    if ($scope.simulator.animated.transition == foundTransition.id) {
+                        trans.State = '<span style="color:red">' + tmpToState.name + '</span>';
+                    } else {
+                        trans.State = tmpToState.name;
+                    }
                 } else {
                     trans.State = "";
+                }
+
+                // marks the current active state at the simulation in the table
+                if ($scope.simulator.animated.currentState == tmpState.id) {
+                    tmpObject.name = '<span class="animated-transition">' + tmpState.name + '</span>';
+                } else {
+                    tmpObject.name = tmpState.name;
                 }
 
                 tmpObject.trans.push(trans);
@@ -48,5 +61,24 @@ function TableDFA($scope) {
         }
 
     };
+
+
+
+    /**************
+     **SIMULATION**
+     *************/
+
+    $scope.$watch('simulator.animated.currentState', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            self.updateFunction();
+        }
+    });
+
+    $scope.$watch('simulator.animated.transition', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            self.updateFunction();
+        }
+    });
+    
 
 }
