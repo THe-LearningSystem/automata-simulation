@@ -52,6 +52,13 @@
     
     
     "STF": {
-        "TITLE": "Statetransitionfunction"
+        "TITLE": "Statetransitionfunction",
+        "TTSIGMA": "Alphabet",
+        "TTSTATES": "States",
+        "TTSTF": "Statetransitionfunctions",
+        "TTSTART": "Startstate",
+        "TTFINAL": "Finalstates",
+        "F": "F"
+        
     }
 }
