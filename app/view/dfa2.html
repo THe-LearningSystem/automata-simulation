@@ -107,11 +107,11 @@
         <div class="bot-content bot-right">
             <h3>{{"STF.TITLE" | translate}}</h3>
 
-            <p>&Sigma; = { {{statetransitionfunction.functionData.transitions}} }</p>
-            <p>S = { {{statetransitionfunction.functionData.states}} }</p>
-            <p>&delta; = {<span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted">{{$last ? '' : ', '}} </span>}</p>
-            <p>S<sub>0</sub>= { {{statetransitionfunction.functionData.startState}} }</p>
-            <p>F = { {{statetransitionfunction.functionData.finalStates}} }</p>
+            <p uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { {{statetransitionfunction.functionData.transitions}} }</p>
+            <p uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
+            <p uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted">{{$last ? '' : ', '}} </span> }</p>
+            <p uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>=  {{statetransitionfunction.functionData.startState}} </p>
+            <p uib-tooltip="{{'STF.TTFINAL' | translate}}" tooltip-placement="left">{{"STF.F" | translate}} = { {{statetransitionfunction.functionData.finalStates}} }</p>
         </div>
     </div>
 </div>
