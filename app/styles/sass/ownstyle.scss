@@ -16,7 +16,8 @@ $stateActiveColor: #F00;
 $stateColorHoverOpacity:0.4;
 $selectForAddTransitionColor:#F00;
 //animated state for the simulation
-$animatedStateColor:#F00;
+$animatedCurrentStateColor:#F00;
+$animatedNextStateColor:#F00;
 //Transition Settings
 $transitionColor: #000;
 $transitionFontSize: 15px;
@@ -105,9 +106,15 @@ $animatedTransitionFontColor: #F00;
     font-size: $stateFontSize;
 }
 //animated state for the simulation
-.animated-state .state-circle {
-    fill: $animatedStateColor;
+.animated-currentstate .state-circle {
+    color:$animatedCurrentStateColor;
+    fill: $animatedCurrentStateColor;
 }
+.animated-nextstate .state-circle {
+    color:$animatedNextStateColor;
+    fill: $animatedNextStateColor;
+}
+
 .selectedForTransition .state-circle {
     fill: $selectForAddTransitionColor;
 }

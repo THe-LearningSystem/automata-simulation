@@ -14,6 +14,8 @@ function GraphdesignerDFA($scope, svgSelector) {
     self.showStateMenu = false;
     self.showTransitionMenu = false;
     self.selectedStateName = "selectedForTransition";
+    //user can snap the states to the grid -> toggles snapping
+    self.snapping = true;
 
     //graphdesigner settings
     self.settings = {
@@ -494,7 +496,16 @@ function GraphdesignerDFA($scope, svgSelector) {
 
 
     self.renameTransition = function (fromState, toState, transitionId, newTransitionName) {
+        //change it in drawnTransition
+        var drawnTransition = self.getDrawnTransition(fromState, toState);
+        var drawnTransitionName = _.find(drawnTransition.names, {
+            "id": transitionId
+        });
+        console.log(drawnTransitionName);
+        drawnTransitionName.name = newTransitionName;
 
+        //change it on the svg
+        drawnTransition.objReference.select(".transition-text").text(self.prepareTransitionNamesForSvg(drawnTransition.names));
     };
 
 
@@ -701,29 +712,36 @@ function GraphdesignerDFA($scope, svgSelector) {
             if (d3.event.sourceEvent.which == 1) {
                 if (!self.preventStateDragging) {
                     self.dragAmount++;
+                    
                     var x = d3.event.x;
                     var y = d3.event.y;
+                    
+                    if (self.snapping) {
 
-                    var snapPointX = x - (x % self.gridSpace);
-                    var snapPointY = y - (y % self.gridSpace);
 
-                    //check first snapping Point (top left)
-                    if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
-                        x = snapPointX;
-                        y = snapPointY;
-                        //second snapping point (top right)
-                    } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
-                        x = snapPointX + self.gridSpace;
-                        y = snapPointY;
-                        //third snapping point (bot left)
-                    } else if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
-                        x = snapPointX;
-                        y = snapPointY + self.gridSpace;
-                        //fourth snapping point (bot right)
-                    } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
-                        x = snapPointX + self.gridSpace;
-                        y = snapPointY + self.gridSpace;
+                        var snapPointX = x - (x % self.gridSpace);
+                        var snapPointY = y - (y % self.gridSpace);
+
+                        //check first snapping Point (top left)
+                        if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
+                            x = snapPointX;
+                            y = snapPointY;
+                            //second snapping point (top right)
+                        } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
+                            x = snapPointX + self.gridSpace;
+                            y = snapPointY;
+                            //third snapping point (bot left)
+                        } else if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
+                            x = snapPointX;
+                            y = snapPointY + self.gridSpace;
+                            //fourth snapping point (bot right)
+                        } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
+                            x = snapPointX + self.gridSpace;
+                            y = snapPointY + self.gridSpace;
+                        }
                     }
+
+                    //on drag isnt allowed workaround for bad drags when wanted to click
                     if (self.dragAmount > 1) {
 
                         //update the shown node
@@ -996,14 +1014,15 @@ function GraphdesignerDFA($scope, svgSelector) {
             self.input.transitions.push(tmpObject);
         });
 
+        self.transitionMenuListener = [];
+
         /*jshint -W083 */
         for (var key in $scope.graphdesigner.input.transitions) {
-            $scope.$watch("graphdesigner.input.transitions['" + key + "'].name", function (val, oldVal) {
+            self.transitionMenuListener.push($scope.$watch("graphdesigner.input.transitions['" + key + "'].name", function (val, oldVal) {
                 // Do stuff
                 $scope.renameTransition($scope.getTransition(fromState, toState, oldVal).id, val);
 
-            });
-
+            }));
         }
 
 
@@ -1012,6 +1031,9 @@ function GraphdesignerDFA($scope, svgSelector) {
     };
 
     self.closeTransitionMenu = function () {
+        _.forEach(self.transitionMenuListener, function (value, key) {
+            value();
+        });
         self.showTransitionMenu = false;
         if (self.selectedTransition !== null) {
             self.setArrowMarkerTo(self.selectedTransition.objReference, "");
@@ -1063,10 +1085,10 @@ function GraphdesignerDFA($scope, svgSelector) {
     $scope.$watch('simulator.animated.currentState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
-                self.setStateClassAs(oldValue, false, "animated-state");
+                self.setStateClassAs(oldValue, false, "animated-currentstate");
             }
             if (newValue !== null) {
-                self.setStateClassAs(newValue, true, "animated-state");
+                self.setStateClassAs(newValue, true, "animated-currentstate");
             }
         }
     });
@@ -1085,10 +1107,10 @@ function GraphdesignerDFA($scope, svgSelector) {
     $scope.$watch('simulator.animated.nextState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             if (oldValue !== null && $scope.simulator.animated.currentState !== oldValue) {
-                self.setStateClassAs(oldValue, false, "animated-state");
+                self.setStateClassAs(oldValue, false, "animated-nextstate");
             }
             if (newValue !== null) {
-                self.setStateClassAs(newValue, true, "animated-state");
+                self.setStateClassAs(newValue, true, "animated-nextstate");
             }
         }
     });

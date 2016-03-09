@@ -483,6 +483,11 @@ function DFA($scope) {
     $scope.renameTransition = function (transitionId, newTransitionName) {
         var transition = $scope.getTransitionById(transitionId);
         if (!$scope.existTransition(transition.fromState, transition.toState, newTransitionName)) {
+            //add new transitionname to the alphabet
+            $scope.addToAlphabet(newTransitionName);
+            //remove the old transitioname
+            //TODO:
+            //$scope.removeFromAlphabetWhenOnlyUsed(transition.id,transition.name);
             $scope.getTransitionById(transitionId).name = newTransitionName;
             //Rename the state on the graphdesigner
             $scope.graphdesigner.renameTransition(transition.fromState, transition.toState, transitionId, newTransitionName);

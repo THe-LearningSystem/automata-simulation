@@ -146,10 +146,10 @@
         <ul>
             <li ng-repeat="(key, value) in graphdesigner.input.transitions">
                 <p>{{"STATE_SET.STARTSTATE" | translate}}:{{value.fromState}}</p>
-                <p>{{"STATE_SET.STARTSTATE" | translate}}:
+                <p>{{"TRANS_SET.NAME" | translate}}:
                     <input type="text" ng-model="value.name">
                 </p>
-                <p>{{"STATE_SET.NEXTSTATE" | translate}}:{{value.toState}}</p>
+                <p>{{"TRANS_SET.NEXTSTATE" | translate}}:{{value.toState}}</p>
             </li>
         </ul>
     </menuitem>

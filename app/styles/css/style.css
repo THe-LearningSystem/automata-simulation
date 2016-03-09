@@ -5886,7 +5886,12 @@ button.close {
 .state-text {
   font-size: 15px; }
 
-.animated-state .state-circle {
+.animated-currentstate .state-circle {
+  color: #F00;
+  fill: #F00; }
+
+.animated-nextstate .state-circle {
+  color: #F00;
   fill: #F00; }
 
 .selectedForTransition .state-circle {
