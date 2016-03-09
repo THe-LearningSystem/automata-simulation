@@ -88,15 +88,28 @@
     </div>
     <div class="bot-content-wrapper">
         <div class="bot-content bot-left">
-            <automatontable automaton="config"></automatontable>
+            <h3>{{"TABLE.TITLE" | translate}}</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>/</th>
+                        <th ng-repeat="char in config.alphabet">{{char}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="(key, value) in table.states" ng-class="value.class">
+                        <th>{{value.name}}</th>
+                        <td ng-repeat="name in value.trans track by $index" ng-bind-html="name.State | to_trusted"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="bot-right">
+        <div class="bot-content bot-right">
             <h3>{{"STF.TITLE" | translate}}</h3>
 
             <p>&Sigma; = { {{statetransitionfunction.functionData.transitions}} }</p>
             <p>S = { {{statetransitionfunction.functionData.states}} }</p>
-            <p>&delta; = {
-                <p ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index">{{x}}</p> &#125;</p>
+            <p>&delta; = {<span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted">{{$last ? '' : ', '}} </span>}</p>
             <p>S<sub>0</sub>= { {{statetransitionfunction.functionData.startState}} }</p>
             <p>F = { {{statetransitionfunction.functionData.finalStates}} }</p>
         </div>
@@ -108,7 +121,7 @@
         <p> {{"DIA_SET.GRID" | translate}}
             <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">
         </p>
-    <p> {{"DIA_SET.SNAPPING" | translate}}
+        <p> {{"DIA_SET.SNAPPING" | translate}}
             <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">
         </p>
     </menuitem>
@@ -119,7 +132,7 @@
 
         </div>
         <span class="alert alert-danger" ng-show="graphdesigner.input.renamedError">{{"STATE_SET.ALREADY_EXIST" | translate}}</span>
-        
+
         <div>{{ "STATE_SET.STARTSTATE" | translate}}
             <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> </div>
 
@@ -134,7 +147,8 @@
             <li ng-repeat="(key, value) in graphdesigner.input.transitions">
                 <p>{{"STATE_SET.STARTSTATE" | translate}}:{{value.fromState}}</p>
                 <p>{{"STATE_SET.STARTSTATE" | translate}}:
-                    <input type="text" ng-model="value.name"></p>
+                    <input type="text" ng-model="value.name">
+                </p>
                 <p>{{"STATE_SET.NEXTSTATE" | translate}}:{{value.toState}}</p>
             </li>
         </ul>

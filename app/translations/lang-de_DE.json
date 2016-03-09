@@ -51,7 +51,9 @@
         "SAVE": "Speichern",
         "ALREADY_EXIST": "Zustandsname bereits verwendet!"
     },
-    
+    "TABLE":{
+        "TITLE": "Zustandstabelle"
+    },
     
     "STF": {
         "TITLE": "Zustandsübergangsfunktion"

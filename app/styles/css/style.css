@@ -5996,12 +5996,12 @@ button.close {
   right: 200px;
   left: 200px;
   bottom: 0px;
-  border-top: 1px solid #e0e0e0;
-  overflow-y: scroll; }
+  border-top: 1px solid #e0e0e0; }
 
 .bot-content {
-  padding: 10px;
-  height: 200px; }
+  padding: 0 10px;
+  height: 250px;
+  overflow-y: scroll; }
 
 .bot-left {
   float: left;

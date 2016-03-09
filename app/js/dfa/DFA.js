@@ -39,13 +39,11 @@ function DFA($scope) {
     $scope.config = cloneObject($scope.defaultConfig);
     $scope.config.name = "NewName";
 
-    //AUTOMATA CONFIG END
-
     //the name of the inputWord
     $scope.inputWord = '';
 
-    //alerts
-    $scope.alertDanger = 'NO ALERT';
+    //Array of all update Listeners
+    $scope.updateListeners = [];
 
     //the simulator controlling the simulation
     $scope.simulator = new SimulationDFA($scope);
@@ -55,14 +53,11 @@ function DFA($scope) {
     $scope.graphdesigner = new GraphdesignerDFA($scope, "#diagramm-svg");
     //the statetransitionfunction controlling the statetransitionfunction-table
     $scope.statetransitionfunction = new StatetransitionfunctionDFA($scope);
-
     //for the testdata
     $scope.testData = new TestData($scope);
 
-    
-    $scope.updateALL = function(){
-        
-    };
+
+
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
     //fix for $apply already in progress
     $scope.safeApply = function (fn) {
@@ -87,7 +82,7 @@ function DFA($scope) {
 
     };
 
-   
+
     /**
      * Adds a char to the input alphabet if the char is not available
      * @param   {value} value the char, which is to be added
@@ -104,6 +99,16 @@ function DFA($scope) {
     };
 
 
+
+    $scope.updateListener = function () {
+        //call each updateListener
+        _.forEach($scope.updateListeners, function (value, key) {
+            value.updateFunction();
+        });
+
+    };
+
+
     //STATE FUNCTIONS START
 
     /**
@@ -114,7 +119,7 @@ function DFA($scope) {
     $scope.existStateWithName = function (stateName) {
         var tmp = false;
         _.forEach($scope.config.states, function (state) {
-            if (state.name == stateName){
+            if (state.name == stateName) {
                 tmp = true;
                 return;
             }
@@ -232,6 +237,7 @@ function DFA($scope) {
         });
         //draw the State after the State is added
         $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(stateId));
+        $scope.updateListener();
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
         return $scope.getStateById(addedStateId - 1);
@@ -255,6 +261,7 @@ function DFA($scope) {
             }
             //first remove the element from the svg after that remove it from the array
             $scope.graphdesigner.removeState(stateId);
+            $scope.updateListener();
             $scope.config.countStateId--;
             $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
         }
@@ -285,6 +292,7 @@ function DFA($scope) {
         if ($scope.existStateWithId(stateId)) {
             //change on graphdesigner and others
             $scope.graphdesigner.changeStartState(stateId);
+            $scope.updateListener();
             //change the startState then
             $scope.config.startState = stateId;
         } else {
@@ -300,6 +308,7 @@ function DFA($scope) {
         if ($scope.config.startState !== null) {
             //change on graphdesigner and others
             $scope.graphdesigner.removeStartState();
+            $scope.updateListener();
             //change the startState
             $scope.config.startState = null;
         }
@@ -336,6 +345,7 @@ function DFA($scope) {
             $scope.config.finalStates.push(stateId);
             //add to the graphdesigner
             $scope.graphdesigner.addFinalState(stateId);
+            $scope.updateListener();
         } else {
             //TODO: BETTER DEBUG
         }
@@ -348,6 +358,7 @@ function DFA($scope) {
     $scope.removeFinalState = function (stateId) {
         //remove from graphdesigner
         $scope.graphdesigner.removeFinalState(stateId);
+        $scope.updateListener();
         $scope.config.finalStates.splice($scope.getFinalStateIndexByStateId(stateId), 1);
 
     };
@@ -383,8 +394,9 @@ function DFA($scope) {
         //there must be a fromState and toState, before adding a transition
         if (!$scope.existTransition(fromState, toState, transitonName) && $scope.existStateWithId(fromState) &&
             $scope.existStateWithId(toState)) {
-            $scope.addTransitionWithId($scope.config.countTransitionId++, fromState, toState, transitonName);
             $scope.addToAlphabet(transitonName);
+            $scope.addTransitionWithId($scope.config.countTransitionId++, fromState, toState, transitonName);
+
         } else {
             //TODO: BETTER DEBUG
         }
@@ -406,6 +418,7 @@ function DFA($scope) {
         });
         //drawTransistion
         $scope.graphdesigner.drawTransition(transitionId);
+        $scope.updateListener();
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
     };
@@ -431,8 +444,8 @@ function DFA($scope) {
     $scope.getTransitionById = function (transitionId) {
         return $scope.config.transitions[$scope.getArrayTransitionIdByTransitionId(transitionId)];
     };
-    
-        /**
+
+    /**
      * Checks if a transition with the params already exist
      * @param  {number}  fromState      Id of the fromstate
      * @param  {number}  toState        id from the toState
@@ -457,6 +470,7 @@ function DFA($scope) {
     $scope.removeTransition = function (transitionId) {
         //first remove the element from the svg after that remove it from the array
         $scope.graphdesigner.removeTransition(transitionId);
+        $scope.updateListener();
         $scope.config.countTransitionId--;
         $scope.config.transitions.splice($scope.getArrayTransitionIdByTransitionId(transitionId), 1);
     };
@@ -471,7 +485,8 @@ function DFA($scope) {
         if (!$scope.existTransition(transition.fromState, transition.toState, newTransitionName)) {
             $scope.getTransitionById(transitionId).name = newTransitionName;
             //Rename the state on the graphdesigner
-            $scope.graphdesigner.renameTransition(transition.fromState,transition.toState,transitionId, newTransitionName);
+            $scope.graphdesigner.renameTransition(transition.fromState, transition.toState, transitionId, newTransitionName);
+            $scope.updateListener();
         } else {
             //TODO: BETTER DEBUG
         }
