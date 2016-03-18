@@ -146,6 +146,10 @@ $animatedTransitionFontColor: #ff7b00;
     fill: $transitionHoverColor;
     opacity: 0;
 }
+//transition line fill for the startline
+.transition-line.start-line{
+    stroke:$transitionColor;
+}
 //animated transition for the simulation
 .animated-transition .transition-line {
     stroke: $animatedTransitionColor;

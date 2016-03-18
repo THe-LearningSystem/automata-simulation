@@ -1086,11 +1086,9 @@ function GraphdesignerDFA($scope, svgSelector) {
         if (newValue !== oldValue) {
             console.log("CURRENTSTATE:oldValue " + oldValue + " newvalue " + newValue);
             if (oldValue !== null) {
-
                 self.setStateClassAs(oldValue, false, "animated-currentstate-svg");
             }
             if (newValue !== null) {
-                self.setStateClassAs($scope.simulator.animate.nextState, false, "animated-nextstate-svg");
                 self.setStateClassAs(newValue, true, "animated-currentstate-svg");
             }
         }
@@ -1110,7 +1108,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     $scope.$watch('simulator.animated.nextState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             console.log("NEXTSTATE: oldValue " + oldValue + " newvalue " + newValue);
-            if (oldValue !== null && $scope.simulator.animated.currentState !== oldValue) {
+            if (oldValue !== null) {
                 self.setStateClassAs(oldValue, false, "animated-nextstate-svg");
             }
             if (newValue !== null) {

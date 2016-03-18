@@ -5920,6 +5920,9 @@ button.close {
   fill: #AAA;
   opacity: 0; }
 
+.transition-line.start-line {
+  stroke: #000; }
+
 .animated-transition .transition-line {
   stroke: #ff7b00;
   stroke-width: 2.5; }
