@@ -5852,10 +5852,10 @@ button.close {
   fill: #AAA; }
 
 #marker-end-arrow-active {
-  fill: #F00; }
+  fill: #ff7b00; }
 
 #marker-end-arrow-animated {
-  fill: #F00; }
+  fill: #ff7b00; }
 
 .grid-line {
   stroke: #000; }
@@ -5887,16 +5887,16 @@ button.close {
   font-size: 15px; }
 
 .animated-currentstate-svg .state-circle {
-  fill: #F00; }
+  fill: #ff7b00; }
 
 .animated-nextstate-svg .state-circle {
-  fill: #F00; }
+  fill: #ff7b00; }
 
 .animated-currentstate {
-  color: #F00; }
+  color: #ff7b00; }
 
 .animated-nextstate {
-  color: #F00; }
+  color: #ff7b00; }
 
 .in-creation {
   opacity: 0.5; }
@@ -5909,7 +5909,7 @@ button.close {
   cursor: pointer; }
 
 .transition.active .transition-line {
-  stroke: #F00; }
+  stroke: #ff7b00; }
 
 .transition-line {
   stroke-width: 2.5; }
@@ -5921,11 +5921,11 @@ button.close {
   opacity: 0; }
 
 .animated-transition .transition-line {
-  stroke: #F00;
+  stroke: #ff7b00;
   stroke-width: 2.5; }
 
 .animated-transition {
-  color: #F00; }
+  color: #ff7b00; }
 
 .transition-text {
   font-size: 15px; }
@@ -5951,6 +5951,12 @@ button.close {
   border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0; }
 
+.th-koeln-logo img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 50px; }
+
 .left-menu {
   position: absolute;
   top: 80px;
@@ -5972,9 +5978,9 @@ button.close {
 .menu-item {
   margin: 15px 0; }
 
-.menu-item .title {
+.menu-item .title, .title {
   padding: 5px;
-  background-color: #e0e0e0; }
+  background-color: #cedde9; }
 
 .menu-button {
   background-color: transparent;
@@ -6008,7 +6014,7 @@ button.close {
   border-top: 1px solid #e0e0e0; }
 
 .bot-content {
-  padding: 0 10px;
+  padding: 10px 10px 0 10px;
   height: 250px;
   overflow-y: scroll; }
 

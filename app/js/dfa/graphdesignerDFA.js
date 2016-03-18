@@ -712,10 +712,10 @@ function GraphdesignerDFA($scope, svgSelector) {
             if (d3.event.sourceEvent.which == 1) {
                 if (!self.preventStateDragging) {
                     self.dragAmount++;
-                    
+
                     var x = d3.event.x;
                     var y = d3.event.y;
-                    
+
                     if (self.snapping) {
 
 
@@ -896,12 +896,11 @@ function GraphdesignerDFA($scope, svgSelector) {
         if (!self.existDrawnTransition(transition.fromState, transition.toState)) {
             //the group element
             var group = self.svgTransitions.append("g")
-                .attr("class", "transition")
-                .attr("fill", "white"),
+                .attr("class", "transition"),
                 //the line itself with the arrow
                 line = group.append("path")
                 .attr("class", "transition-line")
-                .attr("fill", "white")
+                .attr("fill", "none")
                 .attr("marker-end", "url(#marker-end-arrow)"),
 
                 lineClickArea = group.append("path")
@@ -911,6 +910,7 @@ function GraphdesignerDFA($scope, svgSelector) {
                 .attr("fill", "none"),
                 lineHover = group.append("path")
                 .attr("class", "transition-line-hover")
+                .attr("fill", "none")
                 .attr("marker-end", "url(#marker-end-arrow-hover)"),
                 //the text of the transition
                 text = group.append("text")
@@ -1084,10 +1084,13 @@ function GraphdesignerDFA($scope, svgSelector) {
 
     $scope.$watch('simulator.animated.currentState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
+            console.log("CURRENTSTATE:oldValue " + oldValue + " newvalue " + newValue);
             if (oldValue !== null) {
+
                 self.setStateClassAs(oldValue, false, "animated-currentstate-svg");
             }
             if (newValue !== null) {
+                self.setStateClassAs($scope.simulator.animate.nextState, false, "animated-nextstate-svg");
                 self.setStateClassAs(newValue, true, "animated-currentstate-svg");
             }
         }
@@ -1106,6 +1109,7 @@ function GraphdesignerDFA($scope, svgSelector) {
 
     $scope.$watch('simulator.animated.nextState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
+            console.log("NEXTSTATE: oldValue " + oldValue + " newvalue " + newValue);
             if (oldValue !== null && $scope.simulator.animated.currentState !== oldValue) {
                 self.setStateClassAs(oldValue, false, "animated-nextstate-svg");
             }

@@ -16,19 +16,19 @@ $stateActiveColor: #F00;
 $stateColorHoverOpacity:0.4;
 $selectForAddTransitionColor:#F00;
 //animated state for the simulation
-$animatedCurrentStateColor:#F00;
-$animatedNextStateColor:#F00;
+$animatedCurrentStateColor:#ff7b00;
+$animatedNextStateColor:#ff7b00;
 //Transition Settings
 $transitionColor: #000;
 $transitionFontSize: 15px;
 $transitionFontColor: #000;
 $transitionWidth:2.5;
 $transitionHoverColor:#AAA;
-$transitionActiveColor:#F00;
+$transitionActiveColor:#ff7b00;
 //animated transition
 $animatedTransitionWidth:2.5;
-$animatedTransitionColor:#F00;
-$animatedTransitionFontColor: #F00;
+$animatedTransitionColor:#ff7b00;
+$animatedTransitionFontColor: #ff7b00;
 //svg diagramm
 .automataWrapper {
     border: 1px solid #000;
@@ -182,6 +182,13 @@ $animatedTransitionFontColor: #F00;
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
 }
+
+.th-koeln-logo img{
+    position:absolute;
+    top:0;
+    right:0;
+    height:50px;
+}
 //MENU
 .left-menu {
     position: absolute;
@@ -204,9 +211,9 @@ $animatedTransitionFontColor: #F00;
 .menu-item {
     margin: 15px 0;
 }
-.menu-item .title {
+.menu-item .title, .title {
     padding: 5px;
-    background-color: #e0e0e0;
+    background-color: #cedde9;
 }
 .menu-button {
     background-color: transparent;
@@ -240,7 +247,7 @@ $animatedTransitionFontColor: #F00;
     border-top: 1px solid #e0e0e0;
 }
 .bot-content {
-    padding: 0 10px;
+    padding: 10px 10px 0 10px;
     height: 250px;
     overflow-y: scroll;
 }

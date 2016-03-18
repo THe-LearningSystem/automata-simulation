@@ -16,13 +16,13 @@ function TableDFA($scope) {
 
         //prepare alphabet
         for (alphabetCounter = 0; alphabetCounter < dfa.alphabet.length; alphabetCounter++) {
-            var transitionName =dfa.alphabet[alphabetCounter];
+            var transitionName = dfa.alphabet[alphabetCounter];
             
             
             var tmp;
-            if($scope.simulator.animated.transition && $scope.simulator.animated.transition.name === transitionName){
-                tmp = '<span class="animated-transition">'+transitionName+'</span>';
-            }else{
+            if ($scope.simulator.animated.transition && $scope.simulator.animated.transition.name === transitionName) {
+                tmp = '<span class="animated-transition">' + transitionName + '</span>';
+            } else {
                 tmp = transitionName;
             }
             self.alphabet.push(tmp);
@@ -33,6 +33,12 @@ function TableDFA($scope) {
             var tmpState = dfa.states[i];
             var tmpObject = {};
             tmpObject.id = tmpState.id;
+            // marks the current active state at the simulation in the table
+            if ($scope.simulator.animated.currentState == tmpState.id) {
+                tmpObject.name = '<span class="animated-currentstate">' + tmpState.name + '</span>';
+            } else {
+                tmpObject.name = tmpState.name;
+            }
             tmpObject.trans = [];
 
 
@@ -57,8 +63,6 @@ function TableDFA($scope) {
                 if (foundTransition !== null) {
                     var tmpToState = $scope.getStateById(foundTransition.toState);
 
-                    console.log($scope.simulator.animated.transition + " First");
-                    console.log(foundTransition.id + " Second");
                     if ($scope.simulator.animated.nextState == tmpToState.id) {
                         trans.State = '<span class="animated-nextstate">' + tmpToState.name + '</span>';
                     } else {
@@ -68,12 +72,7 @@ function TableDFA($scope) {
                     trans.State = "";
                 }
 
-                // marks the current active state at the simulation in the table
-                if ($scope.simulator.animated.currentState == tmpState.id) {
-                    tmpObject.name = '<span class="animated-currentstate">' + tmpState.name + '</span>';
-                } else {
-                    tmpObject.name = tmpState.name;
-                }
+
 
                 tmpObject.trans.push(trans);
             }
@@ -82,7 +81,6 @@ function TableDFA($scope) {
         }
 
     };
-
 
 
     /**************

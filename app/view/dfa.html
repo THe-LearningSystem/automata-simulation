@@ -1,114 +1,159 @@
-<div class="col-md-12">
-    <button type="button" class="btn btn-default btn-play-or-pause" ng-click="simulator.playOrPause()" aria-label="Left Align">
-        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-    </button>
-    <button type="button" class="btn btn-default" ng-click="simulator.stop()" aria-label="Left Align">
-        <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
-    </button>
-    <button type="button" class="btn btn-default" ng-click="simulator.stepBackward()" aria-label="Left Align">
-        <span class="glyphicon glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
-    </button>
-    <button type="button" class="btn btn-default" ng-click=" simulator.stepForward()" aria-label="Left Align ">
-        <span class="glyphicon glyphicon glyphicon-fast-forward " aria-hidden="true "></span>
-    </button>
-    <button type="button " class="btn btn-default " ng-click="simulator.simulationSettings = !simulator.simulationSettings" aria-label="Left Align">
-        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-    </button>
-    Input:
-    <input class="inputWord" ng-model="inputWord" />
-    <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span> |
-    <button type="button" class="btn btn-default" ng-click="export()" aria-label="Left Align">
-        <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>
-    </button>
-    <button type="button" class="btn btn-default import" aria-label="Left Align">
-        <input type="file" id="hidden-file-upload">
-        <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
-    </button>
-    <button type="button" class="btn btn-default" ng-click="removeConfig()" aria-label="Left Align">
-        <span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span>
-    </button>
-    |
-    <button type="button" class="btn btn-default" ng-click="testData.testDFA()" aria-label="Left Align">
-        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-    </button>
+<div class="top-nav">
+    <ul ng-controller="LangCtrl">
+        <li><a href="" ng-click="changeLang('en_US')">Englisch</a></li>
+        <li><a href="" ng-click="changeLang('de_DE')">German</a></li>
+    </ul>
+<div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
-<div class="col-md-12" ng-show="simulator.simulationSettings">
-    <p> Loop:
-        <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
-    </p>
-    <p> StepTimeOut:
-        <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
-    </p>
-    <p>Looptimeout
-        <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
-    </p>
+
+
+<div class="top-menu">
+
+    <div class="button-group">
+        <!-- Simple dropdown -->
+        <span uib-dropdown on-toggle="toggled(open)">
+
+        <a href id="simple-dropdown" uib-dropdown-toggle>
+                   {{config.diagramm.scale*100 | number:0}}%   <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+        </a>
+
+        <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+            <li><a ng-click="graphdesigner.zoomTo(25)">25%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(50)">50%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(75)">75%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(100)">100%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(125)">125%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(150)">150%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(200)">200%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(250)">250%</a></li>
+            </li>
+
+        </ul>
+        </span>
+        <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
+        <menubutton glyphicon="zoom-out" action="graphdesigner.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
+        <menubutton glyphicon="resize-small" action="graphdesigner.scaleAndTranslateToDefault()" tttext="NAVBAR.TTTEXT_RESCALE"></menubutton>
+    </div>
+    <div class="button-group">
+        <menubutton glyphicon="trash" action="graphdesigner.remove()" ng-disable="graphdesigner.showStateMenu"></menubutton>
+    </div>
+
+    <div class="button-group" ng-controller="portationCtrl">
+        <menubutton glyphicon="open" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
+        <menubutton glyphicon="save" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"></menubutton>
+    </div>
+    <div class="button-group">
+
+    </div>
+    <div class="button-group">
+        <menubutton glyphicon="plus" action="graphdesigner.addState()" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+        <menubutton glyphicon="plus" action="graphdesigner.addTransition()" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+        <menubutton glyphicon="trash" action="removeConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
+    </div>
 </div>
-<div class="automataWrapper col-md-12">
-    <div class="col-md-12">
-        <h3>Zustandsdiagramm</h3>
-        <div id="diagramm">
-            <div id="diagramm-buttons">
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.addStateEventListener()" aria-label="Left Align">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.addTransitionEventListener()" aria-label="Left Align">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.removeEventListener()" aria-label="Left Align">
-                    <span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.toggleGrid()" aria-label="Left Align">
-                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.scaleAndTranslateToDefault()" aria-label="Left Align">
-                    <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
-                </button>
-            </div>
-            <svg id="diagramm-svg">
-            </svg>
-            <div id="state-context" ng-show="graphdesigner.showStateContext">
-                <h2>State</h2>
-                <p> Name:
-                    <input id="state-input-name" ng-model="graphdesigner.input.stateName">
-                </p>
-                <p>StartState:
-                    <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">
-                </p>
-                </p>
-                <p>FinalState:
-                    <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
-                </p>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.saveState()" aria-label="Left Align">
-                    SAVE
-                </button>
-            </div>
-            <div id="transition-context" ng-show="graphdesigner.showTransitionContext">
-                <h2>State</h2>
-                <p> Name:
-                    <input id="state-input-name" ng-model="graphdesigner.input.stateName">
-                </p>
-                <p>StartState:
-                    <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">
-                </p>
-                </p>
-                <p>FinalState:
-                    <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
-                </p>
-                <button type="button" class="btn btn-default" ng-click="graphdesigner.saveState()" aria-label="Left Align">
-                    SAVE
-                </button>
-            </div>
+
+<div class="left-menu">
+    <menuitemextendable titlename="SIM.TITLE">
+        <menubutton glyphicon="play" action="simulator.playOrPause()" tttext="SIM.PLAYPAUSE"></menubutton>
+        <menubutton glyphicon="stop" action="simulator.stop()" tttext="SIM.STOP"></menubutton>
+        <menubutton glyphicon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
+        <menubutton glyphicon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
+        <p>{{"SIM.INPUT" | translate}}
+            <input class="inputWord" ng-model="inputWord" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></p>
+
+    </menuitemextendable>
+    <menuitemextendable titlename="SIM_SET.TITLE">
+
+        <p> {{"SIM_SET.LOOP" | translate}}
+            <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
+        </p>
+        <p> {{"SIM_SET.STO" | translate}} SLIDER
+            <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
+        </p>
+        <p>{{"SIM_SET.LTO" | translate}}
+            <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
+        </p>
+    </menuitemextendable>
+    <menuitemextendable titlename="DEV.TITLE">
+        <menubutton glyphicon="wrench" action="testData.testDFA()">
+
+        </menubutton>
+        <p>DiagrammValues: {{config}}</p>
+        <p>DrawnTransitions:{{drawnTransitions}}</p>
+        <p>{{graphdesigner.input}}</p>
+    </menuitemextendable>
+</div>
+<div class="mid-wrapper">
+    <div class="diagramm">
+        <p class="title">Zustandsübergangsdiagramm</p>
+        <svg id="diagramm-svg">
+        </svg>
+    </div>
+    <div class="bot-content-wrapper">
+        <div class="bot-content bot-left">
+            <h3 class="title">{{"TABLE.TITLE" | translate}}</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>/</th>
+                        <th ng-repeat="char in table.alphabet" ng-bind-html="char | to_trusted"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="(key, value) in table.states" ng-class="value.class">
+                        <th ng-bind-html="value.name | to_trusted"></th>
+                        <td ng-repeat="name in value.trans track by $index" ng-bind-html="name.State | to_trusted"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="bot-content bot-right">
+            <h3  class="title">{{"STF.TITLE" | translate}}</h3>
+
+            <p uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? '' : ', '}}</span>}</p>
+            <p uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
+            <p uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</p>
+            <p uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>=  {{statetransitionfunction.functionData.startState}} </p>
+            <p uib-tooltip="{{'STF.TTFINAL' | translate}}" tooltip-placement="left">{{"STF.F" | translate}} = { {{statetransitionfunction.functionData.finalStates}} }</p>
         </div>
     </div>
-    <div class="col-md-6">
-        <h3>Zustandstabelle</h3>
-    </div>
-    <div class="col-md-6">
-        <h3>Zustandsüberführungsfunktion</h3>
-        <p>&Sigma; = { {{statetransitionfunction.functionData.transitions}} }</p>
-        <p>S = { {{statetransitionfunction.functionData.states}} }</p>
-        <p>&delta; = {
-            <p ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction">{{x}}</p> &#125;</p>
-        <p>S<sub>0</sub>= { {{statetransitionfunction.functionData.startState}} }</p>
-        <p>F = { {{statetransitionfunction.functionData.finalStates}} }</p>
-    </div>
+</div>
+<div class="right-menu">
+
+    <menuitem titlename="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu && !graphdesigner.showTransitionMenu">
+        <p> {{"DIA_SET.GRID" | translate}}
+            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">
+        </p>
+        <p> {{"DIA_SET.SNAPPING" | translate}}
+            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">
+        </p>
+    </menuitem>
+    <!--Diagramm Settigns -->
+    <menuitem titlename="DIA_SET.TITLE" ng-show="graphdesigner.showStateMenu">
+        <div> {{"STATE_SET.NAME" | translate}}
+            <input id="state-input-name" ng-model="graphdesigner.input.stateName">
+
+        </div>
+        <span class="alert alert-danger" ng-show="graphdesigner.input.renamedError">{{"STATE_SET.ALREADY_EXIST" | translate}}</span>
+
+        <div>{{ "STATE_SET.STARTSTATE" | translate}}
+            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> </div>
+
+
+        <div>{{ "STATE_SET.FINALSTATE" | translate}}
+            <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
+        </div>
+
+    </menuitem>
+    <menuitem titlename="TransitionMenu" ng-show="graphdesigner.showTransitionMenu">
+        <ul>
+            <li ng-repeat="(key, value) in graphdesigner.input.transitions">
+                <p>{{"STATE_SET.STARTSTATE" | translate}}:{{value.fromState}}</p>
+                <p>{{"TRANS_SET.NAME" | translate}}:
+                    <input type="text" ng-model="value.name">
+                </p>
+                <p>{{"TRANS_SET.NEXTSTATE" | translate}}:{{value.toState}}</p>
+            </li>
+        </ul>
+    </menuitem>
+</div>

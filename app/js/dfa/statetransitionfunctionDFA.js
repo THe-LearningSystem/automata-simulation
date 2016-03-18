@@ -25,18 +25,8 @@ function StatetransitionfunctionDFA($scope) {
         var i;
 
 
-        //Update of the Alphabet
-        for (i = 0; i < $scope.config.transitions.length; i++) {
-            arrayAlphabet[i] = $scope.config.transitions[i].name;
-        }
-        arrayAlphabet = _.uniq(arrayAlphabet);
-        for (i = 0; i < arrayAlphabet.length; i++) {
-            stringAlphabet += arrayAlphabet[i];
-            if (i < arrayAlphabet.length - 1) {
-                stringAlphabet += ', ';
-            }
-        }
-        self.functionData.transitions = stringAlphabet;
+  
+        self.functionData.transitions = $scope.config.alphabet;
 
 
 
