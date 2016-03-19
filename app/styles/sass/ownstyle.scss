@@ -12,7 +12,6 @@ $finalStateBorderColor: $stateBorderColor;
 $finalStateBorderWidth:2;
 //Hover
 $stateHoverColor: #000;
-$stateActiveColor: #F00;
 $stateColorHoverOpacity:0.4;
 $selectForAddTransitionColor:#F00;
 //animated state for the simulation
@@ -24,11 +23,12 @@ $transitionFontSize: 15px;
 $transitionFontColor: #000;
 $transitionWidth:2.5;
 $transitionHoverColor:#AAA;
-$transitionActiveColor:#ff7b00;
 //animated transition
 $animatedTransitionWidth:2.5;
 $animatedTransitionColor:#ff7b00;
 $animatedTransitionFontColor: #ff7b00;
+//selected
+$selectedColor:#00b7ff;
 //svg diagramm
 .automataWrapper {
     border: 1px solid #000;
@@ -67,8 +67,8 @@ $animatedTransitionFontColor: #ff7b00;
 #marker-end-arrow-hover {
     fill: $transitionHoverColor;
 }
-#marker-end-arrow-active {
-    fill: $transitionActiveColor;
+#marker-end-arrow-selection {
+    fill: $selectedColor;
 }
 //animated arrow for the simulation
 #marker-end-arrow-animated {
@@ -89,13 +89,20 @@ $animatedTransitionFontColor: #ff7b00;
     fill: $stateHoverColor;
     fill-opacity: $stateColorHoverOpacity;
 }
-.active .state-circle {
-    fill: $stateActiveColor;
-}
 .state-circle {
     fill: $stateColor;
     stroke: $stateBorderColor;
     stroke-width: $stateBorderWidth;
+}
+.selected-circle {
+    fill: transparent;
+    stroke: $selectedColor;
+    stroke-width: 1;
+    stroke-dasharray: 10, 10;
+    visibility: hidden;
+}
+.active .selected-circle {
+    visibility: visible;
 }
 .final-state {
     fill: $finalStateColor;
@@ -115,13 +122,12 @@ $animatedTransitionFontColor: #ff7b00;
 }
 //others
 .animated-currentstate {
-    color:$animatedCurrentStateColor;
+    color: $animatedCurrentStateColor;
 }
 .animated-nextstate {
-    color:$animatedNextStateColor;
+    color: $animatedNextStateColor;
 }
-.selectedForTransition {
-}
+.selectedForTransition {}
 .state-text:hover {}
 .in-creation {
     opacity: 0.5;
@@ -134,8 +140,14 @@ $animatedTransitionFontColor: #ff7b00;
 .transition:hover {
     cursor: pointer;
 }
-.transition.active .transition-line {
-    stroke: $transitionActiveColor;
+.transition-line-selection {
+    stroke-width: $transitionWidth;
+    stroke: $selectedColor;
+    opacity: 0.6;
+    visibility: hidden;
+}
+.transition.active .transition-line-selection {
+    visibility: visible;
 }
 .transition-line {
     stroke-width: $transitionWidth;
@@ -143,12 +155,11 @@ $animatedTransitionFontColor: #ff7b00;
 .transition-line-hover {
     stroke-width: $transitionWidth;
     stroke: $transitionHoverColor;
-    fill: $transitionHoverColor;
     opacity: 0;
 }
 //transition line fill for the startline
-.transition-line.start-line{
-    stroke:$transitionColor;
+.transition-line.start-line {
+    stroke: $transitionColor;
 }
 //animated transition for the simulation
 .animated-transition .transition-line {
@@ -159,7 +170,8 @@ $animatedTransitionFontColor: #ff7b00;
     color: $animatedTransitionColor;
 }
 .transition-text {
-    font-size: 15px
+    font-size: 15px;
+    text-anchor: middle;
 }
 //ECT
 #hidden-file-upload {
@@ -186,12 +198,11 @@ $animatedTransitionFontColor: #ff7b00;
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
 }
-
-.th-koeln-logo img{
-    position:absolute;
-    top:0;
-    right:0;
-    height:50px;
+.th-koeln-logo img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 50px;
 }
 //MENU
 .left-menu {
@@ -215,7 +226,8 @@ $animatedTransitionFontColor: #ff7b00;
 .menu-item {
     margin: 15px 0;
 }
-.menu-item .title, .title {
+.menu-item .title,
+.title {
     padding: 5px;
     background-color: #cedde9;
 }

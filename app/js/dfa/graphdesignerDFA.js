@@ -106,12 +106,13 @@ function GraphdesignerDFA($scope, svgSelector) {
 
     self.zoomIn = function () {
         $scope.config.diagramm.scale = ($scope.config.diagramm.scale + self.zoomValue) > self.zoomMax ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale + self.zoomValue) * 100) / 100;
-        self.updataZoomBehavior();
+        self.updateZoomBehaviour();
     };
     self.zoomOut = function () {
 
         $scope.config.diagramm.scale = ($scope.config.diagramm.scale - self.zoomValue) <= self.zoomMin ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale - self.zoomValue) * 100) / 100;
-        self.updataZoomBehavior();
+
+        self.updateZoomBehaviour();
 
     };
 
@@ -119,13 +120,14 @@ function GraphdesignerDFA($scope, svgSelector) {
         console.log("zoomtedto");
         $scope.config.diagramm.scale = value / 100;
         $scope.safeApply();
-        self.updataZoomBehavior();
+        self.updateZoomBehaviour();
     };
 
-    self.updupdataZoomBehaviorateZoom = function () {
+    self.updateZoomBehaviour = function () {
+        $scope.safeApply();
         self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
-        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
+        svgOuterZoomAndDrag.scale($scope.config.diagramm.scale);
+        svgOuterZoomAndDrag.translate([$scope.config.diagramm.x, $scope.config.diagramm.y]);
     };
 
 
@@ -288,7 +290,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         .append('svg:path')
         .attr('d', 'M0,0 L0,6 L9,3 z');
     self.defs.append('svg:marker')
-        .attr('id', 'marker-end-arrow-active')
+        .attr('id', 'marker-end-arrow-selection')
         .attr('refX', 8)
         .attr('refY', 3)
         .attr('markerWidth', 10)
@@ -574,9 +576,13 @@ function GraphdesignerDFA($scope, svgSelector) {
             .attr("class", "state " + "state-" + state.id)
             .attr("object-id", state.id); //save the state-id
 
-        var circleSelection = group.append("circle")
+        var circle = group.append("circle")
             .attr("class", "state-circle")
             .attr("r", self.settings.stateRadius);
+        //for outer circle dotted when selected
+        var selectedCircle = group.append("circle")
+            .attr("class", "selected-circle")
+            .attr("r", self.settings.stateRadius + 6);
 
         var hoverCircle = group.append("circle")
             .attr("class", "state-circle hover-circle")
@@ -902,7 +908,10 @@ function GraphdesignerDFA($scope, svgSelector) {
                 .attr("class", "transition-line")
                 .attr("fill", "none")
                 .attr("marker-end", "url(#marker-end-arrow)"),
-
+                lineSelection = group.append("path")
+                .attr("class", "transition-line-selection")
+                .attr("fill", "none")
+                .attr("marker-end", "url(#marker-end-arrow-selection)"),
                 lineClickArea = group.append("path")
                 .attr("class", "transition-line-click")
                 .attr("stroke-width", 20)
@@ -934,6 +943,9 @@ function GraphdesignerDFA($scope, svgSelector) {
                     var otherCurveData = self.transitionCurve(otherCoordObj, false);
                     var otherTrans = self.getDrawnTransition(transition.toState, transition.fromState);
                     otherTrans.objReference.select(".transition-line").attr("d", otherCurveData);
+                    otherTrans.objReference.select(".transition-line-selection").attr("d", otherCurveData);
+                    otherTrans.objReference.select(".transition-line-hover").attr("d", otherCurveData);
+                    otherTrans.objReference.select(".transition-line-click").attr("d", otherCurveData);
                     //update the transition text position
                     otherTrans.objReference.select(".transition-text")
                         .attr("x", (otherCoordObj.xMidPoint))
@@ -945,6 +957,7 @@ function GraphdesignerDFA($scope, svgSelector) {
                 //get the curve data ( depends if there is a transition in the oposite direction)
                 curveData = self.transitionCurve(coordObj, !self.existDrawnTransition(transition.toState, transition.fromState));
                 line.attr("d", curveData);
+                lineSelection.attr("d", curveData);
                 lineHover.attr("d", curveData);
                 lineClickArea.attr("d", curveData);
                 //if it is a selfreference
@@ -954,6 +967,9 @@ function GraphdesignerDFA($scope, svgSelector) {
                 var y = $scope.config.states[stateId].y;
 
                 line.attr("d", self.selfTransition(x, y));
+                lineSelection.attr("d", self.selfTransition(x, y));
+                lineHover.attr("d", self.selfTransition(x, y));
+                lineClickArea.attr("d", self.selfTransition(x, y));
                 text.attr("x", x - self.settings.stateRadius - 50)
                     .attr("y", y);
             }
@@ -1000,7 +1016,6 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.selectedTransition = self.getDrawnTransition(fromState, toState);
         console.log(self.selectedTransition);
         self.selectedTransition.objReference.classed("active", true);
-        self.setArrowMarkerTo(self.selectedTransition.objReference, "active");
 
         self.input = {};
         self.input.transitions = [];
@@ -1036,7 +1051,6 @@ function GraphdesignerDFA($scope, svgSelector) {
         });
         self.showTransitionMenu = false;
         if (self.selectedTransition !== null) {
-            self.setArrowMarkerTo(self.selectedTransition.objReference, "");
             self.selectedTransition.objReference.classed("active", false);
             self.selectedTransition = null;
 
@@ -1054,15 +1068,24 @@ function GraphdesignerDFA($scope, svgSelector) {
                 //if its not a selfreference
                 var obj = n.objReference,
                     transitionLine = obj.select(".transition-line"),
+                    lineSelection = obj.select(".transition-line-selection"),
+                    lineClickArea = obj.select(".transition-line-click"),
+                    lineHover = obj.select(".transition-line-hover"),
                     transitionText = obj.select("text");
                 if (n.fromState != n.toState) {
                     var coordObj = self.getTransitionCoordinates(n.fromState, n.toState);
                     //if there is a transition in the other direction
                     if (self.existDrawnTransition(n.toState, n.fromState)) {
                         transitionLine.attr("d", self.transitionCurve(coordObj, false));
+                        lineSelection.attr("d", self.transitionCurve(coordObj, false));
+                        lineClickArea.attr("d", self.transitionCurve(coordObj, false));
+                        lineHover.attr("d", self.transitionCurve(coordObj, false));
                         transitionText.attr("x", coordObj.xMidPoint).attr("y", coordObj.yMidPoint);
                     } else {
                         transitionLine.attr("d", self.transitionCurve(coordObj, true));
+                        lineSelection.attr("d", self.transitionCurve(coordObj, true));
+                        lineClickArea.attr("d", self.transitionCurve(coordObj, true));
+                        lineHover.attr("d", self.transitionCurve(coordObj, true));
                         transitionText.attr("x", coordObj.xMid).attr("y", coordObj.yMid);
                     }
                 } else {
@@ -1071,6 +1094,9 @@ function GraphdesignerDFA($scope, svgSelector) {
                     var y = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].y;
                     //update Transistion with self reference
                     transitionLine.attr("d", self.selfTransition(x, y));
+                    lineSelection.attr("d", self.selfTransition(x, y));
+                    lineClickArea.attr("d", self.selfTransition(x, y));
+                    lineHover.attr("d", self.selfTransition(x, y));
                     transitionText.attr("x", x - self.settings.stateRadius - 50).attr("y", y);
                 }
             }
