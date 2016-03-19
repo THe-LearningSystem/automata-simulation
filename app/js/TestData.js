@@ -6,7 +6,7 @@ function TestData($scope) {
     var self = this;
 
     self.testDFA = function() {
-        $scope.inputWord = "abc";
+        $scope.config.inputWord = "abc";
         $scope.addStateWithPresets(100, 100);
         $scope.addStateWithPresets(100, 300);
         $scope.addStateWithPresets(300, 300);

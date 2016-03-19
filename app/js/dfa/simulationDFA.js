@@ -19,6 +19,7 @@ function SimulationDFA($scope) {
     self.nextState = null;
     self.transition = null;
 
+
     //
     self.isInputAccepted = false;
 
@@ -41,6 +42,8 @@ function SimulationDFA($scope) {
             transition: null,
             nextState: null
         };
+        //stack of the gone transitions
+        self.goneTransitions = [];
         //Animation Settings
         //saves the currentStateId -> for animating
         self.currentState = $scope.config.startState;
@@ -155,6 +158,7 @@ function SimulationDFA($scope) {
         if (!self.animatedTransition) {
             self.animatedTransition = true;
             self.animated.transition = self.transition;
+            self.goneTransitions.push(self.transition);
 
             //Second: Paint the nextstate & wait
         } else if (!self.animatedNextState && self.animatedTransition) {
@@ -276,8 +280,8 @@ function SimulationDFA($scope) {
             self.animatedNextState = false;
         } else if (self.animatedTransition) {
             self.animated.transition = null;
-
             self.animatedTransition = false;
+            self.goneTransitions.pop();
         } else {
             self.calcLastStep();
         }
@@ -292,16 +296,9 @@ function SimulationDFA($scope) {
         console.log(self.nextChar + " " + self.statusSequence[self.statusSequence.length - 2]);
 
         //get the gone way back
-        self.transition = _.filter($scope.config.transitions, function (transition) {
-            //if there is no next char then the word is not accepted
-            if (self.nextChar === undefined) {
-                self.status = 'not accepted';
-                return;
-            }
-            //get the nextState
-            return transition.fromState == self.statusSequence[self.statusSequence.length - 2] && transition.toState == self.currentState && transition.name == self.nextChar;
-        });
-        self.transition = self.transition[0];
+        self.transition = _.last(self.goneTransitions);
+        console.log(self.transition);
+        _.pullAt(self.goneTransitions, self.goneTransitions.length);
         //First: Paint the transition & wait
         self.animatedTransition = true;
         self.animated.transition = self.transition;
