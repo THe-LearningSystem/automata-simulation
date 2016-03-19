@@ -32,15 +32,15 @@ function DFA($scope) {
     $scope.defaultConfig.transitions = [];
     //alphabet
     $scope.defaultConfig.alphabet = [];
-
+    //the name of the inputWord
+    $scope.defaultConfig.inputWord = '';
 
 
     //Config Object
     $scope.config = cloneObject($scope.defaultConfig);
     $scope.config.name = "NewName";
 
-    //the name of the inputWord
-    $scope.inputWord = '';
+
 
     //Array of all update Listeners
     $scope.updateListeners = [];
@@ -358,9 +358,10 @@ function DFA($scope) {
     $scope.removeFinalState = function (stateId) {
         //remove from graphdesigner
         $scope.graphdesigner.removeFinalState(stateId);
+        //remove from array
+        _.pull($scope.config.finalStates,stateId);
+        //update
         $scope.updateListener();
-        $scope.config.finalStates.splice($scope.getFinalStateIndexByStateId(stateId), 1);
-
     };
 
     //TRANSITIONS

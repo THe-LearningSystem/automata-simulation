@@ -59,7 +59,8 @@
         <menubutton glyphicon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
         <menubutton glyphicon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         <p>{{"SIM.INPUT" | translate}}
-            <input class="inputWord" ng-model="inputWord" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></p>
+            <input class="inputWord" ng-model="config.inputWord" ng-change="simulator.check()" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true" ng-show="simulator.isInputAccepted"></span><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true" ng-show="!simulator.isInputAccepted"></span>
+        </p>
 
     </menuitemextendable>
     <menuitemextendable titlename="SIM_SET.TITLE">
@@ -83,6 +84,7 @@
         <p>{{graphdesigner.input}}</p>
     </menuitemextendable>
 </div>
+
 <div class="mid-wrapper">
     <div class="diagramm">
         <p class="title">Zustandsübergangsdiagramm</p>

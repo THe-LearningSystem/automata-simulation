@@ -19,6 +19,9 @@ function SimulationDFA($scope) {
     self.nextState = null;
     self.transition = null;
 
+    //
+    self.isInputAccepted = false;
+
     self.settings = function () {
         self.simulationSettings = !self.simulationSettings;
     };
@@ -60,7 +63,7 @@ function SimulationDFA($scope) {
         //saves the steps we made T.
         self.madeSteps = 0;
         //the word we want to check
-        self.inputWord = $scope.inputWord;
+        self.inputWord = $scope.config.inputWord;
         //the word we already checked
         self.processedWord = '';
         //the char we checked at the step
@@ -315,16 +318,15 @@ function SimulationDFA($scope) {
         self.processedWord = self.processedWord.slice(0, -1);
     };
 
-    //TODO: better name
-    self.checkTransition = function (transition, nextChar, statusSequence) {
-        //if there is no next char then the word is not accepted
-        if (nextChar === undefined) {
-            return;
+    self.getNextTransition = function (fromState, transitonName) {
+        for (var i = 0; i < $scope.config.transitions.length; i++) {
+            var transition = $scope.config.transitions[i];
+            if (transition.fromState == fromState && transition.name == transitonName) {
+                return transition;
+            }
         }
-        //get the nextState
-        return transition.fromState == _.last(statusSequence) && transition.name == nextChar;
+        return undefined;
     };
-
     /**
      * checks if a word is accepted from the automata
      * @return {Boolean} [description]
@@ -338,21 +340,20 @@ function SimulationDFA($scope) {
         var madeSteps = 0;
         var transition = null;
 
-        while (self.status === '') {
-            nextChar = $scope.inputWord[madeSteps];
+        while (madeSteps <= $scope.config.inputWord.length) {
+            nextChar = $scope.config.inputWord[madeSteps];
             //get the next transition
-            transition = _.filter($scope.config.transitions, self.checkTransition(transition, nextChar, statusSequence));
+            transition = self.getNextTransition(_.last(statusSequence), nextChar);
             //if there is no next transition, then the word is not accepted
             if (_.isEmpty(transition)) {
                 break;
             }
-            transition = transition[0];
             //push the new State to the sequence
             statusSequence.push(transition.toState);
             madeSteps++;
             //if outmadeSteps is equal to the length of the inputWord 
             //and our currenState is a finalState then the inputWord is accepted, if not its not accepted
-            if ($scope.inputWord.length == madeSteps) {
+            if ($scope.config.inputWord.length == madeSteps) {
                 if (_.include($scope.config.finalStates, _.last(statusSequence))) {
                     accepted = true;
                     break;
@@ -424,5 +425,14 @@ function SimulationDFA($scope) {
         d3.select(".glyphicon-pause").attr("class", "glyphicon glyphicon-play");
         self.isInPlay = false;
     };
+
+
+    $scope.updateListeners.push(self);
+    self.updateFunction = function () {
+        self.isInputAccepted = self.check();
+    };
+
+
+
 
 }
