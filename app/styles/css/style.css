@@ -6043,3 +6043,9 @@ button.close {
 .bot-right {
   width: 50%;
   float: right; }
+
+.transitions-menu-list {
+  padding: 0; }
+
+.transitions-menu-list li {
+  list-style-type: none; }

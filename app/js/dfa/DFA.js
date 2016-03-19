@@ -75,10 +75,14 @@ function DFA($scope) {
      * Removes the current automata and the inputWord
      */
     $scope.removeConfig = function () {
-        //get the new config
-        $scope.config = cloneObject($scope.defaultConfig);
         //clear the svgContent
         $scope.graphdesigner.clearSvgContent();
+
+        //get the new config
+        $scope.config = cloneObject($scope.defaultConfig);
+        $scope.safeApply();
+        $scope.updateListener();
+
 
     };
 
@@ -281,6 +285,7 @@ function DFA($scope) {
             $scope.getStateById(stateId).name = newStateName;
             //Rename the state on the graphdesigner
             $scope.graphdesigner.renameState(stateId, newStateName);
+            $scope.updateListeners();
             return true;
         }
     };

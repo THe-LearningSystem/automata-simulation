@@ -88,12 +88,17 @@ function GraphdesignerDFA($scope, svgSelector) {
      * Clears the svgContent, resets scale and translate and delete drawnTransitionContent
      */
     self.clearSvgContent = function () {
+        //first close Menus
+        self.closeStateMenu();
+        self.closeTransitionMenu();
         //Clear the content of the svg
         self.svgTransitions.html("");
         self.svgStates.html("");
-        //change the scale and the translate to the updatedConfig
-        self.updataZoomBehavior();
         $scope.drawnTransitions = [];
+        //change the scale and the translate to the defaultConfit
+        self.svg.attr("transform", "translate(" + $scope.defaultConfig.diagramm.x + "," + $scope.defaultConfig.diagramm.y + ")" + " scale(" + $scope.defaultConfig.diagramm.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
+        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
 
     };
 
@@ -111,7 +116,6 @@ function GraphdesignerDFA($scope, svgSelector) {
     self.zoomOut = function () {
 
         $scope.config.diagramm.scale = ($scope.config.diagramm.scale - self.zoomValue) <= self.zoomMin ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale - self.zoomValue) * 100) / 100;
-
         self.updateZoomBehaviour();
 
     };
@@ -139,7 +143,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         $scope.config.diagramm.x = $scope.defaultConfig.diagramm.x;
         $scope.config.diagramm.y = $scope.defaultConfig.diagramm.y;
         $scope.safeApply();
-        self.updataZoomBehavior();
+        self.updateZoomBehaviour();
     };
 
 
@@ -151,6 +155,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         .zoom()
         .scaleExtent([self.zoomMin, self.zoomMax])
         .on("zoom", function () {
+            var stop = d3.event.button || d3.event.ctrlKey;
+            if (stop) d3.event.stopImmediatePropagation(); // stop zoom
             //dont translate on right click (3)
             if (d3.event.sourceEvent.which !== 3) {
                 var newScale = Math.floor(d3.event.scale * 100) / 100;
@@ -264,7 +270,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     //Marker-Arrow ( for the transitions)
     self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow')
-        .attr('refX', 8)
+        .attr('refX', 9)
         .attr('refY', 3)
         .attr('markerWidth', 10)
         .attr('markerHeight', 10)
@@ -273,7 +279,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
     self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow-animated')
-        .attr('refX', 8)
+        .attr('refX', 9)
         .attr('refY', 3)
         .attr('markerWidth', 10)
         .attr('markerHeight', 10)
@@ -282,7 +288,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
     self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow-hover')
-        .attr('refX', 8)
+        .attr('refX', 9)
         .attr('refY', 3)
         .attr('markerWidth', 10)
         .attr('markerHeight', 10)
@@ -291,7 +297,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
     self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow-selection')
-        .attr('refX', 8)
+        .attr('refX', 9)
         .attr('refY', 3)
         .attr('markerWidth', 10)
         .attr('markerHeight', 10)
@@ -1018,13 +1024,13 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.selectedTransition.objReference.classed("active", true);
 
         self.input = {};
+        self.input.fromState = $scope.getStateById(fromState).name;
+        self.input.toState = $scope.getStateById(toState).name;
         self.input.transitions = [];
 
 
         _.forEach(self.selectedTransition.names, function (value, key) {
             var tmpObject = {};
-            tmpObject.fromState = $scope.getStateById(fromState).name;
-            tmpObject.toState = $scope.getStateById(toState).name;
             tmpObject.name = value.name;
             self.input.transitions.push(tmpObject);
         });
@@ -1033,7 +1039,7 @@ function GraphdesignerDFA($scope, svgSelector) {
 
         /*jshint -W083 */
         for (var key in $scope.graphdesigner.input.transitions) {
-            self.transitionMenuListener.push($scope.$watch("graphdesigner.input.transitions['" + key + "'].name", function (val, oldVal) {
+            self.transitionMenuListener.push($scope.$watch("graphdesigner.input.transitions['" + key + "'].name", function (val, oldVal, key) {
                 // Do stuff
                 $scope.renameTransition($scope.getTransition(fromState, toState, oldVal).id, val);
 
