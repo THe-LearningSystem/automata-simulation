@@ -46,8 +46,8 @@
 
     </div>
     <div class="button-group">
-        <menubutton glyphicon="plus" action="graphdesigner.addState()" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
-        <menubutton glyphicon="plus" action="graphdesigner.addTransition()" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+        <menubutton glyphicon="plus" action="graphdesigner.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+        <menubutton glyphicon="plus" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
         <menubutton glyphicon="trash" action="removeConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
 </div>
@@ -133,17 +133,17 @@
     <!--Diagramm Settigns -->
     <menuitem titlename="DIA_SET.TITLE" ng-show="graphdesigner.showStateMenu">
         <div> {{"STATE_SET.NAME" | translate}}
-            <input id="state-input-name" ng-model="graphdesigner.input.stateName">
+            <input id="state-input-name" ng-model="graphdesigner.input.stateName" ng-disabled="simulator.isInPlay">
 
         </div>
         <span class="alert alert-danger" ng-show="graphdesigner.input.renamedError">{{"STATE_SET.ALREADY_EXIST" | translate}}</span>
 
         <div>{{ "STATE_SET.STARTSTATE" | translate}}
-            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> </div>
+            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState" ng-disabled="simulator.isInPlay"> </div>
 
 
         <div>{{ "STATE_SET.FINALSTATE" | translate}}
-            <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
+            <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState" ng-disabled="simulator.isInPlay">
         </div>
 
     </menuitem>
@@ -152,7 +152,7 @@
             <li ng-repeat="(key, value) in graphdesigner.input.transitions">
                 <p>{{"STATE_SET.STARTSTATE" | translate}}:{{value.fromState}}</p>
                 <p>{{"TRANS_SET.NAME" | translate}}:
-                    <input type="text" ng-model="value.name">
+                    <input type="text" ng-model="value.name" ng-disabled="simulator.isInPlay">
                 </p>
                 <p>{{"TRANS_SET.NEXTSTATE" | translate}}:{{value.toState}}</p>
             </li>

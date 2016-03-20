@@ -174,7 +174,7 @@ $animatedTransitionFontColor: #ff7b00;
 /*******
 *Layout*
 *******/
-
+$disabledColor: #AAA;
 .top-nav {
     height: 50px;
     background-color: white;
@@ -263,4 +263,7 @@ $animatedTransitionFontColor: #ff7b00;
 .bot-right {
     width: 50%;
     float: right;
+}
+button:disabled .glyphicon{
+    color:$disabledColor;
 }
