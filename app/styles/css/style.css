@@ -5892,11 +5892,23 @@ button.close {
 .animated-nextstate-svg .state-circle {
   fill: #ff7b00; }
 
+.animated-accepted-svg .state-circle {
+  fill: #00ff7b; }
+
+.animated-not-accepted-svg .state-circle {
+  fill: #aa2200; }
+
 .animated-currentstate {
   color: #ff7b00; }
 
 .animated-nextstate {
   color: #ff7b00; }
+
+.animated-accepted {
+  color: #00ff7b; }
+
+.animated-not-accepted {
+  color: #aa2200; }
 
 .in-creation {
   opacity: 0.5; }

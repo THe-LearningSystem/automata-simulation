@@ -184,6 +184,8 @@ function SimulationDFA($scope) {
                 }
             }
 
+
+
             //Reset the step & start the next step
             self.isNextStepCalculated = false;
             self.animatedNextState = false;
@@ -192,6 +194,10 @@ function SimulationDFA($scope) {
 
             //push the currentState to the statusSequence
             self.statusSequence.push(self.currentState);
+
+            //check if there is a next transition
+            if (self.status !== "accepted" && self.status !== "not accepted")
+                self.calcNextStep();
         }
 
     };

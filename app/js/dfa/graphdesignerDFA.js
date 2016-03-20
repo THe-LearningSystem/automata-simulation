@@ -1085,11 +1085,21 @@ function GraphdesignerDFA($scope, svgSelector) {
     $scope.$watch('simulator.animated.currentState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             console.log("CURRENTSTATE:oldValue " + oldValue + " newvalue " + newValue);
+            console.log("status"+$scope.simulator.status);
             if (oldValue !== null) {
                 self.setStateClassAs(oldValue, false, "animated-currentstate-svg");
+                self.setStateClassAs(oldValue, false, "animated-accepted-svg");
+                self.setStateClassAs(oldValue, false, "animated-not-accepted-svg");
+
             }
             if (newValue !== null) {
-                self.setStateClassAs(newValue, true, "animated-currentstate-svg");
+                if ($scope.simulator.status === "accepted") {
+                    self.setStateClassAs($scope.simulator.animated.currentState, true, "animated-accepted-svg");
+                } else if ($scope.simulator.status === "not accepted") {
+                    self.setStateClassAs($scope.simulator.animated.currentState, true, "animated-not-accepted-svg");
+                } else {
+                    self.setStateClassAs(newValue, true, "animated-currentstate-svg");
+                }
             }
         }
     });
@@ -1116,5 +1126,4 @@ function GraphdesignerDFA($scope, svgSelector) {
             }
         }
     });
-
 }

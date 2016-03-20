@@ -59,7 +59,7 @@
         <menubutton glyphicon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
         <menubutton glyphicon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         <p>{{"SIM.INPUT" | translate}}
-            <input class="inputWord" ng-model="config.inputWord" ng-change="simulator.check()" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true" ng-show="simulator.isInputAccepted"></span><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true" ng-show="!simulator.isInputAccepted"></span>
+            <input class="inputWord" ng-model="config.inputWord" ng-change="simulator.updateFunction()" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true" ng-show="simulator.isInputAccepted"></span><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true" ng-show="!simulator.isInputAccepted"></span>
         </p>
 
     </menuitemextendable>

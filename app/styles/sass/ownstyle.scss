@@ -29,6 +29,9 @@ $transitionActiveColor:#ff7b00;
 $animatedTransitionWidth:2.5;
 $animatedTransitionColor:#ff7b00;
 $animatedTransitionFontColor: #ff7b00;
+//animated accepted and not accepted color
+$animatedAcceptedColor:#00ff7b;
+$animatedNotAcceptedColor:#aa2200;
 //svg diagramm
 .automataWrapper {
     border: 1px solid #000;
@@ -113,12 +116,24 @@ $animatedTransitionFontColor: #ff7b00;
 .animated-nextstate-svg .state-circle {
     fill: $animatedNextStateColor;
 }
+.animated-accepted-svg .state-circle{
+    fill:$animatedAcceptedColor;
+}
+.animated-not-accepted-svg .state-circle{
+    fill:$animatedNotAcceptedColor;
+}
 //others
 .animated-currentstate {
     color:$animatedCurrentStateColor;
 }
 .animated-nextstate {
     color:$animatedNextStateColor;
+}
+.animated-accepted{
+    color:$animatedAcceptedColor;
+}
+.animated-not-accepted{
+    color:$animatedNotAcceptedColor;
 }
 .selectedForTransition {
 }
