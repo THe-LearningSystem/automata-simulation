@@ -104,6 +104,10 @@ function DFA($scope) {
 
 
 
+    $scope.removeFromAlphabetIfNotUsedFromOthers = function (transitionId) {
+
+    };
+
     $scope.updateListener = function () {
         //call each updateListener
         _.forEach($scope.updateListeners, function (value, key) {
@@ -200,7 +204,7 @@ function DFA($scope) {
      * @returns {object} the created object
      */
     $scope.addStateWithPresets = function (x, y) {
-        var obj = $scope.addState($scope.config.statePrefix + $scope.config.countStateId, x, y);
+        var obj = $scope.addState(($scope.config.statePrefix + $scope.config.countStateId), x, y);
         //if u created a state then make the first state as startState ( default)
         if ($scope.config.countStateId == 1) {
             $scope.changeStartState(0);
@@ -265,9 +269,9 @@ function DFA($scope) {
             }
             //first remove the element from the svg after that remove it from the array
             $scope.graphdesigner.removeState(stateId);
-            $scope.updateListener();
-            $scope.config.countStateId--;
             $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
+            //update the other listeners when remove is finished
+            $scope.updateListener();
         }
     };
 
@@ -475,9 +479,10 @@ function DFA($scope) {
     $scope.removeTransition = function (transitionId) {
         //first remove the element from the svg after that remove it from the array
         $scope.graphdesigner.removeTransition(transitionId);
-        $scope.updateListener();
         $scope.config.countTransitionId--;
         $scope.config.transitions.splice($scope.getArrayTransitionIdByTransitionId(transitionId), 1);
+        //update other listeners when remove is finished
+        $scope.updateListener();
     };
 
     /**

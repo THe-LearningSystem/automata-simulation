@@ -132,17 +132,14 @@
     <menuitem titlename="STATE_MENU.TITLE" ng-show="graphdesigner.showStateMenu">
         <div> {{"STATE_MENU.NAME" | translate}}
             <input id="state-input-name" ng-model="graphdesigner.input.stateName">
-
         </div>
         <span class="alert alert-danger" ng-show="graphdesigner.input.renamedError">{{"STATE_MENU.ALREADY_EXIST" | translate}}</span>
-
         <div>{{ "STATE_MENU.STARTSTATE" | translate}}
             <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> </div>
-
-
         <div>{{ "STATE_MENU.FINALSTATE" | translate}}
             <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
         </div>
+        <button class="btn btn-danger" ng-click="removeState(graphdesigner.input.state.id)">Delete</button>
 
     </menuitem>
     <!--Transition Menu -->
@@ -151,8 +148,10 @@
         <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{graphdesigner.input.toState}}</p>
         <ul class="transitions-menu-list">
             <li ng-repeat="(key, value) in graphdesigner.input.transitions">
-                <p>{{"TRANS_MENU.NAME" | translate}}: <input type="text" ng-model="value.name"></p>
-                <button class="btn btn-danger" ng-click="deleteTransition(value.id)">Delete</button>
+                <p>{{"TRANS_MENU.NAME" | translate}}:
+                    <input type="text" ng-model="value.name">
+                </p>
+                <button class="btn btn-danger" ng-click="removeTransition(value.id)">Delete</button>
             </li>
         </ul>
     </menuitem>

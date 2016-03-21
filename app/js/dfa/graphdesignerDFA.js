@@ -310,12 +310,8 @@ function GraphdesignerDFA($scope, svgSelector) {
      * Reset all the AddListeners
      */
     self.resetAddActions = function () {
-        //remove selectedState if not null
-        if (self.selectedState !== null) {
-            self.toggleState(self.selectedState.id, false);
-        }
-        //hide the stateMenu
-        self.showStateMenu = false;
+        self.closeStateMenu();
+        self.closeTransitionMenu();
         self.svgOuter.on("click", null);
         self.inAddTransition = false;
         self.inAddState = false;
@@ -349,6 +345,7 @@ function GraphdesignerDFA($scope, svgSelector) {
             self.addSvgOuterClickListener();
             self.preventSvgOuterClick = false;
             $scope.safeApply();
+
         });
     };
 
@@ -379,7 +376,7 @@ function GraphdesignerDFA($scope, svgSelector) {
 
                 //if already selected a state then create transition to the clickedState
             } else {
-                $scope.addTransition(self.selectedState.id, parseInt(d3.select(this).attr("object-id")), "c");
+                $scope.addTransition(self.selectedState.id, parseInt(d3.select(this).attr("object-id")), "&");
                 self.toggleState(self.selectedState.id, false);
                 self.tmpTransition.remove();
                 self.tmpTransition = null;
@@ -497,6 +494,7 @@ function GraphdesignerDFA($scope, svgSelector) {
      * @param  {number} stateId 
      */
     self.removeState = function (stateId) {
+        self.closeStateMenu();
         var state = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)];
         var objReference = state.objReference;
         objReference.remove();
@@ -518,7 +516,24 @@ function GraphdesignerDFA($scope, svgSelector) {
 
 
     self.removeTransition = function (transitionId) {
-
+        var tmpTransition = $scope.getTransitionById(transitionId);
+        var tmpDrawnTransition = self.getDrawnTransition(tmpTransition.fromState,tmpTransition.toState);
+        self.closeTransitionMenu();
+        //if its the only transition in the drawn transition -> then remove the drawn transition
+        if(tmpDrawnTransition.names.length === 1){
+            tmpDrawnTransition.objReference.remove();
+            _.remove($scope.drawnTransitions,function(n){
+                console.log(n);
+                return n == tmpDrawnTransition;
+            });
+        }
+        //if there are other transitions with the same from- and tostate, then remove the transition from the names and redraw the text
+        else{
+            _.remove(tmpDrawnTransition.names,function(n){
+               return n.id ==tmpTransition.id;
+            });
+            tmpDrawnTransition.objReference.select("text").text(self.prepareTransitionNamesForSvg(tmpDrawnTransition.names));
+        }
     };
 
     self.addFinalState = function (stateId) {
@@ -902,6 +917,7 @@ function GraphdesignerDFA($scope, svgSelector) {
      * @return {object}  Retruns the reference of the group object
      */
     self.drawTransition = function (transitionId) {
+        console.log(transitionId);
         var arrayTransitionId = $scope.getArrayTransitionIdByTransitionId(transitionId);
         var transition = $scope.config.transitions[arrayTransitionId];
         //if there is not a transition with the same from and toState
@@ -1020,7 +1036,6 @@ function GraphdesignerDFA($scope, svgSelector) {
         var fromState = d3.select(this).attr('from-state-id');
         var toState = d3.select(this).attr('to-state-id');
         self.selectedTransition = self.getDrawnTransition(fromState, toState);
-        console.log(self.selectedTransition);
         self.selectedTransition.objReference.classed("active", true);
 
         self.input = {};
@@ -1031,7 +1046,8 @@ function GraphdesignerDFA($scope, svgSelector) {
 
         _.forEach(self.selectedTransition.names, function (value, key) {
             var tmpObject = {};
-            tmpObject.name = value.name;
+            console.log(value);
+            tmpObject = value;
             self.input.transitions.push(tmpObject);
         });
 
