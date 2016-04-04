@@ -63,7 +63,7 @@ function TableDFA($scope) {
                 if (foundTransition !== null) {
                     var tmpToState = $scope.getStateById(foundTransition.toState);
 
-                    if ($scope.simulator.animated.nextState == tmpToState.id) {
+                    if ($scope.simulator.animated.nextState == tmpToState.id && foundTransition.name == $scope.simulator.animated.transition.name) {
                         trans.State = '<span class="animated-nextstate">' + tmpToState.name + '</span>';
                     } else {
                         trans.State = tmpToState.name;
