@@ -479,7 +479,6 @@ function DFA($scope) {
     $scope.removeTransition = function (transitionId) {
         //first remove the element from the svg after that remove it from the array
         $scope.graphdesigner.removeTransition(transitionId);
-        $scope.config.countTransitionId--;
         $scope.config.transitions.splice($scope.getArrayTransitionIdByTransitionId(transitionId), 1);
         //update other listeners when remove is finished
         $scope.updateListener();
@@ -502,8 +501,10 @@ function DFA($scope) {
             //Rename the state on the graphdesigner
             $scope.graphdesigner.renameTransition(transition.fromState, transition.toState, transitionId, newTransitionName);
             $scope.updateListener();
+            return true;
         } else {
             //TODO: BETTER DEBUG
+            return false;
         }
     };
 }

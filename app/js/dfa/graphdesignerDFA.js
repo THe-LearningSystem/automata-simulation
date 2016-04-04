@@ -918,8 +918,8 @@ function GraphdesignerDFA($scope, svgSelector) {
      */
     self.drawTransition = function (transitionId) {
         console.log(transitionId);
-        var arrayTransitionId = $scope.getArrayTransitionIdByTransitionId(transitionId);
-        var transition = $scope.config.transitions[arrayTransitionId];
+        var transition = $scope.getTransitionById(transitionId);
+        console.log(transition);
         //if there is not a transition with the same from and toState
         if (!self.existDrawnTransition(transition.fromState, transition.toState)) {
             //the group element
@@ -1042,6 +1042,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.input.fromState = $scope.getStateById(fromState).name;
         self.input.toState = $scope.getStateById(toState).name;
         self.input.transitions = [];
+        self.input.renamedError = false;
 
 
         _.forEach(self.selectedTransition.names, function (value, key) {
@@ -1057,8 +1058,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         for (var key in $scope.graphdesigner.input.transitions) {
             self.transitionMenuListener.push($scope.$watch("graphdesigner.input.transitions['" + key + "'].name", function (val, oldVal, key) {
                 // Do stuff
-                $scope.renameTransition($scope.getTransition(fromState, toState, oldVal).id, val);
-
+                    $scope.renameTransition($scope.getTransition(fromState, toState, oldVal).id, val);
             }));
         }
 
@@ -1146,9 +1146,11 @@ function GraphdesignerDFA($scope, svgSelector) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
                 self.setTransitionClassAs(oldValue.id, false, "animated-transition");
+                //remove transitionname animation
             }
             if (newValue !== null) {
                 self.setTransitionClassAs(newValue.id, true, "animated-transition");
+                //animate transitionname
             }
         }
     });
