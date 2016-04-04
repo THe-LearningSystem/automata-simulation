@@ -78,9 +78,10 @@
         <menubutton glyphicon="wrench" action="testData.testDFA()">
 
         </menubutton>
-        <p>DiagrammValues: {{config}}</p>
-        <p>DrawnTransitions:{{drawnTransitions}}</p>
-        <p>{{graphdesigner.input}}</p>
+       
+        <p>DiagrammValues:  <json-formatter json="config" open="1"></json-formatter></p>
+        <p>DrawnTransitions: <json-formatter json="drawnTransitions" open="1"></json-formatter></p>
+        <p>Graphdesigner Input: <json-formatter json="graphdesigner.input" open="1"></json-formatter></p>
     </menuitemextendable>
 </div>
 <div class="mid-wrapper">

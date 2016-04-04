@@ -1,6 +1,3 @@
 {
-  "directory": "app/bower_components",
-     "scripts": {
-        "postinstall": "wiredep --verbose --bowerJson bower.json --src app/index.html"
-    }
+  "directory": "app/bower_components"
 }
