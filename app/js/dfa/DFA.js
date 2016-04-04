@@ -229,8 +229,8 @@ function DFA($scope) {
     };
 
     /**
-     * Adds a state at the end of the states array with a variable id -> used for import
-     * !!!dont use at other places!!!!! ONLY FOR IMPORT
+     * Adds a state at the end of the states array with a variable id
+     * !!!dont use at other places!!!!
      * @param {String} stateName 
      * @param {number} x         
      * @param {number} y   
@@ -244,11 +244,11 @@ function DFA($scope) {
             y: y
         });
         //draw the State after the State is added
-        $scope.graphdesigner.drawState($scope.getArrayStateIdByStateId(stateId));
+        $scope.graphdesigner.drawState(stateId);
         $scope.updateListener();
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
-        return $scope.getStateById(addedStateId - 1);
+        return $scope.getStateById(stateId);
     };
 
     /**

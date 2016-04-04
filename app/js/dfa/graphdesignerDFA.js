@@ -587,7 +587,7 @@ function GraphdesignerDFA($scope, svgSelector) {
 
     /**
      * Draws a State 
-     * @param  {number} id The arrayid of the State
+     * @param  {number} id the stateid
      * @return {Reference}    Returns the reference of the group object
      */
     self.drawState = function (id) {
@@ -615,7 +615,7 @@ function GraphdesignerDFA($scope, svgSelector) {
             .attr("dominant-baseline", "central")
             .attr("text-anchor", "middle");
 
-        $scope.config.states[id].objReference = group;
+        state.objReference = group;
         group.on('click', self.openStateMenu)
             .call(self.dragState);
         return group;
