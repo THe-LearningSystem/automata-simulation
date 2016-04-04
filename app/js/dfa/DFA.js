@@ -289,7 +289,7 @@ function DFA($scope) {
             $scope.getStateById(stateId).name = newStateName;
             //Rename the state on the graphdesigner
             $scope.graphdesigner.renameState(stateId, newStateName);
-            $scope.updateListeners();
+            $scope.updateListener();
             return true;
         }
     };

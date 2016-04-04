@@ -78,10 +78,16 @@
         <menubutton glyphicon="wrench" action="testData.testDFA()">
 
         </menubutton>
-       
-        <p>DiagrammValues:  <json-formatter json="config" open="1"></json-formatter></p>
-        <p>DrawnTransitions: <json-formatter json="drawnTransitions" open="1"></json-formatter></p>
-        <p>Graphdesigner Input: <json-formatter json="graphdesigner.input" open="1"></json-formatter></p>
+
+        <p>DiagrammValues:
+            <json-formatter json="config" open="1"></json-formatter>
+        </p>
+        <p>DrawnTransitions:
+            <json-formatter json="drawnTransitions" open="1"></json-formatter>
+        </p>
+        <p>Graphdesigner Input:
+            <json-formatter json="graphdesigner.input" open="1"></json-formatter>
+        </p>
     </menuitemextendable>
 </div>
 <div class="mid-wrapper">
@@ -122,23 +128,25 @@
 <div class="right-menu">
     <!--Diagramm Settigns -->
     <menuitem titlename="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu && !graphdesigner.showTransitionMenu">
-        <p> {{"DIA_SET.GRID" | translate}}
-            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">
+        <p>
+            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">{{"DIA_SET.GRID" | translate}}
         </p>
-        <p> {{"DIA_SET.SNAPPING" | translate}}
-            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">
+        <p>
+            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">{{"DIA_SET.SNAPPING" | translate}}
         </p>
     </menuitem>
     <!--State Menu -->
     <menuitem titlename="STATE_MENU.TITLE" ng-show="graphdesigner.showStateMenu">
-        <div> {{"STATE_MENU.NAME" | translate}}
-            <input id="state-input-name" ng-model="graphdesigner.input.stateName">
+        <div>
+            <p>{{"STATE_MENU.NAME" | translate}}</br>
+                <input id="state-input-name" ng-model="graphdesigner.input.stateName" maxlength="5" uib-tooltip="{{graphdesigner.input.ttt | translate}}" tooltip-is-open="graphdesigner.input.tttisopen" tooltip-placement="left" tooltip-trigger="none">
+            </p>
         </div>
-        <span class="alert alert-danger" ng-show="graphdesigner.input.renamedError">{{"STATE_MENU.ALREADY_EXIST" | translate}}</span>
-        <div>{{ "STATE_MENU.STARTSTATE" | translate}}
-            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> </div>
-        <div>{{ "STATE_MENU.FINALSTATE" | translate}}
-            <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">
+        <div>
+            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> {{ "STATE_MENU.STARTSTATE" | translate}}
+        </div>
+        <div>
+            <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">{{ "STATE_MENU.FINALSTATE" | translate}}
         </div>
         <button class="btn btn-danger" ng-click="removeState(graphdesigner.input.state.id)">Delete</button>
 

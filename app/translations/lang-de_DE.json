@@ -49,7 +49,8 @@
         "STARTSTATE": "Startzustand",
         "FINALSTATE": "Endzustand",
         "SAVE": "Speichern",
-        "ALREADY_EXIST": "Zustandsname bereits verwendet!"
+        "NAME_ALREADY_EXIST": "Zustandsname bereits verwendet!",
+        "NAME_TOO_SHORT": "Zustandsname zu kurz!"
     },
     "TRANS_MENU":{
         "TITLE": "Zustandsübergangsmenü",

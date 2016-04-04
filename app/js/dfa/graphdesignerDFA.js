@@ -674,6 +674,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.input.stateName = self.selectedState.name;
         self.input.startState = $scope.config.startState == self.selectedState.id;
         self.input.finalState = $scope.isStateAFinalState(self.selectedState.id);
+        self.input.ttt = "";
+        self.input.tttisopen = false;
         self.input.renamedError = false;
         $scope.safeApply();
         self.stateMenuListener = [];
@@ -697,9 +699,20 @@ function GraphdesignerDFA($scope, svgSelector) {
             }
         }));
         self.stateMenuListener.push($scope.$watch('graphdesigner.input.stateName', function (newValue, oldValue) {
-            if (newValue !== oldValue)
-                self.input.renamedError = !$scope.renameState(self.input.state.id, newValue);
-
+            if (newValue !== oldValue && newValue !== ""){
+                self.input.tttisopen = false;
+                var renameError = !$scope.renameState(self.input.state.id, newValue);
+                if(renameError){
+                    self.input.tttisopen = true;
+                    self.input.ttt = 'STATE_MENU.NAME_ALREADY_EXISTS';
+                }
+            }else{
+                if(newValue === ""){
+                    self.input.tttisopen = true;
+                    self.input.ttt = 'STATE_MENU.NAME_TOO_SHORT';
+                }
+            }
+                console.log("error");
         }));
     };
 
