@@ -39,7 +39,8 @@
 
     "DIA_SET": {
         "TITLE": "Diagrammeinstellungen",
-        "GRID": "Gitter"
+        "GRID": "Gitter",
+        "SNAPPING": "Einrasten"
     },
 
 

@@ -158,7 +158,7 @@
         <ul class="transitions-menu-list">
             <li ng-repeat="(key, value) in graphdesigner.input.transitions">
                 <p>{{"TRANS_MENU.NAME" | translate}}:
-                    <input type="text" ng-model="value.name" maxlength="1">
+                    <input type="text" ng-model="value.name" maxlength="1"  uib-tooltip="{{value.ttt | translate}}"  tooltip-is-open="value.tttisopen" tooltip-placement="left" tooltip-trigger="none">
                 </p>
                 <button class="btn btn-danger" ng-click="removeTransition(value.id)">Delete</button>
             </li>
