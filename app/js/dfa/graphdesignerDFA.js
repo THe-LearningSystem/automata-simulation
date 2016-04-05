@@ -325,8 +325,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         //add listener that the selectedstate follows the mouse
         self.svgOuter.on("mousemove", function () {
             //move the state (only moved visually not saved)
-            self.selectedState.objReference.attr("transform", "translate(" + (((d3.mouse(this)[0])-$scope.config.diagramm.x)*(1/$scope.config.diagramm.scale)) + " " +
-                (((d3.mouse(this)[1])-$scope.config.diagramm.y)*(1/$scope.config.diagramm.scale)) + ")");
+            self.selectedState.objReference.attr("transform", "translate(" + (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale)) + " " +
+                (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale)) + ")");
         });
         //create a new selectedState in a position not viewable
         self.selectedState = $scope.addStateWithPresets(-10000, -10000);
@@ -337,8 +337,8 @@ function GraphdesignerDFA($scope, svgSelector) {
             self.selectedState.objReference.classed("state-in-creation", false);
             //update the stateData
 
-            self.selectedState.x = (((d3.mouse(this)[0])-$scope.config.diagramm.x)*(1/$scope.config.diagramm.scale));
-            self.selectedState.y = (((d3.mouse(this)[1])-$scope.config.diagramm.y)*(1/$scope.config.diagramm.scale));
+            self.selectedState.x = (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale));
+            self.selectedState.y = (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale));
             //remove mousemove listener
             self.svgOuter.on("mousemove", null);
             //overwrite the click listener
@@ -398,8 +398,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         //2. if the mouse moves on the svgOuter and not on a state, then update the tmpLine
         self.svgOuter.on("mousemove", function () {
             if (!self.mouseInState && self.selectedState !== null) {
-                var x =  (((d3.mouse(this)[0])-$scope.config.diagramm.x)*(1/$scope.config.diagramm.scale));
-                var y =  (((d3.mouse(this)[1])-$scope.config.diagramm.y)*(1/$scope.config.diagramm.scale));
+                var x = (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale));
+                var y = (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale));
                 var pathLine = self.bezierLine([[self.selectedState.x, self.selectedState.y], [x, y]]);
                 self.tmpTransitionline.attr("d", pathLine);
             }
@@ -506,7 +506,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         drawnTransitionName.name = newTransitionName;
 
         //change it on the svg
-        drawnTransition.objReference.select(".transition-text").text(self.prepareTransitionNamesForSvg(drawnTransition.names));
+        self.writeTransitionText(drawnTransition.objReference.select(".transition-text"),drawnTransition.names);
     };
 
 
@@ -809,8 +809,8 @@ function GraphdesignerDFA($scope, svgSelector) {
                 $scope.safeApply();
             }
         });
-    
-    
+
+
     self.selfTransition = function (x, y) {
         return self.bezierLine([
                 [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
@@ -929,6 +929,23 @@ function GraphdesignerDFA($scope, svgSelector) {
         obj.path = self.bezierLine(array);
         return obj;
     };
+    
+    self.writeTransitionText =function(textObj,names){
+        textObj.selectAll("*").remove();
+        for(var i =0;i<names.length;i++){
+            //fix when creating new transition when in animation
+            if($scope.simulator.animated.transition !== null && names[i].id ===$scope.simulator.animated.transition.id){
+              textObj.append('tspan').attr('transition-id',names[i].id).text(names[i].name).classed("animated-transition-text",true);
+            }else{
+                textObj.append('tspan').attr('transition-id',names[i].id).text(names[i].name);
+            }
+            
+            if(i < names.length-1)
+                textObj.append('tspan').text(' | ');
+        }
+        
+        
+    };
 
     /**
      * Draw a Transition
@@ -963,8 +980,7 @@ function GraphdesignerDFA($scope, svgSelector) {
                 //the text of the transition
                 text = group.append("text")
                 .attr("class", "transition-text")
-                .attr("fill", "black")
-                .text(transition.name);
+                .attr("fill", "black");
             //if it is not a self Reference
             if (transition.fromState != transition.toState) {
                 var drawConfig = self.getTransitionDrawConfig(transition);
@@ -1004,7 +1020,8 @@ function GraphdesignerDFA($scope, svgSelector) {
                     "name": transition.name
                 }],
                 objReference: group
-            }) - 1);
+            }) - 1);            
+            self.writeTransitionText(text,self.getDrawnTransition(transition.fromState,transition.toState).names);
             group.attr("from-state-id", transition.fromState)
                 .attr("to-state-id", transition.toState)
                 .on('click', self.openTransitionMenu)
@@ -1023,8 +1040,7 @@ function GraphdesignerDFA($scope, svgSelector) {
                 "name": transition.name
             });
             //drawn the new name to the old transition (svg)
-            drawnTransition.objReference.select(".transition-text").text(self.prepareTransitionNamesForSvg(drawnTransition.names));
-
+            self.writeTransitionText(drawnTransition.objReference.select('.transition-text'),self.getDrawnTransition(transition.fromState,transition.toState).names);
 
         }
     };
@@ -1161,10 +1177,13 @@ function GraphdesignerDFA($scope, svgSelector) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
                 self.setTransitionClassAs(oldValue.id, false, "animated-transition");
+                d3.selectAll("[transition-id='"+oldValue.id+"'").classed("animated-transition-text",false);
                 //remove transitionname animation
             }
             if (newValue !== null) {
                 self.setTransitionClassAs(newValue.id, true, "animated-transition");
+                console.log(newValue);
+            d3.selectAll("[transition-id='"+newValue.id+"'").classed("animated-transition-text",true);
                 //animate transitionname
             }
         }

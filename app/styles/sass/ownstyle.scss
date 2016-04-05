@@ -166,6 +166,9 @@ $selectedColor:#00b7ff;
     stroke: $animatedTransitionColor;
     stroke-width: $animatedTransitionWidth;
 }
+.animated-transition-text {
+    stroke: $animatedTransitionColor;
+}
 .animated-transition {
     color: $animatedTransitionColor;
 }
