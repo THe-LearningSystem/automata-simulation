@@ -5851,8 +5851,8 @@ button.close {
 #marker-end-arrow-hover {
   fill: #AAA; }
 
-#marker-end-arrow-active {
-  fill: #ff7b00; }
+#marker-end-arrow-selection {
+  fill: #00b7ff; }
 
 #marker-end-arrow-animated {
   fill: #ff7b00; }
@@ -5870,13 +5870,20 @@ button.close {
   fill: #000;
   fill-opacity: 0.4; }
 
-.active .state-circle {
-  fill: #F00; }
-
 .state-circle {
   fill: #CCC;
   stroke: #666;
   stroke-width: 2; }
+
+.selected-circle {
+  fill: transparent;
+  stroke: #00b7ff;
+  stroke-width: 1;
+  stroke-dasharray: 10, 10;
+  visibility: hidden; }
+
+.active .selected-circle {
+  visibility: visible; }
 
 .final-state {
   fill: #FFF;
@@ -5910,6 +5917,9 @@ button.close {
 .animated-not-accepted {
   color: #aa2200; }
 
+.selectedForTransition {
+  color: #ff7b00; }
+
 .in-creation {
   opacity: 0.5; }
 
@@ -5920,8 +5930,14 @@ button.close {
 .transition:hover {
   cursor: pointer; }
 
-.transition.active .transition-line {
-  stroke: #ff7b00; }
+.transition-line-selection {
+  stroke-width: 2.5;
+  stroke: #00b7ff;
+  opacity: 0.6;
+  visibility: hidden; }
+
+.transition.active .transition-line-selection {
+  visibility: visible; }
 
 .transition-line {
   stroke-width: 2.5; }
@@ -5929,7 +5945,6 @@ button.close {
 .transition-line-hover {
   stroke-width: 2.5;
   stroke: #AAA;
-  fill: #AAA;
   opacity: 0; }
 
 .transition-line.start-line {
@@ -5939,11 +5954,15 @@ button.close {
   stroke: #ff7b00;
   stroke-width: 2.5; }
 
+.animated-transition-text {
+  stroke: #ff7b00; }
+
 .animated-transition {
   color: #ff7b00; }
 
 .transition-text {
-  font-size: 15px; }
+  font-size: 15px;
+  text-anchor: middle; }
 
 #hidden-file-upload {
   display: none; }
@@ -5993,7 +6012,8 @@ button.close {
 .menu-item {
   margin: 15px 0; }
 
-.menu-item .title, .title {
+.menu-item .title,
+.title {
   padding: 5px;
   background-color: #cedde9; }
 
@@ -6011,7 +6031,7 @@ button.close {
   border-right: 1px solid #e0e0e0; }
 
 .menu-item .content {
-  padding: 5px; }
+  padding: 5px 10px; }
 
 .diagramm {
   position: absolute;
@@ -6044,3 +6064,9 @@ button.close {
 
 button:disabled .glyphicon {
   color: #AAA; }
+
+.transitions-menu-list {
+  padding: 0; }
+
+.transitions-menu-list li {
+  list-style-type: none; }

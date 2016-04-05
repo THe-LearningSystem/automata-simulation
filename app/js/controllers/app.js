@@ -2,7 +2,8 @@
 var autoSim = angular.module('automata-simulation', [
   'ngRoute',
   'ui.bootstrap',
-  'pascalprecht.translate'
+  'pascalprecht.translate',
+   'jsonFormatter'
 ]).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/dfa', {
         templateUrl: 'view/dfa.html',
@@ -154,12 +155,13 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
         angular.element('#hidden-file-upload').trigger('click');
         console.log($scope);
         //called when the user uploads a file
-
-
-
     };
-}]);
+    
+    $scope.saveAsPng =function () {
+     saveSvgAsPng(document.getElementById("diagramm-svg"), $scope.config.name+".png");
+    };
 
+}]);
 
 
 //from: http://stackoverflow.com/questions/19415394/with-ng-bind-html-unsafe-removed-how-do-i-inject-html

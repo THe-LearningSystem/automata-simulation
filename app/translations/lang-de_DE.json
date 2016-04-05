@@ -39,17 +39,24 @@
 
     "DIA_SET": {
         "TITLE": "Diagrammeinstellungen",
-        "GRID": "Gitter"
+        "GRID": "Gitter",
+        "SNAPPING": "Einrasten"
     },
 
 
-    "STATE_SET": {
+    "STATE_MENU": {
         "TITLE": "Zustandsmenü",
         "NAME": "Name",
         "STARTSTATE": "Startzustand",
         "FINALSTATE": "Endzustand",
         "SAVE": "Speichern",
-        "ALREADY_EXIST": "Zustandsname bereits verwendet!"
+        "NAME_ALREADY_EXIST": "Zustandsname bereits verwendet!",
+        "NAME_TOO_SHORT": "Zustandsname zu kurz!"
+    },
+    "TRANS_MENU":{
+        "TITLE": "Zustandsübergangsmenü",
+        "NEXTSTATE": "Nächster Zustand",
+        "NAME": "Name"
     },
     "TABLE":{
         "TITLE": "Zustandstabelle"
