@@ -685,7 +685,6 @@ function GraphdesignerDFA($scope, svgSelector) {
 
         }));
         self.stateMenuListener.push($scope.$watch('graphdesigner.input.finalState', function (newValue, oldValue) {
-            console.log(newValue + " " + oldValue);
             if (newValue !== oldValue) {
                 if (self.input.finalState) {
                     $scope.addFinalState(self.input.state.id);
@@ -808,80 +807,8 @@ function GraphdesignerDFA($scope, svgSelector) {
                 $scope.safeApply();
             }
         });
-
-    /**
-     * [getTransitionCoordinates description]
-     * @param  {[type]} transitionId [description]
-     * @return {[type]}              [description]
-     */
-    /*
-        self.getTransitionCoordinates = function (fromStateId, toStateId) {
-            var fromState = $scope.getStateById(fromStateId);
-            var toState = $scope.getStateById(toStateId);
-            var x1 = fromState.x;
-            var y1 = fromState.y;
-            var x2 = toState.x;
-            var y2 = toState.y;
-            var richtungsvektor = {
-                "x": x2 - x1,
-                "y": y2 - y1
-            };
-            var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y),
-                n = self.settings.stateRadius / richtungsVectorLength;
-            x1 = x1 + n * richtungsvektor.x;
-            y1 = y1 + n * richtungsvektor.y;
-            x2 = x2 - n * richtungsvektor.x;
-            y2 = y2 - n * richtungsvektor.y;
-            var coordObj = {
-                x1: x1,
-                y1: y1,
-                x2: x2,
-                y2: y2,
-                xDiff: x2 - x1,
-                yDiff: y2 - y1,
-                xMid: (x1 + x2) / 2,
-                yMid: (y1 + y2) / 2
-            };
-            coordObj.distance = Math.sqrt(coordObj.xDiff * coordObj.xDiff + coordObj.yDiff * coordObj.yDiff);
-
-
-            return coordObj;
-
-        };
-
-
-        self.getTransitionCurveData = function (coordObj) {
-            var vecA = {
-                x: coordObj.xMid - coordObj.x1,
-                y: coordObj.yMid - coordObj.y1,
-                z: 0
-            };
-
-            var vecB = {
-                x: 0,
-                y: 0,
-                z: 1
-            };
-
-            coordObj.movingPoint = crossPro(vecA, vecB);
-            coordObj.movingPoint = expandVector(coordObj.movingPoint, 70 * (1 / coordObj.distance * 1.1));
-
-            coordObj.xMidPoint = coordObj.movingPoint.x + coordObj.xMid;
-            coordObj.yMidPoint = coordObj.movingPoint.y + coordObj.yMid;
-            return coordObj;
-        };
-        
-        self.selfTransition = function (x, y) {
-            return self.bezierLine([
-                [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
-                [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY],
-                [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY],
-                [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]
-            ]);
-        };
-
-   
-    */
+    
+    
     self.selfTransition = function (x, y) {
         return self.bezierLine([
                 [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
@@ -921,7 +848,6 @@ function GraphdesignerDFA($scope, svgSelector) {
 
 
     self.getTransitionDrawConfig = function (transition, forceApproach) {
-        console.log(transition);
         //the distance the endPoint of the transition is away from the state
         var gapBetweenTransitionLineAndState = 3;
         var obj = {};
@@ -1040,7 +966,6 @@ function GraphdesignerDFA($scope, svgSelector) {
             //if it is not a self Reference
             if (transition.fromState != transition.toState) {
                 var drawConfig = self.getTransitionDrawConfig(transition);
-                console.log(drawConfig);
                 //if there is an approached transition update the approached transition
                 if (drawConfig.approachTransition) {
                     //other transition in the other direction
