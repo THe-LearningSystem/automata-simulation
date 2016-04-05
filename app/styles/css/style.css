@@ -6073,3 +6073,16 @@ button:disabled .glyphicon {
 
 .icon {
   font-size: 15px; }
+
+input[type='text'] {
+  font-size: 24px;
+  border: 0; }
+
+.currentAutomatonName {
+  position: absolute;
+  font-size: 24px;
+  max-width: 100%;
+  cursor: pointer; }
+
+.inputField {
+  z-index: 1; }

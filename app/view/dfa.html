@@ -1,4 +1,14 @@
 <div class="top-nav">
+    <!-- look about for the right alignment -->
+    <div class=" automataName col-lg-1">
+        <span class="currentAutomatonName" ng-click="inNameEdit = true" ng-show="!inNameEdit">
+            {{config.name}}
+        </span>
+        <input id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" placeholder="{{getConfigName()}}" ng-show="inNameEdit">
+    </div>
+
+    <!-- look about for the right alignment -->
+    </div>
     <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
 
@@ -98,6 +108,7 @@
 
         </menubutton>
 
+
         <p>DiagrammValues:
             <json-formatter json="config" open="1"></json-formatter>
         </p>
@@ -135,7 +146,6 @@
             </table>
         </div>
         <div class="bot-content bot-right">
-            <h3 class="title">{{"STF.TITLE" | translate}}</h3>
             <p uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</p>
             <p uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
             <p uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</p>

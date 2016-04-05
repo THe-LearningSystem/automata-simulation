@@ -56,7 +56,8 @@ function DFA($scope) {
     //for the testdata
     $scope.testData = new TestData($scope);
 
-
+    //for the showing/hiding of the Input Field of the automaton name
+    $scope.inNameEdit = false;
 
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
     //fix for $apply already in progress
