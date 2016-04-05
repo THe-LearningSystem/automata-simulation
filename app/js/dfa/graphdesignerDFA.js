@@ -418,31 +418,23 @@ function GraphdesignerDFA($scope, svgSelector) {
                     //the group element
                     //if it is not a self Reference
                     if (transition.fromState != transition.toState) {
-                        var coordObj = self.getTransitionCoordinates(transition.fromState, transition.toState);
-                        self.getTransitionCurveData(coordObj);
-                        var curveData = null;
+                        var drawConfig = self.getTransitionDrawConfig(transition);
+                        console.log(drawConfig);
                         //if there is a transition in the other direction
-                        if (self.existsDrawnTransition(transition.toState, transition.fromState)) {
-
-
-
+                        if (drawConfig.approachTransition) {
                             //other transition in the other direction
-                            var otherCoordObj = self.getTransitionCoordinates(transition.toState, transition.fromState);
-                            var otherCurveData = self.transitionCurve(otherCoordObj, false);
                             var otherTrans = self.getDrawnTransition(transition.toState, transition.fromState);
-                            otherTrans.objReference.select(".transition-line").attr("d", otherCurveData);
+                            var otherDrawConfig = self.getTransitionDrawConfig(otherTrans, true);
+                            self.updateTransitionLines(otherTrans.objReference, otherDrawConfig.path);
                             otherTrans.objReference.select(".transition-text")
-                                .attr("x", (otherCoordObj.xMidPoint))
-                                .attr("y", (otherCoordObj.yMidPoint));
+                                .attr("x", otherDrawConfig.xText)
+                                .attr("y", otherDrawConfig.yText);
                             //update the transition text position
                             self.otherTransition = otherTrans;
 
-                        } else {
-
                         }
                         //get the curve data ( depends if there is a transition in the oposite direction)
-                        curveData = self.transitionCurve(coordObj, !self.existsDrawnTransition(transition.toState, transition.fromState));
-                        line.attr("d", curveData);
+                        line.attr("d", drawConfig.path);
                         //if it is a selfreference
                     } else {
                         var stateId = $scope.getArrayStateIdByStateId(transition.fromState);
@@ -469,12 +461,11 @@ function GraphdesignerDFA($scope, svgSelector) {
             self.mouseInState = false;
             //remove the visual feedback from transition going against our tmpLine
             if (self.otherTransition !== null && self.otherTransition !== undefined) {
-                var otherCoordObj = self.getTransitionCoordinates(self.otherTransition.fromState, self.otherTransition.toState);
-                var otherCurveData = self.transitionCurve(otherCoordObj, !self.existsDrawnTransition(self.otherTransition.toState, self.otherTransition.fromState));
-                self.otherTransition.objReference.select(".transition-line").attr("d", otherCurveData);
+                var otherDrawConfig = self.getTransitionDrawConfig(self.otherTransition);
+                self.updateTransitionLines(self.otherTransition.objReference, otherDrawConfig.path);
                 self.otherTransition.objReference.select(".transition-text")
-                    .attr("x", (otherCoordObj.xMid))
-                    .attr("y", (otherCoordObj.yMid));
+                    .attr("x", (otherDrawConfig.xText))
+                    .attr("y", (otherDrawConfig.yText));
             }
         });
     };
@@ -823,60 +814,81 @@ function GraphdesignerDFA($scope, svgSelector) {
      * @param  {[type]} transitionId [description]
      * @return {[type]}              [description]
      */
-    self.getTransitionCoordinates = function (fromStateId, toStateId) {
-        var fromState = $scope.getStateById(fromStateId);
-        var toState = $scope.getStateById(toStateId);
-        var x1 = fromState.x;
-        var y1 = fromState.y;
-        var x2 = toState.x;
-        var y2 = toState.y;
-        var richtungsvektor = {
-            "x": x2 - x1,
-            "y": y2 - y1
-        };
-        var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y),
-            n = self.settings.stateRadius / richtungsVectorLength;
-        x1 = x1 + n * richtungsvektor.x;
-        y1 = y1 + n * richtungsvektor.y;
-        x2 = x2 - n * richtungsvektor.x;
-        y2 = y2 - n * richtungsvektor.y;
-        var coordObj = {
-            x1: x1,
-            y1: y1,
-            x2: x2,
-            y2: y2,
-            xDiff: x2 - x1,
-            yDiff: y2 - y1,
-            xMid: (x1 + x2) / 2,
-            yMid: (y1 + y2) / 2
-        };
-        coordObj.distance = Math.sqrt(coordObj.xDiff * coordObj.xDiff + coordObj.yDiff * coordObj.yDiff);
+    /*
+        self.getTransitionCoordinates = function (fromStateId, toStateId) {
+            var fromState = $scope.getStateById(fromStateId);
+            var toState = $scope.getStateById(toStateId);
+            var x1 = fromState.x;
+            var y1 = fromState.y;
+            var x2 = toState.x;
+            var y2 = toState.y;
+            var richtungsvektor = {
+                "x": x2 - x1,
+                "y": y2 - y1
+            };
+            var richtungsVectorLength = Math.sqrt(richtungsvektor.x * richtungsvektor.x + richtungsvektor.y * richtungsvektor.y),
+                n = self.settings.stateRadius / richtungsVectorLength;
+            x1 = x1 + n * richtungsvektor.x;
+            y1 = y1 + n * richtungsvektor.y;
+            x2 = x2 - n * richtungsvektor.x;
+            y2 = y2 - n * richtungsvektor.y;
+            var coordObj = {
+                x1: x1,
+                y1: y1,
+                x2: x2,
+                y2: y2,
+                xDiff: x2 - x1,
+                yDiff: y2 - y1,
+                xMid: (x1 + x2) / 2,
+                yMid: (y1 + y2) / 2
+            };
+            coordObj.distance = Math.sqrt(coordObj.xDiff * coordObj.xDiff + coordObj.yDiff * coordObj.yDiff);
 
 
-        return coordObj;
+            return coordObj;
 
-    };
-
-
-    self.getTransitionCurveData = function (coordObj) {
-        var vecA = {
-            x: coordObj.xMid - coordObj.x1,
-            y: coordObj.yMid - coordObj.y1,
-            z: 0
         };
 
-        var vecB = {
-            x: 0,
-            y: 0,
-            z: 1
+
+        self.getTransitionCurveData = function (coordObj) {
+            var vecA = {
+                x: coordObj.xMid - coordObj.x1,
+                y: coordObj.yMid - coordObj.y1,
+                z: 0
+            };
+
+            var vecB = {
+                x: 0,
+                y: 0,
+                z: 1
+            };
+
+            coordObj.movingPoint = crossPro(vecA, vecB);
+            coordObj.movingPoint = expandVector(coordObj.movingPoint, 70 * (1 / coordObj.distance * 1.1));
+
+            coordObj.xMidPoint = coordObj.movingPoint.x + coordObj.xMid;
+            coordObj.yMidPoint = coordObj.movingPoint.y + coordObj.yMid;
+            return coordObj;
+        };
+        
+        self.selfTransition = function (x, y) {
+            return self.bezierLine([
+                [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
+                [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY],
+                [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY],
+                [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]
+            ]);
         };
 
-        coordObj.movingPoint = crossPro(vecA, vecB);
-        coordObj.movingPoint = expandVector(coordObj.movingPoint, 70 * (1 / coordObj.distance * 1.1));
-
-        coordObj.xMidPoint = coordObj.movingPoint.x + coordObj.xMid;
-        coordObj.yMidPoint = coordObj.movingPoint.y + coordObj.yMid;
-        return coordObj;
+   
+    */
+    self.selfTransition = function (x, y) {
+        return self.bezierLine([
+                [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
+                [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY],
+                [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY],
+                [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]
+            ]);
     };
 
     function crossPro(a, b) {
@@ -907,31 +919,87 @@ function GraphdesignerDFA($scope, svgSelector) {
         .interpolate("basis");
 
 
-    self.selfTransition = function (x, y) {
-        return self.bezierLine([
-            [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
-            [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY],
-            [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY],
-            [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]
-        ]);
-    };
 
-    self.transitionCurve = function (coordObj, justStraight) {
-        self.getTransitionCurveData(coordObj);
-        var array = null;
-        if (!justStraight) {
+    self.getTransitionDrawConfig = function (transition, forceApproach) {
+        console.log(transition);
+        //the distance the endPoint of the transition is away from the state
+        var gapBetweenTransitionLineAndState = 3;
+        var obj = {};
+        /**1: Check if there is a transition aproach our transition**/
+        obj.approachTransition = forceApproach || self.existsDrawnTransition(transition.toState, transition.fromState);
+
+        /****2. Get the xStart,yStart and xEnd,yEnd  and xMid,yMid***/
+        //from and to State
+        var fromState = $scope.getStateById(transition.fromState);
+        var toState = $scope.getStateById(transition.toState);
+        //the x and y coordinates
+        var x1 = fromState.x;
+        var y1 = fromState.y;
+        var x2 = toState.x;
+        var y2 = toState.y;
+
+        //needed for the calculation of the coordinates
+        var directionvector = {
+            "x": x2 - x1,
+            "y": y2 - y1
+        };
+        var directionVectorLength = Math.sqrt(directionvector.x * directionvector.x + directionvector.y * directionvector.y);
+        var nStart = self.settings.stateRadius / directionVectorLength;
+        var nEnd = (self.settings.stateRadius + gapBetweenTransitionLineAndState) / directionVectorLength;
+
+        obj.xStart = x1 + nStart * directionvector.x;
+        obj.yStart = y1 + nStart * directionvector.y;
+        obj.xEnd = x2 - nEnd * directionvector.x;
+        obj.yEnd = y2 - nEnd * directionvector.y;
+        obj.xDiff = x2 - x1;
+        obj.yDiff = y2 - y1;
+        obj.xMid = (x1 + x2) / 2;
+        obj.yMid = (y1 + y2) / 2;
+        obj.distance = Math.sqrt(obj.xDiff * obj.xDiff + obj.yDiff * obj.yDiff);
+        /**3: Calc the CurvedPoint**/
+        //BETTER ONLY CALC WHEN obj.approachTransition = true;
+        var vecA = {
+            x: obj.xMid - obj.xStart,
+            y: obj.yMid - obj.yStart,
+            z: 0
+        };
+
+        var vecB = {
+            x: 0,
+            y: 0,
+            z: 1
+        };
+        var stretchValue = 70 * (1 / obj.distance * 1.1);
+        var movingPoint = crossPro(vecA, vecB);
+        movingPoint = expandVector(movingPoint, stretchValue);
+
+        obj.xMidCurv = movingPoint.x + obj.xMid;
+        obj.yMidCurv = movingPoint.y + obj.yMid;
+
+        if (obj.approachTransition) {
+            obj.xText = obj.xMidCurv;
+            obj.yText = obj.yMidCurv;
+        } else {
+            obj.xText = obj.xMid;
+            obj.yText = obj.yMid;
+        }
+
+        /**4:Calc the Path**/
+        var array = [];
+        if (obj.approachTransition) {
             array = [
-                [coordObj.x1, coordObj.y1],
-                [coordObj.xMidPoint, coordObj.yMidPoint],
-                [coordObj.x2, coordObj.y2]
+                [obj.xStart, obj.yStart],
+                [obj.xMidCurv, obj.yMidCurv],
+                [obj.xEnd, obj.yEnd]
             ];
         } else {
             array = [
-                [coordObj.x1, coordObj.y1],
-                [coordObj.x2, coordObj.y2]
+                [obj.xStart, obj.yStart],
+                [obj.xEnd, obj.yEnd]
             ];
         }
-        return self.bezierLine(array);
+        obj.path = self.bezierLine(array);
+        return obj;
     };
 
     /**
@@ -971,48 +1039,32 @@ function GraphdesignerDFA($scope, svgSelector) {
                 .text(transition.name);
             //if it is not a self Reference
             if (transition.fromState != transition.toState) {
-                var coordObj = self.getTransitionCoordinates(transition.fromState, transition.toState);
-                self.getTransitionCurveData(coordObj);
-                var curveData = null;
-                //if there is a transition in the other direction
-                if (self.existsDrawnTransition(transition.toState, transition.fromState)) {
-
-                    text.attr("class", "transition-text")
-                        .attr("x", (coordObj.xMidPoint))
-                        .attr("y", (coordObj.yMidPoint));
-
+                var drawConfig = self.getTransitionDrawConfig(transition);
+                console.log(drawConfig);
+                //if there is an approached transition update the approached transition
+                if (drawConfig.approachTransition) {
                     //other transition in the other direction
-                    var otherCoordObj = self.getTransitionCoordinates(transition.toState, transition.fromState);
-                    var otherCurveData = self.transitionCurve(otherCoordObj, false);
                     var otherTrans = self.getDrawnTransition(transition.toState, transition.fromState);
-                    otherTrans.objReference.select(".transition-line").attr("d", otherCurveData);
-                    otherTrans.objReference.select(".transition-line-selection").attr("d", otherCurveData);
-                    otherTrans.objReference.select(".transition-line-hover").attr("d", otherCurveData);
-                    otherTrans.objReference.select(".transition-line-click").attr("d", otherCurveData);
+                    var otherTransdrawConfig = self.getTransitionDrawConfig(otherTrans, true);
+                    self.updateTransitionLines(otherTrans.objReference, otherTransdrawConfig.path);
                     //update the transition text position
                     otherTrans.objReference.select(".transition-text")
-                        .attr("x", (otherCoordObj.xMidPoint))
-                        .attr("y", (otherCoordObj.yMidPoint));
-                } else {
-                    text.attr("x", (coordObj.xMid))
-                        .attr("y", (coordObj.yMid));
+                        .attr("x", (otherTransdrawConfig.xText))
+                        .attr("y", (otherTransdrawConfig.yText));
                 }
-                //get the curve data ( depends if there is a transition in the oposite direction)
-                curveData = self.transitionCurve(coordObj, !self.existsDrawnTransition(transition.toState, transition.fromState));
-                line.attr("d", curveData);
-                lineSelection.attr("d", curveData);
-                lineHover.attr("d", curveData);
-                lineClickArea.attr("d", curveData);
+                //draw the text
+                text.attr("class", "transition-text")
+                    .attr("x", (drawConfig.xText))
+                    .attr("y", (drawConfig.yText));
+                self.updateTransitionLines(group, drawConfig.path);
+
                 //if it is a selfreference
             } else {
                 var stateId = $scope.getArrayStateIdByStateId(transition.fromState);
                 var x = $scope.config.states[stateId].x;
                 var y = $scope.config.states[stateId].y;
 
-                line.attr("d", self.selfTransition(x, y));
-                lineSelection.attr("d", self.selfTransition(x, y));
-                lineHover.attr("d", self.selfTransition(x, y));
-                lineClickArea.attr("d", self.selfTransition(x, y));
+                self.updateTransitionLines(group, self.selfTransition(x, y));
                 text.attr("x", x - self.settings.stateRadius - 50)
                     .attr("y", y);
             }
@@ -1025,8 +1077,10 @@ function GraphdesignerDFA($scope, svgSelector) {
                     "name": transition.name
                 }],
                 objReference: group
-            }) - 1).attr("from-state-id", transition.fromState).attr("to-state-id", transition.toState);
-            group.on('click', self.openTransitionMenu)
+            }) - 1);
+            group.attr("from-state-id", transition.fromState)
+                .attr("to-state-id", transition.toState)
+                .on('click', self.openTransitionMenu)
                 .on("mouseover", function () {
                     d3.select(this).select('.transition-line-hover').attr("style", "opacity:0.6");
                 }).on("mouseleave", function () {
@@ -1046,6 +1100,13 @@ function GraphdesignerDFA($scope, svgSelector) {
 
 
         }
+    };
+
+    self.updateTransitionLines = function (transitionobjReference, path) {
+        transitionobjReference.select(".transition-line").attr("d", path);
+        transitionobjReference.select(".transition-line-selection").attr("d", path);
+        transitionobjReference.select(".transition-line-hover").attr("d", path);
+        transitionobjReference.select(".transition-line-click").attr("d", path);
     };
 
     self.openTransitionMenu = function (transitionId) {
@@ -1093,13 +1154,13 @@ function GraphdesignerDFA($scope, svgSelector) {
             self.transitionMenuListener.push($scope.$watchCollection("graphdesigner.input.transitions['" + i + "']", function (newValue, oldValue) {
 
                 if (newValue.name !== oldValue.name) {
-                      newValue.tttisopen = false;
+                    newValue.tttisopen = false;
                     if (newValue.name !== "" && !$scope.existsTransition(fromState, toState, newValue.name)) {
                         $scope.renameTransition(newValue.id, newValue.name);
                     } else if (newValue.name === "") {
                         newValue.tttisopen = true;
                         newValue.ttt = 'TRANS_MENU.NAME_TOO_SHORT';
-                    } else if ($scope.existsTransition(fromState, toState, newValue.name,transitionId)) {
+                    } else if ($scope.existsTransition(fromState, toState, newValue.name, transitionId)) {
                         newValue.tttisopen = true;
                         newValue.ttt = 'TRANS_MENU.NAME_ALREAD_EXISTS';
                     }
@@ -1134,36 +1195,18 @@ function GraphdesignerDFA($scope, svgSelector) {
             if (n.fromState == stateId || n.toState == stateId) {
                 //if its not a selfreference
                 var obj = n.objReference,
-                    transitionLine = obj.select(".transition-line"),
-                    lineSelection = obj.select(".transition-line-selection"),
-                    lineClickArea = obj.select(".transition-line-click"),
-                    lineHover = obj.select(".transition-line-hover"),
                     transitionText = obj.select("text");
                 if (n.fromState != n.toState) {
-                    var coordObj = self.getTransitionCoordinates(n.fromState, n.toState);
+                    var drawConfig = self.getTransitionDrawConfig(n);
                     //if there is a transition in the other direction
-                    if (self.existsDrawnTransition(n.toState, n.fromState)) {
-                        transitionLine.attr("d", self.transitionCurve(coordObj, false));
-                        lineSelection.attr("d", self.transitionCurve(coordObj, false));
-                        lineClickArea.attr("d", self.transitionCurve(coordObj, false));
-                        lineHover.attr("d", self.transitionCurve(coordObj, false));
-                        transitionText.attr("x", coordObj.xMidPoint).attr("y", coordObj.yMidPoint);
-                    } else {
-                        transitionLine.attr("d", self.transitionCurve(coordObj, true));
-                        lineSelection.attr("d", self.transitionCurve(coordObj, true));
-                        lineClickArea.attr("d", self.transitionCurve(coordObj, true));
-                        lineHover.attr("d", self.transitionCurve(coordObj, true));
-                        transitionText.attr("x", coordObj.xMid).attr("y", coordObj.yMid);
-                    }
+                    self.updateTransitionLines(obj, drawConfig.path);
+                    transitionText.attr("x", drawConfig.xText).attr("y", drawConfig.yText);
                 } else {
                     var moveStateId = n.fromState;
                     var x = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].x;
                     var y = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].y;
                     //update Transistion with self reference
-                    transitionLine.attr("d", self.selfTransition(x, y));
-                    lineSelection.attr("d", self.selfTransition(x, y));
-                    lineClickArea.attr("d", self.selfTransition(x, y));
-                    lineHover.attr("d", self.selfTransition(x, y));
+                    self.updateTransitionLines(obj, self.selfTransition(x, y));
                     transitionText.attr("x", x - self.settings.stateRadius - 50).attr("y", y);
                 }
             }
