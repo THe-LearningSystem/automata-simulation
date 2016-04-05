@@ -3,7 +3,7 @@
         <li><a href="" ng-click="changeLang('en_US')">Englisch</a></li>
         <li><a href="" ng-click="changeLang('de_DE')">German</a></li>
     </ul>
-<div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
+    <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
 
 
@@ -67,11 +67,19 @@
         <p> {{"SIM_SET.LOOP" | translate}}
             <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
         </p>
-        <p> {{"SIM_SET.STO" | translate}} SLIDER
-            <input id="simulator-settings-input-loop" ng-model="simulator.stepTimeOut">
+        <p> {{"SIM_SET.STO" | translate}}
+            <span>{{simulator.stepTimeOut}}</span>
+            <div class="slider">
+                <a name="stepTimeOutSlider"></a>
+                <div ui-slider min="0" max="3000" ng-model="simulator.stepTimeOut"></div>
+            </div>
         </p>
         <p>{{"SIM_SET.LTO" | translate}}
-            <input id="simulator-settings-input-loop" ng-model="simulator.loopTimeOut">
+            <span>{{simulator.loopTimeOut}}</span>
+            <div class="slider">
+                <a name="loopTimeOutSlider"></a>
+                <div ui-slider min="0" max="4000" ng-model="simulator.loopTimeOut"></div>
+            </div>
         </p>
     </menuitemextendable>
     <menuitemextendable titlename="DEV.TITLE">
@@ -108,12 +116,11 @@
             </table>
         </div>
         <div class="bot-content bot-right">
-            <h3  class="title">{{"STF.TITLE" | translate}}</h3>
-
+            <h3 class="title">{{"STF.TITLE" | translate}}</h3>
             <p uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</p>
             <p uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
             <p uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</p>
-            <p uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>=  {{statetransitionfunction.functionData.startState}} </p>
+            <p uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>= {{statetransitionfunction.functionData.startState}} </p>
             <p uib-tooltip="{{'STF.TTFINAL' | translate}}" tooltip-placement="left">{{"STF.F" | translate}} = { {{statetransitionfunction.functionData.finalStates}} }</p>
         </div>
     </div>

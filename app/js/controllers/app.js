@@ -2,7 +2,8 @@
 var autoSim = angular.module('automata-simulation', [
   'ngRoute',
   'ui.bootstrap',
-  'pascalprecht.translate'
+  'pascalprecht.translate',
+  'ui.slider'
 ]).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/dfa', {
         templateUrl: 'view/dfa.html',
@@ -20,7 +21,7 @@ var autoSim = angular.module('automata-simulation', [
         redirectTo: '/dfa'
     });
 
-
+    
 
 }]).config(['$translateProvider', function ($translateProvider) {
     //translation
