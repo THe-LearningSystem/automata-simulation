@@ -35,7 +35,6 @@ function GraphdesignerDFA($scope, svgSelector) {
     //if there is already a transition with the right fromState and toState, thenn only add myname to the names array
     $scope.drawnTransitions = [];
 
-
     /**
      * Check if transition already drawn
      * @param   {number}  fromState 
@@ -270,7 +269,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     //Marker-Arrow ( for the transitions)
     self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow')
-        .attr('refX', 9)
+        .attr('refX', 7.5)
         .attr('refY', 3)
         .attr('markerWidth', 10)
         .attr('markerHeight', 10)
@@ -279,7 +278,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
     self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow-animated')
-        .attr('refX', 9)
+        .attr('refX', 7.5)
         .attr('refY', 3)
         .attr('markerWidth', 10)
         .attr('markerHeight', 10)
@@ -288,7 +287,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
     self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow-hover')
-        .attr('refX', 9)
+        .attr('refX', 7.5)
         .attr('refY', 3)
         .attr('markerWidth', 10)
         .attr('markerHeight', 10)
@@ -297,7 +296,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         .attr('d', 'M0,0 L0,6 L9,3 z');
     self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow-selection')
-        .attr('refX', 9)
+        .attr('refX', 7.5)
         .attr('refY', 3)
         .attr('markerWidth', 10)
         .attr('markerHeight', 10)
@@ -506,7 +505,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         drawnTransitionName.name = newTransitionName;
 
         //change it on the svg
-        self.writeTransitionText(drawnTransition.objReference.select(".transition-text"),drawnTransition.names);
+        self.writeTransitionText(drawnTransition.objReference.select(".transition-text"), drawnTransition.names);
     };
 
 
@@ -929,22 +928,22 @@ function GraphdesignerDFA($scope, svgSelector) {
         obj.path = self.bezierLine(array);
         return obj;
     };
-    
-    self.writeTransitionText =function(textObj,names){
+
+    self.writeTransitionText = function (textObj, names) {
         textObj.selectAll("*").remove();
-        for(var i =0;i<names.length;i++){
+        for (var i = 0; i < names.length; i++) {
             //fix when creating new transition when in animation
-            if($scope.simulator.animated.transition !== null && names[i].id ===$scope.simulator.animated.transition.id){
-              textObj.append('tspan').attr('transition-id',names[i].id).text(names[i].name).classed("animated-transition-text",true);
-            }else{
-                textObj.append('tspan').attr('transition-id',names[i].id).text(names[i].name);
+            if ($scope.simulator.animated.transition !== null && names[i].id === $scope.simulator.animated.transition.id) {
+                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name).classed("animated-transition-text", true);
+            } else {
+                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name);
             }
-            
-            if(i < names.length-1)
+
+            if (i < names.length - 1)
                 textObj.append('tspan').text(' | ');
         }
-        
-        
+
+
     };
 
     /**
@@ -1020,8 +1019,8 @@ function GraphdesignerDFA($scope, svgSelector) {
                     "name": transition.name
                 }],
                 objReference: group
-            }) - 1);            
-            self.writeTransitionText(text,self.getDrawnTransition(transition.fromState,transition.toState).names);
+            }) - 1);
+            self.writeTransitionText(text, self.getDrawnTransition(transition.fromState, transition.toState).names);
             group.attr("from-state-id", transition.fromState)
                 .attr("to-state-id", transition.toState)
                 .on('click', self.openTransitionMenu)
@@ -1040,7 +1039,7 @@ function GraphdesignerDFA($scope, svgSelector) {
                 "name": transition.name
             });
             //drawn the new name to the old transition (svg)
-            self.writeTransitionText(drawnTransition.objReference.select('.transition-text'),self.getDrawnTransition(transition.fromState,transition.toState).names);
+            self.writeTransitionText(drawnTransition.objReference.select('.transition-text'), self.getDrawnTransition(transition.fromState, transition.toState).names);
 
         }
     };
@@ -1177,13 +1176,13 @@ function GraphdesignerDFA($scope, svgSelector) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
                 self.setTransitionClassAs(oldValue.id, false, "animated-transition");
-                d3.selectAll("[transition-id='"+oldValue.id+"'").classed("animated-transition-text",false);
+                d3.selectAll("[transition-id='" + oldValue.id + "'").classed("animated-transition-text", false);
                 //remove transitionname animation
             }
             if (newValue !== null) {
                 self.setTransitionClassAs(newValue.id, true, "animated-transition");
                 console.log(newValue);
-            d3.selectAll("[transition-id='"+newValue.id+"'").classed("animated-transition-text",true);
+                d3.selectAll("[transition-id='" + newValue.id + "'").classed("animated-transition-text", true);
                 //animate transitionname
             }
         }
