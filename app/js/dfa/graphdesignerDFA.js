@@ -325,8 +325,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         //add listener that the selectedstate follows the mouse
         self.svgOuter.on("mousemove", function () {
             //move the state (only moved visually not saved)
-            self.selectedState.objReference.attr("transform", "translate(" + ((d3.mouse(this)[0])) + " " +
-                ((d3.mouse(this)[1])) + ")");
+            self.selectedState.objReference.attr("transform", "translate(" + (((d3.mouse(this)[0])-$scope.config.diagramm.x)*(1/$scope.config.diagramm.scale)) + " " +
+                (((d3.mouse(this)[1])-$scope.config.diagramm.y)*(1/$scope.config.diagramm.scale)) + ")");
         });
         //create a new selectedState in a position not viewable
         self.selectedState = $scope.addStateWithPresets(-10000, -10000);
@@ -337,8 +337,8 @@ function GraphdesignerDFA($scope, svgSelector) {
             self.selectedState.objReference.classed("state-in-creation", false);
             //update the stateData
 
-            self.selectedState.x = (d3.mouse(this)[0]);
-            self.selectedState.y = (d3.mouse(this)[1]);
+            self.selectedState.x = (((d3.mouse(this)[0])-$scope.config.diagramm.x)*(1/$scope.config.diagramm.scale));
+            self.selectedState.y = (((d3.mouse(this)[1])-$scope.config.diagramm.y)*(1/$scope.config.diagramm.scale));
             //remove mousemove listener
             self.svgOuter.on("mousemove", null);
             //overwrite the click listener
@@ -398,7 +398,9 @@ function GraphdesignerDFA($scope, svgSelector) {
         //2. if the mouse moves on the svgOuter and not on a state, then update the tmpLine
         self.svgOuter.on("mousemove", function () {
             if (!self.mouseInState && self.selectedState !== null) {
-                var pathLine = self.bezierLine([[self.selectedState.x, self.selectedState.y], [d3.mouse(this)[0], d3.mouse(this)[1]]]);
+                var x =  (((d3.mouse(this)[0])-$scope.config.diagramm.x)*(1/$scope.config.diagramm.scale));
+                var y =  (((d3.mouse(this)[1])-$scope.config.diagramm.y)*(1/$scope.config.diagramm.scale));
+                var pathLine = self.bezierLine([[self.selectedState.x, self.selectedState.y], [x, y]]);
                 self.tmpTransitionline.attr("d", pathLine);
             }
         });
