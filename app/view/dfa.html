@@ -1,9 +1,5 @@
 <div class="top-nav">
-    <ul ng-controller="LangCtrl">
-        <li><a href="" ng-click="changeLang('en_US')">Englisch</a></li>
-        <li><a href="" ng-click="changeLang('de_DE')">German</a></li>
-    </ul>
-<div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
+    <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
 
 
@@ -18,7 +14,7 @@
         </a>
 
         <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
-            <li><a ng-click="graphdesigner.zoomTo(25)">25%</a></li>
+            <li> <a ng-click="graphdesigner.zoomTo(25)">25%</a></li>
             <li> <a ng-click="graphdesigner.zoomTo(50)">50%</a></li>
             <li> <a ng-click="graphdesigner.zoomTo(75)">75%</a></li>
             <li> <a ng-click="graphdesigner.zoomTo(100)">100%</a></li>
@@ -30,36 +26,49 @@
 
         </ul>
         </span>
-        <menubutton glyphicon="zoom-in" action="graphdesigner.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
-        <menubutton glyphicon="zoom-out" action="graphdesigner.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
-        <menubutton glyphicon="resize-small" action="graphdesigner.scaleAndTranslateToDefault()" tttext="NAVBAR.TTTEXT_RESCALE"></menubutton>
+        <menubutton icon="search-plus" action="graphdesigner.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
+        <menubutton icon="search-minus" action="graphdesigner.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
+        <menubutton icon="expand" action="graphdesigner.scaleAndTranslateToDefault()" tttext="NAVBAR.TTTEXT_RESCALE"></menubutton>
     </div>
     <div class="button-group">
-        <menubutton glyphicon="trash" action="graphdesigner.remove()" ng-disable="graphdesigner.showStateMenu"></menubutton>
+        <menubutton icon="trash" action="graphdesigner.remove()" ng-disable="graphdesigner.showStateMenu"></menubutton>
     </div>
 
     <div class="button-group" ng-controller="portationCtrl">
-        <menubutton glyphicon="open" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
-        <menubutton glyphicon="save" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"></menubutton>
+        <menubutton icon="upload" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
+        <menubutton icon="download" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"></menubutton>
     </div>
     <div class="button-group">
 
     </div>
     <div class="button-group">
-        <menubutton glyphicon="plus" action="graphdesigner.addState()" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
-        <menubutton glyphicon="plus" action="graphdesigner.addTransition()" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
-        <menubutton glyphicon="trash" action="removeConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
+        <menubutton icon="addstate" action="graphdesigner.addState()" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+        <menubutton icon="addtransition" action="graphdesigner.addTransition()" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+        <menubutton icon="trash" action="removeConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
+    </div>
+    <div class="button-group">
+        <span uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
+        <!-- Here is the current language shown -->
+        <a href id="simple-dropdown" uib-dropdown-toggle><span ng-bind-html="activeLanguage | to_trusted"></span><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+        </a>
+        <!-- here you can see all selectable languages in a simple dropdown -->
+        <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+            <li> <a ng-click="changeLang('en_EN')"><span class="flag-icon flag-icon-gb"></span> {{"LANG_DROP.ENGLISH" | translate}}</a></li>
+            <li> <a ng-click="changeLang('de_DE')"><span class="flag-icon flag-icon-de"></span> {{"LANG_DROP.GERMAN" | translate}}</a></li>
+        </ul>
+        </span>
     </div>
 </div>
 
+
 <div class="left-menu">
     <menuitemextendable titlename="SIM.TITLE">
-        <menubutton glyphicon="play" action="simulator.playOrPause()" tttext="SIM.PLAYPAUSE"></menubutton>
-        <menubutton glyphicon="stop" action="simulator.stop()" tttext="SIM.STOP"></menubutton>
-        <menubutton glyphicon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
-        <menubutton glyphicon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
+        <menubutton icon="play" action="simulator.playOrPause()" tttext="SIM.PLAYPAUSE"></menubutton>
+        <menubutton icon="stop" action="simulator.stop()" tttext="SIM.STOP"></menubutton>
+        <menubutton icon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
+        <menubutton icon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         <p>{{"SIM.INPUT" | translate}}
-            <input class="inputWord" ng-model="inputWord" /><span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span></p>
+            <input class="inputWord" ng-model="inputWord" /><span class="icon icon-check" aria-hidden="true"></span></p>
 
     </menuitemextendable>
     <menuitemextendable titlename="SIM_SET.TITLE">
@@ -75,7 +84,7 @@
         </p>
     </menuitemextendable>
     <menuitemextendable titlename="DEV.TITLE">
-        <menubutton glyphicon="wrench" action="testData.testDFA()">
+        <menubutton icon="wrench" action="testData.testDFA()">
 
         </menubutton>
         <p>DiagrammValues: {{config}}</p>
@@ -108,12 +117,12 @@
             </table>
         </div>
         <div class="bot-content bot-right">
-            <h3  class="title">{{"STF.TITLE" | translate}}</h3>
+            <h3 class="title">{{"STF.TITLE" | translate}}</h3>
 
             <p uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</p>
             <p uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
             <p uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</p>
-            <p uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>=  {{statetransitionfunction.functionData.startState}} </p>
+            <p uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>= {{statetransitionfunction.functionData.startState}} </p>
             <p uib-tooltip="{{'STF.TTFINAL' | translate}}" tooltip-placement="left">{{"STF.F" | translate}} = { {{statetransitionfunction.functionData.finalStates}} }</p>
         </div>
     </div>

@@ -6029,3 +6029,6 @@ button.close {
 .bot-right {
   width: 50%;
   float: right; }
+
+.icon {
+  font-size: 15px; }

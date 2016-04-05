@@ -46,11 +46,11 @@ autoSim.directive("menubutton", function () {
         replace: true,
         transclude: false,
         scope: {
-            glyphicon: '@',
+            icon: '@',
             action: '&',
             tttext: '@'
         },
-        template: '<button type="button" class="menu-button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}"><span class="icon-{{glyphicon}}" aria-hidden="true"> </span> </button>'
+        template: '<button type="button" class="menu-button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}"><span class="icon icon-{{icon}}" aria-hidden="true"> </span> </button>'
     };
 });
 
@@ -66,7 +66,7 @@ autoSim.directive("menuitemextendable", function () {
         scope: {
             titlename: '@',
         },
-        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="icon-triangle-bottom" aria-hidden="true" ng-show="extended"></span><span class="icon-triangle-right" aria-hidden="true" ng-show="!extended"></span>{{titlename | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
+        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="icon icon-triangle-bottom" aria-hidden="true" ng-show="extended"></span><span class="icon icon-triangle-right" aria-hidden="true" ng-show="!extended"></span>{{titlename | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
 
     };
 
@@ -94,10 +94,23 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
     $scope.changeLang = function (key) {
         $translate.use(key).then(function (key) {
             console.log("Sprache zu " + key + " gewechselt.");
+            $scope.getCurrentLanguage();
         }, function (key) {
             console.log("Irgendwas lief schief.");
         });
     };
+    $scope.getCurrentLanguage = function () {
+        var currentLanguage = $translate.proposedLanguage() || $translate.use();
+        switch (currentLanguage) {
+            case "de_DE":
+                $scope.activeLanguage = '<span class="flag-icon flag-icon-de"></span> Deutsch';
+                break;
+            case "en_EN":
+                $scope.activeLanguage = '<span class="flag-icon flag-icon-gb"></span> English';
+                break;
+        }
+    };
+    $scope.getCurrentLanguage();
 }]);
 
 
@@ -163,8 +176,8 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
 
 
 //from: http://stackoverflow.com/questions/19415394/with-ng-bind-html-unsafe-removed-how-do-i-inject-html
-autoSim.filter('to_trusted', ['$sce', function($sce){
-        return function(text) {
-            return $sce.trustAsHtml(text);
-        };
+autoSim.filter('to_trusted', ['$sce', function ($sce) {
+    return function (text) {
+        return $sce.trustAsHtml(text);
+    };
     }]);

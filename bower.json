@@ -17,6 +17,7 @@
     "filesaver": "*",
     "angular-bootstrap": "~1.1.0",
     "angular-translate": "~2.10.0",
-    "angular-translate-loader-static-files": "^2.10.0"
+    "angular-translate-loader-static-files": "^2.10.0",
+    "flag-icon-css": "https://github.com/lipis/flag-icon-css.git#^1.4.0"
   }
 }

@@ -12,6 +12,11 @@
         "TTTEXT_ADDTRANS": "Übergang hinzufügen",
         "TTTEXT_REMALL": "Alles löschen"
     },
+    
+    "LANG_DROP": {
+        "ENGLISH": "Englisch",
+        "GERMAN": "Deutsch"
+    },
 
 
     "SIM": {
@@ -39,7 +44,8 @@
 
     "DIA_SET": {
         "TITLE": "Diagrammeinstellungen",
-        "GRID": "Gitter"
+        "GRID": "Gitter",
+        "SNAPPING": "feststellen"
     },
 
 
@@ -51,6 +57,7 @@
         "SAVE": "Speichern",
         "ALREADY_EXIST": "Zustandsname bereits verwendet!"
     },
+    
     "TABLE":{
         "TITLE": "Zustandstabelle"
     },
