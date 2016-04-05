@@ -6070,3 +6070,6 @@ button:disabled .glyphicon {
 
 .transitions-menu-list li {
   list-style-type: none; }
+
+.icon {
+  font-size: 15px; }

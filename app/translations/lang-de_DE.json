@@ -12,6 +12,11 @@
         "TTTEXT_ADDTRANS": "Übergang hinzufügen",
         "TTTEXT_REMALL": "Alles löschen"
     },
+    
+    "LANG_DROP": {
+        "ENGLISH": "Englisch",
+        "GERMAN": "Deutsch"
+    },
 
 
     "SIM": {
@@ -58,6 +63,7 @@
         "NEXTSTATE": "Nächster Zustand",
         "NAME": "Name"
     },
+    
     "TABLE":{
         "TITLE": "Zustandstabelle"
     },

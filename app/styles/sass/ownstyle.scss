@@ -298,6 +298,7 @@ $disabledColor: #AAA;
     float: right;
 }
 
+
 button:disabled .glyphicon{
     color:$disabledColor;
 }
@@ -308,4 +309,6 @@ button:disabled .glyphicon{
 .transitions-menu-list li {
     list-style-type: none;
 }
-
+.icon {
+    font-size: 15px;
+}
