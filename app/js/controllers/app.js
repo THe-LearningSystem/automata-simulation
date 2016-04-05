@@ -168,3 +168,16 @@ autoSim.filter('to_trusted', ['$sce', function($sce){
             return $sce.trustAsHtml(text);
         };
     }]);
+
+
+// to defocus an field, when clicked on someother place than the focused field
+autoSim.directive('showFocus', function($timeout) {
+  return function(scope, element, attrs) {
+    scope.$watch(attrs.showFocus, 
+      function (newValue) { 
+        $timeout(function() {
+            newValue && element[0].focus();
+        });
+      },true);
+  };    
+});

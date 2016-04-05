@@ -115,13 +115,12 @@ $animatedTransitionFontColor: #ff7b00;
 }
 //others
 .animated-currentstate {
-    color:$animatedCurrentStateColor;
+    color: $animatedCurrentStateColor;
 }
 .animated-nextstate {
-    color:$animatedNextStateColor;
+    color: $animatedNextStateColor;
 }
-.selectedForTransition {
-}
+.selectedForTransition {}
 .state-text:hover {}
 .in-creation {
     opacity: 0.5;
@@ -147,8 +146,8 @@ $animatedTransitionFontColor: #ff7b00;
     opacity: 0;
 }
 //transition line fill for the startline
-.transition-line.start-line{
-    stroke:$transitionColor;
+.transition-line.start-line {
+    stroke: $transitionColor;
 }
 //animated transition for the simulation
 .animated-transition .transition-line {
@@ -186,12 +185,11 @@ $animatedTransitionFontColor: #ff7b00;
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
 }
-
-.th-koeln-logo img{
-    position:absolute;
-    top:0;
-    right:0;
-    height:50px;
+.th-koeln-logo img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 50px;
 }
 //MENU
 .left-menu {
@@ -215,7 +213,8 @@ $animatedTransitionFontColor: #ff7b00;
 .menu-item {
     margin: 15px 0;
 }
-.menu-item .title, .title {
+.menu-item .title,
+.title {
     padding: 5px;
     background-color: #cedde9;
 }
@@ -263,4 +262,19 @@ $animatedTransitionFontColor: #ff7b00;
 .bot-right {
     width: 50%;
     float: right;
+}
+
+//design is not ready!
+input[type='text'] {
+    font-size: 24px;
+    border: 0;
+}
+.currentAutomatonName {
+    position: absolute;
+    font-size: 24px;
+    max-width: 100%;
+    cursor: pointer;
+}
+.inputField {
+    z-index: 1;
 }

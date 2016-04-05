@@ -1,9 +1,21 @@
 <div class="top-nav">
-    <ul ng-controller="LangCtrl">
-        <li><a href="" ng-click="changeLang('en_US')">Englisch</a></li>
-        <li><a href="" ng-click="changeLang('de_DE')">German</a></li>
-    </ul>
-<div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
+    <!-- look about for the right alignment -->
+    <div class=" automataName col-lg-1">
+        <span class="currentAutomatonName" ng-click="inNameEdit = true" ng-show="!inNameEdit">
+            {{config.name}}
+        </span>
+        <input id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" placeholder="{{getConfigName()}}" ng-show="inNameEdit">
+    </div>
+
+    <!-- look about for the right alignment -->
+    <div class="col-lg-1">
+        <ul ng-controller="LangCtrl">
+            <li><a href="" ng-click="changeLang('en_US')">Englisch</a></li>
+            <li><a href="" ng-click="changeLang('de_DE')">German</a></li>
+        </ul>
+    </div>
+
+    <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
 
 
@@ -78,6 +90,7 @@
         <menubutton glyphicon="wrench" action="testData.testDFA()">
 
         </menubutton>
+        <p>{{inNameEdit}}</p>
         <p>DiagrammValues: {{config}}</p>
         <p>DrawnTransitions:{{drawnTransitions}}</p>
         <p>{{graphdesigner.input}}</p>
@@ -108,12 +121,12 @@
             </table>
         </div>
         <div class="bot-content bot-right">
-            <h3  class="title">{{"STF.TITLE" | translate}}</h3>
+            <h3 class="title">{{"STF.TITLE" | translate}}</h3>
 
             <p uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</p>
             <p uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
             <p uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</p>
-            <p uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>=  {{statetransitionfunction.functionData.startState}} </p>
+            <p uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>= {{statetransitionfunction.functionData.startState}} </p>
             <p uib-tooltip="{{'STF.TTFINAL' | translate}}" tooltip-placement="left">{{"STF.F" | translate}} = { {{statetransitionfunction.functionData.finalStates}} }</p>
         </div>
     </div>
