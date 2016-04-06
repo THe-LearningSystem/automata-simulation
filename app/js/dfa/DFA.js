@@ -75,7 +75,7 @@ function DFA($scope) {
     /**
      * Removes the current automata and the inputWord
      */
-    $scope.removeConfig = function () {
+    $scope.resetConfig = function () {
         //clear the svgContent
         $scope.graphdesigner.clearSvgContent();
 

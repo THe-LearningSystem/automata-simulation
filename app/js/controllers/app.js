@@ -116,13 +116,10 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
 }]);
 
 
-autoSim.directive("importautomaton", function () {
-
-});
 
 autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     $scope.export = function () {
-        console.log("test");
+
         /**
          * Returns all transition without the objReference
          * @return {Array} array of transition objects
@@ -157,23 +154,90 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
         exportData.transitions = getTransitions();
         exportData.states = getStates();
         var data = window.JSON.stringify(exportData);
+        console.log(exportData);
         var blob = new Blob([data], {
-            type: "text/plain;charset=utf-8;",
+            type: "application/json",
         });
         saveAs(blob, $scope.config.name + ".json");
     };
 
-    $scope.import = function () {
-        //Called when the user clicks on the import Button and opens the hidden-file-input
-
-        angular.element('#hidden-file-upload').trigger('click');
-        console.log($scope);
-        //called when the user uploads a file
-    };
-    
     $scope.saveAsPng =function () {
      saveSvgAsPng(document.getElementById("diagramm-svg"), $scope.config.name+".png");
     };
+    $scope.import = function () {
+        //Called when the user clicks on the import Button and opens the hidden-file-input
+        angular.element('#hidden-file-upload').trigger('click');
+        //called when the user uploads a file
+    };
+    
+
+    };
+
+    /* jshint -W083 */
+    /* jshint -W117 */
+    /* jshint -W084 */
+    function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+
+        // files is a FileList of File objects. List some properties.
+        var output = [];
+
+        for (var i = 0, f; f = files[i]; i++) {
+            var reader = new FileReader();
+
+            // Closure to capture the file information.
+            reader.onload = (function (theFile) {
+                return function (e) {
+                    try {
+                        var json = JSON.parse(e.target.result);
+                        //import the data to the automaton
+                        $scope.importConfig(json);
+
+                    } catch (ex) {
+                        alert('ex when trying to parse json = ' + ex);
+                    }
+                };
+            })(f);
+            reader.readAsText(f);
+        }
+
+    }
+
+    $scope.importConfig = function (jsonObj) {
+        //clear the config at the start
+        $scope.resetConfig();
+        var tmpObject = cloneObject(jsonObj);
+        //clear the objects we create after 
+        tmpObject.states = [];
+        tmpObject.transitions = [];
+        tmpObject.startState = null;
+        tmpObject.finalStates = [];
+        $scope.$parent.config = tmpObject;
+        createOtherObjects(jsonObj);
+        console.log($scope.$parent.config);
+    };
+
+    function createOtherObjects(jsonObj) {
+
+            //create States
+        _.forEach(jsonObj.states, function (value, key) {
+            $scope.$parent.addStateWithId(value.id, value.name, value.x, value.y);
+        });
+        //create transitions
+        _.forEach(jsonObj.transitions, function (value, key) {
+            $scope.$parent.addTransitionWithId(value.id, value.fromState, value.toState, value.name);
+        });
+        //create startstate
+        $scope.$parent.changeStartState(jsonObj.startState);
+        //create finalStates
+        _.forEach(jsonObj.finalStates, function (value, key) {
+            $scope.$parent.addFinalState(value);
+        });
+    }
+
+    document.getElementById('hidden-file-upload').addEventListener('change', handleFileSelect, false);
+
+}]);
 
 }]);
 
