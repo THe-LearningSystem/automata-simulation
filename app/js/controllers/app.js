@@ -164,13 +164,10 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     $scope.saveAsPng =function () {
      saveSvgAsPng(document.getElementById("diagramm-svg"), $scope.config.name+".png");
     };
-    $scope.import = function () {
+    
+      $scope.import = function () {
         //Called when the user clicks on the import Button and opens the hidden-file-input
         angular.element('#hidden-file-upload').trigger('click');
-        //called when the user uploads a file
-    };
-    
-
     };
 
     /* jshint -W083 */
@@ -205,6 +202,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
 
     $scope.importConfig = function (jsonObj) {
         //clear the config at the start
+        console.log($scope.$parent);
         $scope.resetConfig();
         var tmpObject = cloneObject(jsonObj);
         //clear the objects we create after 
@@ -218,7 +216,6 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     };
 
     function createOtherObjects(jsonObj) {
-
             //create States
         _.forEach(jsonObj.states, function (value, key) {
             $scope.$parent.addStateWithId(value.id, value.name, value.x, value.y);
@@ -236,8 +233,6 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     }
 
     document.getElementById('hidden-file-upload').addEventListener('change', handleFileSelect, false);
-
-}]);
 
 }]);
 

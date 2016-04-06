@@ -44,9 +44,10 @@
 
     <div class="button-group" ng-controller="portationCtrl">
 
-        <menubutton icon="upload" action="import()" ng-disabled="true" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
+        <menubutton icon="upload" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
+        <input id="hidden-file-upload" type="file" name="file">
         <menubutton icon="download" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"></menubutton>
-        <menubutton icon="picture-o" action="saveAsPng()" tttext="NAVBAR_TTTEXST_SAVEASPNG"></menubutton>
+        <menubutton icon="camera" action="saveAsPng()" tttext="NAVBAR_TTTEXST_SAVEASPNG"></menubutton>
     </div>
     <div class="button-group">
 
@@ -54,7 +55,7 @@
     <div class="button-group">
         <menubutton icon="plus-circle" action="graphdesigner.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
         <menubutton icon="long-arrow-right" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
-        <menubutton icon="trash" action="removeConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
+        <menubutton icon="trash" action="resetConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
         <button type="button" class="menu-button" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
