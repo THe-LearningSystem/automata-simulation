@@ -186,6 +186,7 @@ $selectedColor:#00b7ff;
 }
 .animated-transition-text {
     stroke: $animatedTransitionColor;
+    fill: $animatedTransitionColor;
 }
 .animated-transition {
     color: $animatedTransitionColor;

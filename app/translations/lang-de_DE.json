@@ -1,7 +1,6 @@
 {
     "APP_TITLE": "Automaten Simulation",
 
-    
     "NAVBAR": {
         "TTTEXT_ZOOM_IN": "Vergrößern",
         "TTTEXT_ZOOM_OUT": "Verkleinern",
@@ -12,12 +11,11 @@
         "TTTEXT_ADDTRANS": "Übergang hinzufügen",
         "TTTEXT_REMALL": "Alles löschen"
     },
-    
+
     "LANG_DROP": {
         "ENGLISH": "Englisch",
         "GERMAN": "Deutsch"
     },
-
 
     "SIM": {
         "TITLE": "Simulation",
@@ -28,7 +26,6 @@
         "STEPFORWARD": "Schritt vorwärts"
     },
 
-
     "SIM_SET": {
         "TITLE": "Simulationseinstellungen",
         "LOOP": "Schleife",
@@ -36,18 +33,19 @@
         "LTO": "Schleifengeschwindigkeit"
     },
 
-
     "DEV": {
         "TITLE": "Entwicklung"
     },
 
+    "DIA": {
+        "TITLE": "Zustandsübergangsdiagramm"
+    },
 
     "DIA_SET": {
         "TITLE": "Diagrammeinstellungen",
         "GRID": "Gitter",
         "SNAPPING": "Einrasten"
     },
-
 
     "STATE_MENU": {
         "TITLE": "Zustandsmenü",
@@ -58,16 +56,16 @@
         "NAME_ALREADY_EXIST": "Zustandsname bereits verwendet!",
         "NAME_TOO_SHORT": "Zustandsname zu kurz!"
     },
-    "TRANS_MENU":{
+    "TRANS_MENU": {
         "TITLE": "Zustandsübergangsmenü",
         "NEXTSTATE": "Nächster Zustand",
         "NAME": "Name"
     },
-    
-    "TABLE":{
+
+    "TABLE": {
         "TITLE": "Zustandstabelle"
     },
-    
+
     "STF": {
         "TITLE": "Zustandsübergangsfunktion",
         "TTSIGMA": "Alphabet",

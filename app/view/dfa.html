@@ -40,9 +40,6 @@
         <menubutton icon="search-minus" action="graphdesigner.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
         <menubutton icon="expand" action="graphdesigner.scaleAndTranslateToDefault()" tttext="NAVBAR.TTTEXT_RESCALE"></menubutton>
     </div>
-    <div class="button-group">
-        <menubutton icon="trash" action="graphdesigner.remove()" ng-disable="graphdesigner.showStateMenu"></menubutton>
-    </div>
 
     <div class="button-group" ng-controller="portationCtrl">
         <menubutton icon="upload" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
@@ -53,8 +50,8 @@
 
     </div>
     <div class="button-group">
-        <menubutton icon="addstate" action="graphdesigner.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
-        <menubutton icon="addtransition" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+        <menubutton icon="plus-circle" action="graphdesigner.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+        <menubutton icon="long-arrow-right" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
         <menubutton icon="trash" action="removeConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
@@ -79,7 +76,7 @@
         <menubutton icon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
         <menubutton icon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         <p>{{"SIM.INPUT" | translate}}
-            <input class="inputWord" ng-model="config.inputWord" ng-change="simulator.updateFunction()" /><span class="icon-icon-check" aria-hidden="true" ng-show="simulator.isInputAccepted"></span><span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true" ng-show="!simulator.isInputAccepted"></span>
+            <input class="inputWord" ng-model="config.inputWord" ng-change="simulator.updateFunction()" /><span class="icon icon-check" aria-hidden="true" ng-show="simulator.isInputAccepted"></span><span class="icon icon-times" aria-hidden="true" ng-show="!simulator.isInputAccepted"></span>
         </p>
 
     </menuitemextendable>
@@ -92,14 +89,14 @@
             <span>{{simulator.stepTimeOut}}</span>
             <div class="slider">
                 <a name="stepTimeOutSlider"></a>
-                <div ui-slider min="0" max="3000" ng-model="simulator.stepTimeOut"></div>
+                <div ui-slider min="0" max="3000" step="100" ng-model="simulator.stepTimeOut"></div>
             </div>
         </p>
         <p>{{"SIM_SET.LTO" | translate}}
             <span>{{simulator.loopTimeOut}}</span>
             <div class="slider">
                 <a name="loopTimeOutSlider"></a>
-                <div ui-slider min="0" max="4000" ng-model="simulator.loopTimeOut"></div>
+                <div ui-slider min="0" max="4000" step="100" ng-model="simulator.loopTimeOut"></div>
             </div>
         </p>
     </menuitemextendable>
@@ -123,7 +120,7 @@
 
 <div class="mid-wrapper">
     <div class="diagramm">
-        <p class="title">Zustandsübergangsdiagramm</p>
+        <h3 class="title">{{"DIA.TITLE" | translate}}</h3>
         <svg id="diagramm-svg">
         </svg>
     </div>
@@ -146,6 +143,7 @@
             </table>
         </div>
         <div class="bot-content bot-right">
+            <h3 class="title">{{"STF.TITLE" | translate}}</h3>
             <p uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</p>
             <p uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
             <p uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</p>

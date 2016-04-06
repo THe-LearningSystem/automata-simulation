@@ -83,10 +83,7 @@ function DFA($scope) {
         $scope.config = cloneObject($scope.defaultConfig);
         $scope.safeApply();
         $scope.updateListener();
-
-
     };
-
 
     /**
      * Adds a char to the input alphabet if the char is not available
@@ -103,8 +100,11 @@ function DFA($scope) {
 
     };
 
-
-
+    /**
+     * Removes a char from the alphavet if this char is only used from the given transition
+     * @param   {number}  transitionId 
+     * @returns {boolean} true if it was removed false if not removed
+     */
     $scope.removeFromAlphabetIfNotUsedFromOthers = function (transitionId) {
         var tmpTransition = $scope.getTransitionById(transitionId);
         //search if an other transition use the same name
@@ -118,11 +118,15 @@ function DFA($scope) {
 
         if (!usedByOthers) {
             _.pull($scope.config.alphabet, tmpTransition.name);
+            return true;
         } else {
-            return;
+            return false;
         }
     };
-
+    
+    /**
+     * This function calls the method updateFunction of every element in $scope.updateListeners
+     */
     $scope.updateListener = function () {
         //call each updateListener
         _.forEach($scope.updateListeners, function (value, key) {
@@ -130,7 +134,6 @@ function DFA($scope) {
         });
 
     };
-
 
     //STATE FUNCTIONS START
 
@@ -404,6 +407,7 @@ function DFA($scope) {
         var tmp = false;
         for (var i = 0; i < $scope.config.transitions.length; i++) {
             var transition = $scope.config.transitions[i];
+            //NFA == if (transition.fromState == fromState && transition.toState == toState && transition.name == transitonName && transition.id !== transitionId) {
             if (transition.fromState == fromState && transition.toState == toState && transition.name == transitonName && transition.id !== transitionId) {
                 tmp = true;
             }

@@ -68,7 +68,7 @@ autoSim.directive("menuitemextendable", function () {
         scope: {
             titlename: '@',
         },
-        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="icon icon-triangle-bottom" aria-hidden="true" ng-show="extended"></span><span class="icon icon-triangle-right" aria-hidden="true" ng-show="!extended"></span>{{titlename | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
+        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="icon icon-chevron-down" aria-hidden="true" ng-show="extended"></span><span class="icon icon-chevron-right" aria-hidden="true" ng-show="!extended"></span>{{titlename | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
 
     };
 
@@ -187,6 +187,7 @@ autoSim.filter('to_trusted', ['$sce', function($sce){
 
 
 // to defocus an field, when clicked on someother place than the focused field
+/* jshint -W030 */
 autoSim.directive('showFocus', function($timeout) {
   return function(scope, element, attrs) {
     scope.$watch(attrs.showFocus, 
