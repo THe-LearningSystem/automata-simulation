@@ -101,13 +101,10 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
 }]);
 
 
-autoSim.directive("importautomaton", function () {
-
-});
 
 autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     $scope.export = function () {
-        console.log("test");
+
         /**
          * Returns all transition without the objReference
          * @return {Array} array of transition objects
@@ -142,6 +139,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
         exportData.transitions = getTransitions();
         exportData.states = getStates();
         var data = window.JSON.stringify(exportData);
+        console.log(data);
         var blob = new Blob([data], {
             type: "text/plain;charset=utf-8;",
         });
@@ -150,21 +148,29 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
 
     $scope.import = function () {
         //Called when the user clicks on the import Button and opens the hidden-file-input
-
         angular.element('#hidden-file-upload').trigger('click');
-        console.log($scope);
-        //called when the user uploads a file
-
-
-
     };
+
+    //to be continued...
+    function handleFileSelect() {
+        var data = $.getJSON(document.getElementById('hidden-file-upload').target.file);
+        console.log(data);
+
+        var inputName = document.getElementById('hidden-file-input').value;
+        var imgPath;
+        imgPath = data.value;
+        console.log(inputName);
+    }
+
+    document.getElementById('hidden-file-upload').addEventListener('change', handleFileSelect, false);
+
 }]);
 
 
 
 //from: http://stackoverflow.com/questions/19415394/with-ng-bind-html-unsafe-removed-how-do-i-inject-html
-autoSim.filter('to_trusted', ['$sce', function($sce){
-        return function(text) {
-            return $sce.trustAsHtml(text);
-        };
+autoSim.filter('to_trusted', ['$sce', function ($sce) {
+    return function (text) {
+        return $sce.trustAsHtml(text);
+    };
     }]);
