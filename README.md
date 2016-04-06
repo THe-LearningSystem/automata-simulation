@@ -16,4 +16,4 @@ There are less good programs to represent in theoretical computer science automa
   - Turing machine (TA)
 
 ###License
-MIT
+  - The Project is developed unter the MIT license - see [LICENSE.md](LICENSE.md) for detailed Information.
