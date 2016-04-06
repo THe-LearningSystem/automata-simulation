@@ -215,7 +215,7 @@ $disabledColor: #AAA;
 }
 .top-menu {
     padding: 0 0 0 200px;
-    height: 30px;
+    height: 40px;
     background-color: whitesmoke;
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
@@ -226,10 +226,17 @@ $disabledColor: #AAA;
     right: 0;
     height: 50px;
 }
+.automata-simulation-logo{
+    width:50px;
+}
+.automata-simulation-logo img{
+    height:50px;
+    width:50px;
+}
 //MENU
 .left-menu {
     position: absolute;
-    top: 80px;
+    top: 90px;
     left: 0;
     bottom: 0;
     width: 200px;
@@ -238,7 +245,7 @@ $disabledColor: #AAA;
 }
 .right-menu {
     position: absolute;
-    top: 80px;
+    top: 90px;
     right: 0;
     bottom: 0;
     width: 200px;
@@ -252,6 +259,7 @@ $disabledColor: #AAA;
 .title {
     padding: 5px;
     background-color: #cedde9;
+    cursor: pointer;
 }
 .menu-button {
     background-color: transparent;
@@ -299,7 +307,7 @@ $disabledColor: #AAA;
     float: right;
 }
 
-button:disabled .glyphicon{
+button:disabled .icon{
     color:$disabledColor;
 }
 //TRANSITION MENU
@@ -310,7 +318,7 @@ button:disabled .glyphicon{
     list-style-type: none;
 }
 .icon {
-    font-size: 15px;
+    font-size: 18px;
 }
 //design is not ready!
 input[type='text'] {
@@ -318,11 +326,18 @@ input[type='text'] {
     border: 0;
 }
 .currentAutomatonName {
-    position: absolute;
+    float:left;
     font-size: 24px;
     max-width: 100%;
     cursor: pointer;
 }
 .inputField {
     z-index: 1;
+}
+
+.ui-slider-handle{
+    cursor:pointer !important;
+}
+.dropdown li a{
+    cursor:pointer;
 }

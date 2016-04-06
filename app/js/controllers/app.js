@@ -68,7 +68,7 @@ autoSim.directive("menuitemextendable", function () {
         scope: {
             titlename: '@',
         },
-        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="icon icon-chevron-down" aria-hidden="true" ng-show="extended"></span><span class="icon icon-chevron-right" aria-hidden="true" ng-show="!extended"></span>{{titlename | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
+        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="icon-extendable icon-chevron-down" aria-hidden="true" ng-show="extended"></span><span class="icon-extendable icon-chevron-right" aria-hidden="true" ng-show="!extended"></span>{{titlename | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
 
     };
 
