@@ -74,7 +74,7 @@ function DFA($scope) {
     /**
      * Removes the current automata and the inputWord
      */
-    $scope.removeConfig = function () {
+    $scope.resetConfig = function () {
         //get the new config
         $scope.config = cloneObject($scope.defaultConfig);
         //clear the svgContent
