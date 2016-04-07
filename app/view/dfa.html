@@ -4,7 +4,7 @@
         <span class="currentAutomatonName" ng-click="inNameEdit = true" ng-show="!inNameEdit">
             {{config.name}}
         </span>
-        <input id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" placeholder="{{getConfigName()}}" ng-show="inNameEdit">
+        <input ng-keypress="keypressCallback($event)" id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" ng-show="inNameEdit">
     </div>
 </div>
 <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
@@ -46,7 +46,7 @@
 
         <menubutton icon="upload" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
         <input id="hidden-file-upload" type="file" name="file">
-        <menubutton icon="download" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"></menubutton>
+        <menubutton id="exportButton" icon="download" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"></menubutton>
         <menubutton icon="camera" action="saveAsPng()" tttext="NAVBAR_TTTEXST_SAVEASPNG"></menubutton>
     </div>
     <div class="button-group">
@@ -89,22 +89,22 @@
     </menuitemextendable>
     <menuitemextendable titlename="SIM_SET.TITLE">
 
-        <p> {{"SIM_SET.LOOP" | translate}}
-            <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
-        </p>
         <p> {{"SIM_SET.STO" | translate}}
-            <span>{{simulator.stepTimeOut}}</span>
+            <span>{{simulator.stepTimeOut}} ms</span>
             <div class="slider">
                 <a name="stepTimeOutSlider"></a>
                 <div ui-slider min="0" max="3000" step="100" ng-model="simulator.stepTimeOut"></div>
             </div>
         </p>
         <p>{{"SIM_SET.LTO" | translate}}
-            <span>{{simulator.loopTimeOut}}</span>
+            <span>{{simulator.loopTimeOut}} ms</span>
             <div class="slider">
                 <a name="loopTimeOutSlider"></a>
                 <div ui-slider min="0" max="4000" step="100" ng-model="simulator.loopTimeOut"></div>
             </div>
+        </p>
+        <p> {{"SIM_SET.LOOP" | translate}}
+            <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
         </p>
     </menuitemextendable>
     <menuitemextendable titlename="DEV.TITLE">

@@ -119,7 +119,9 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
 
 autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     $scope.export = function () {
-
+        
+        // if no automaton exist, disable export (button)
+        
         /**
          * Returns all transition without the objReference
          * @return {Array} array of transition objects

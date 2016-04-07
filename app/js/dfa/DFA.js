@@ -59,6 +59,16 @@ function DFA($scope) {
     //for the showing/hiding of the Input Field of the automaton name
     $scope.inNameEdit = false;
 
+    /**
+     * Leave the input field after clicking the enter button
+     */
+    $scope.keypressCallback = function ($event) {
+        if ($event.charCode == 13) {
+            console.log($event);
+            document.getElementById("automatonNameEdit").blur();
+        }
+    };
+
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
     //fix for $apply already in progress
     $scope.safeApply = function (fn) {
@@ -110,9 +120,9 @@ function DFA($scope) {
         //search if an other transition use the same name
         var usedByOthers = false;
         for (var i = 0; i < $scope.config.transitions.length; i++) {
-            if (tmpTransition.name === $scope.config.transitions[i].name && $scope.config.transitions[i].id !== transitionId){
+            if (tmpTransition.name === $scope.config.transitions[i].name && $scope.config.transitions[i].id !== transitionId) {
                 usedByOthers = true;
-                return ;
+                return;
             }
         }
 
@@ -123,7 +133,7 @@ function DFA($scope) {
             return false;
         }
     };
-    
+
     /**
      * This function calls the method updateFunction of every element in $scope.updateListeners
      */

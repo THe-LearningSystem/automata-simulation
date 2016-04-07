@@ -9,7 +9,7 @@
         "TTTEXT_IMPORT": "Importieren",
         "TTTEXT_ADDSTATE": "Zustand hinzufügen",
         "TTTEXT_ADDTRANS": "Übergang hinzufügen",
-        "TTTEXT_REMALL": "Alles löschen"
+        "TTTEXT_REMALL": "Reset Automat"
     },
 
     "LANG_DROP": {
