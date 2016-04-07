@@ -6101,3 +6101,9 @@ input[type='text'] {
 
 .dropdown li a {
   cursor: pointer; }
+
+.icon-check {
+  color: limegreen; }
+
+.icon-times {
+  color: red; }
