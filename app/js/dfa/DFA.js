@@ -35,9 +35,12 @@ function DFA($scope) {
     //the name of the inputWord
     $scope.defaultConfig.inputWord = '';
 
+
     //Config Object
     $scope.config = cloneObject($scope.defaultConfig);
     $scope.config.name = "NewName";
+
+
 
     //Array of all update Listeners
     $scope.updateListeners = [];
@@ -57,24 +60,11 @@ function DFA($scope) {
     $scope.inNameEdit = false;
 
     /**
-     * Enable the export, when a automaton exist and disable it when no one exist
-     */
-    $scope.checkConfigChange = function () {
-        //not complete functional
-        //console.log($scope.config.states, $scope.config.transitions);
-        if ($scope.config.States === [] || $scope.config.Transitions === []) {
-            console.log("check");
-            document.getElementById("exportButton").disabled = true;
-        } else {
-            document.getElementById("exportButton").disabled = false;
-        }
-    };
-
-    /**
      * Leave the input field after clicking the enter button
      */
     $scope.keypressCallback = function ($event) {
         if ($event.charCode == 13) {
+            console.log($event);
             document.getElementById("automatonNameEdit").blur();
         }
     };
@@ -103,7 +93,6 @@ function DFA($scope) {
         $scope.config = cloneObject($scope.defaultConfig);
         $scope.safeApply();
         $scope.updateListener();
-        $scope.checkConfigChange();
     };
 
     /**
@@ -249,7 +238,6 @@ function DFA($scope) {
         if ($scope.config.countStateId == 1) {
             $scope.changeStartState(0);
         }
-        $scope.checkConfigChange();
         return obj;
     };
 
@@ -267,7 +255,6 @@ function DFA($scope) {
             //TODO: BETTER DEBUG  
             return null;
         }
-        $scope.checkConfigChange();
     };
 
     /**
@@ -290,7 +277,6 @@ function DFA($scope) {
         $scope.updateListener();
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
-        $scope.checkConfigChange();
         return $scope.getStateById(stateId);
     };
 
@@ -315,7 +301,6 @@ function DFA($scope) {
             $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
             //update the other listeners when remove is finished
             $scope.updateListener();
-            $scope.checkConfigChange();
         }
     };
 
@@ -452,8 +437,8 @@ function DFA($scope) {
         if (!$scope.existsTransition(fromState, toState, transitonName) && $scope.existsStateWithId(fromState) &&
             $scope.existsStateWithId(toState)) {
             $scope.addToAlphabet(transitonName);
-            $scope.checkConfigChange();
             return $scope.addTransitionWithId($scope.config.countTransitionId++, fromState, toState, transitonName);
+
         } else {
             //TODO: BETTER DEBUG
         }
@@ -478,7 +463,6 @@ function DFA($scope) {
         $scope.updateListener();
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
-        $scope.checkConfigChange();
         return $scope.getTransitionById(transitionId);
     };
 
