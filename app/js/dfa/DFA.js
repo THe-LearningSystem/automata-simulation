@@ -34,11 +34,13 @@ function DFA($scope) {
     $scope.defaultConfig.alphabet = [];
     //the name of the inputWord
     $scope.defaultConfig.inputWord = '';
+    //the default name
+    $scope.defaultConfig.name = "Untitled Automaton";
 
 
     //Config Object
     $scope.config = cloneObject($scope.defaultConfig);
-    $scope.config.name = "NewName";
+
 
 
 
