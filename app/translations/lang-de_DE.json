@@ -20,7 +20,8 @@
     "SIM": {
         "TITLE": "Simulation",
         "INPUT": "Eingabewort",
-        "PLAYPAUSE": "Start/Pause",
+        "PLAY": "Start",
+        "PAUSE": "Pause",
         "STOP": "Stop",
         "STEPBACKWARD": "Schritt zurück",
         "STEPFORWARD": "Schritt vorwärts"
