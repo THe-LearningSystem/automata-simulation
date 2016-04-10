@@ -188,8 +188,8 @@
     </menuitem>
     <!--Transition Menu -->
     <menuitem titlename="TRANS_MENU.TITLE" ng-show="graphdesigner.showTransitionMenu">
-        <p>{{"STATE_MENU.STARTSTATE" | translate}}:{{graphdesigner.input.fromState}}</p>
-        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{graphdesigner.input.toState}}</p>
+        <p>{{"STATE_MENU.STARTSTATE" | translate}}:{{graphdesigner.input.fromState.name}}</p>
+        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{graphdesigner.input.toState.name}}</p>
         <ul class="transitions-menu-list">
             <li ng-repeat="(key, value) in graphdesigner.input.transitions">
                 <p>{{"TRANS_MENU.NAME" | translate}}:

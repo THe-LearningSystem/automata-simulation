@@ -698,7 +698,6 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.input.finalState = $scope.isStateAFinalState(self.selectedState.id);
         self.input.ttt = "";
         self.input.tttisopen = false;
-        self.input.renamedError = false;
         $scope.safeApply();
         self.stateMenuListener = [];
         //Menu watcher
@@ -1160,10 +1159,8 @@ function GraphdesignerDFA($scope, svgSelector) {
         self.selectedTransition.objReference.classed("active", true);
 
         self.input = {};
-        self.input.ttt = "";
-        self.input.tttisopen = false;
-        self.input.fromState = $scope.getStateById(fromState).name;
-        self.input.toState = $scope.getStateById(toState).name;
+        self.input.fromState = $scope.getStateById(fromState);
+        self.input.toState = $scope.getStateById(toState);
         self.input.transitions = [];
 
 
