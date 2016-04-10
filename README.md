@@ -7,13 +7,28 @@ Automata Simulation is a program that can create and modify automata. In the var
 
 There are less good programs to represent in theoretical computer science automata. With this program, we want to especially students and any other person help to better understand automata. For us, the focus is that the processing of the individual steps of the automata are clearly displayed.
 
-###Coming Soon
-  - Push-Down Automaton (PDA)
+##Future Features
+- Push-Down Automaton (PDA)
+- different languages (type 1 - 3)
+- non-deterministic automata (NDA)
+- Turing machine (TA)
 
-###In future appearing core Elements
-  - different languages (type 1 - 3)
-  - non-deterministic automata (NDA)
-  - Turing machine (TA)
+###Used Frameworks/Libraries
+- [Angular] (https://github.com/angular/angular)
+- [D3] (https://github.com/mbostock/d3)
+- [Bootstrap-sass] (https://github.com/twbs/bootstrap-sass)
+- [Lodash] (https://github.com/lodash/lodash)
+- [Filesaver] (https://github.com/eligrey/FileSaver.js)
+- [Json Formatter] (https://github.com/mohsen1/json-formatter)
+- [Flac Icon Css] (https://github.com/lipis/flag-icon-css)
+- Angular UI
+  - [Bootstrap] (https://github.com/angular-ui/bootstrap)
+  - [slider] (https://github.com/angular-ui/ui-slider)
+
+###Authors
+- [MRisto](https://github.com/MRisto)
+- [Embe1](https://github.com/Embe1)
+- [kschilke](https://github.com/kschilke)
 
 ###License
-  - The Project is developed unter the MIT license - see [LICENSE.md](LICENSE.md) for detailed Information.
+  - This Project is developed unter the MIT license - see [LICENSE.md](LICENSE.md) for detailed Information.
