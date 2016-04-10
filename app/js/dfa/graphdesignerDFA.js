@@ -1171,6 +1171,9 @@ function GraphdesignerDFA($scope, svgSelector) {
             var tmpObject = {};
 
             tmpObject = value;
+            if(value.id == transitionId){
+                tmpObject.isFocus = true;
+            }
             //add other variables
             tmpObject.ttt = "";
             tmpObject.tttisopen = false;
