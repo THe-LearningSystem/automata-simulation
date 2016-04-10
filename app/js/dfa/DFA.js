@@ -90,6 +90,7 @@ function DFA($scope) {
     $scope.resetConfig = function () {
         //clear the svgContent
         $scope.graphdesigner.clearSvgContent();
+        $scope.simulator.reset();
 
         //get the new config
         $scope.config = cloneObject($scope.defaultConfig);
