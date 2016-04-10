@@ -97,12 +97,8 @@ $selectedColor:#00b7ff;
     stroke: $stateBorderColor;
     stroke-width: $stateBorderWidth;
 }
-.selected-circle {
-    fill: transparent;
-    stroke: $selectedColor;
-    stroke-width: 1;
-    stroke-dasharray: 10, 10;
-    visibility: hidden;
+.state.active .state-circle{
+    stroke:$selectedColor;
 }
 .active .selected-circle {
     visibility: visible;
@@ -148,7 +144,7 @@ $selectedColor:#00b7ff;
 .selectedForTransition {}
 .state-text:hover {}
 .in-creation {
-    opacity: 0.5;
+    stroke:$selectedColor;
 }
 //Transition
 .transition {
@@ -159,7 +155,7 @@ $selectedColor:#00b7ff;
     cursor: pointer;
 }
 .transition-line-selection {
-    stroke-width: $transitionWidth;
+    stroke-width: 7;
     stroke: $selectedColor;
     opacity: 0.6;
     visibility: hidden;
@@ -321,7 +317,7 @@ button:disabled .icon{
     font-size: 18px;
 }
 //design is not ready!
-input[type='text'] {
+#automatonNameEdit {
     font-size: 24px;
     border: 0;
 }
