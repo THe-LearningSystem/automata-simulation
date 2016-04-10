@@ -7,6 +7,9 @@
         <input ng-keypress="keypressCallback($event)" id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" ng-show="inNameEdit">
     </div>
 </div>
+<div class="unsavedChanges" ng-click="saveAutomaton()" ng-show="config.unSavedChanges">
+    {{"APP.UNSAVEDCHANGES" |translate}}
+</div>
 <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
 
@@ -55,7 +58,7 @@
     <div class="button-group">
         <menubutton icon="plus-circle" action="graphdesigner.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
         <menubutton icon="long-arrow-right" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
-        <menubutton icon="trash" action="resetConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
+        <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
         <button type="button" class="menu-button" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">

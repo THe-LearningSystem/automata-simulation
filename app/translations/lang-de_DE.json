@@ -1,5 +1,8 @@
 {
-    "APP_TITLE": "Automaten Simulation",
+    "APP": {
+        "TITLE": "Automaten Simulation",
+        "UNSAVEDCHANGES": "Ungesicherte Veränderungen. Hier klicken zum speichern."
+    },
 
     "NAVBAR": {
         "TTTEXT_ZOOM_IN": "Vergrößern",

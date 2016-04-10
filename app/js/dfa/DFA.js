@@ -1,5 +1,5 @@
 //Simulator for the simulation of the automata
-function DFA($scope) {
+function DFA($scope, $translate) {
     "use strict";
     //selfReference
     //for debug puposes better way for acessing in console?
@@ -71,6 +71,32 @@ function DFA($scope) {
         }
     };
 
+    /**
+     * Prevent leaving site
+     */
+    window.onbeforeunload = function (event) {
+        //turn true when you want the leaving protection
+        if ($scope.config.unSavedChanges) {
+            var closemessage = "All Changes will be Lost. Save before continue!";
+            if (typeof event == 'undefined') {
+                event = window.event;
+            }
+            if (event) {
+                event.returnValue = closemessage;
+            }
+            return closemessage;
+
+        }
+    };
+
+    /**
+     * Saves the automata
+     */
+    $scope.saveAutomaton = function () {
+        $scope.config.unSavedChanges = false;
+
+    };
+
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
     //fix for $apply already in progress
     $scope.safeApply = function (fn) {
@@ -87,7 +113,7 @@ function DFA($scope) {
     /**
      * Removes the current automata and the inputWord
      */
-    $scope.resetConfig = function () {
+    $scope.resetAutomaton = function () {
         //clear the svgContent
         $scope.graphdesigner.clearSvgContent();
         $scope.simulator.reset();
@@ -145,6 +171,8 @@ function DFA($scope) {
         _.forEach($scope.updateListeners, function (value, key) {
             value.updateFunction();
         });
+        //after every update we show the user that he has unsaved changes
+        $scope.config.unSavedChanges = true;
 
     };
 
