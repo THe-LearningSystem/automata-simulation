@@ -5975,61 +5975,19 @@ button.close {
 /*******
 *Layout*
 *******/
-.top-nav {
-  height: 50px;
-  background-color: white; }
-
-.top-menu {
-  padding: 0 0 0 200px;
-  height: 40px;
-  background-color: whitesmoke;
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0; }
-
-.th-koeln-logo img {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 50px; }
-
-.automata-simulation-logo {
-  width: 50px; }
-
-.automata-simulation-logo img {
-  height: 50px;
-  width: 50px; }
-
-.left-menu {
-  position: absolute;
-  top: 90px;
-  left: 0;
-  bottom: 0;
-  width: 200px;
-  background-color: whitesmoke;
-  border-right: 1px solid #e0e0e0; }
-
-.right-menu {
-  position: absolute;
-  top: 90px;
-  right: 0;
-  bottom: 0;
-  width: 200px;
-  background-color: whitesmoke;
-  border-left: 1px solid #e0e0e0; }
-
-.menu-item {
-  margin: 15px 0; }
-
 .menu-item .title,
 .title {
   padding: 5px;
   background-color: #cedde9;
-  cursor: pointer; }
+  cursor: pointer;
+  margin: 0px 0px 0px 0px !important;
+  vertical-align: middle;
+  font-size: 15px; }
 
 .menu-button {
   background-color: transparent;
   border: 1px solid whitesmoke;
-  margin: 5px 1px; }
+  align-content: center; }
 
 .menu-button:hover {
   border: 1px solid #e0e0e0; }
@@ -6042,37 +6000,128 @@ button.close {
 .menu-item .content {
   padding: 5px 10px; }
 
-.diagramm {
-  position: absolute;
-  left: 200px;
-  right: 200px;
-  top: 80px;
-  bottom: 150px; }
-
-.bot-content-wrapper {
-  position: absolute;
-  background-color: whitesmoke;
-  right: 200px;
-  left: 200px;
-  bottom: 0px;
-  border-top: 1px solid #e0e0e0; }
-
-.bot-content {
-  padding: 10px 10px 0 10px;
-  height: 250px;
-  overflow-y: scroll; }
-
-.bot-left {
-  float: left;
-  width: 50%;
-  border-right: 1px solid #e0e0e0; }
-
-.bot-right {
-  width: 50%;
-  float: right; }
-
 button:disabled .icon {
   color: #AAA; }
+
+input[type='text'] {
+  width: 85px;
+  height: 30px;
+  font-size: 18px;
+  border: 0; }
+
+.currentAutomatonName {
+  display: table;
+  height: 30px;
+  float: left;
+  font-size: 18px;
+  max-width: 100%;
+  cursor: pointer;
+  vertical-align: middle; }
+
+.inputField {
+  z-index: 1; }
+
+.ui-slider-handle {
+  cursor: pointer !important; }
+
+.dropdown li a {
+  cursor: pointer; }
+
+.checkbox-item {
+  margin-right: 6px !important; }
+
+.top-nav {
+  height: 50px;
+  background-color: white; }
+
+.top-menu {
+  padding: 0 0 0 200px;
+  height: 30px;
+  background-color: whitesmoke;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0; }
+
+.th-koeln-logo img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 50px;
+  padding: 7px; }
+
+.automata-simulation-logo {
+  width: 50px; }
+
+.automata-simulation-logo img {
+  height: 50px;
+  width: 50px; }
+
+.left-menu {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  background-color: whitesmoke;
+  border-right: 1px solid #e0e0e0; }
+
+.left-indextab {
+  height: 29.8px;
+  padding: 5px;
+  background-color: #eeeeee;
+  cursor: pointer;
+  vertical-align: middle;
+  border-bottom: 1px solid #e5e5e5;
+  margin: 0px 0px 0px 0px !important; }
+
+.left-indextab-title {
+  color: #505050; }
+
+.left-indextab:hover {
+  background: #e5e5e5; }
+
+.icon-extendable-set {
+  vertical-align: middle;
+  margin-right: 6px;
+  color: #909090; }
+
+.icon-position {
+  vertical-align: center; }
+
+.right-menu {
+  position: absolute;
+  top: 80px;
+  right: 0;
+  bottom: 0;
+  width: 200px;
+  background-color: whitesmoke;
+  border-left: 1px solid #e0e0e0; }
+
+.right-menu-content {
+  padding: 12px 0px 12px 18px; }
+
+.right-indextab {
+  height: 29.8px;
+  padding: 5px;
+  background-color: whitesmoke;
+  cursor: pointer;
+  vertical-align: middle;
+  border-bottom: 1px solid silver;
+  margin: 0px 0px 0px 0px !important; }
+
+.right-indextab-title {
+  text-align: center;
+  font-weight: bold;
+  color: #707070; }
+
+.right-indextab-subtitle {
+  padding-top: 7px;
+  font-weight: bold;
+  color: #707070; }
+
+.dia-option {
+  margin: 6px 0px 0px 0px;
+  color: #707070;
+  font-family: "Helvetica Neue"; }
 
 .transitions-menu-list {
   padding: 0; }
@@ -6083,21 +6132,57 @@ button:disabled .icon {
 .icon {
   font-size: 18px; }
 
-input[type='text'] {
-  font-size: 24px;
-  border: 0; }
+.diagram {
+  position: absolute;
+  left: 200px;
+  right: 200px;
+  top: 80px;
+  bottom: 150px; }
 
-.currentAutomatonName {
+.diagram-title {
+  height: 30.5px;
+  padding-top: 8px;
+  background-color: #cedde9;
+  cursor: pointer;
+  margin: 0px 0px 0px 0px;
+  font-size: 14px;
+  color: #505050;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle; }
+
+.bot-content-wrapper {
+  position: absolute;
+  background-color: whitesmoke;
+  right: 200px;
+  left: 200px;
+  bottom: 0px;
+  border-top: 1px solid #e0e0e0; }
+
+.bot-content {
+  height: 250px;
+  overflow-y: scroll; }
+
+.bot-title {
+  height: 29.8px;
+  padding-top: 7.5px;
+  background-color: #cedde9;
+  cursor: pointer;
+  font-size: 14px;
+  color: #505050;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0px 0px 0px 0px; }
+
+.bot-left {
   float: left;
-  font-size: 24px;
-  max-width: 100%;
-  cursor: pointer; }
+  width: 50%;
+  border-right: 1px solid #e0e0e0; }
 
-.inputField {
-  z-index: 1; }
+.bot-right {
+  width: 50%;
+  float: right; }
 
-.ui-slider-handle {
-  cursor: pointer !important; }
-
-.dropdown li a {
-  cursor: pointer; }
+.stf-element {
+  margin: 10px 10px 10px 10px; }
