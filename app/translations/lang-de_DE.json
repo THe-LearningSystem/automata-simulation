@@ -1,5 +1,8 @@
 {
-    "APP_TITLE": "Automaten Simulation",
+    "APP": {
+        "TITLE": "Automaten Simulation",
+        "UNSAVEDCHANGES": "Ungesicherte Veränderungen."
+    },
 
     "NAVBAR": {
         "TTTEXT_ZOOM_IN": "Vergrößern",
@@ -20,7 +23,8 @@
     "SIM": {
         "TITLE": "Simulation",
         "INPUT": "Eingabewort",
-        "PLAYPAUSE": "Start/Pause",
+        "PLAY": "Start",
+        "PAUSE": "Pause",
         "STOP": "Stop",
         "STEPBACKWARD": "Schritt zurück",
         "STEPFORWARD": "Schritt vorwärts"

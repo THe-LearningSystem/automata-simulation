@@ -1,39 +1,41 @@
-describe('Simulation Automata', function() {
+describe('Simulation Automata', function () {
     var scope,
         controller;
-    beforeEach(function() {
+    beforeEach(function () {
         module('automata-simulation');
     });
 
 
-    describe('DFA Test', function() {
-        beforeEach(inject(function($rootScope, $controller) {
+    describe('DFA Test', function () {
+        beforeEach(inject(function ($rootScope, $controller) {
             scope = $rootScope.$new();
             controller = $controller('DFACtrl', {
                 '$scope': scope
             });
+            //Prepare the scope for the unittest
+            scope.graphdesigner.isGrid = false;
         }));
 
-        describe('States', function() {
-            it('State should be created', function() {
+        describe('States', function () {
+            it('State should be created', function () {
                 scope.addState("S0", 10, 10);
                 expect(scope.config.countStateId).toBe(1);
                 expect(scope.config.states.length).toBe(1);
             });
 
-            it('Should find a state with a name', function() {
+            it('Should find a state with a name', function () {
                 scope.addState("S0", 10, 10);
-                expect(scope.existStateWithName('S0')).toBe(true);
-                expect(scope.existStateWithName('S1')).toBe(false);
+                expect(scope.existsStateWithName('S0')).toBe(true);
+                expect(scope.existsStateWithName('S1')).toBe(false);
             });
 
-            it('State should be Found by Id (exist)', function() {
+            it('State should be Found by Id (exist)', function () {
                 scope.addState("S0", 10, 10);
-                expect(scope.existStateWithId(0)).toBe(true);
-                expect(scope.existStateWithId(1)).toBe(false);
+                expect(scope.existsStateWithId(0)).toBe(true);
+                expect(scope.existsStateWithId(1)).toBe(false);
             });
 
-            it('Has state transition(s)', function() {
+            it('Has state transition(s)', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 scope.addState("S3", 10, 10);
@@ -44,26 +46,26 @@ describe('Simulation Automata', function() {
                 expect(scope.hasStateTransitions(2)).toBe(false);
             });
 
-            it('StateArrayId should be Found by id', function() {
+            it('StateArrayId should be Found by id', function () {
                 scope.addState("S0", 10, 10);
                 expect(scope.getArrayStateIdByStateId(0)).toBe(0);
                 expect(scope.getArrayStateIdByStateId(4)).toBe(-1);
             });
 
-            it('State should be returned back by id', function() {
+            it('State should be returned back by id', function () {
                 scope.addState("S0", 10, 10);
                 expect(scope.getStateById(0)).toBeDefined();
                 expect(scope.getStateById(2)).not.toBeDefined();
             });
 
-            it('State should be uniqe', function() {
+            it('State should be uniqe', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 expect(scope.config.countStateId).toBe(2);
             });
 
-            it('State shouldnt be  easy removed if they have a transition', function() {
+            it('State shouldnt be  easy removed if they have a transition', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 scope.addTransition(0, 1, "a");
@@ -72,15 +74,15 @@ describe('Simulation Automata', function() {
                 expect(scope.config.states.length).toBe(2);
             });
 
-            it('State should be removed', function() {
-                scope.addState("S0", 10, 10);
+            it('State should be removed', function () {
+               var tmp =  scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
-                scope.removeState(1);
-                expect(scope.config.countStateId).toBe(1);
+                scope.removeState(tmp.id);
+                expect(scope.existsStateWithName("S1")).toBe(true);
                 expect(scope.config.states.length).toBe(1);
             });
 
-            it('State should be renamed, if name isnt in use', function() {
+            it('State should be renamed, if name isnt in use', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 scope.renameState(0, "S1");
@@ -89,7 +91,7 @@ describe('Simulation Automata', function() {
                 expect(scope.getStateById(0).name).toBe('S2');
             });
 
-            it('Should change the startstate, if exist!', function() {
+            it('Should change the startstate, if exist!', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 scope.changeStartState(1);
@@ -98,8 +100,8 @@ describe('Simulation Automata', function() {
                 expect(scope.config.startState).toBe(1);
             });
 
-            describe('FinalState', function() {
-                it('Should add FinalState, but not if already exist', function() {
+            describe('FinalState', function () {
+                it('Should add FinalState, but not if already exist', function () {
                     scope.addState("S0", 10, 10);
                     scope.addState("S1", 10, 10);
                     scope.addFinalState(1);
@@ -113,7 +115,7 @@ describe('Simulation Automata', function() {
                     expect(scope.config.finalStates.length).toBe(2);
                 });
 
-                it('Should get the index of the finalState', function() {
+                it('Should get the index of the finalState', function () {
                     scope.addState("S0", 10, 10);
                     scope.addState("S1", 10, 10);
                     scope.addFinalState(1);
@@ -123,7 +125,7 @@ describe('Simulation Automata', function() {
                     expect(scope.getFinalStateIndexByStateId(2)).toBe(-1);
                 });
 
-                it('Should remove the finalState', function() {
+                it('Should remove the finalState', function () {
                     scope.addState("S0", 10, 10);
                     scope.addState("S1", 10, 10);
                     scope.addState("S2", 10, 10);
@@ -135,7 +137,7 @@ describe('Simulation Automata', function() {
                     expect(scope.config.finalStates.length).toBe(2);
                 });
 
-                it('Is state a finalState', function() {
+                it('Is state a finalState', function () {
                     scope.addState("S0", 10, 10);
                     scope.addState("S1", 10, 10);
                     scope.addFinalState(1);
@@ -145,8 +147,8 @@ describe('Simulation Automata', function() {
             });
         });
 
-        describe('Transitions', function() {
-            it('Transition should be created, if states created before', function() {
+        describe('Transitions', function () {
+            it('Transition should be created, if states created before', function () {
                 scope.addState("S0", 10, 10);
                 scope.addTransition(0, 0, "a");
                 expect(scope.config.countTransitionId).toBe(1);
@@ -158,7 +160,7 @@ describe('Simulation Automata', function() {
 
             });
 
-            it('exist a transition like me', function() {
+            it('exist a transition like me', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 scope.addTransition(0, 0, "a");
@@ -167,13 +169,13 @@ describe('Simulation Automata', function() {
                 scope.addTransition(1, 0, "c");
 
 
-                expect(scope.existTransition(0, 0, "a")).toBe(true);
-                expect(scope.existTransition(0, 1, "c")).toBe(true);
-                expect(scope.existTransition(0, 0, "b")).toBe(false);
+                expect(scope.existsTransition(0, 0, "a")).toBe(true);
+                expect(scope.existsTransition(0, 1, "c")).toBe(true);
+                expect(scope.existsTransition(0, 0, "b")).toBe(false);
 
             });
 
-            it('Should get the right transitionArrayId', function() {
+            it('Should get the right transitionArrayId', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 scope.addTransition(0, 0, "a");
@@ -183,7 +185,7 @@ describe('Simulation Automata', function() {
                 expect(scope.getArrayTransitionIdByTransitionId(1)).not.toBe(0);
             });
 
-            it('should get a transition by transitionId', function() {
+            it('should get a transition by transitionId', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 scope.addTransition(0, 0, "a");
@@ -191,23 +193,22 @@ describe('Simulation Automata', function() {
                 expect(scope.getTransitionById(1)).not.toBeDefined();
             });
 
-            it('should remove a transition by transitionId', function() {
+            it('should remove a transition by transitionId', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 scope.addTransition(0, 0, "a");
                 scope.addTransition(0, 0, "b");
                 scope.removeTransition(0);
-                expect(scope.config.countTransitionId).toBe(1);
                 expect(scope.config.transitions.length).toBe(1);
             });
 
-            it('should rename a transition by transitionId and newTransitionName', function() {
+            it('should rename a transition by transitionId and newTransitionName', function () {
                 scope.addState("S0", 10, 10);
                 scope.addState("S1", 10, 10);
                 scope.addTransition(0, 0, "A");
                 scope.addTransition(0, 0, "B");
-                scope.renameTransition(0,"B");
-                scope.renameTransition(1,"D");
+                scope.renameTransition(0, "B");
+                scope.renameTransition(1, "D");
                 expect(scope.getTransitionById(0).name).toBe("A");
                 expect(scope.getTransitionById(1).name).toBe("D");
 

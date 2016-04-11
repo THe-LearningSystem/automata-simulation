@@ -1,5 +1,5 @@
 //Simulator for the simulation of the automata
-function DFA($scope) {
+function DFA($scope, $translate) {
     "use strict";
     //selfReference
     //for debug puposes better way for acessing in console?
@@ -34,10 +34,17 @@ function DFA($scope) {
     $scope.defaultConfig.alphabet = [];
     //the name of the inputWord
     $scope.defaultConfig.inputWord = '';
+    //the default name
+    $scope.defaultConfig.name = "Untitled Automaton";
+    //if there is something unsaved
+    $scope.defaultConfig.unSavedChanges = false;
+
 
     //Config Object
     $scope.config = cloneObject($scope.defaultConfig);
-    $scope.config.name = "NewName";
+
+
+
 
     //Array of all update Listeners
     $scope.updateListeners = [];
@@ -57,26 +64,39 @@ function DFA($scope) {
     $scope.inNameEdit = false;
 
     /**
-     * Enable the export, when a automaton exist and disable it when no one exist
-     */
-    $scope.checkConfigChange = function () {
-        //not complete functional
-        //console.log($scope.config.states, $scope.config.transitions);
-        if ($scope.config.States === [] || $scope.config.Transitions === []) {
-            console.log("check");
-            document.getElementById("exportButton").disabled = true;
-        } else {
-            document.getElementById("exportButton").disabled = false;
-        }
-    };
-
-    /**
      * Leave the input field after clicking the enter button
      */
     $scope.keypressCallback = function ($event) {
         if ($event.charCode == 13) {
+            console.log($event);
             document.getElementById("automatonNameEdit").blur();
         }
+    };
+
+    /**
+     * Prevent leaving site
+     */
+    window.onbeforeunload = function (event) {
+        //turn true when you want the leaving protection
+        if ($scope.config.unSavedChanges) {
+            var closemessage = "All Changes will be Lost. Save before continue!";
+            if (typeof event == 'undefined') {
+                event = window.event;
+            }
+            if (event) {
+                event.returnValue = closemessage;
+            }
+            return closemessage;
+
+        }
+    };
+
+    /**
+     * Saves the automata
+     */
+    $scope.saveAutomaton = function () {
+        $scope.config.unSavedChanges = false;
+
     };
 
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
@@ -95,15 +115,15 @@ function DFA($scope) {
     /**
      * Removes the current automata and the inputWord
      */
-    $scope.resetConfig = function () {
+    $scope.resetAutomaton = function () {
         //clear the svgContent
         $scope.graphdesigner.clearSvgContent();
+        $scope.simulator.reset();
 
         //get the new config
         $scope.config = cloneObject($scope.defaultConfig);
         $scope.safeApply();
         $scope.updateListener();
-        $scope.checkConfigChange();
     };
 
     /**
@@ -153,6 +173,8 @@ function DFA($scope) {
         _.forEach($scope.updateListeners, function (value, key) {
             value.updateFunction();
         });
+        //after every update we show the user that he has unsaved changes
+        $scope.config.unSavedChanges = true;
 
     };
 
@@ -249,7 +271,6 @@ function DFA($scope) {
         if ($scope.config.countStateId == 1) {
             $scope.changeStartState(0);
         }
-        $scope.checkConfigChange();
         return obj;
     };
 
@@ -267,7 +288,6 @@ function DFA($scope) {
             //TODO: BETTER DEBUG  
             return null;
         }
-        $scope.checkConfigChange();
     };
 
     /**
@@ -290,7 +310,6 @@ function DFA($scope) {
         $scope.updateListener();
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
-        $scope.checkConfigChange();
         return $scope.getStateById(stateId);
     };
 
@@ -315,7 +334,6 @@ function DFA($scope) {
             $scope.config.states.splice($scope.getArrayStateIdByStateId(stateId), 1);
             //update the other listeners when remove is finished
             $scope.updateListener();
-            $scope.checkConfigChange();
         }
     };
 
@@ -452,8 +470,8 @@ function DFA($scope) {
         if (!$scope.existsTransition(fromState, toState, transitonName) && $scope.existsStateWithId(fromState) &&
             $scope.existsStateWithId(toState)) {
             $scope.addToAlphabet(transitonName);
-            $scope.checkConfigChange();
             return $scope.addTransitionWithId($scope.config.countTransitionId++, fromState, toState, transitonName);
+
         } else {
             //TODO: BETTER DEBUG
         }
@@ -478,7 +496,6 @@ function DFA($scope) {
         $scope.updateListener();
         //fix changes wont update after addTransisiton from the graphdesigner
         $scope.safeApply();
-        $scope.checkConfigChange();
         return $scope.getTransitionById(transitionId);
     };
 
