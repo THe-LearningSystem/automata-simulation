@@ -3,8 +3,9 @@ var autoSim = angular.module('automata-simulation', [
   'ngRoute',
   'ui.bootstrap',
   'pascalprecht.translate',
-   'jsonFormatter',
-  'ui.slider'
+  'jsonFormatter',
+  'ui.slider',
+  'rzModule'
 ]).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/dfa', {
         templateUrl: 'view/dfa.html',

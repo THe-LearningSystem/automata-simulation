@@ -1,4 +1,4 @@
-@import 'bootstrap_variables';
+    @import 'bootstrap_variables';
 //svg diagramm variables
 //state Settings
 $stateColor: #CCC;
@@ -123,24 +123,24 @@ $selectedColor:#00b7ff;
 .animated-nextstate-svg .state-circle {
     fill: $animatedNextStateColor;
 }
-.animated-accepted-svg .state-circle{
-    fill:$animatedAcceptedColor;
+.animated-accepted-svg .state-circle {
+    fill: $animatedAcceptedColor;
 }
-.animated-not-accepted-svg .state-circle{
-    fill:$animatedNotAcceptedColor;
+.animated-not-accepted-svg .state-circle {
+    fill: $animatedNotAcceptedColor;
 }
 //others
 .animated-currentstate {
     color: $animatedCurrentStateColor;
 }
 .animated-nextstate {
-    color:$animatedNextStateColor;
+    color: $animatedNextStateColor;
 }
-.animated-accepted{
-    color:$animatedAcceptedColor;
+.animated-accepted {
+    color: $animatedAcceptedColor;
 }
-.animated-not-accepted{
-    color:$animatedNotAcceptedColor;
+.animated-not-accepted {
+    color: $animatedNotAcceptedColor;
 }
 .selectedForTransition {
     color: $animatedNextStateColor;
@@ -208,6 +208,7 @@ $selectedColor:#00b7ff;
 /*******
 *Layout*
 *******/
+
 $disabledColor: #AAA;
 .top-nav {
     height: 50px;
@@ -226,12 +227,12 @@ $disabledColor: #AAA;
     right: 0;
     height: 50px;
 }
-.automata-simulation-logo{
-    width:50px;
+.automata-simulation-logo {
+    width: 50px;
 }
-.automata-simulation-logo img{
-    height:50px;
-    width:50px;
+.automata-simulation-logo img {
+    height: 50px;
+    width: 50px;
 }
 //MENU
 .left-menu {
@@ -306,9 +307,8 @@ $disabledColor: #AAA;
     width: 50%;
     float: right;
 }
-
-button:disabled .icon{
-    color:$disabledColor;
+button:disabled .icon {
+    color: $disabledColor;
 }
 //TRANSITION MENU
 .transitions-menu-list {
@@ -326,7 +326,7 @@ input[type='text'] {
     border: 0;
 }
 .currentAutomatonName {
-    float:left;
+    float: left;
     font-size: 24px;
     max-width: 100%;
     cursor: pointer;
@@ -334,17 +334,26 @@ input[type='text'] {
 .inputField {
     z-index: 1;
 }
-
-.ui-slider-handle{
-    cursor:pointer !important;
+.ui-slider-handle {
+    cursor: pointer !important;
 }
-.dropdown li a{
-    cursor:pointer;
+.dropdown li a {
+    cursor: pointer;
 }
-
 .icon-check {
     color: limegreen;
 }
 .icon-times {
     color: red;
+}
+rzslider .rz-pointer {
+    top: -7px;
+    width: 16px;
+    height: 16px;
+}
+rzslider .rz-pointer:after {
+    top: 5px;
+    left: 5px;
+    width: 6px;
+    height: 6px;
 }

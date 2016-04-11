@@ -64,6 +64,36 @@ function DFA($scope, $translate) {
     $scope.inNameEdit = false;
 
     /**
+     * Options for the stepTimeOut-Slider
+     */
+    $scope.stepTimeOutSlider = {
+        options: {
+            floor: 0,
+            step: 100,
+            ceil: 3000,
+            hideLimitLabels: true,
+            translate: function (value) {
+                return value + ' ms';
+            }
+        }
+    };
+
+    /**
+     * Options for the loopTimeOut-Slider
+     */
+    $scope.loopTimeOutSlider = {
+        options: {
+            floor: 0,
+            step: 100,
+            ceil: 4000,
+            hideLimitLabels: true,
+            translate: function (value) {
+                return value + ' ms';
+            }
+        }
+    };
+
+    /**
      * Leave the input field after clicking the enter button
      */
     $scope.keypressCallback = function ($event) {

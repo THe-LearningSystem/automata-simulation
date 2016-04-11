@@ -6107,3 +6107,14 @@ input[type='text'] {
 
 .icon-times {
   color: red; }
+
+rzslider .rz-pointer {
+  top: -7px;
+  width: 16px;
+  height: 16px; }
+
+rzslider .rz-pointer:after {
+  top: 5px;
+  left: 5px;
+  width: 6px;
+  height: 6px; }
