@@ -20,6 +20,7 @@
         "Blob":false,
         "saveAs":false,
         "alert":false,
-        "document": false
+        "document": false,
+        "saveSvgAsPng": false
     }
 }

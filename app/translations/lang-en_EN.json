@@ -9,7 +9,12 @@
         "TTTEXT_IMPORT": "Import",
         "TTTEXT_ADDSTATE": "Add State",
         "TTTEXT_ADDTRANS": "Add Transition",
-        "TTTEXT_REMALL": "Delete All"
+        "TTTEXT_REMALL": "Reset Automaton"
+    },
+    
+    "LANG_DROP": {
+        "ENGLISH": "English",
+        "GERMAN": "German"
     },
 
 
@@ -38,7 +43,8 @@
 
     "DIA_SET": {
         "TITLE": "Diagramm Settings",
-        "GRID": "Grid"
+        "GRID": "Grid",
+        "SNAPPING": "Snapping"
     },
 
 
@@ -48,6 +54,10 @@
         "STARTSTATE": "StartState",
         "FINALSTATE": "FinalState",
         "SAVE": "Save"
+    },
+    
+    "TABLE":{
+        "TITLE": "Statetable"
     },
     
     

@@ -19,6 +19,10 @@ function SimulationDFA($scope) {
     self.nextState = null;
     self.transition = null;
 
+
+    //
+    self.isInputAccepted = false;
+
     self.settings = function () {
         self.simulationSettings = !self.simulationSettings;
     };
@@ -38,6 +42,8 @@ function SimulationDFA($scope) {
             transition: null,
             nextState: null
         };
+        //stack of the gone transitions
+        self.goneTransitions = [];
         //Animation Settings
         //saves the currentStateId -> for animating
         self.currentState = $scope.config.startState;
@@ -60,7 +66,7 @@ function SimulationDFA($scope) {
         //saves the steps we made T.
         self.madeSteps = 0;
         //the word we want to check
-        self.inputWord = $scope.inputWord;
+        self.inputWord = $scope.config.inputWord;
         //the word we already checked
         self.processedWord = '';
         //the char we checked at the step
@@ -152,6 +158,7 @@ function SimulationDFA($scope) {
         if (!self.animatedTransition) {
             self.animatedTransition = true;
             self.animated.transition = self.transition;
+            self.goneTransitions.push(self.transition);
 
             //Second: Paint the nextstate & wait
         } else if (!self.animatedNextState && self.animatedTransition) {
@@ -177,6 +184,8 @@ function SimulationDFA($scope) {
                 }
             }
 
+
+
             //Reset the step & start the next step
             self.isNextStepCalculated = false;
             self.animatedNextState = false;
@@ -185,6 +194,10 @@ function SimulationDFA($scope) {
 
             //push the currentState to the statusSequence
             self.statusSequence.push(self.currentState);
+
+            //check if there is a next transition
+            if (self.status !== "accepted" && self.status !== "not accepted")
+                self.calcNextStep();
         }
 
     };
@@ -273,8 +286,8 @@ function SimulationDFA($scope) {
             self.animatedNextState = false;
         } else if (self.animatedTransition) {
             self.animated.transition = null;
-
             self.animatedTransition = false;
+            self.goneTransitions.pop();
         } else {
             self.calcLastStep();
         }
@@ -289,16 +302,9 @@ function SimulationDFA($scope) {
         console.log(self.nextChar + " " + self.statusSequence[self.statusSequence.length - 2]);
 
         //get the gone way back
-        self.transition = _.filter($scope.config.transitions, function (transition) {
-            //if there is no next char then the word is not accepted
-            if (self.nextChar === undefined) {
-                self.status = 'not accepted';
-                return;
-            }
-            //get the nextState
-            return transition.fromState == self.statusSequence[self.statusSequence.length - 2] && transition.toState == self.currentState && transition.name == self.nextChar;
-        });
-        self.transition = self.transition[0];
+        self.transition = _.last(self.goneTransitions);
+        console.log(self.transition);
+        _.pullAt(self.goneTransitions, self.goneTransitions.length);
         //First: Paint the transition & wait
         self.animatedTransition = true;
         self.animated.transition = self.transition;
@@ -315,16 +321,15 @@ function SimulationDFA($scope) {
         self.processedWord = self.processedWord.slice(0, -1);
     };
 
-    //TODO: better name
-    self.checkTransition = function (transition, nextChar, statusSequence) {
-        //if there is no next char then the word is not accepted
-        if (nextChar === undefined) {
-            return;
+    self.getNextTransition = function (fromState, transitonName) {
+        for (var i = 0; i < $scope.config.transitions.length; i++) {
+            var transition = $scope.config.transitions[i];
+            if (transition.fromState == fromState && transition.name == transitonName) {
+                return transition;
+            }
         }
-        //get the nextState
-        return transition.fromState == _.last(statusSequence) && transition.name == nextChar;
+        return undefined;
     };
-
     /**
      * checks if a word is accepted from the automata
      * @return {Boolean} [description]
@@ -338,21 +343,20 @@ function SimulationDFA($scope) {
         var madeSteps = 0;
         var transition = null;
 
-        while (self.status === '') {
-            nextChar = $scope.inputWord[madeSteps];
+        while (madeSteps <= $scope.config.inputWord.length) {
+            nextChar = $scope.config.inputWord[madeSteps];
             //get the next transition
-            transition = _.filter($scope.config.transitions, self.checkTransition(transition, nextChar, statusSequence));
+            transition = self.getNextTransition(_.last(statusSequence), nextChar);
             //if there is no next transition, then the word is not accepted
             if (_.isEmpty(transition)) {
                 break;
             }
-            transition = transition[0];
             //push the new State to the sequence
             statusSequence.push(transition.toState);
             madeSteps++;
             //if outmadeSteps is equal to the length of the inputWord 
             //and our currenState is a finalState then the inputWord is accepted, if not its not accepted
-            if ($scope.inputWord.length == madeSteps) {
+            if ($scope.config.inputWord.length == madeSteps) {
                 if (_.include($scope.config.finalStates, _.last(statusSequence))) {
                     accepted = true;
                     break;
@@ -424,5 +428,14 @@ function SimulationDFA($scope) {
         d3.select(".glyphicon-pause").attr("class", "glyphicon glyphicon-play");
         self.isInPlay = false;
     };
+
+
+    $scope.updateListeners.push(self);
+    self.updateFunction = function () {
+        self.isInputAccepted = self.check();
+    };
+
+
+
 
 }

@@ -25,7 +25,7 @@ function StatetransitionfunctionDFA($scope) {
         var i;
 
 
-  
+
         self.functionData.transitions = $scope.config.alphabet;
 
 
@@ -35,7 +35,14 @@ function StatetransitionfunctionDFA($scope) {
         for (i = 0; i < $scope.config.states.length; i++) {
             stringStates = '';
             if ($scope.config.states[i].id == $scope.simulator.animated.currentState) {
-                stringStates += '<span class="animated-currentstate">';
+                if ($scope.simulator.status === "accepted") {
+                    stringStates += '<span class="animated-accepted">';
+                } else if ($scope.simulator.status === "not accepted") {
+                    stringStates += '<span class="animated-not-accepted">';
+                } else {
+                    stringStates += '<span class="animated-currentstate">';
+                }
+
                 stringStates += $scope.config.states[i].name;
                 stringStates += '</span>';
                 if (i < $scope.config.states.length - 1) {
@@ -105,7 +112,7 @@ function StatetransitionfunctionDFA($scope) {
         }
     };
 
-    
+
     /**************
      **SIMULATION**
      *************/
@@ -115,7 +122,7 @@ function StatetransitionfunctionDFA($scope) {
             self.updateFunction();
         }
     });
-    
+
     $scope.$watch('simulator.animated.transition', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             self.updateFunction();
