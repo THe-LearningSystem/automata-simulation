@@ -104,12 +104,12 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
     $scope.getCurrentLanguage = function () {
         var currentLanguage = $translate.proposedLanguage() || $translate.use();
         switch (currentLanguage) {
-            case "de_DE":
-                $scope.activeLanguage = '<span class="flag-icon flag-icon-de"></span> Deutsch';
-                break;
-            case "en_EN":
-                $scope.activeLanguage = '<span class="flag-icon flag-icon-gb"></span> English';
-                break;
+        case "de_DE":
+            $scope.activeLanguage = '<span class="flag-icon flag-icon-de"></span> Deutsch';
+            break;
+        case "en_EN":
+            $scope.activeLanguage = '<span class="flag-icon flag-icon-gb"></span> English';
+            break;
         }
     };
     $scope.getCurrentLanguage();
@@ -119,9 +119,9 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
 
 autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     $scope.export = function () {
-        
+
         // if no automaton exist, disable export (button)
-        
+
         /**
          * Returns all transition without the objReference
          * @return {Array} array of transition objects
@@ -161,13 +161,14 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
             type: "application/json",
         });
         saveAs(blob, $scope.config.name + ".json");
+        $scope.config.unSavedChanges = false;
     };
 
-    $scope.saveAsPng =function () {
-     saveSvgAsPng(document.getElementById("diagramm-svg"), $scope.config.name+".png");
+    $scope.saveAsPng = function () {
+        saveSvgAsPng(document.getElementById("diagramm-svg"), $scope.config.name + ".png");
     };
-    
-      $scope.import = function () {
+
+    $scope.import = function () {
         //Called when the user clicks on the import Button and opens the hidden-file-input
         angular.element('#hidden-file-upload').trigger('click');
     };
@@ -218,7 +219,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     };
 
     function createOtherObjects(jsonObj) {
-            //create States
+        //create States
         _.forEach(jsonObj.states, function (value, key) {
             $scope.$parent.addStateWithId(value.id, value.name, value.x, value.y);
         });
@@ -240,22 +241,22 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
 
 
 //from: http://stackoverflow.com/questions/19415394/with-ng-bind-html-unsafe-removed-how-do-i-inject-html
-autoSim.filter('to_trusted', ['$sce', function($sce){
-        return function(text) {
-            return $sce.trustAsHtml(text);
-        };
+autoSim.filter('to_trusted', ['$sce', function ($sce) {
+    return function (text) {
+        return $sce.trustAsHtml(text);
+    };
     }]);
 
 
 // to defocus an field, when clicked on someother place than the focused field
 /* jshint -W030 */
-autoSim.directive('showFocus', function($timeout) {
-  return function(scope, element, attrs) {
-    scope.$watch(attrs.showFocus, 
-      function (newValue) { 
-        $timeout(function() {
-            newValue && element[0].focus();
-        });
-      },true);
-  };    
+autoSim.directive('showFocus', function ($timeout) {
+    return function (scope, element, attrs) {
+        scope.$watch(attrs.showFocus,
+            function (newValue) {
+                $timeout(function () {
+                    newValue && element[0].focus();
+                });
+            }, true);
+    };
 });

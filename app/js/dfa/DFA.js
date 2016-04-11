@@ -36,6 +36,8 @@ function DFA($scope, $translate) {
     $scope.defaultConfig.inputWord = '';
     //the default name
     $scope.defaultConfig.name = "Untitled Automaton";
+    //if there is something unsaved
+    $scope.defaultConfig.unSavedChanges = false;
 
 
     //Config Object
