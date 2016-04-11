@@ -66,6 +66,7 @@ function GraphdesignerDFA($scope, svgSelector) {
                 return transition;
             }
         }
+        return undefined;
     };
 
     /**
@@ -539,6 +540,10 @@ function GraphdesignerDFA($scope, svgSelector) {
                 return n.id == tmpTransition.id;
             });
             self.writeTransitionText(tmpDrawnTransition.objReference.select(".transition-text"), tmpDrawnTransition.names);
+            drawConfig = self.getTransitionDrawConfig(tmpTransition);
+            tmpDrawnTransition.objReference.select(".transition-text")
+                .attr("x", drawConfig.xText)
+                .attr("y", drawConfig.yText);
         }
 
     };
@@ -875,6 +880,14 @@ function GraphdesignerDFA($scope, svgSelector) {
         return vecC;
     }
 
+    function toDegrees(angle) {
+        return angle * (180 / Math.PI);
+    }
+
+    function toRadians(angle) {
+        return angle * (Math.PI / 180);
+    }
+
     /**
      * expands a vector with a given factor
      * @param   {object} a      vector
@@ -887,6 +900,32 @@ function GraphdesignerDFA($scope, svgSelector) {
             y: a.y * factor
         };
     }
+
+    function fixVectorLength(a) {
+        var tmp = 1 / Math.sqrt(a.x * a.x + a.y * a.y);
+        return {
+            x: a.x * tmp,
+            y: a.y * tmp
+
+        };
+    }
+
+    function AngleBetweenTwoVectors(a, b) {
+        var tmp = (a.x * b.x + a.y * b.y) / (Math.sqrt(a.x * a.x + a.y * a.y) * Math.sqrt(b.x * b.x + b.y * b.y));
+        var tmp2 = Math.acos(tmp);
+        return {
+            val: tmp,
+            rad: tmp2,
+            degree: toDegrees(tmp2)
+        };
+    }
+
+    function newAngle(a, b) {
+        var dot1 = a.x * b.x + a.y * b.y;
+        var dot2 = a.x * b.y - a.y * b.x;
+        return Math.atan2(dot2, dot1);
+    }
+
 
     //Get the Path from an array -> for the transition
     self.bezierLine = d3.svg.line()
@@ -905,7 +944,6 @@ function GraphdesignerDFA($scope, svgSelector) {
      * @returns {object}  the drawConfig
      */
     self.getTransitionDrawConfig = function (transition, forceApproach) {
-        console.log(transition);
         //the distance the endPoint of the transition is away from the state
         var gapBetweenTransitionLineAndState = 3;
         var obj = {};
@@ -924,10 +962,15 @@ function GraphdesignerDFA($scope, svgSelector) {
         var x2 = toState.x;
         var y2 = toState.y;
 
+        var xCurv1,
+            yCurv1,
+            xCurv2,
+            yCurv2;
+
         //needed for the calculation of the coordinates
         var directionvector = {
-            "x": x2 - x1,
-            "y": y2 - y1
+            x: x2 - x1,
+            y: y2 - y1
         };
         var directionVectorLength = Math.sqrt(directionvector.x * directionvector.x + directionvector.y * directionvector.y);
         var nStart = self.settings.stateRadius / directionVectorLength;
@@ -940,6 +983,7 @@ function GraphdesignerDFA($scope, svgSelector) {
 
         obj.xStart = x1 + nStart * directionvector.x;
         obj.yStart = y1 + nStart * directionvector.y;
+
         obj.xEnd = x2 - nEnd * directionvector.x;
         obj.yEnd = y2 - nEnd * directionvector.y;
         obj.xDiff = x2 - x1;
@@ -960,27 +1004,115 @@ function GraphdesignerDFA($scope, svgSelector) {
             y: 0,
             z: 1
         };
-        var stretchValue, movingPoint;
+
+        var vecX = {
+            x: 1,
+            y: 0,
+            z: 0
+        };
+
+
+
+        //TEST
+        console.log('######');
+        console.log({
+            x: obj.xStart - x1,
+            y: obj.yStart - y1
+        });
+        console.log({
+            x: self.settings.stateRadius,
+            y: 0
+        });
+
+        var x = newAngle({
+            x: obj.xStart - x1,
+            y: obj.yStart - y1
+        }, {
+            x: self.settings.stateRadius,
+            y: 0
+        });
+        console.log('######!!!');
+        console.log(x);
+        var test = x;
+
+
+        var degreeConstant = 30;
+        obj.xStartUpperPoint = x1 + (self.settings.stateRadius * Math.cos(test - toRadians(degreeConstant)));
+        obj.yStartUpperPoint = y1 + (self.settings.stateRadius * Math.sin(test - toRadians(degreeConstant)));
+        obj.xStartLowerPoint = x1 + (self.settings.stateRadius * Math.cos(test - toRadians(degreeConstant)));
+        obj.yStartLowerPoint = y1 + (self.settings.stateRadius * Math.sin(test - toRadians(degreeConstant)));
+        x = newAngle({
+            x: obj.xEnd - x2,
+            y: obj.yEnd - y2
+        }, {
+            x: self.settings.stateRadius,
+            y: 0
+        });
+        test = x.degree;
+        obj.xEndUpperPoint = x2 + (self.settings.stateRadius * Math.cos(test + toRadians(degreeConstant)));
+        obj.yEndUpperPoint = y2 + (self.settings.stateRadius * Math.sin(test + toRadians(degreeConstant)));
+        obj.xEndLowerPoint = x2 + (self.settings.stateRadius * Math.cos(test + toRadians(degreeConstant)));
+        obj.yEndLowerPoint = y2 + (self.settings.stateRadius * Math.sin(test + toRadians(degreeConstant)));
 
         if (obj.approachTransition) {
-            stretchValue = 70 * (1 / obj.distance * 1.1) * 1.4;
-            movingPoint = crossPro(vecA, vecB);
-            movingPoint = expandVector(movingPoint, stretchValue);
+            //goes right
+            console.log(directionvector);
+            if (directionvector.x >= 0) {
+                obj.xStart = obj.xStartUpperPoint;
+                obj.yStart = obj.yStartUpperPoint;
 
-            obj.xMidCurv = movingPoint.x + obj.xMid;
-            obj.yMidCurv = movingPoint.y + obj.yMid;
-            obj.xText = obj.xMidCurv;
-            obj.yText = obj.yMidCurv;
-        } else {
-            stretchValue = 0.12;
-            movingPoint = crossPro(vecA, vecB);
-            movingPoint = expandVector(movingPoint, stretchValue);
+                obj.xEnd = obj.xEndUpperPoint;
+                obj.yEnd = obj.yEndUpperPoint;
+            } else {
+                obj.xStart = obj.xStartLowerPoint;
+                obj.yStart = obj.yStartLowerPoint;
 
-            obj.xMidCurv = movingPoint.x + obj.xMid;
-            obj.yMidCurv = movingPoint.y + obj.yMid;
-            obj.xText = obj.xMidCurv;
-            obj.yText = obj.yMidCurv;
+
+                obj.xEnd = obj.xEndLowerPoint;
+                obj.yEnd = obj.yEndLowerPoint;
+            }
         }
+
+
+
+        var stretchValue, movingPoint;
+        //OLD:stretchValue = (70 * (1 / obj.distance * 1.1) * 1.4);
+        stretchValue = 20;
+
+        movingPoint = crossPro(vecA, vecB);
+        movingPoint = fixVectorLength(movingPoint);
+        movingPoint = expandVector(movingPoint, stretchValue);
+        obj.xMidCurv = movingPoint.x + obj.xMid;
+        obj.yMidCurv = movingPoint.y + obj.yMid;
+
+
+        //textposition
+        var existsDrawnTrans = self.existsDrawnTransition(fromState.id, toState.id);
+        var drawnTrans = self.getDrawnTransition(fromState.id, toState.id);
+        var transNamesLength;
+        if (drawnTrans) {
+            transNamesLength = drawnTrans.names.length;
+        } else {
+            transNamesLength = 1;
+        }
+        var angleAAndX = AngleBetweenTwoVectors(vecA, vecX);
+        var textStretchValue, textPoint;
+
+        if (obj.approachTransition) {
+            //TODO: BETTER STRECHVALUE
+            textStretchValue = (15 * transNamesLength);
+
+        } else {
+            textStretchValue = (10 * (transNamesLength) * +0.5);
+
+        }
+        textPoint = crossPro(vecA, vecB);
+        textPoint = fixVectorLength(textPoint);
+        textPoint = expandVector(textPoint, textStretchValue);
+
+        obj.xText = textPoint.x + obj.xMid;
+        obj.yText = textPoint.y + obj.yMid;
+
 
         /**4:Calc the Path**/
         var array = [];
@@ -997,6 +1129,7 @@ function GraphdesignerDFA($scope, svgSelector) {
             ];
         }
         obj.path = self.bezierLine(array);
+        console.log(obj);
         return obj;
     };
 
@@ -1118,6 +1251,10 @@ function GraphdesignerDFA($scope, svgSelector) {
             });
             //drawn the new name to the old transition (svg)
             self.writeTransitionText(drawnTransition.objReference.select('.transition-text'), self.getDrawnTransition(transition.fromState, transition.toState).names);
+            var drawConfigNew = self.getTransitionDrawConfig(transition);
+            drawnTransition.objReference.select('.transition-text')
+                .attr("x", (drawConfigNew.xText))
+                .attr("y", (drawConfigNew.yText));
 
         }
     };
@@ -1168,7 +1305,7 @@ function GraphdesignerDFA($scope, svgSelector) {
             var tmpObject = {};
 
             tmpObject = value;
-            if(value.id == transitionId){
+            if (value.id == transitionId) {
                 tmpObject.isFocus = true;
             }
             //add other variables

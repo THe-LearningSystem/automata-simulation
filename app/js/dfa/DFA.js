@@ -446,7 +446,6 @@ function DFA($scope) {
             if ($scope.config.transitions[i].fromState == fromState && (tmpName === null || $scope.config.transitions[i].name.charCodeAt(0) > tmpName.charCodeAt(0)))
                 tmpName = $scope.config.transitions[i].name;
         }
-        console.log(tmpName);
         if (tmpName !== null) {
             return String.fromCharCode(tmpName.charCodeAt() + 1);
         } else {
