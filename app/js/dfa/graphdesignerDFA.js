@@ -545,7 +545,12 @@ function GraphdesignerDFA($scope, svgSelector) {
             tmpDrawnTransition.objReference.select(".transition-text")
                 .attr("x", drawConfig.xText)
                 .attr("y", drawConfig.yText);
+            console.log(tmpDrawnTransition);
+
+            self.openTransitionMenu(tmpDrawnTransition.names[tmpDrawnTransition.names.length - 1].id);
+
         }
+
 
     };
 
@@ -1292,10 +1297,16 @@ function GraphdesignerDFA($scope, svgSelector) {
 
         _.forEach(self.selectedTransition.names, function (value, key) {
             var tmpObject = {};
+            console.log("asd" + key);
+            tmpObject = cloneObject(value);
 
-            tmpObject = value;
-            if (value.id == transitionId) {
+            if (transitionId !== undefined) {
+                if (value.id == transitionId) {
+                    tmpObject.isFocus = true;
+                }
+            } else if (self.selectedTransition.names.length - 1 === key) {
                 tmpObject.isFocus = true;
+
             }
             //add other variables
             tmpObject.ttt = "";

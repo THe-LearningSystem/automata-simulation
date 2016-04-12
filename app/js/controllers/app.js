@@ -22,7 +22,7 @@ var autoSim = angular.module('automata-simulation', [
         redirectTo: '/dfa'
     });
 
-    
+
 
 }]).config(['$translateProvider', function ($translateProvider) {
     //translation
@@ -206,7 +206,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     $scope.importConfig = function (jsonObj) {
         //clear the config at the start
         console.log($scope.$parent);
-        $scope.resetConfig();
+        $scope.resetAutomaton();
         var tmpObject = cloneObject(jsonObj);
         //clear the objects we create after 
         tmpObject.states = [];

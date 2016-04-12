@@ -295,13 +295,6 @@
         color: $disabledColor;
     }
     
-    input[type='text'] {
-        width: 85px;
-        height: 30px;
-        font-size: 18px;
-        border: 0;
-    }
-    
     .currentAutomatonName {
         display: table;
         height: 30px;
@@ -553,6 +546,9 @@
     }
     
     .transitions-menu-list li {
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #B1B1B1;
         list-style-type: none;
     }
     
@@ -608,4 +604,9 @@
         left: 5px;
         width: 6px;
         height: 6px;
+    }
+    
+    //TransitionButton
+    body .transbutton {
+        @extend .btn-danger
     }
