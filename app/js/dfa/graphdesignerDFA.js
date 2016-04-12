@@ -198,8 +198,9 @@ function GraphdesignerDFA($scope, svgSelector) {
 
 
     //first draw the transitions -> nodes are in front of them if they overlap
-    self.svgTransitions = self.svg.append("g").attr("id", "transitions");
+
     self.svgStates = self.svg.append("g").attr("id", "states");
+    self.svgTransitions = self.svg.append("g").attr("id", "transitions");
 
 
     //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
@@ -921,11 +922,50 @@ function GraphdesignerDFA($scope, svgSelector) {
     }
 
     function newAngle(a, b) {
-        var dot1 = a.x * b.x + a.y * b.y;
-        var dot2 = a.x * b.y - a.y * b.x;
-        return Math.atan2(dot2, dot1);
+        var dot1 = a.x * b.x + a.y * b.y; //dot product
+        var dot2 = a.x * b.y - a.y * b.x; //determinant
+        return Math.atan2(dot2, dot1); //atan2(y, x) or atan2(sin, cos)
     }
 
+    var degreeConstant = 30;
+
+    /*
+    function getAngles(a, b) {
+        var angle = toDegrees(newAngle(a, b));
+
+        var upperAngle = angle + degreeConstant;
+
+        var lowerAngle = angle - degreeConstant;
+
+
+        return {
+            angle: angle,
+            lowerAngle: lowerAngle,
+            upperAngle: upperAngle
+        };
+    }*/
+
+    function getAngles(a, b) {
+        var angle = toDegrees(newAngle(a, b));
+        if (angle < 0) {
+            angle = angle + 360;
+        }
+
+        var upperAngle = angle + degreeConstant;
+        if (upperAngle > 360) {
+            upperAngle -= 360;
+        }
+        var lowerAngle = angle - degreeConstant;
+        if (lowerAngle < 0) {
+            lowerAngle += 360;
+        }
+
+        return {
+            angle: angle,
+            lowerAngle: lowerAngle,
+            upperAngle: upperAngle
+        };
+    }
 
     //Get the Path from an array -> for the transition
     self.bezierLine = d3.svg.line()
@@ -1011,70 +1051,112 @@ function GraphdesignerDFA($scope, svgSelector) {
             z: 0
         };
 
-
+        $scope.testDataAngle = {};
+        $scope.testDataAngle.trans = transition;
 
         //TEST
-        console.log('######');
-        console.log({
-            x: obj.xStart - x1,
-            y: obj.yStart - y1
-        });
-        console.log({
-            x: self.settings.stateRadius,
-            y: 0
-        });
 
-        var x = newAngle({
+
+        var xStart = getAngles({
             x: obj.xStart - x1,
             y: obj.yStart - y1
         }, {
             x: self.settings.stateRadius,
             y: 0
         });
-        console.log('######!!!');
-        console.log(x);
-        var test = x;
 
+        $scope.testDataAngle.start = {};
+        $scope.testDataAngle.start.angle = xStart.angle;
+        $scope.testDataAngle.start.upper = xStart.upperAngle;
+        $scope.testDataAngle.start.lower = xStart.lowerAngle;
 
-        var degreeConstant = 30;
-        obj.xStartUpperPoint = x1 + (self.settings.stateRadius * Math.cos(test - toRadians(degreeConstant)));
-        obj.yStartUpperPoint = y1 + (self.settings.stateRadius * Math.sin(test - toRadians(degreeConstant)));
-        obj.xStartLowerPoint = x1 + (self.settings.stateRadius * Math.cos(test - toRadians(degreeConstant)));
-        obj.yStartLowerPoint = y1 + (self.settings.stateRadius * Math.sin(test - toRadians(degreeConstant)));
-        x = newAngle({
+        obj.CurvedPoint = {};
+        obj.CurvedPoint.StartUpperX = x1 + (self.settings.stateRadius * Math.cos(toRadians(xStart.upperAngle)));
+        obj.CurvedPoint.StartUpperY = y1 - (self.settings.stateRadius * Math.sin(toRadians(xStart.upperAngle)));
+        obj.CurvedPoint.StartLowerX = x1 + (self.settings.stateRadius * Math.cos(toRadians(xStart.lowerAngle)));
+        obj.CurvedPoint.StartLowerY = y1 - (self.settings.stateRadius * Math.sin(toRadians(xStart.upperAngle)));
+        var xEnd = getAngles({
             x: obj.xEnd - x2,
             y: obj.yEnd - y2
         }, {
             x: self.settings.stateRadius,
             y: 0
         });
-        test = x.degree;
-        obj.xEndUpperPoint = x2 + (self.settings.stateRadius * Math.cos(test + toRadians(degreeConstant)));
-        obj.yEndUpperPoint = y2 + (self.settings.stateRadius * Math.sin(test + toRadians(degreeConstant)));
-        obj.xEndLowerPoint = x2 + (self.settings.stateRadius * Math.cos(test + toRadians(degreeConstant)));
-        obj.yEndLowerPoint = y2 + (self.settings.stateRadius * Math.sin(test + toRadians(degreeConstant)));
+
+        $scope.testDataAngle.end = {};
+        $scope.testDataAngle.end.angle = xEnd.angle;
+        $scope.testDataAngle.end.upper = xEnd.upperAngle;
+        $scope.testDataAngle.end.lower = xEnd.lowerAngle;
+
+        obj.CurvedPoint.EndUpperX = x2 + (self.settings.stateRadius * Math.cos(toRadians(xEnd.upperAngle)));
+        obj.CurvedPoint.EndUpperY = y2 - (self.settings.stateRadius * Math.sin(toRadians(xEnd.upperAngle)));
+        obj.CurvedPoint.EndLowerX = x2 + (self.settings.stateRadius * Math.cos(toRadians(xEnd.lowerAngle)));
+        obj.CurvedPoint.EndLowerY = y2 - (self.settings.stateRadius * Math.sin(toRadians(xEnd.lowerAngle)));
+        $scope.testDataAngle.end.points = obj.CurvedPoint;
+
+        $scope.safeApply();
 
         if (obj.approachTransition) {
             //goes right
-            console.log(directionvector);
-            if (directionvector.x >= 0) {
-                obj.xStart = obj.xStartUpperPoint;
-                obj.yStart = obj.yStartUpperPoint;
+            if (xStart.angle < 180) {
+                obj.xStart = obj.CurvedPoint.StartUpperX;
+                obj.yStart = obj.CurvedPoint.StartUpperY;
 
-                obj.xEnd = obj.xEndUpperPoint;
-                obj.yEnd = obj.yEndUpperPoint;
+                obj.xEnd = obj.CurvedPoint.EndLowerX;
+                obj.yEnd = obj.CurvedPoint.EndLowerX;
             } else {
-                obj.xStart = obj.xStartLowerPoint;
-                obj.yStart = obj.yStartLowerPoint;
+                obj.xStart = obj.CurvedPoint.StartLowerX;
+                obj.yStart = obj.CurvedPoint.StartLowerY;
 
-
-                obj.xEnd = obj.xEndLowerPoint;
-                obj.yEnd = obj.yEndLowerPoint;
+                obj.xEnd = obj.CurvedPoint.EndUpperX;
+                obj.yEnd = obj.CurvedPoint.EndUpperY;
             }
+
+
         }
+        /*
+                
+                console.log(test);
+                obj.xStartUpperPoint = x1 + (self.settings.stateRadius * Math.cos(toRadians(test - degreeConstant)));
+                obj.yStartUpperPoint = y1 + (self.settings.stateRadius * Math.sin(toRadians(test - degreeConstant)));
+                obj.xStartLowerPoint = x1 + (self.settings.stateRadius * Math.cos(toRadians(test - degreeConstant)));
+                obj.yStartLowerPoint = y1 + (self.settings.stateRadius * Math.sin(toRadians(test - degreeConstant)));
+                x = newAngle({
+                    x: obj.xEnd - x2,
+                    y: obj.yEnd - y2
+                }, {
+                    x: self.settings.stateRadius,
+                    y: 0
+                });
+                test = x;
+                if (test < 0) {
+                    test = test + 360;
+                }
+
+                obj.xEndUpperPoint = x2 + (self.settings.stateRadius * Math.cos(toRadians(test + degreeConstant)));
+                obj.yEndUpperPoint = y2 + (self.settings.stateRadius * Math.sin(toRadians(test + degreeConstant)));
+                obj.xEndLowerPoint = x2 + (self.settings.stateRadius * Math.cos(toRadians(test - degreeConstant)));
+                obj.yEndLowerPoint = y2 + (self.settings.stateRadius * Math.sin(toRadians(test - degreeConstant)));
+
+                if (obj.approachTransition) {
+                    //goes right
+                    console.log(directionvector);
+                    if (directionvector.x >= 0) {
+                        obj.xStart = obj.xStartUpperPoint;
+                        obj.yStart = obj.yStartUpperPoint;
+
+                        obj.xEnd = obj.xEndUpperPoint;
+                        obj.yEnd = obj.yEndUpperPoint;
+                    } else {
+                        obj.xStart = obj.xStartLowerPoint;
+                        obj.yStart = obj.yStartLowerPoint;
 
 
-
+                        obj.xEnd = obj.xEndLowerPoint;
+                        obj.yEnd = obj.yEndLowerPoint;
+                    }
+                }
+                */
         var stretchValue, movingPoint;
         //OLD:stretchValue = (70 * (1 / obj.distance * 1.1) * 1.4);
         stretchValue = 20;
