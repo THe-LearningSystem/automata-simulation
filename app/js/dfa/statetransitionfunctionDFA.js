@@ -137,8 +137,6 @@ function StatetransitionfunctionDFA($scope) {
 
     $scope.$watch('graphdesigner.selectedTransition', function (newValue, oldValue) {
         if (newValue !== oldValue) {
-            console.log("test");
-            console.log(newValue);
             self.updateFunction();
         }
     });

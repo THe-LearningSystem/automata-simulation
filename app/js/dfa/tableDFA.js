@@ -15,35 +15,35 @@ function TableDFA($scope) {
         var alphabetCounter;
 
         //prepare alphabet
-        for (alphabetCounter = 0; alphabetCounter < dfa.alphabet.length; alphabetCounter++) {
-            var transitionName = dfa.alphabet[alphabetCounter];
+        _.forEach($scope.config.alphabet, function (character, key) {
             var selectedTrans = "";
             if ($scope.graphdesigner.selectedTransition !== null && _.find($scope.graphdesigner.selectedTransition.names, {
-                    name: transitionName
+                    name: character
                 }) !== undefined) {
                 selectedTrans = "selected";
             }
 
             var tmp;
-            if ($scope.simulator.animated.transition && $scope.simulator.animated.transition.name === transitionName) {
-                tmp = '<span class="animated-transition ' + selectedTrans + '">' + transitionName + '</span>';
+            if ($scope.simulator.animated.transition && $scope.simulator.animated.transition.name === character) {
+                tmp = '<span class="animated-transition ' + selectedTrans + '">' + character + '</span>';
             } else {
-                tmp = '<span class="' + selectedTrans + '">' + transitionName + '</span>';
+                tmp = '<span class="' + selectedTrans + '">' + character + '</span>';
             }
             self.alphabet.push(tmp);
-        }
+        });
 
         // iterates over all States
-        for (var i = 0; i < dfa.states.length; i++) {
-            var tmpState = dfa.states[i];
+        _.forEach($scope.config.states, function (state, key) {
+
+
             var tmpObject = {};
-            tmpObject.id = tmpState.id;
+            tmpObject.id = state.id;
             // marks the current active state at the simulation in the table
             var selectedClass = "";
-            if ($scope.graphdesigner.selectedState !== null && $scope.graphdesigner.selectedState.id == tmpState.id) {
+            if ($scope.graphdesigner.selectedState !== null && $scope.graphdesigner.selectedState.id == state.id) {
                 selectedClass = "selected";
             }
-            if ($scope.simulator.animated.currentState == tmpState.id) {
+            if ($scope.simulator.animated.currentState == state.id) {
                 var animatedClass = "";
                 if ($scope.simulator.status === "accepted") {
                     animatedClass = "animated-accepted";
@@ -52,29 +52,26 @@ function TableDFA($scope) {
                 } else {
                     animatedClass = "animated-currentstate";
                 }
-                tmpObject.name = '<span class="' + animatedClass + ' ' + selectedClass + '">' + tmpState.name + '</span>';
+                tmpObject.name = '<span class="' + animatedClass + ' ' + selectedClass + '">' + state.name + '</span>';
             } else {
-                tmpObject.name = '<span class="' + selectedClass + '">' + tmpState.name + '</span>';
+                tmpObject.name = '<span class="' + selectedClass + '">' + state.name + '</span>';
             }
             tmpObject.trans = [];
 
 
             // iterates over all aplphabet 
-            for (alphabetCounter = 0; alphabetCounter < dfa.alphabet.length; alphabetCounter++) {
-                var tmpTransitionName = dfa.alphabet[alphabetCounter];
+            _.forEach($scope.config.alphabet, function (character, key) {
                 var foundTransition = null;
 
                 // iterates over the available transitions and saves found transitions
-                for (var transitionCounter = 0; transitionCounter < dfa.transitions.length; transitionCounter++) {
-                    var tmpTransition = dfa.transitions[transitionCounter];
-                    if (tmpTransition.fromState === tmpState.id && tmpTransition.name === tmpTransitionName) {
-                        foundTransition = tmpTransition;
-
+                _.forEach($scope.config.transitions, function (transition, key) {
+                    if (transition.fromState === state.id && transition.name === character) {
+                        foundTransition = transition;
                     }
-                }
+                });
 
                 var trans = {};
-                trans.alphabet = tmpTransitionName;
+                trans.alphabet = character;
 
                 // saves the found Transition in "Trans.State"
                 if (foundTransition !== null) {
@@ -92,13 +89,11 @@ function TableDFA($scope) {
                     trans.State = "";
                 }
 
-
-
                 tmpObject.trans.push(trans);
-            }
+            });
             self.states.push(tmpObject);
 
-        }
+        });
 
     };
 
