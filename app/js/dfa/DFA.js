@@ -441,16 +441,24 @@ function DFA($scope) {
     };
 
     $scope.getNextTransitionName = function (fromState) {
-        var tmpName = null;
+        var namesArray = [];
         for (var i = 0; i < $scope.config.transitions.length; i++) {
-            if ($scope.config.transitions[i].fromState == fromState && (tmpName === null || $scope.config.transitions[i].name.charCodeAt(0) > tmpName.charCodeAt(0)))
-                tmpName = $scope.config.transitions[i].name;
+            if ($scope.config.transitions[i].fromState == fromState) {
+                namesArray.push($scope.config.transitions[i].name);
+            }
         }
-        if (tmpName !== null) {
-            return String.fromCharCode(tmpName.charCodeAt() + 1);
-        } else {
-            return 'a';
+        var foundNextName = false;
+        var tryChar = "a";
+        while (!foundNextName) {
+            var value = _.indexOf(namesArray, tryChar);
+            if (value === -1) {
+                foundNextName = true;
+            } else {
+                tryChar = String.fromCharCode(tryChar.charCodeAt() + 1);
+            }
         }
+        return tryChar;
+
     };
 
     /**
