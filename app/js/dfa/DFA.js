@@ -488,6 +488,27 @@ function DFA($scope, $translate) {
         return tmp;
     };
 
+    $scope.getNextTransitionName = function (fromState) {
+        var namesArray = [];
+        for (var i = 0; i < $scope.config.transitions.length; i++) {
+            if ($scope.config.transitions[i].fromState == fromState) {
+                namesArray.push($scope.config.transitions[i].name);
+            }
+        }
+        var foundNextName = false;
+        var tryChar = "a";
+        while (!foundNextName) {
+            var value = _.indexOf(namesArray, tryChar);
+            if (value === -1) {
+                foundNextName = true;
+            } else {
+                tryChar = String.fromCharCode(tryChar.charCodeAt() + 1);
+            }
+        }
+        return tryChar;
+
+    };
+
     /**
      * Adds a transition at the end of the transitions array
      * @param {number} fromState      The id from the fromState

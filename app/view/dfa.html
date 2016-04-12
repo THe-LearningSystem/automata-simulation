@@ -120,6 +120,9 @@
         <p>Graphdesigner Input:
             <json-formatter json="graphdesigner.input" open="1"></json-formatter>
         </p>
+        <p>Graphdesigner Input:
+            <json-formatter json="testDataAngle" open="1"></json-formatter>
+        </p>
     </menuitemextendable>
 </div>
 
@@ -172,7 +175,7 @@
     <menuitem titlename="STATE_MENU.TITLE" ng-show="graphdesigner.showStateMenu">
         <div>
             <p>{{"STATE_MENU.NAME" | translate}}</br>
-                <input id="state-input-name" ng-model="graphdesigner.input.stateName" maxlength="5" uib-tooltip="{{graphdesigner.input.ttt | translate}}" tooltip-is-open="graphdesigner.input.tttisopen" tooltip-placement="left" tooltip-trigger="none">
+                <input class="form-control" id="state-input-name" ng-model="graphdesigner.input.stateName" maxlength="5" uib-tooltip="{{graphdesigner.input.ttt | translate}}" tooltip-is-open="graphdesigner.input.tttisopen" tooltip-placement="left" tooltip-trigger="none" show-focus="graphdesigner.showStateMenu">
             </p>
         </div>
         <div>
@@ -187,12 +190,12 @@
     </menuitem>
     <!--Transition Menu -->
     <menuitem titlename="TRANS_MENU.TITLE" ng-show="graphdesigner.showTransitionMenu">
-        <p>{{"STATE_MENU.STARTSTATE" | translate}}:{{graphdesigner.input.fromState}}</p>
-        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{graphdesigner.input.toState}}</p>
+        <p>{{"STATE_MENU.STARTSTATE" | translate}}:{{graphdesigner.input.fromState.name}}</p>
+        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{graphdesigner.input.toState.name}}</p>
         <ul class="transitions-menu-list">
             <li ng-repeat="(key, value) in graphdesigner.input.transitions">
                 <p>{{"TRANS_MENU.NAME" | translate}}:
-                    <input type="text" ng-model="value.name" maxlength="1" uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen" tooltip-placement="left" tooltip-trigger="none">
+                    <input type="text" class="form-control" ng-model="value.name" maxlength="1" uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen" tooltip-placement="left" tooltip-trigger="none" ng-attr-show-focus="{{value.isFocus || undefined}}">
                 </p>
                 <button class="btn btn-danger" ng-click="removeTransition(value.id)">Delete</button>
             </li>
