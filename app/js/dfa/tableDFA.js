@@ -17,13 +17,18 @@ function TableDFA($scope) {
         //prepare alphabet
         for (alphabetCounter = 0; alphabetCounter < dfa.alphabet.length; alphabetCounter++) {
             var transitionName = dfa.alphabet[alphabetCounter];
-
+            var selectedTrans = "";
+            if ($scope.graphdesigner.selectedTransition !== null && _.find($scope.graphdesigner.selectedTransition.names, {
+                    name: transitionName
+                }) !== undefined) {
+                selectedTrans = "selected";
+            }
 
             var tmp;
             if ($scope.simulator.animated.transition && $scope.simulator.animated.transition.name === transitionName) {
-                tmp = '<span class="animated-transition">' + transitionName + '</span>';
+                tmp = '<span class="animated-transition ' + selectedTrans + '">' + transitionName + '</span>';
             } else {
-                tmp = transitionName;
+                tmp = '<span class="' + selectedTrans + '">' + transitionName + '</span>';
             }
             self.alphabet.push(tmp);
         }
@@ -34,17 +39,22 @@ function TableDFA($scope) {
             var tmpObject = {};
             tmpObject.id = tmpState.id;
             // marks the current active state at the simulation in the table
+            var selectedClass = "";
+            if ($scope.graphdesigner.selectedState !== null && $scope.graphdesigner.selectedState.id == tmpState.id) {
+                selectedClass = "selected";
+            }
             if ($scope.simulator.animated.currentState == tmpState.id) {
+                var animatedClass = "";
                 if ($scope.simulator.status === "accepted") {
-                    tmpObject.name = '<span class="animated-accepted">' + tmpState.name + '</span>';
+                    animatedClass = "animated-accepted";
                 } else if ($scope.simulator.status === "not accepted") {
-                    tmpObject.name = '<span class="animated-not-accepted">' + tmpState.name + '</span>';
+                    animatedClass = "animated-not-accepted";
                 } else {
-
-                    tmpObject.name = '<span class="animated-currentstate">' + tmpState.name + '</span>';
+                    animatedClass = "animated-currentstate";
                 }
+                tmpObject.name = '<span class="' + animatedClass + ' ' + selectedClass + '">' + tmpState.name + '</span>';
             } else {
-                tmpObject.name = tmpState.name;
+                tmpObject.name = '<span class="' + selectedClass + '">' + tmpState.name + '</span>';
             }
             tmpObject.trans = [];
 
@@ -69,11 +79,14 @@ function TableDFA($scope) {
                 // saves the found Transition in "Trans.State"
                 if (foundTransition !== null) {
                     var tmpToState = $scope.getStateById(foundTransition.toState);
-
+                    var selectedTrans = "";
+                    if ($scope.graphdesigner.selectedTransition !== null && $scope.graphdesigner.selectedTransition.toState === tmpToState.id) {
+                        selectedTrans = "selected";
+                    }
                     if ($scope.simulator.animated.nextState == tmpToState.id && foundTransition.name == $scope.simulator.animated.transition.name) {
-                        trans.State = '<span class="animated-nextstate">' + tmpToState.name + '</span>';
+                        trans.State = '<span class="animated-nextstate ' + selectedTrans + '">' + tmpToState.name + '</span>';
                     } else {
-                        trans.State = tmpToState.name;
+                        trans.State = '<span class="' + selectedTrans + '">' + tmpToState.name + '</span>';
                     }
                 } else {
                     trans.State = "";
@@ -111,5 +124,16 @@ function TableDFA($scope) {
         }
     });
 
+    $scope.$watch('graphdesigner.selectedState', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            self.updateFunction();
+        }
+    });
+
+    $scope.$watch('graphdesigner.selectedTransition', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            self.updateFunction();
+        }
+    });
 
 }

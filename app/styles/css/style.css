@@ -5882,6 +5882,9 @@ button.close {
   stroke-dasharray: 10, 10;
   visibility: hidden; }
 
+.selected {
+  border-bottom: 3px solid #00b7ff; }
+
 .active .selected-circle {
   visibility: visible; }
 
