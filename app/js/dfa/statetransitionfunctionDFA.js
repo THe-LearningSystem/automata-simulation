@@ -38,9 +38,9 @@ function StatetransitionfunctionDFA($scope) {
             if ($scope.graphdesigner.selectedState !== null && $scope.graphdesigner.selectedState.id == $scope.config.states[i].id) {
                 selectedClass = "selected";
             }
-            if ($scope.simulator.status === "accepted") {
+            if ($scope.config.states[i].id == $scope.simulator.animated.currentState && $scope.simulator.status === "accepted") {
                 stringStates += '<span class="animated-accepted ' + selectedClass + '">';
-            } else if ($scope.simulator.status === "not accepted") {
+            } else if ($scope.config.states[i].id == $scope.simulator.animated.currentState && $scope.simulator.status === "not accepted") {
                 stringStates += '<span class="animated-not-accepted ' + selectedClass + '">';
             } else if ($scope.config.states[i].id == $scope.simulator.animated.currentState) {
                 stringStates += '<span class="animated-currentstate ' + selectedClass + '">';
