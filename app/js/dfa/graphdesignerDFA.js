@@ -1410,6 +1410,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     });
 
     $scope.$watch('simulator.animated.transition', function (newValue, oldValue) {
+        console.log(newValue);
         if (newValue !== oldValue) {
             if (oldValue !== null) {
                 self.setTransitionClassAs(oldValue.id, false, "animated-transition");
@@ -1435,5 +1436,15 @@ function GraphdesignerDFA($scope, svgSelector) {
                 self.setStateClassAs(newValue, true, "animated-nextstate-svg");
             }
         }
+    });
+    $scope.$watch('simulator.status', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            if ($scope.simulator.status === "accepted") {
+                self.setStateClassAs($scope.simulator.animated.currentState, true, "animated-accepted-svg");
+            } else if ($scope.simulator.status === "not accepted") {
+                self.setStateClassAs($scope.simulator.animated.currentState, true, "animated-not-accepted-svg");
+            }
+        }
+
     });
 }

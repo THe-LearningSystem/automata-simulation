@@ -32,8 +32,9 @@ function StatetransitionfunctionDFA($scope) {
         self.functionData.states = [];
         _.forEach($scope.config.states, function (state, key) {
             stringStates = '';
+            var selectedClass = '';
             if ($scope.graphdesigner.selectedState !== null && $scope.graphdesigner.selectedState.id == state.id) {
-                var selectedClass = "selected";
+                selectedClass = "selected";
             }
             if (state.id == $scope.simulator.animated.currentState && $scope.simulator.status === "accepted") {
                 stringStates += '<span class="animated-accepted ' + selectedClass + '">';
@@ -63,13 +64,15 @@ function StatetransitionfunctionDFA($scope) {
 
                 if (transition.fromState === state.id) {
                     var stateTransition = transition;
+                    var selectedTransition = false;
                     if ($scope.graphdesigner.selectedTransition !== null && _.find($scope.graphdesigner.selectedTransition.names, {
                             id: transition.id
                         }) !== undefined) {
-                        var selectedTransition = true;
+                        selectedTransition = true;
                     }
+                    var animatedCurrentState = false;
                     if ($scope.simulator.animated.transition && $scope.simulator.animated.transition.id === stateTransition.id) {
-                        var animatedCurrentState = true;
+                        animatedCurrentState = true;
                     }
                     if (animatedCurrentState || selectedTransition) {
                         stringStateTransitions = '(<span class=" ' + (animatedCurrentState ? 'animated-transition' : '') + ' ' + (selectedTransition ? 'selected' : '') + '">';
@@ -136,6 +139,11 @@ function StatetransitionfunctionDFA($scope) {
     });
 
     $scope.$watch('graphdesigner.selectedTransition', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            self.updateFunction();
+        }
+    });
+    $scope.$watch('simulator.status', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             self.updateFunction();
         }

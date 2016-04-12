@@ -216,6 +216,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
         $scope.$parent.config = tmpObject;
         createOtherObjects(jsonObj);
         console.log($scope.$parent.config);
+        $scope.$parent.graphdesigner.updateZoomBehaviour();
     };
 
     function createOtherObjects(jsonObj) {

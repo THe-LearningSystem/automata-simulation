@@ -220,6 +220,7 @@ function SimulationDFA($scope) {
         });
         //if there is no next transition, then the word is not accepted
         if (_.isEmpty(self.transition)) {
+            self.transition = null;
             self.status = 'not accepted';
             return;
         }
