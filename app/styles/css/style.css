@@ -6052,15 +6052,16 @@ button:disabled .icon {
   border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0; }
 
+.th-koeln-logo {
+  float: right; }
+
 .th-koeln-logo img {
-  position: absolute;
-  top: 0;
-  right: 0;
   height: 50px;
   padding: 7px; }
 
 .automata-simulation-logo {
-  width: 50px; }
+  width: 50px;
+  float: left; }
 
 .automata-simulation-logo img {
   height: 50px;
@@ -6226,15 +6227,20 @@ button:disabled .icon {
 .icon {
   font-size: 18px; }
 
-#automatonNameEdit {
-  font-size: 24px;
-  border: 0; }
-
 .currentAutomatonName {
-  float: left;
-  font-size: 24px;
-  max-width: 100%;
-  cursor: pointer; }
+  margin: 5px;
+  display: inline-block;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid white;
+  overflow: hidden; }
+
+.currentAutomatonName:hover {
+  border: 1px solid #B7B5B5; }
 
 .inputField {
   z-index: 1; }

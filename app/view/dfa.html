@@ -4,11 +4,12 @@
         <span class="currentAutomatonName" ng-click="inNameEdit = true" ng-show="!inNameEdit">
             {{config.name}}
         </span>
-        <input ng-keypress="keypressCallback($event)" id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" ng-show="inNameEdit">
+        <input class="currentAutomatonName" ng-keypress="keypressCallback($event)" id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" ng-show="inNameEdit">
     </div>
+    <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
 
-<div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
+
 </div>
 
 
