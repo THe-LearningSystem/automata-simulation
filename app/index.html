@@ -14,14 +14,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
     <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="styles/css/style.css">
     <link href="https://file.myfontastic.com/7CZ8hX584jz7dFx7nc4HnM/icons.css" rel="stylesheet">
     <link href="bower_components/flag-icon-css/css/flag-icon.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/angularjs-slider/dist/rzslider.css" />
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/json-formatter/dist/json-formatter.css">
     <!-- endbower -->
     <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+    <!-- Our styles. To override the other styles it is important that this is the last link. -->
+    <link rel="stylesheet" href="styles/css/style.css">
 </head>
 
 <body>
@@ -32,7 +33,6 @@
     <div class="container-fluid nopadding" ng-view></div>
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
 
     <script src="bower_components/angular/angular.js"></script>
 
@@ -41,6 +41,7 @@
     <script src="bower_components/angular-mocks/angular-mocks.js"></script>
     <script src="bower_components/angular-translate/angular-translate.js"></script>
     <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+    <script src="bower_components/angularjs-slider/dist/rzslider.js"></script>
 
     <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -49,7 +50,6 @@
     <script src="bower_components/lodash/lodash.js"></script>
     <script src="bower_components/json-formatter/dist/json-formatter.js"></script>
     <script src="bower_components/saveSvgAsPng/saveSvgAsPng.js"></script>
-    <script src="bower_components/angular-ui-slider/src/slider.js"></script>
     <!-- endbower -->
     <script src="js/lib/lib.js"></script>
     <script src="js/controllers/app.js"></script>

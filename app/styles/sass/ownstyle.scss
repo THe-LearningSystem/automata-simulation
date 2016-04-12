@@ -1,4 +1,4 @@
-@import 'bootstrap_variables';
+    @import 'bootstrap_variables';
 //svg diagramm variables
 //state Settings
 $stateColor: #CCC;
@@ -167,6 +167,7 @@ $selectedColor:#00b7ff;
 .animated-accepted {
     color: $animatedAcceptedColor;
 }
+
 
 .animated-not-accepted {
     color: $animatedNotAcceptedColor;
@@ -405,9 +406,6 @@ input[type='text'] {
     margin: 15px 0;
 }
 
-.menu-item .title,
-.title {
-
 .right-indextab {
     height: 29.8px;
     padding: 5px;
@@ -540,8 +538,6 @@ input[type='text'] {
     width: 50%;
     float: right;
 }
-
-
 button:disabled .icon {
     color: $disabledColor;
 }
@@ -583,7 +579,6 @@ input[type='text'] {
 .dropdown li a {
     cursor: pointer;
 }
-
 .icon-check {
     color: limegreen;
 }
@@ -592,6 +587,21 @@ input[type='text'] {
     color: red;
 }
 
+
 .stf-element {
     margin: 10px 10px 10px 10px;
+    
+}
+
+rzslider .rz-pointer {
+    top: -7px;
+    width: 16px;
+    height: 16px;
+}
+rzslider .rz-pointer:after {
+    top: 5px;
+    left: 5px;
+    width: 6px;
+    height: 6px;
+
 }

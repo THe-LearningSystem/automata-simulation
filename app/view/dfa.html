@@ -90,28 +90,20 @@
         </div>
     </menuitemextendable>
     <menuitemextendable titlename="SIM_SET.TITLE">
-        <p>
-            <input class="checkbox-item" id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">{{"SIM_SET.LOOP" | translate}}
-        </p>
-        <p> {{"SIM_SET.STO" | translate}}:
-            <span>{{simulator.stepTimeOut}}</span>
-            <div class="slider">
-                <a name="stepTimeOutSlider"></a>
-                <div ui-slider min="0" max="3000" step="100" ng-model="simulator.stepTimeOut"></div>
+
+        <p> {{"SIM_SET.STO" | translate}}
+            <div>
+                <rzslider rz-slider-model="simulator.stepTimeOut" rz-slider-options="stepTimeOutSlider.options"></rzslider>
             </div>
         </p>
         <p>{{"SIM_SET.LTO" | translate}}
-            <span>{{simulator.loopTimeOut}} ms</span>
-            <p>{{"SIM_SET.LTO" | translate}}:
-                <span>{{simulator.loopTimeOut}}</span>
-                <div class="slider">
-                    <a name="loopTimeOutSlider"></a>
-                    <div ui-slider min="0" max="4000" step="100" ng-model="simulator.loopTimeOut"></div>
-                </div>
-            </p>
-            <p> {{"SIM_SET.LOOP" | translate}}
-                <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
-            </p>
+            <div>
+                <rzslider rz-slider-model="simulator.loopTimeOut" rz-slider-options="loopTimeOutSlider.options"></rzslider>
+            </div>
+        </p>
+        <p> {{"SIM_SET.LOOP" | translate}}
+            <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
+        </p>
     </menuitemextendable>
     <menuitemextendable titlename="DEV.TITLE">
         <menubutton icon="wrench" action="testData.testDFA()">

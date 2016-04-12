@@ -6099,8 +6099,8 @@ input[type='text'] {
   background-color: whitesmoke;
   border-left: 1px solid #e0e0e0; }
 
-.right-menu-content {
-  padding: 12px 0px 12px 18px; }
+.menu-item {
+  margin: 15px 0; }
 
 .right-indextab {
   height: 29.8px;
@@ -6110,6 +6110,22 @@ input[type='text'] {
   vertical-align: middle;
   border-bottom: 1px solid silver;
   margin: 0px 0px 0px 0px !important; }
+
+.menu-button {
+  background-color: transparent;
+  border: 1px solid whitesmoke;
+  margin: 5px 1px; }
+
+.menu-button:hover {
+  border: 1px solid #e0e0e0; }
+
+.button-group {
+  padding: 0 5px;
+  float: left;
+  border-right: 1px solid #e0e0e0; }
+
+.menu-item .content {
+  padding: 5px 10px; }
 
 .right-indextab-title {
   text-align: center;
@@ -6187,7 +6203,6 @@ input[type='text'] {
   width: 50%;
   float: right; }
 
-<<<<<<< HEAD
 button:disabled .icon {
   color: #AAA; }
 
@@ -6224,7 +6239,17 @@ input[type='text'] {
 
 .icon-times {
   color: red; }
-=======
+
 .stf-element {
   margin: 10px 10px 10px 10px; }
->>>>>>> design
+
+rzslider .rz-pointer {
+  top: -7px;
+  width: 16px;
+  height: 16px; }
+
+rzslider .rz-pointer:after {
+  top: 5px;
+  left: 5px;
+  width: 6px;
+  height: 6px; }
