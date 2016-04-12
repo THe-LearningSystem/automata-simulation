@@ -198,9 +198,9 @@ function GraphdesignerDFA($scope, svgSelector) {
 
 
     //first draw the transitions -> nodes are in front of them if they overlap
-
-    self.svgStates = self.svg.append("g").attr("id", "states");
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");
+    self.svgStates = self.svg.append("g").attr("id", "states");
+
 
 
     //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
@@ -929,22 +929,6 @@ function GraphdesignerDFA($scope, svgSelector) {
 
     var degreeConstant = 30;
 
-    /*
-    function getAngles(a, b) {
-        var angle = toDegrees(newAngle(a, b));
-
-        var upperAngle = angle + degreeConstant;
-
-        var lowerAngle = angle - degreeConstant;
-
-
-        return {
-            angle: angle,
-            lowerAngle: lowerAngle,
-            upperAngle: upperAngle
-        };
-    }*/
-
     function getAngles(a, b) {
         var angle = toDegrees(newAngle(a, b));
         if (angle < 0) {
@@ -1050,63 +1034,35 @@ function GraphdesignerDFA($scope, svgSelector) {
             y: 0,
             z: 0
         };
+        /**4:Calc the curvestart and end if there is and approach transition**/
+        if (obj.approachTransition) {
 
-        $scope.testDataAngle = {};
-        $scope.testDataAngle.trans = transition;
+            var xStart = getAngles({
+                x: obj.xStart - x1,
+                y: obj.yStart - y1
+            }, {
+                x: self.settings.stateRadius,
+                y: 0
+            });
 
-        //TEST
+            var xEnd = getAngles({
+                x: obj.xEnd - x2,
+                y: obj.yEnd - y2
+            }, {
+                x: self.settings.stateRadius,
+                y: 0
+            });
 
+            obj.xStart = x1 + (self.settings.stateRadius * Math.cos(toRadians(xStart.upperAngle)));
+            obj.yStart = y1 - (self.settings.stateRadius * Math.sin(toRadians(xStart.upperAngle)));
 
-        var xStart = getAngles({
-            x: obj.xStart - x1,
-            y: obj.yStart - y1
-        }, {
-            x: self.settings.stateRadius,
-            y: 0
-        });
+            obj.xEnd = x2 + (self.settings.stateRadius * Math.cos(toRadians(xEnd.lowerAngle)));
+            obj.yEnd = y2 - (self.settings.stateRadius * Math.sin(toRadians(xEnd.lowerAngle)));
+        }
 
-        $scope.testDataAngle.start = {};
-        $scope.testDataAngle.start.angle = xStart.angle;
-        $scope.testDataAngle.start.upper = xStart.upperAngle;
-        $scope.testDataAngle.start.lower = xStart.lowerAngle;
-
-        obj.CurvedPoint = {};
-        obj.CurvedPoint.StartUpperX = x1 + (self.settings.stateRadius * Math.cos(toRadians(xStart.upperAngle)));
-        obj.CurvedPoint.StartUpperY = y1 - (self.settings.stateRadius * Math.sin(toRadians(xStart.upperAngle)));
-        obj.CurvedPoint.StartLowerX = x1 + (self.settings.stateRadius * Math.cos(toRadians(xStart.lowerAngle)));
-        obj.CurvedPoint.StartLowerY = y1 - (self.settings.stateRadius * Math.sin(toRadians(xStart.lowerAngle)));
-        var xEnd = getAngles({
-            x: obj.xEnd - x2,
-            y: obj.yEnd - y2
-        }, {
-            x: self.settings.stateRadius,
-            y: 0
-        });
-
-        $scope.testDataAngle.end = {};
-        $scope.testDataAngle.end.angle = xEnd.angle;
-        $scope.testDataAngle.end.upper = xEnd.upperAngle;
-        $scope.testDataAngle.end.lower = xEnd.lowerAngle;
-
-        obj.CurvedPoint.EndUpperX = x2 + (self.settings.stateRadius * Math.cos(toRadians(xEnd.upperAngle)));
-        obj.CurvedPoint.EndUpperY = y2 - (self.settings.stateRadius * Math.sin(toRadians(xEnd.upperAngle)));
-        obj.CurvedPoint.EndLowerX = x2 + (self.settings.stateRadius * Math.cos(toRadians(xEnd.lowerAngle)));
-        obj.CurvedPoint.EndLowerY = y2 - (self.settings.stateRadius * Math.sin(toRadians(xEnd.lowerAngle)));
-        $scope.testDataAngle.end.points = obj.CurvedPoint;
-
-        $scope.safeApply();
-
-            if(obj.approachTransition){
-                obj.xStart = obj.CurvedPoint.StartUpperX;
-                obj.yStart = obj.CurvedPoint.StartUpperY;
-
-                obj.xEnd = obj.CurvedPoint.EndLowerX;
-                obj.yEnd = obj.CurvedPoint.EndLowerY;
-            }
-       
         var stretchValue, movingPoint;
         //OLD:stretchValue = (70 * (1 / obj.distance * 1.1) * 1.4);
-        stretchValue = 20;
+        stretchValue = 35;
 
         movingPoint = crossPro(vecA, vecB);
         movingPoint = fixVectorLength(movingPoint);
@@ -1115,7 +1071,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         obj.yMidCurv = movingPoint.y + obj.yMid;
 
 
-        //textposition
+        /**5:Calc the textposition**/
         var existsDrawnTrans = self.existsDrawnTransition(fromState.id, toState.id);
         var drawnTrans = self.getDrawnTransition(fromState.id, toState.id);
         var transNamesLength;
@@ -1125,16 +1081,21 @@ function GraphdesignerDFA($scope, svgSelector) {
             transNamesLength = 1;
         }
         var angleAAndX = AngleBetweenTwoVectors(vecA, vecX);
+
         var textStretchValue, textPoint;
+        var textAngle = angleAAndX.degree;
+        if (textAngle > 90) {
+            textAngle = 90 - (textAngle % 90);
+        }
+        var x = Math.pow((textAngle / 90), 1 / 2);
 
         if (obj.approachTransition) {
-            //TODO: BETTER STRECHVALUE
-            textStretchValue = (15 * transNamesLength);
-
+            textStretchValue = (40 + (8 * transNamesLength) * x);
         } else {
-            textStretchValue = (10 * (transNamesLength) * +0.5);
-
+            textStretchValue = (12 + (transNamesLength * 8) * x);
         }
+
+
         textPoint = crossPro(vecA, vecB);
         textPoint = fixVectorLength(textPoint);
         textPoint = expandVector(textPoint, textStretchValue);
@@ -1143,7 +1104,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         obj.yText = textPoint.y + obj.yMid;
 
 
-        /**4:Calc the Path**/
+        /**6:Calc the path**/
         var array = [];
         if (obj.approachTransition) {
             array = [
@@ -1158,7 +1119,6 @@ function GraphdesignerDFA($scope, svgSelector) {
             ];
         }
         obj.path = self.bezierLine(array);
-        console.log(obj);
         return obj;
     };
 
