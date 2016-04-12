@@ -257,6 +257,67 @@ $selectedColor:#00b7ff;
 *******/
 
 $disabledColor: #AAA;
+
+//GENERALMENU
+.menu-item .title,
+.title {
+    padding: 5px;
+    background-color: #cedde9;
+    cursor: pointer;
+    margin: 0px 0px 0px 0px !important;
+    vertical-align: middle;
+    font-size: 15px;
+}
+.menu-button {
+    background-color: transparent;
+    border: 1px solid whitesmoke;
+    align-content: center;
+}
+.menu-button:hover {
+    border: 1px solid #e0e0e0;
+}
+.button-group {
+    padding: 0 5px;
+    float: left;
+    border-right: 1px solid #e0e0e0;
+}
+.menu-item .content {
+    padding: 5px 10px;
+}
+button:disabled .icon{
+    color:$disabledColor;
+}
+
+input[type='text'] {
+    width: 85px;
+    height: 30px;
+    font-size: 18px;
+    border: 0;
+}
+.currentAutomatonName {
+    display: table;
+    height: 30px;
+    float:left;
+    font-size: 18px;
+    max-width: 100%;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.inputField {
+    z-index: 1;
+}
+.ui-slider-handle{
+    cursor:pointer !important;
+}
+.dropdown li a{
+    cursor:pointer;
+}
+.checkbox-item {
+    margin-right: 6px !important;
+}
+
+
+//TOPMENU
 .top-nav {
     height: 50px;
     background-color: white;
@@ -264,7 +325,7 @@ $disabledColor: #AAA;
 
 .top-menu {
     padding: 0 0 0 200px;
-    height: 40px;
+    height: 30px;
     background-color: whitesmoke;
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
@@ -275,6 +336,7 @@ $disabledColor: #AAA;
     top: 0;
     right: 0;
     height: 50px;
+    padding: 7px;
 }
 
 .automata-simulation-logo {
@@ -287,9 +349,10 @@ $disabledColor: #AAA;
 }
 
 //MENU
+//LEFTMENU
 .left-menu {
     position: absolute;
-    top: 90px;
+    top: 80px;
     left: 0;
     bottom: 0;
     width: 200px;
@@ -297,9 +360,39 @@ $disabledColor: #AAA;
     border-right: 1px solid #e0e0e0;
 }
 
+.left-indextab {
+    height: 29.8px;
+    padding: 5px;
+    background-color: #eeeeee;
+    //#cedde9
+    cursor: pointer;
+    vertical-align: middle;
+    border-bottom: 1px solid #e5e5e5;
+    margin: 0px 0px 0px 0px !important;
+}
+
+.left-indextab-title {
+    color: #505050;
+}
+
+.left-indextab:hover {
+    background: rgb(229, 229, 229);
+}
+
+.icon-extendable-set {
+    vertical-align: middle;
+    margin-right: 6px;
+    color: #909090;
+}
+
+.icon-position {
+    vertical-align: center;
+}
+
+//RIGHTMENU
 .right-menu {
     position: absolute;
-    top: 90px;
+    top: 80px;
     right: 0;
     bottom: 0;
     width: 200px;
@@ -307,15 +400,23 @@ $disabledColor: #AAA;
     border-left: 1px solid #e0e0e0;
 }
 
+
 .menu-item {
     margin: 15px 0;
 }
 
 .menu-item .title,
 .title {
+
+.right-indextab {
+    height: 29.8px;
     padding: 5px;
-    background-color: #cedde9;
+    background-color: whitesmoke;
+    //#cedde9
     cursor: pointer;
+    vertical-align: middle;
+    border-bottom: 1px solid rgb(192, 192, 192);
+    margin: 0px 0px 0px 0px !important;
 }
 
 .menu-button {
@@ -338,7 +439,43 @@ $disabledColor: #AAA;
     padding: 5px 10px;
 }
 
-.diagramm {
+.right-indextab-title {
+    text-align: center;
+    font-weight: bold;
+    color: #707070;
+}
+
+.right-indextab-subtitle {
+    padding-top: 7px;
+    font-weight: bold;
+    color: #707070;
+}
+
+//.right-indextab-content {
+//    margin: 12px 0px 12px 18px;
+//}
+
+.dia-option {
+    margin: 6px 0px 0px 0px;
+    color: rgb(112, 112, 112);
+    font-family: "Helvetica Neue";
+}
+
+//TRANSITION MENU
+.transitions-menu-list {
+    padding: 0;
+}
+.transitions-menu-list li {
+    list-style-type: none;
+}
+.icon {
+    font-size: 18px;
+}
+
+
+
+//DIAGRAMM
+.diagram {
     position: absolute;
     left: 200px;
     right: 200px;
@@ -346,6 +483,21 @@ $disabledColor: #AAA;
     bottom: 150px;
 }
 
+
+.diagram-title {
+    height: 30.5px;
+    padding-top: 8px;
+    background-color: #cedde9;
+    cursor: pointer;
+    margin: 0px 0px 0px 0px;
+    font-size: 14px;
+    color: #505050;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+}
+
+//BOTTOMMENU
 .bot-content-wrapper {
     position: absolute;
     background-color: whitesmoke;
@@ -356,10 +508,25 @@ $disabledColor: #AAA;
 }
 
 .bot-content {
-    padding: 10px 10px 0 10px;
     height: 250px;
     overflow-y: scroll;
 }
+
+
+.bot-title {
+    height: 29.8px;
+    padding-top: 7.5px;
+    background-color: #cedde9;
+    cursor: pointer;
+    font-size: 14px;
+    color: #505050;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0px 0px 0px 0px;
+}
+
+//STATETABLE
 
 .bot-left {
     float: left;
@@ -367,10 +534,13 @@ $disabledColor: #AAA;
     border-right: 1px solid #e0e0e0;
 }
 
+
+//STF
 .bot-right {
     width: 50%;
     float: right;
 }
+
 
 button:disabled .icon {
     color: $disabledColor;
@@ -420,4 +590,8 @@ input[type='text'] {
 
 .icon-times {
     color: red;
+}
+
+.stf-element {
+    margin: 10px 10px 10px 10px;
 }

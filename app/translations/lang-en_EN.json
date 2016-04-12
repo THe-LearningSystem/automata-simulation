@@ -43,6 +43,7 @@
 
     "DIA_SET": {
         "TITLE": "Diagramm Settings",
+        "VIEW": "View",
         "GRID": "Grid",
         "SNAPPING": "Snapping"
     },
