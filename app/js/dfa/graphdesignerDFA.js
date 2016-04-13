@@ -1357,7 +1357,6 @@ function GraphdesignerDFA($scope, svgSelector) {
 
         _.forEach(self.selectedTransition.names, function (value, key) {
             var tmpObject = {};
-            console.log("asd" + key);
             tmpObject = cloneObject(value);
 
             if (transitionId !== undefined) {
