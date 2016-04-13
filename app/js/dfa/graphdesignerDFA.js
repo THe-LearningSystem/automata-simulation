@@ -141,6 +141,54 @@ function GraphdesignerDFA($scope, svgSelector) {
     };
 
     /**
+     * This method zooms the svg to a calculated scale, so the complete svg fits in the window
+     */
+    self.zoomFitWindow = function () {
+        var stateXCoor = [];
+        var stateYCoor = [];
+        var minX = 0;
+        var maxX = 0;
+        var minY = 0;
+        var maxY = 0;
+        var i;
+
+        if ($scope.config.states.length > 0) {
+            for (i = 0; i < $scope.config.states.length; i++) {
+                stateXCoor[i] = $scope.config.states[i].x;
+            }
+
+            for (i = 0; i < $scope.config.states.length; i++) {
+                stateYCoor[i] = $scope.config.states[i].y;
+            }
+            minX = _.min(stateXCoor) - 100;
+            maxX = _.max(stateXCoor);
+            minY = _.min(stateYCoor) - 50;
+            maxY = _.max(stateYCoor);
+            console.log(minX);
+            console.log(minY);
+            console.log(self.svgOuter.style("width"));
+            console.log(self.svgOuter.style("height"));
+            console.log($scope.config.diagramm.scale);
+            console.log(maxX-minX);
+            console.log(maxY-minY);
+            $scope.config.diagramm.x = -minX;
+            $scope.config.diagramm.y = -minY;
+            while (((maxX - minX) > (1000 / $scope.config.diagramm.scale)) || ((maxY - minY) > (300 / $scope.config.diagramm.scale))) {
+                $scope.config.diagramm.scale -= 0.01;
+            }
+//            while (((maxX - minX) < (1000 / $scope.config.diagramm.scale)) || ((maxY - minY) < (300 / $scope.config.diagramm.scale))) {
+//                $scope.config.diagramm.scale += 0.01;
+//            }
+            console.log($scope.config.diagramm.scale);
+            self.updateZoomBehaviour();
+
+            //(((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale))
+        } else {
+            self.scaleAndTranslateToDefault();
+        }
+    };
+
+    /**
      * Scale and Translate the Svg to the default Value
      */
     self.scaleAndTranslateToDefault = function () {
@@ -963,8 +1011,77 @@ function GraphdesignerDFA($scope, svgSelector) {
             y: 0,
             z: 1
         };
+<<<<<<< Updated upstream
         var stretchValue = 70 * (1 / obj.distance * 1.1);
         var movingPoint = crossPro(vecA, vecB);
+=======
+
+        var vecX = {
+            x: 1,
+            y: 0,
+            z: 0
+        };
+
+        $scope.testDataAngle = {};
+        $scope.testDataAngle.trans = transition;
+
+        //TEST
+
+
+        var xStart = getAngles({
+            x: obj.xStart - x1,
+            y: obj.yStart - y1
+        }, {
+            x: self.settings.stateRadius,
+            y: 0
+        });
+
+        $scope.testDataAngle.start = {};
+        $scope.testDataAngle.start.angle = xStart.angle;
+        $scope.testDataAngle.start.upper = xStart.upperAngle;
+        $scope.testDataAngle.start.lower = xStart.lowerAngle;
+
+        obj.CurvedPoint = {};
+        obj.CurvedPoint.StartUpperX = x1 + (self.settings.stateRadius * Math.cos(toRadians(xStart.upperAngle)));
+        obj.CurvedPoint.StartUpperY = y1 - (self.settings.stateRadius * Math.sin(toRadians(xStart.upperAngle)));
+        obj.CurvedPoint.StartLowerX = x1 + (self.settings.stateRadius * Math.cos(toRadians(xStart.lowerAngle)));
+        obj.CurvedPoint.StartLowerY = y1 - (self.settings.stateRadius * Math.sin(toRadians(xStart.lowerAngle)));
+        var xEnd = getAngles({
+            x: obj.xEnd - x2,
+            y: obj.yEnd - y2
+        }, {
+            x: self.settings.stateRadius,
+            y: 0
+        });
+
+        $scope.testDataAngle.end = {};
+        $scope.testDataAngle.end.angle = xEnd.angle;
+        $scope.testDataAngle.end.upper = xEnd.upperAngle;
+        $scope.testDataAngle.end.lower = xEnd.lowerAngle;
+
+        obj.CurvedPoint.EndUpperX = x2 + (self.settings.stateRadius * Math.cos(toRadians(xEnd.upperAngle)));
+        obj.CurvedPoint.EndUpperY = y2 - (self.settings.stateRadius * Math.sin(toRadians(xEnd.upperAngle)));
+        obj.CurvedPoint.EndLowerX = x2 + (self.settings.stateRadius * Math.cos(toRadians(xEnd.lowerAngle)));
+        obj.CurvedPoint.EndLowerY = y2 - (self.settings.stateRadius * Math.sin(toRadians(xEnd.lowerAngle)));
+        $scope.testDataAngle.end.points = obj.CurvedPoint;
+
+        $scope.safeApply();
+
+        if (obj.approachTransition) {
+            obj.xStart = obj.CurvedPoint.StartUpperX;
+            obj.yStart = obj.CurvedPoint.StartUpperY;
+
+            obj.xEnd = obj.CurvedPoint.EndLowerX;
+            obj.yEnd = obj.CurvedPoint.EndLowerY;
+        }
+
+        var stretchValue, movingPoint;
+        //OLD:stretchValue = (70 * (1 / obj.distance * 1.1) * 1.4);
+        stretchValue = 20;
+
+        movingPoint = crossPro(vecA, vecB);
+        movingPoint = fixVectorLength(movingPoint);
+>>>>>>> Stashed changes
         movingPoint = expandVector(movingPoint, stretchValue);
 
         obj.xMidCurv = movingPoint.x + obj.xMid;
