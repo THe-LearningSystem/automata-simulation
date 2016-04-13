@@ -3,6 +3,8 @@ function SimulationDFA($scope) {
     "use strict";
     var self = this;
 
+    //saves if the animation is in playmode
+    self.isInPlay = false;
     //if the simulation loops (start at the end again)
     self.loopSimulation = true;
     //time between the steps
@@ -81,7 +83,7 @@ function SimulationDFA($scope) {
     self.pause = function () {
         if (!self.simulationPaused) {
             self.simulationPaused = true;
-            self.changeToPlay();
+            self.isInPlay = false;
         }
     };
 
@@ -91,8 +93,6 @@ function SimulationDFA($scope) {
     self.stop = function () {
         self.pause();
         self.reset();
-        //enable inputField after simulation
-        d3.select(".inputWord").attr("disabled", null);
     };
 
     /**
@@ -120,7 +120,7 @@ function SimulationDFA($scope) {
                         setTimeout(self.play, self.loopTimeOut);
                         //finish the Animation
                     } else {
-                        self.changeToPlay();
+                        self.isInPlay = false;
                     }
                     self.simulationStarted = false;
                     $scope.safeApply(function () {});
@@ -135,8 +135,6 @@ function SimulationDFA($scope) {
      * Prepare the simulation ( set startSettings)
      */
     self.prepareSimulation = function () {
-        //disable inputField during simulation
-        d3.select(".inputWord").attr("disabled", true);
         //The simulation always resets the parameters at the start -> it also sets the inputWord
         self.reset();
         self.simulationStarted = true;
@@ -222,6 +220,7 @@ function SimulationDFA($scope) {
         });
         //if there is no next transition, then the word is not accepted
         if (_.isEmpty(self.transition)) {
+            self.transition = null;
             self.status = 'not accepted';
             return;
         }
@@ -386,7 +385,7 @@ function SimulationDFA($scope) {
         //the automat needs to be playable
         if (self.isPlayable()) {
             //change the icon and the state to Play or Pause
-            changeToPlayOrPause();
+            self.isInPlay = !self.isInPlay;
             if (self.isInPlay) {
                 self.simulationPaused = false;
                 self.play();
@@ -399,36 +398,6 @@ function SimulationDFA($scope) {
         }
 
     };
-
-    //Saves if the icons show Play and if its false it shows pause
-    self.isInPlay = false;
-
-
-    /**
-     * Changes the icon of the playorpause button and the state of isInPlay
-     */
-    function changeToPlayOrPause() {
-        if (!self.isInPlay) {
-            //change to Pause
-            d3.select(".glyphicon-play").attr("class", "glyphicon glyphicon-pause");
-
-        } else {
-            //change to Play
-            d3.select(".glyphicon-pause").attr("class", "glyphicon glyphicon-play");
-        }
-        self.isInPlay = !self.isInPlay;
-
-    }
-
-    /**
-     * [changeToPlay description]
-     * @return {[type]} [description]
-     */
-    self.changeToPlay = function () {
-        d3.select(".glyphicon-pause").attr("class", "glyphicon glyphicon-play");
-        self.isInPlay = false;
-    };
-
 
     $scope.updateListeners.push(self);
     self.updateFunction = function () {

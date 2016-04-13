@@ -4,15 +4,16 @@
         <span class="currentAutomatonName" ng-click="inNameEdit = true" ng-show="!inNameEdit">
             {{config.name}}
         </span>
-        <input id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" placeholder="{{getConfigName()}}" ng-show="inNameEdit">
+        <input class="currentAutomatonName" ng-keypress="keypressCallback($event)" id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" ng-show="inNameEdit">
     </div>
+    <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
-<div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
+
+
 </div>
 
 
 <div class="top-menu">
-
     <div class="button-group">
         <!-- Simple dropdown -->
         <button type="button" class="menu-button" uib-dropdown on-toggle="toggled(open)">
@@ -48,7 +49,7 @@
 
         <menubutton icon="upload" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
         <input id="hidden-file-upload" type="file" name="file">
-        <menubutton icon="download" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"></menubutton>
+        <menubutton id="exportButton" icon="download" action="export()" tttext="NAVBAR.TTTEXT_EXPORT" ng-disabled="config.states.length == 0 && config.transitions == 0"></menubutton>
         <menubutton icon="camera" action="saveAsPng()" tttext="NAVBAR_TTTEXST_SAVEASPNG"></menubutton>
     </div>
     <div class="button-group">
@@ -57,7 +58,7 @@
     <div class="button-group">
         <menubutton icon="plus-circle" action="graphdesigner.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
         <menubutton icon="long-arrow-right" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
-        <menubutton icon="trash" action="resetConfig()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
+        <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
         <button type="button" class="menu-button" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
@@ -77,36 +78,36 @@
 <div class="left-menu">
     <menuitemextendable titlename="SIM.TITLE">
         <div class="sim-buttons">
-            <menubutton icon="play" action="simulator.playOrPause()" tttext="SIM.PLAYPAUSE"></menubutton>
+            <menubutton icon="play" action="simulator.playOrPause()" tttext="SIM.PLAY" ng-hide="simulator.isInPlay"></menubutton>
+            <menubutton icon="pause" action="simulator.playOrPause()" tttext="SIM.PAUSE" ng-hide="!simulator.isInPlay"></menubutton>
             <menubutton icon="stop" action="simulator.stop()" tttext="SIM.STOP"></menubutton>
             <menubutton icon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
             <menubutton icon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         </div>
-        <div class="input-group" uib-tooltip="{{'SIM.INPUT' |translate}}" tooltip-placement="bottom">
-            <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" />
-            <span class="input-group-addon icon-check" aria-hidden="true" ng-show="simulator.isInputAccepted"></span>
-            <span class="input-group-addon icon-times" aria-hidden="true" ng-show="!simulator.isInputAccepted"></span>
+        <div uib-tooltip="{{'SIM.INPUT' |translate}}" tooltip-placement="bottom">
+            <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" ng-disabled="simulator.isInPlay" ng-show="config.inputWord.length === 0" />
         </div>
-
+        <div class="input-group" uib-tooltip="{{'SIM.INPUT' |translate}}" tooltip-placement="bottom">
+            <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" ng-disabled="simulator.isInPlay" ng-show="simulator.isInputAccepted && (config.inputWord.length !== 0)" /><span class="input-group-addon icon-check" aria-hidden="true" ng-show="simulator.isInputAccepted && (config.inputWord.length !== 0)"></span>
+        </div>
+        <div class="input-group" uib-tooltip="{{'SIM.INPUT' |translate}}" tooltip-placement="bottom">
+            <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" ng-disabled="simulator.isInPlay" ng-show="!simulator.isInputAccepted && (config.inputWord.length !== 0)" /><span class="input-group-addon icon-times" aria-hidden="true" ng-show="!simulator.isInputAccepted && (config.inputWord.length !== 0)"></span>
+        </div>
     </menuitemextendable>
     <menuitemextendable titlename="SIM_SET.TITLE">
 
-        <p> {{"SIM_SET.LOOP" | translate}}
-            <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
-        </p>
         <p> {{"SIM_SET.STO" | translate}}
-            <span>{{simulator.stepTimeOut}}</span>
-            <div class="slider">
-                <a name="stepTimeOutSlider"></a>
-                <div ui-slider min="0" max="3000" step="100" ng-model="simulator.stepTimeOut"></div>
+            <div>
+                <rzslider rz-slider-model="simulator.stepTimeOut" rz-slider-options="stepTimeOutSlider.options"></rzslider>
             </div>
         </p>
         <p>{{"SIM_SET.LTO" | translate}}
-            <span>{{simulator.loopTimeOut}}</span>
-            <div class="slider">
-                <a name="loopTimeOutSlider"></a>
-                <div ui-slider min="0" max="4000" step="100" ng-model="simulator.loopTimeOut"></div>
+            <div>
+                <rzslider rz-slider-model="simulator.loopTimeOut" rz-slider-options="loopTimeOutSlider.options"></rzslider>
             </div>
+        </p>
+        <p> {{"SIM_SET.LOOP" | translate}}
+            <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
         </p>
     </menuitemextendable>
     <menuitemextendable titlename="DEV.TITLE">
@@ -124,18 +125,21 @@
         <p>Graphdesigner Input:
             <json-formatter json="graphdesigner.input" open="1"></json-formatter>
         </p>
+        <p>Graphdesigner Input:
+            <json-formatter json="testDataAngle" open="1"></json-formatter>
+        </p>
     </menuitemextendable>
 </div>
 
 <div class="mid-wrapper">
-    <div class="diagramm">
-        <h3 class="title">{{"DIA.TITLE" | translate}}</h3>
+    <div class="diagram">
+        <h3 class="diagram-title">{{"DIA.TITLE" | translate}}</h3>
         <svg id="diagramm-svg">
         </svg>
     </div>
     <div class="bot-content-wrapper">
         <div class="bot-content bot-left">
-            <h3 class="title">{{"TABLE.TITLE" | translate}}</h3>
+            <h3 class="bot-title">{{"TABLE.TITLE" | translate}}</h3>
             <table class="table">
                 <thead>
                     <tr>
@@ -152,37 +156,37 @@
             </table>
         </div>
         <div class="bot-content bot-right">
-            <h3 class="title">{{"STF.TITLE" | translate}}</h3>
-            <p uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</p>
-            <p uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
-            <p uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</p>
-            <p uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>= {{statetransitionfunction.functionData.startState}} </p>
-            <p uib-tooltip="{{'STF.TTFINAL' | translate}}" tooltip-placement="left">{{"STF.F" | translate}} = { {{statetransitionfunction.functionData.finalStates}} }</p>
+            <h3 class="bot-title">{{"STF.TITLE" | translate}}</h3>
+            <p class="stf-element" uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</p>
+            <p class="stf-element" uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
+            <p class="stf-element" uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</p>
+            <p class="stf-element" uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>= <span ng-bind-html="statetransitionfunction.functionData.startState | to_trusted"></span> </p>
+            <p class="stf-element" uib-tooltip="{{'STF.TTFINAL' | translate}}" tooltip-placement="left">{{"STF.F" | translate}} = { <span ng-bind="statetransitionfunction.functionData.finalStates | to_trusted"></span> }</p>
         </div>
     </div>
 </div>
 <div class="right-menu">
     <!--Diagramm Settigns -->
     <menuitem titlename="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu && !graphdesigner.showTransitionMenu">
-        <p>
-            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">{{"DIA_SET.GRID" | translate}}
+        <p class="right-indextab-subtitle">{{'DIA_SET.VIEW' | translate}}</p>
+        <p class="dia-option">
+            <input class="checkbox-item" type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">{{"DIA_SET.GRID" | translate}}
         </p>
-        <p>
-            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">{{"DIA_SET.SNAPPING" | translate}}
+        <p class="dia-option">
+            <input class="checkbox-item" type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">{{"DIA_SET.SNAPPING" | translate}}
         </p>
     </menuitem>
     <!--State Menu -->
     <menuitem titlename="STATE_MENU.TITLE" ng-show="graphdesigner.showStateMenu">
-        <div>
-            <p>{{"STATE_MENU.NAME" | translate}}</br>
-                <input id="state-input-name" ng-model="graphdesigner.input.stateName" maxlength="5" uib-tooltip="{{graphdesigner.input.ttt | translate}}" tooltip-is-open="graphdesigner.input.tttisopen" tooltip-placement="left" tooltip-trigger="none">
-            </p>
+        <div class="input-group">
+            <span class="input-group-addon">{{"STATE_MENU.NAME" | translate}}</span>
+            <input class="form-control" id="state-input-name" ng-model="graphdesigner.input.stateName" maxlength="5" uib-tooltip="{{graphdesigner.input.ttt | translate}}" tooltip-is-open="graphdesigner.input.tttisopen" tooltip-placement="left" tooltip-trigger="none" show-focus="graphdesigner.showStateMenu">
         </div>
         <div>
-            <input type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState"> {{ "STATE_MENU.STARTSTATE" | translate}}
+            <input class="checkbox-item" type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">{{ "STATE_MENU.STARTSTATE" | translate}}
         </div>
         <div>
-            <input type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">{{ "STATE_MENU.FINALSTATE" | translate}}
+            <input class="checkbox-item" type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">{{ "STATE_MENU.FINALSTATE" | translate}}
 
         </div>
         <button class="btn btn-danger" ng-click="removeState(graphdesigner.input.state.id)">Delete</button>
@@ -190,17 +194,17 @@
     </menuitem>
     <!--Transition Menu -->
     <menuitem titlename="TRANS_MENU.TITLE" ng-show="graphdesigner.showTransitionMenu">
-        <p>{{"STATE_MENU.STARTSTATE" | translate}}:{{graphdesigner.input.fromState}}</p>
-        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{graphdesigner.input.toState}}</p>
+        <p>{{"STATE_MENU.STARTSTATE" | translate}}:{{graphdesigner.input.fromState.name}}</p>
+        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{graphdesigner.input.toState.name}}</p>
         <ul class="transitions-menu-list">
             <li ng-repeat="(key, value) in graphdesigner.input.transitions">
-                <p>{{"TRANS_MENU.NAME" | translate}}:
-                    <input type="text" ng-model="value.name" maxlength="1" uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen" tooltip-placement="left" tooltip-trigger="none">
-                </p>
-                <button class="btn btn-danger" ng-click="removeTransition(value.id)">Delete</button>
+                <div class="input-group">
+                    <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
+                    <input class="form-control" type="text" ng-model="value.name" maxlength="1" uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen" tooltip-placement="left" tooltip-trigger="none" ng-attr-show-focus="{{value.isFocus || undefined}}">
+                    <span class="input-group-addon btn btn-danger transbutton" ng-click="removeTransition(value.id)">Delete</span>
+                </div>
+
             </li>
         </ul>
     </menuitem>
-    <a href="https://github.com/AutoSimDevelopers/automata-simulation/">Github</a>
-    <a href="https://github.com/AutoSimDevelopers/automata-simulation/issues">ISSUES</a>
 </div>

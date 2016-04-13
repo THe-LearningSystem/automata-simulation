@@ -1,17 +1,21 @@
-describe('Simulation Automata', function() {
+/*jshint -W030*/
+describe('Simulation Automata', function () {
     var scope,
-        controller,
-        simulator;
-    beforeEach(function() {
-        module('AutoSim');
+        controller;
+    beforeEach(function () {
+        module('automata-simulation');
     });
 
-    describe('SimulationDFA', function() {
-        beforeEach(inject(function($rootScope, $controller) {
+
+    describe('DFA Test', function () {
+        beforeEach(inject(function ($rootScope, $controller) {
             scope = $rootScope.$new();
             controller = $controller('DFACtrl', {
                 '$scope': scope
             });
+            //Prepare the scope for the unittest
+            scope.graphdesigner.isGrid = false;
+            /*jshint -W020 */
             simulator = scope.simulator;
             scope.inputWord = "abc";
             scope.addStateWithPresets(50, 50);
@@ -27,6 +31,7 @@ describe('Simulation Automata', function() {
         }));
 
         it('At the beginning the inputWord should be undefined', function() {
+            console.log(simulator.inputWord);
             expect(simulator.inputWord).toBeUndeFined;
         });
 

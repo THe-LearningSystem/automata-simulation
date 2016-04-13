@@ -1,5 +1,5 @@
 //Simulator for the simulation of the automata
-function DFA($scope) {
+function DFA($scope, $translate) {
     "use strict";
     //selfReference
     //for debug puposes better way for acessing in console?
@@ -34,11 +34,15 @@ function DFA($scope) {
     $scope.defaultConfig.alphabet = [];
     //the name of the inputWord
     $scope.defaultConfig.inputWord = '';
+    //the default name
+    $scope.defaultConfig.name = "Untitled Automaton";
+    //if there is something unsaved
+    $scope.defaultConfig.unSavedChanges = false;
 
 
     //Config Object
     $scope.config = cloneObject($scope.defaultConfig);
-    $scope.config.name = "NewName";
+
 
 
 
@@ -59,6 +63,72 @@ function DFA($scope) {
     //for the showing/hiding of the Input Field of the automaton name
     $scope.inNameEdit = false;
 
+    /**
+     * Options for the stepTimeOut-Slider
+     */
+    $scope.stepTimeOutSlider = {
+        options: {
+            floor: 0,
+            step: 100,
+            ceil: 3000,
+            hideLimitLabels: true,
+            translate: function (value) {
+                return value + ' ms';
+            }
+        }
+    };
+
+    /**
+     * Options for the loopTimeOut-Slider
+     */
+    $scope.loopTimeOutSlider = {
+        options: {
+            floor: 0,
+            step: 100,
+            ceil: 4000,
+            hideLimitLabels: true,
+            translate: function (value) {
+                return value + ' ms';
+            }
+        }
+    };
+
+    /**
+     * Leave the input field after clicking the enter button
+     */
+    $scope.keypressCallback = function ($event) {
+        if ($event.charCode == 13) {
+            console.log($event);
+            document.getElementById("automatonNameEdit").blur();
+        }
+    };
+
+    /**
+     * Prevent leaving site
+     */
+    window.onbeforeunload = function (event) {
+        //turn true when you want the leaving protection
+        if ($scope.config.unSavedChanges) {
+            var closemessage = "All Changes will be Lost. Save before continue!";
+            if (typeof event == 'undefined') {
+                event = window.event;
+            }
+            if (event) {
+                event.returnValue = closemessage;
+            }
+            return closemessage;
+
+        }
+    };
+
+    /**
+     * Saves the automata
+     */
+    $scope.saveAutomaton = function () {
+        $scope.config.unSavedChanges = false;
+
+    };
+
     //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
     //fix for $apply already in progress
     $scope.safeApply = function (fn) {
@@ -75,9 +145,10 @@ function DFA($scope) {
     /**
      * Removes the current automata and the inputWord
      */
-    $scope.resetConfig = function () {
+    $scope.resetAutomaton = function () {
         //clear the svgContent
         $scope.graphdesigner.clearSvgContent();
+        $scope.simulator.reset();
 
         //get the new config
         $scope.config = cloneObject($scope.defaultConfig);
@@ -110,9 +181,9 @@ function DFA($scope) {
         //search if an other transition use the same name
         var usedByOthers = false;
         for (var i = 0; i < $scope.config.transitions.length; i++) {
-            if (tmpTransition.name === $scope.config.transitions[i].name && $scope.config.transitions[i].id !== transitionId){
+            if (tmpTransition.name === $scope.config.transitions[i].name && $scope.config.transitions[i].id !== transitionId) {
                 usedByOthers = true;
-                return ;
+                return;
             }
         }
 
@@ -123,7 +194,7 @@ function DFA($scope) {
             return false;
         }
     };
-    
+
     /**
      * This function calls the method updateFunction of every element in $scope.updateListeners
      */
@@ -132,6 +203,8 @@ function DFA($scope) {
         _.forEach($scope.updateListeners, function (value, key) {
             value.updateFunction();
         });
+        //after every update we show the user that he has unsaved changes
+        $scope.config.unSavedChanges = true;
 
     };
 
@@ -413,6 +486,27 @@ function DFA($scope) {
             }
         }
         return tmp;
+    };
+
+    $scope.getNextTransitionName = function (fromState) {
+        var namesArray = [];
+        for (var i = 0; i < $scope.config.transitions.length; i++) {
+            if ($scope.config.transitions[i].fromState == fromState) {
+                namesArray.push($scope.config.transitions[i].name);
+            }
+        }
+        var foundNextName = false;
+        var tryChar = "a";
+        while (!foundNextName) {
+            var value = _.indexOf(namesArray, tryChar);
+            if (value === -1) {
+                foundNextName = true;
+            } else {
+                tryChar = String.fromCharCode(tryChar.charCodeAt() + 1);
+            }
+        }
+        return tryChar;
+
     };
 
     /**

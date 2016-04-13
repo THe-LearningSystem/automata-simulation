@@ -9,7 +9,7 @@
         "TTTEXT_IMPORT": "Import",
         "TTTEXT_ADDSTATE": "Add State",
         "TTTEXT_ADDTRANS": "Add Transition",
-        "TTTEXT_REMALL": "Delete All"
+        "TTTEXT_REMALL": "Reset Automaton"
     },
     
     "LANG_DROP": {
@@ -43,6 +43,7 @@
 
     "DIA_SET": {
         "TITLE": "Diagramm Settings",
+        "VIEW": "View",
         "GRID": "Grid",
         "SNAPPING": "Snapping"
     },

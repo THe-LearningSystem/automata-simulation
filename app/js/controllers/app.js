@@ -3,8 +3,8 @@ var autoSim = angular.module('automata-simulation', [
   'ngRoute',
   'ui.bootstrap',
   'pascalprecht.translate',
-   'jsonFormatter',
-  'ui.slider'
+  'jsonFormatter',
+  'rzModule'
 ]).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/dfa', {
         templateUrl: 'view/dfa.html',
@@ -22,7 +22,7 @@ var autoSim = angular.module('automata-simulation', [
         redirectTo: '/dfa'
     });
 
-    
+
 
 }]).config(['$translateProvider', function ($translateProvider) {
     //translation
@@ -52,7 +52,7 @@ autoSim.directive("menubutton", function () {
             action: '&',
             tttext: '@'
         },
-        template: '<button type="button" class="menu-button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}"><span class="icon icon-{{icon}}" aria-hidden="true"> </span> </button>'
+        template: '<button class="menu-button" type="button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}"><span class="icon icon-{{icon}} icon-position" aria-hidden="true"></span></button>'
     };
 });
 
@@ -68,7 +68,7 @@ autoSim.directive("menuitemextendable", function () {
         scope: {
             titlename: '@',
         },
-        template: '<div class="menu-item"><p class="title" ng-click="extended=!extended"><span class="icon-extendable icon-chevron-down" aria-hidden="true" ng-show="extended"></span><span class="icon-extendable icon-chevron-right" aria-hidden="true" ng-show="!extended"></span>{{titlename | translate}}</p><div class="content" ng-transclude ng-show="extended"></div></div>'
+        template: '<div class="menu-item"><p class="left-indextab" ng-click="extended=!extended"><span class="icon-extendable icon-chevron-down icon-extendable-set" aria-hidden="true" ng-show="extended"></span><span class="icon-extendable icon-chevron-right icon-extendable-set" aria-hidden="true" ng-show="!extended"></span><span class="left-indextab-title">{{titlename | translate}}</span></p><div class="content" ng-transclude ng-show="extended"></div></div>'
 
     };
 
@@ -82,7 +82,7 @@ autoSim.directive("menuitem", function () {
         scope: {
             titlename: '@',
         },
-        template: '<div class="menu-item"><p class="title">{{titlename | translate}}</p><div class="content" ng-transclude></div></div>'
+        template: '<div class="menu-item"><p class="right-indextab right-indextab-title">{{titlename | translate}}</p><div class="content" ng-transclude></div></div>'
 
     };
 
@@ -104,12 +104,12 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
     $scope.getCurrentLanguage = function () {
         var currentLanguage = $translate.proposedLanguage() || $translate.use();
         switch (currentLanguage) {
-            case "de_DE":
-                $scope.activeLanguage = '<span class="flag-icon flag-icon-de"></span> Deutsch';
-                break;
-            case "en_EN":
-                $scope.activeLanguage = '<span class="flag-icon flag-icon-gb"></span> English';
-                break;
+        case "de_DE":
+            $scope.activeLanguage = '<span class="flag-icon flag-icon-de"></span> Deutsch';
+            break;
+        case "en_EN":
+            $scope.activeLanguage = '<span class="flag-icon flag-icon-gb"></span> English';
+            break;
         }
     };
     $scope.getCurrentLanguage();
@@ -119,6 +119,8 @@ autoSim.controller("LangCtrl", ['$scope', '$translate', function ($scope, $trans
 
 autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     $scope.export = function () {
+
+        // if no automaton exist, disable export (button)
 
         /**
          * Returns all transition without the objReference
@@ -159,13 +161,14 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
             type: "application/json",
         });
         saveAs(blob, $scope.config.name + ".json");
+        $scope.config.unSavedChanges = false;
     };
 
-    $scope.saveAsPng =function () {
-     saveSvgAsPng(document.getElementById("diagramm-svg"), $scope.config.name+".png");
+    $scope.saveAsPng = function () {
+        saveSvgAsPng(document.getElementById("diagramm-svg"), $scope.config.name + ".png");
     };
-    
-      $scope.import = function () {
+
+    $scope.import = function () {
         //Called when the user clicks on the import Button and opens the hidden-file-input
         angular.element('#hidden-file-upload').trigger('click');
     };
@@ -203,7 +206,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
     $scope.importConfig = function (jsonObj) {
         //clear the config at the start
         console.log($scope.$parent);
-        $scope.resetConfig();
+        $scope.resetAutomaton();
         var tmpObject = cloneObject(jsonObj);
         //clear the objects we create after 
         tmpObject.states = [];
@@ -213,10 +216,11 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
         $scope.$parent.config = tmpObject;
         createOtherObjects(jsonObj);
         console.log($scope.$parent.config);
+        $scope.$parent.graphdesigner.updateZoomBehaviour();
     };
 
     function createOtherObjects(jsonObj) {
-            //create States
+        //create States
         _.forEach(jsonObj.states, function (value, key) {
             $scope.$parent.addStateWithId(value.id, value.name, value.x, value.y);
         });
@@ -238,22 +242,22 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
 
 
 //from: http://stackoverflow.com/questions/19415394/with-ng-bind-html-unsafe-removed-how-do-i-inject-html
-autoSim.filter('to_trusted', ['$sce', function($sce){
-        return function(text) {
-            return $sce.trustAsHtml(text);
-        };
+autoSim.filter('to_trusted', ['$sce', function ($sce) {
+    return function (text) {
+        return $sce.trustAsHtml(text);
+    };
     }]);
 
 
 // to defocus an field, when clicked on someother place than the focused field
 /* jshint -W030 */
-autoSim.directive('showFocus', function($timeout) {
-  return function(scope, element, attrs) {
-    scope.$watch(attrs.showFocus, 
-      function (newValue) { 
-        $timeout(function() {
-            newValue && element[0].focus();
-        });
-      },true);
-  };    
+autoSim.directive('showFocus', function ($timeout) {
+    return function (scope, element, attrs) {
+        scope.$watch(attrs.showFocus,
+            function (newValue) {
+                $timeout(function () {
+                    newValue && element[0].focus();
+                });
+            }, true);
+    };
 });

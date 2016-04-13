@@ -21,6 +21,13 @@
         "saveAs":false,
         "alert":false,
         "document": false,
-        "saveSvgAsPng": false
+        "saveSvgAsPng": false,
+        "describe": false,
+        "beforeEach":false,
+        "module":false,
+        "it":false,
+        "inject":false,
+        "expect":false,
+        "simulator":false
     }
 }

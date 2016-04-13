@@ -22,12 +22,12 @@ var paths = {
     index: './app/index.html',
     all: './app/**/*.*',
     tests: 'unit-tests/spec/*.js'
-}
+};
 
 var pipes = {};
 pipes.uglifyAndConcat = function () {
-    return
-}
+    return;
+};
 
 
 ///////////////////////////
@@ -61,7 +61,7 @@ gulp.task('assets', function () {
         .pipe(assets)
         .pipe(assets.restore())
         .pipe(useref())
-        .pipe(gulp.dest(paths.dist))
+        .pipe(gulp.dest(paths.dist));
 });
 
 /////////////////////////////////////////////////
@@ -86,7 +86,7 @@ gulp.task('wiredep-css', function () {
 
 gulp.task('views', function () {
     gulp.src(paths.views)
-        .pipe(gulp.dest(paths.dist + '/views'))
+        .pipe(gulp.dest(paths.dist + '/views'));
 });
 
 ////////////////////////////////////////////////
@@ -95,7 +95,7 @@ gulp.task('views', function () {
 
 gulp.task('images', function () {
     gulp.src(paths.images)
-        .pipe(gulp.dest(paths.dist + '/images'))
+        .pipe(gulp.dest(paths.dist + '/images'));
 });
 
 ////////////////////////////////
@@ -103,10 +103,10 @@ gulp.task('images', function () {
 ////////////////////////////////
 gulp.task('fonts', function () {
     gulp.src(paths.fonts)
-        .pipe(gulp.dest(paths.dist + '/fonts'))
+        .pipe(gulp.dest(paths.dist + '/fonts'));
 
     gulp.src(paths.vendorFonts)
-        .pipe(gulp.dest(paths.dist + '/vendor'))
+        .pipe(gulp.dest(paths.dist + '/vendor'));
 });
 
 
@@ -130,7 +130,7 @@ gulp.task('index', function () {
                 }
             }
         }))
-        .pipe(gulp.dest(paths.dist))
+        .pipe(gulp.dest(paths.dist));
 });
 
 //////////////////////////////////
@@ -138,7 +138,7 @@ gulp.task('index', function () {
 //////////////////////////////////
 gulp.task('live', function () {
     connect.server({
-        port: 9000,
+        port: 9010,
         livereload: true,
     });
     gulp.watch(paths.sass, ['styles']);

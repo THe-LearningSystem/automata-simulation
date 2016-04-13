@@ -1,5 +1,8 @@
 {
-    "APP_TITLE": "Automaten Simulation",
+    "APP": {
+        "TITLE": "Automaten Simulation",
+        "UNSAVEDCHANGES": "Ungesicherte Veränderungen."
+    },
 
     "NAVBAR": {
         "TTTEXT_ZOOM_IN": "Vergrößern",
@@ -9,7 +12,7 @@
         "TTTEXT_IMPORT": "Importieren",
         "TTTEXT_ADDSTATE": "Zustand hinzufügen",
         "TTTEXT_ADDTRANS": "Übergang hinzufügen",
-        "TTTEXT_REMALL": "Alles löschen"
+        "TTTEXT_REMALL": "Reset Automat"
     },
 
     "LANG_DROP": {
@@ -20,7 +23,8 @@
     "SIM": {
         "TITLE": "Simulation",
         "INPUT": "Eingabewort",
-        "PLAYPAUSE": "Start/Pause",
+        "PLAY": "Start",
+        "PAUSE": "Pause",
         "STOP": "Stop",
         "STEPBACKWARD": "Schritt zurück",
         "STEPFORWARD": "Schritt vorwärts"
@@ -43,6 +47,7 @@
 
     "DIA_SET": {
         "TITLE": "Diagrammeinstellungen",
+        "VIEW": "Ansicht",
         "GRID": "Gitter",
         "SNAPPING": "Einrasten"
     },
