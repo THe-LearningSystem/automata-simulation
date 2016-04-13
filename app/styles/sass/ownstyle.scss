@@ -1,618 +1,630 @@
-    @import 'bootstrap_variables';
-    //svg diagramm variables
-    //state Settings
-    $stateColor: #CCC;
-    $stateBorderWidth:2;
-    $stateBorderColor:#666;
-    $stateFontSize:15px;
-    $stateFontColor: #000;
-    //final state
-    $finalStateColor: #FFF;
-    $finalStateBorderColor: $stateBorderColor;
-    $finalStateBorderWidth:2;
-    //Hover
-    $stateHoverColor: #000;
-    $stateColorHoverOpacity:0.4;
-    $selectForAddTransitionColor:#F00;
-    //animated state for the simulation
-    $animatedCurrentStateColor:#ff7b00;
-    $animatedNextStateColor:#ff7b00;
-    //Transition Settings
-    $transitionColor: #000;
-    $transitionFontSize: 15px;
-    $transitionFontColor: #000;
-    $transitionWidth:2.5;
-    $transitionHoverColor:#AAA;
-    //animated transition
-    $animatedTransitionWidth:2.5;
-    $animatedTransitionColor:#ff7b00;
-    $animatedTransitionFontColor: #ff7b00;
-    //animated accepted and not accepted color
-    $animatedAcceptedColor:#00ff7b;
-    $animatedNotAcceptedColor:#aa2200;
-    //selected
-    $selectedColor:#00b7ff;
-    //svg diagramm
-    .automataWrapper {
-        border: 1px solid #000;
-    }
-    
-    #stateDiagramm {}
-    
-    #diagramm {
-        border: 1px solid #000;
-        width: 100%;
-        height: 500px;
-        min-width: auto;
-        position: relative;
-    }
-    
-    #diagramm-buttons {
-        position: absolute;
-        z-index: 5;
-    }
-    
-    #diagramm-svg {
-        width: 100%;
-        height: 100%;
-        min-width: auto;
-        position: absolute;
-    }
-    
-    #state-context {
-        //display:none;
-        padding: 5px;
-        position: absolute;
-        right: 0px;
-        width: auto;
-        height: 100%;
-        background-color: #888;
-    }
-    
-    //normal arrow
-    #marker-end-arrow {
-        fill: #000;
-    }
-    
-    #marker-end-arrow-hover {
-        fill: $transitionHoverColor;
-    }
-    
-    #marker-end-arrow-selection {
-        fill: $selectedColor;
-    }
-    
-    //animated arrow for the simulation
-    #marker-end-arrow-animated {
-        fill: $animatedTransitionColor;
-    }
-    
-    //grid
-    .grid-line {
-        stroke: $transitionColor;
-    }
-    
-    //states
-    .state {
-        cursor: context-menu;
-    }
-    
-    .state:hover {
-        cursor: pointer;
-    }
-    
-    .state:hover .hover-circle {
-        fill: $stateHoverColor;
-        fill-opacity: $stateColorHoverOpacity;
-    }
-    
-    .state-circle {
-        fill: $stateColor;
-        stroke: $stateBorderColor;
-        stroke-width: $stateBorderWidth;
-    }
-    
-    .selected-circle {
-        fill: transparent;
-        stroke: $selectedColor;
-        stroke-width: 1;
-        stroke-dasharray: 10, 10;
-        visibility: hidden;
-    }
-    
-    .state.active .state-circle {
-        stroke: $selectedColor;
-    }
-    
-    .selected {
-        border-bottom: 3px solid $selectedColor;
-    }
-    
-    .active .selected-circle {
-        visibility: visible;
-    }
-    
-    .final-state {
-        fill: $finalStateColor;
-        stroke: $finalStateBorderColor;
-        stroke-width: $finalStateBorderWidth;
-    }
-    
-    .state-text {
-        font-size: $stateFontSize;
-    }
-    
-    //animated state for the simulation
-    //svg
-    .animated-currentstate-svg .state-circle {
-        fill: $animatedCurrentStateColor;
-    }
-    
-    .animated-nextstate-svg .state-circle {
-        fill: $animatedNextStateColor;
-    }
-    
-    .animated-accepted-svg .state-circle {
-        fill: $animatedAcceptedColor;
-    }
-    
-    .animated-not-accepted-svg .state-circle {
-        fill: $animatedNotAcceptedColor;
-    }
-    
-    //others
-    .animated-currentstate {
-        color: $animatedCurrentStateColor;
-    }
-    
-    .animated-nextstate {
-        color: $animatedNextStateColor;
-    }
-    
-    .animated-accepted {
-        color: $animatedAcceptedColor;
-    }
-    
-    .animated-not-accepted {
-        color: $animatedNotAcceptedColor;
-    }
-    
-    .selectedForTransition {
-        color: $animatedNextStateColor;
-    }
-    
-    .selectedForTransition {}
-    
-    .state-text:hover {}
-    
-    .in-creation {
-        stroke: $selectedColor;
-    }
-    
-    //Transition
-    .transition {
-        stroke: $transitionColor;
-        cursor: context-menu;
-    }
-    
-    .transition:hover {
-        cursor: pointer;
-    }
-    
-    .transition-line-selection {
-        stroke-width: 7;
-        stroke: $selectedColor;
-        opacity: 0.6;
-        visibility: hidden;
-    }
-    
-    .transition.active .transition-line-selection {
-        visibility: visible;
-    }
-    
-    .transition-line {
-        stroke-width: $transitionWidth;
-    }
-    
-    .transition-line-hover {
-        stroke-width: $transitionWidth;
-        stroke: $transitionHoverColor;
-        opacity: 0;
-    }
-    
-    //transition line fill for the startline
-    .transition-line.start-line {
-        stroke: $transitionColor;
-    }
-    
-    //animated transition for the simulation
-    .animated-transition .transition-line {
-        stroke: $animatedTransitionColor;
-        stroke-width: $animatedTransitionWidth;
-    }
-    
-    .animated-transition-text {
-        stroke: $animatedTransitionColor;
-        fill: $animatedTransitionColor;
-    }
-    
-    .animated-transition {
-        color: $animatedTransitionColor;
-    }
-    
-    .transition-text {
-        font-size: 15px;
-        text-anchor: middle;
-    }
-    
-    //ECT
-    #hidden-file-upload {
-        display: none;
-    }
-    
-    //GRID
-    .nopadding {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    /*******
+@import 'bootstrap_variables';
+//svg diagramm variables
+//state Settings
+$stateColor: #CCC;
+$stateBorderWidth:2;
+$stateBorderColor:#666;
+$stateFontSize:15px;
+$stateFontColor: #000;
+//final state
+$finalStateColor: #FFF;
+$finalStateBorderColor: $stateBorderColor;
+$finalStateBorderWidth:2;
+//Hover
+$stateHoverColor: #000;
+$stateColorHoverOpacity:0.4;
+$selectForAddTransitionColor:#F00;
+//animated state for the simulation
+$animatedCurrentStateColor:#ff7b00;
+$animatedNextStateColor:#ff7b00;
+//Transition Settings
+$transitionColor: #000;
+$transitionFontSize: 15px;
+$transitionFontColor: #000;
+$transitionWidth:2.5;
+$transitionHoverColor:#AAA;
+$gridLine: #B3AEAE;
+//animated transition
+$animatedTransitionWidth:2.5;
+$animatedTransitionColor:#ff7b00;
+$animatedTransitionFontColor: #ff7b00;
+//animated accepted and not accepted color
+$animatedAcceptedColor:#00ff7b;
+$animatedNotAcceptedColor:#aa2200;
+//selected
+$selectedColor:#00b7ff;
+//svg diagramm
+.automataWrapper {
+    border: 1px solid #000;
+}
+
+#stateDiagramm {}
+
+#diagramm {
+    border: 1px solid #000;
+    width: 100%;
+    height: 500px;
+    min-width: auto;
+    position: relative;
+}
+
+#diagramm-buttons {
+    position: absolute;
+    z-index: 5;
+}
+
+#diagramm-svg {
+    width: 100%;
+    height: 100%;
+    min-width: auto;
+    position: absolute;
+}
+
+#state-context {
+    //display:none;
+    padding: 5px;
+    position: absolute;
+    right: 0px;
+    width: auto;
+    height: 100%;
+    background-color: #888;
+}
+
+//normal arrow
+#marker-end-arrow {
+    fill: #000;
+}
+
+#marker-end-arrow-hover {
+    fill: $transitionHoverColor;
+}
+
+#marker-end-arrow-selection {
+    fill: $selectedColor;
+}
+
+//animated arrow for the simulation
+#marker-end-arrow-animated {
+    fill: $animatedTransitionColor;
+}
+
+//grid
+.grid-line {
+    stroke: $gridLine;
+}
+
+//states
+.state {
+    cursor: context-menu;
+}
+
+.state:hover {
+    cursor: pointer;
+}
+
+.state:hover .hover-circle {
+    fill: $stateHoverColor;
+    fill-opacity: $stateColorHoverOpacity;
+}
+
+.state-circle {
+    fill: $stateColor;
+    stroke: $stateBorderColor;
+    stroke-width: $stateBorderWidth;
+}
+
+.selected-circle {
+    fill: transparent;
+    stroke: $selectedColor;
+    stroke-width: 1;
+    stroke-dasharray: 10, 10;
+    visibility: hidden;
+}
+
+.state.active .state-circle {
+    stroke: $selectedColor;
+}
+
+.selected {
+    border-bottom: 3px solid $selectedColor;
+}
+
+.active .selected-circle {
+    visibility: visible;
+}
+
+.final-state {
+    fill: $finalStateColor;
+    stroke: $finalStateBorderColor;
+    stroke-width: $finalStateBorderWidth;
+}
+
+.state-text {
+    font-size: $stateFontSize;
+}
+
+//animated state for the simulation
+//svg
+.animated-currentstate-svg .state-circle {
+    fill: $animatedCurrentStateColor;
+}
+
+.animated-nextstate-svg .state-circle {
+    fill: $animatedNextStateColor;
+}
+
+.animated-accepted-svg .state-circle {
+    fill: $animatedAcceptedColor;
+}
+
+.animated-not-accepted-svg .state-circle {
+    fill: $animatedNotAcceptedColor;
+}
+
+//others
+.animated-currentstate {
+    color: $animatedCurrentStateColor;
+}
+
+.animated-nextstate {
+    color: $animatedNextStateColor;
+}
+
+.animated-accepted {
+    color: $animatedAcceptedColor;
+}
+
+.animated-not-accepted {
+    color: $animatedNotAcceptedColor;
+}
+
+.selectedForTransition {
+    color: $animatedNextStateColor;
+}
+
+.selectedForTransition {}
+
+.state-text:hover {}
+
+.in-creation {
+    stroke: $selectedColor;
+}
+
+//Transition
+.transition {
+    stroke: $transitionColor;
+    cursor: context-menu;
+}
+
+.transition:hover {
+    cursor: pointer;
+}
+
+.transition-line-selection {
+    stroke-width: 7;
+    stroke: $selectedColor;
+    opacity: 0.6;
+    visibility: hidden;
+}
+
+.transition.active .transition-line-selection {
+    visibility: visible;
+}
+
+.transition-line {
+    stroke-width: $transitionWidth;
+}
+
+.transition-line-hover {
+    stroke-width: $transitionWidth;
+    stroke: $transitionHoverColor;
+    opacity: 0;
+}
+
+//transition line fill for the startline
+.transition-line.start-line {
+    stroke: $transitionColor;
+}
+
+//animated transition for the simulation
+.animated-transition .transition-line {
+    stroke: $animatedTransitionColor;
+    stroke-width: $animatedTransitionWidth;
+}
+
+.animated-transition-text {
+    stroke: $animatedTransitionColor;
+    fill: $animatedTransitionColor;
+}
+
+.animated-transition {
+    color: $animatedTransitionColor;
+}
+
+.transition-text {
+    font-size: 15px;
+    text-anchor: middle;
+}
+
+//ECT
+#hidden-file-upload {
+    display: none;
+}
+
+//GRID
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+/*******
 *Layout*
 *******/
-    
-    $disabledColor: #AAA;
-    //GENERALMENU
-    .menu-item .title,
-    .title {
-        padding: 5px;
-        background-color: #cedde9;
-        cursor: pointer;
-        margin: 0px 0px 0px 0px !important;
-        vertical-align: middle;
-        font-size: 15px;
-    }
-    
-    .menu-button {
-        background-color: transparent;
-        border: 1px solid whitesmoke;
-        align-content: center;
-    }
-    
-    .menu-button:hover {
-        border: 1px solid #e0e0e0;
-    }
-    
-    .button-group {
-        padding: 0 5px;
-        float: left;
-        border-right: 1px solid #e0e0e0;
-    }
-    
-    .menu-item .content {
-        padding: 5px 10px;
-    }
-    
-    button:disabled .icon {
-        color: $disabledColor;
-    }
-    
-    .currentAutomatonName {
-        display: table;
-        height: 30px;
-        float: left;
-        font-size: 18px;
-        max-width: 100%;
-        cursor: pointer;
-        vertical-align: middle;
-    }
-    
-    .inputField {
-        z-index: 1;
-    }
-    
-    .ui-slider-handle {
-        cursor: pointer !important;
-    }
-    
-    .dropdown li a {
-        cursor: pointer;
-    }
-    
-    .checkbox-item {
-        margin-right: 6px !important;
-    }
-    
-    //TOPMENU
-    .top-nav {
-        height: 50px;
-        background-color: white;
-    }
-    
-    .top-menu {
-        padding: 0 0 0 200px;
-        height: 30px;
-        background-color: whitesmoke;
-        border-top: 1px solid #e0e0e0;
-        border-bottom: 1px solid #e0e0e0;
-    }
-    
-    .th-koeln-logo {
-        float: right;
-    }
-    
-    .th-koeln-logo img {
-        height: 50px;
-        padding: 7px;
-    }
-    
-    .automata-simulation-logo {
-        width: 50px;
-        float: left;
-    }
-    
-    .automata-simulation-logo img {
-        height: 50px;
-        width: 50px;
-    }
-    
-    //MENU
-    //LEFTMENU
-    .left-menu {
-        position: absolute;
-        top: 80px;
-        left: 0;
-        bottom: 0;
-        width: 200px;
-        background-color: whitesmoke;
-        border-right: 1px solid #e0e0e0;
-    }
-    
-    .left-indextab {
-        height: 29.8px;
-        padding: 5px;
-        background-color: #eeeeee;
-        //#cedde9
-        cursor: pointer;
-        vertical-align: middle;
-        border-bottom: 1px solid #e5e5e5;
-        margin: 0px 0px 0px 0px !important;
-    }
-    
-    .left-indextab-title {
-        color: #505050;
-    }
-    
-    .left-indextab:hover {
-        background: rgb(229, 229, 229);
-    }
-    
-    .icon-extendable-set {
-        vertical-align: middle;
-        margin-right: 6px;
-        color: #909090;
-    }
-    
-    .icon-position {
-        vertical-align: center;
-    }
-    
-    //RIGHTMENU
-    .right-menu {
-        position: absolute;
-        top: 80px;
-        right: 0;
-        bottom: 0;
-        width: 200px;
-        background-color: whitesmoke;
-        border-left: 1px solid #e0e0e0;
-    }
-    
-    .menu-item {
-        margin: 15px 0;
-    }
-    
-    .right-indextab {
-        height: 29.8px;
-        padding: 5px;
-        background-color: whitesmoke;
-        //#cedde9
-        cursor: pointer;
-        vertical-align: middle;
-        border-bottom: 1px solid rgb(192, 192, 192);
-        margin: 0px 0px 0px 0px !important;
-    }
-    
-    .menu-button {
-        background-color: transparent;
-        border: 1px solid whitesmoke;
-        margin: 5px 1px;
-    }
-    
-    .menu-button:hover {
-        border: 1px solid #e0e0e0;
-    }
-    
-    .button-group {
-        padding: 0 5px;
-        float: left;
-        border-right: 1px solid #e0e0e0;
-    }
-    
-    .menu-item .content {
-        padding: 5px 10px;
-    }
-    
-    .right-indextab-title {
-        text-align: center;
-        font-weight: bold;
-        color: #707070;
-    }
-    
-    .right-indextab-subtitle {
-        padding-top: 7px;
-        font-weight: bold;
-        color: #707070;
-    }
-    
-    //.right-indextab-content {
-    //    margin: 12px 0px 12px 18px;
-    //}
-    .dia-option {
-        margin: 6px 0px 0px 0px;
-        color: rgb(112, 112, 112);
-        font-family: "Helvetica Neue";
-    }
-    
-    //TRANSITION MENU
-    .transitions-menu-list {
-        padding: 0;
-    }
-    
-    .transitions-menu-list li {
-        list-style-type: none;
-    }
-    
-    .icon {
-        font-size: 18px;
-    }
-    
-    //DIAGRAMM
-    .diagram {
-        position: absolute;
-        left: 200px;
-        right: 200px;
-        top: 80px;
-        bottom: 150px;
-    }
-    
-    .diagram-title {
-        height: 30.5px;
-        padding-top: 8px;
-        background-color: #cedde9;
-        cursor: pointer;
-        margin: 0px 0px 0px 0px;
-        font-size: 14px;
-        color: #505050;
-        font-weight: bold;
-        text-align: center;
-        vertical-align: middle;
-    }
-    
-    //BOTTOMMENU
-    .bot-content-wrapper {
-        position: absolute;
-        background-color: whitesmoke;
-        right: 200px;
-        left: 200px;
-        bottom: 0px;
-        border-top: 1px solid #e0e0e0;
-    }
-    
-    .bot-content {
-        height: 250px;
-        overflow-y: scroll;
-    }
-    
-    .bot-title {
-        height: 29.8px;
-        padding-top: 7.5px;
-        background-color: #cedde9;
-        cursor: pointer;
-        font-size: 14px;
-        color: #505050;
-        font-weight: bold;
-        text-align: center;
-        vertical-align: middle;
-        margin: 0px 0px 0px 0px;
-    }
-    
-    //STATETABLE
-    .bot-left {
-        float: left;
-        width: 50%;
-        border-right: 1px solid #e0e0e0;
-    }
-    
-    //STF
-    .bot-right {
-        width: 50%;
-        float: right;
-    }
-    
-    button:disabled .icon {
-        color: $disabledColor;
-    }
-    
-    //TRANSITION MENU
-    .transitions-menu-list {
-        padding: 0;
-    }
-    
-    .transitions-menu-list li {
-        margin-bottom: 10px;
-        padding-bottom: 5px;
-        border-bottom: 2px solid #B1B1B1;
-        list-style-type: none;
-    }
-    
-    .icon {
-        font-size: 18px;
-    }
-    
-    .currentAutomatonName {
-        margin:5px;
-        display: inline-block;
-        width: 180px;
-        white-space: nowrap;
-        overflow: hidden !important;
-        text-overflow: ellipsis;
-        font-size: 20px;
-        cursor: pointer;
-        border: 1px solid white;
-        overflow: hidden;
-    }
-    
-    .currentAutomatonName:hover {
-        border: 1px solid #B7B5B5;
-    }
-    
-    .inputField {
-        z-index: 1;
-    }
-    
-    .ui-slider-handle {
-        cursor: pointer !important;
-    }
-    
-    .dropdown li a {
-        cursor: pointer;
-    }
-    
-    .icon-check {
-        color: limegreen;
-    }
-    
-    .icon-times {
-        color: red;
-    }
-    
-    .stf-element {
-        margin: 10px 10px 10px 10px;
-    }
-    
-    rzslider .rz-pointer {
-        top: -7px;
-        width: 16px;
-        height: 16px;
-    }
-    
-    rzslider .rz-pointer:after {
-        top: 5px;
-        left: 5px;
-        width: 6px;
-        height: 6px;
-    }
-    
-    //TransitionButton
-    body .transbutton {
-        @extend .btn-danger
-    }
+
+$disabledColor: #AAA;
+//GENERALMENU
+.menu-item .title,
+.title {
+    padding: 5px;
+    background-color: #cedde9;
+    cursor: pointer;
+    margin: 0px 0px 0px 0px !important;
+    vertical-align: middle;
+    font-size: 15px;
+}
+
+.menu-button {
+    background-color: transparent;
+    border: 1px solid whitesmoke;
+    align-content: center;
+}
+
+.menu-button:hover {
+    border: 1px solid #e0e0e0;
+}
+
+.button-group {
+    padding: 0 5px;
+    float: left;
+    border-right: 1px solid #e0e0e0;
+    height: 40px;
+}
+
+.menu-item .content {
+    padding: 5px 10px;
+}
+
+button:disabled .icon {
+    color: $disabledColor;
+}
+
+.inputField {
+    z-index: 1;
+}
+
+.ui-slider-handle {
+    cursor: pointer !important;
+}
+
+.dropdown li a {
+    cursor: pointer;
+}
+
+.checkbox-item {
+    margin-right: 6px !important;
+}
+
+//TOPMENU
+.top-nav {
+    height: 50px;
+    background-color: white;
+}
+
+.top-menu {
+    padding: 0 0 0 200px;
+    height: 40px;
+    background-color: whitesmoke;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.th-koeln-logo {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.th-koeln-logo img {
+    height: 50px;
+    padding: 7px;
+}
+
+.automata-simulation-logo {
+    width: 50px;
+    float: left;
+}
+
+.automata-simulation-logo img {
+    height: 50px;
+    width: 50px;
+}
+
+//MENU
+//LEFTMENU
+.left-menu {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    background-color: whitesmoke;
+    border-right: 1px solid #e0e0e0;
+}
+
+.left-indextab {
+    height: 30px;
+    padding: 5px;
+    background-color: #eeeeee;
+    //#cedde9
+    cursor: pointer;
+    vertical-align: middle;
+    border-bottom: 1px solid #e5e5e5;
+    margin: 0px 0px 0px 0px !important;
+}
+
+.left-indextab-title {
+    color: #505050;
+}
+
+.left-indextab:hover {
+    background: rgb(229, 229, 229);
+}
+
+.icon-extendable-set {
+    vertical-align: middle;
+    margin-right: 6px;
+    color: #909090;
+}
+
+.icon-position {
+    vertical-align: center;
+}
+
+//RIGHTMENU
+.right-menu {
+    position: absolute;
+    top: 90px;
+    right: 0;
+    bottom: 0;
+    width: 200px;
+    background-color: whitesmoke;
+    border-left: 1px solid #e0e0e0;
+}
+
+.right-indextab {
+    height: 30px;
+    padding: 5px;
+    background-color: whitesmoke;
+    //#cedde9
+    cursor: pointer;
+    vertical-align: middle;
+    border-bottom: 1px solid rgb(192, 192, 192);
+    margin: 0px 0px 0px 0px !important;
+}
+
+.menu-button {
+    background-color: transparent;
+    border: 1px solid whitesmoke;
+    margin: 5px 1px;
+}
+
+.menu-button:hover {
+    border: 1px solid #e0e0e0;
+}
+
+.dropbutton {
+    height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 5px;
+    padding: 2px;
+}
+
+.right-indextab-title {
+    text-align: center;
+    font-weight: bold;
+    color: #707070;
+}
+
+.right-indextab-subtitle {
+    padding-top: 7px;
+    font-weight: bold;
+    color: #707070;
+}
+
+//.right-indextab-content {
+//    margin: 12px 0px 12px 18px;
+//}
+.dia-option {
+    margin: 6px 0px 0px 0px;
+    color: rgb(112, 112, 112);
+    font-family: "Helvetica Neue";
+}
+
+//TRANSITION MENU
+.transitions-menu-list {
+    padding: 0;
+}
+
+.transitions-menu-list li {
+    list-style-type: none;
+}
+
+.icon {
+    font-size: 18px;
+}
+
+//DIAGRAMM
+.diagram {
+    position: absolute;
+    left: 200px;
+    right: 200px;
+    top: 90px;
+    bottom: 150px;
+}
+
+.diagram-title {
+    height: 30px;
+    padding-top: 8px;
+    background-color: #cedde9;
+    cursor: pointer;
+    margin: 0px 0px 0px 0px;
+    font-size: 14px;
+    color: #505050;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+}
+
+//BOTTOMMENU
+.bot-content-wrapper {
+    position: absolute;
+    background-color: whitesmoke;
+    right: 200px;
+    left: 200px;
+    bottom: 0px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.bot-content {
+    height: 250px;
+    overflow-y: scroll;
+}
+
+.bot-title {
+    height: 30px;
+    padding-top: 7px;
+    background-color: #cedde9;
+    cursor: pointer;
+    font-size: 14px;
+    color: #505050;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0px 0px 0px 0px;
+}
+
+//STATETABLE
+.bot-left {
+    float: left;
+    width: 50%;
+    border-right: 1px solid #e0e0e0;
+}
+
+//STF
+.bot-right {
+    width: 50%;
+    float: right;
+}
+
+button:disabled .icon {
+    color: $disabledColor;
+}
+
+//TRANSITION MENU
+.transitions-menu-list {
+    padding: 0;
+}
+
+.transitions-menu-list li {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #B1B1B1;
+    list-style-type: none;
+}
+
+.icon {
+    font-size: 18px;
+}
+
+.automataName {
+    overflow: auto;
+    width: 200px;
+    float: left;
+}
+
+.currentAutomatonName {
+    margin: 5px;
+    display: inline-block;
+    width: 180px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    font-size: 20px;
+    cursor: pointer;
+    border: 1px solid white;
+    overflow: hidden;
+}
+
+.currentAutomatonName:hover {
+    border: 1px solid #B7B5B5;
+}
+
+.inputField {
+    z-index: 1;
+}
+
+.ui-slider-handle {
+    cursor: pointer !important;
+}
+
+.dropdown li a {
+    cursor: pointer;
+}
+
+.icon-check {
+    color: limegreen;
+}
+
+.icon-times {
+    color: red;
+}
+
+.stf-element {
+    margin: 10px 10px 10px 10px;
+}
+
+rzslider .rz-pointer {
+    top: -7px;
+    width: 16px;
+    height: 16px;
+}
+
+rzslider .rz-pointer:after {
+    top: 5px;
+    left: 5px;
+    width: 6px;
+    height: 6px;
+}
+
+//TransitionButton
+body .transbutton {
+    @extend .btn-danger
+}
+
+//unsaved changes
+.unsaved-changes {
+    padding: 0 !important;
+    width: 200px;
+    float: left;
+    margin-top: 30px;
+}
+
+.unsaved-changes .alert {
+    padding: 1px;
+}
+
+.sim-input-not-accepted {
+    border-left: 0;
+}

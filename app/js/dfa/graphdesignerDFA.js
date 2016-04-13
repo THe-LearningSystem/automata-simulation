@@ -1470,7 +1470,6 @@ function GraphdesignerDFA($scope, svgSelector) {
     });
 
     $scope.$watch('simulator.animated.transition', function (newValue, oldValue) {
-        console.log(newValue);
         if (newValue !== oldValue) {
             if (oldValue !== null) {
                 self.setTransitionClassAs(oldValue.id, false, "animated-transition");

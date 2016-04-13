@@ -149,8 +149,8 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
             });
             return allStates;
         }
-
-
+        //workaround: couldnt add new states after export
+        $scope.$parent.graphdesigner.resetAddActions();
         var exportData = {};
         exportData = $scope.config;
         exportData.transitions = getTransitions();
