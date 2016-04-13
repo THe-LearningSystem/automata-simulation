@@ -6178,8 +6178,7 @@ button:disabled .icon {
   border-top: 1px solid #e0e0e0; }
 
 .bot-content {
-  height: 250px;
-  overflow-y: scroll; }
+  height: 250px; }
 
 .bot-title {
   height: 30px;
@@ -6253,6 +6252,7 @@ button:disabled .icon {
   color: red; }
 
 .stf-element {
+  display: table;
   margin: 10px 10px 10px 10px; }
 
 rzslider .rz-pointer {
@@ -6277,3 +6277,9 @@ rzslider .rz-pointer:after {
 
 .sim-input-not-accepted {
   border-left: 0; }
+
+.mCSB_container_wrapper {
+  margin-right: 0; }
+
+.mCSB_container_wrapper > .mCSB_container {
+  padding-right: 20px; }

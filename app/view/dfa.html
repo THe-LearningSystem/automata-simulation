@@ -9,15 +9,13 @@
     <div class=" unsaved-changes"><span class="alert alert-info" ng-show="config.unSavedChanges">Unsaved Changes.</span></div>
     <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
-
-
 </div>
 
 
 <div class="top-menu">
     <div class="button-group">
         <!-- Simple dropdown -->
-        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)">
+        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)" uib-tooltip="{{ 'NAVBAR.ZOOM' | translate}}" tooltip-placement="bottom">
 
             <a href id="simple-dropdown" uib-dropdown-toggle>
                    {{config.diagramm.scale*100 | number:0}}%   
@@ -62,7 +60,7 @@
         <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
-        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
+        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl" uib-tooltip="{{ 'LANG_DROP.TITLE' | translate}}" tooltip-placement="bottom">
             <!-- Here is the current language shown -->
             <a href id="simple-dropdown" uib-dropdown-toggle><span ng-bind-html="activeLanguage | to_trusted"></span><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
         </a>
@@ -122,9 +120,6 @@
         <p>Graphdesigner Input:
             <json-formatter json="graphdesigner.input" open="1"></json-formatter>
         </p>
-        <p>Graphdesigner Input:
-            <json-formatter json="testDataAngle" open="1"></json-formatter>
-        </p>
     </menuitemextendable>
 </div>
 
@@ -136,41 +131,43 @@
     </div>
     <div class="bot-content-wrapper">
         <div class="bot-content bot-left">
-            <h3 class="bot-title">{{"TABLE.TITLE" | translate}}</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>/</th>
-                        <th ng-repeat="char in table.alphabet" ng-bind-html="char | to_trusted"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="(key, value) in table.states" ng-class="value.class">
-                        <th ng-bind-html="value.name | to_trusted"></th>
-                        <td ng-repeat="name in value.trans track by $index" ng-bind-html="name.State | to_trusted"></td>
-                    </tr>
-                </tbody>
-            </table>
+            <h3 class=" bot-title">{{"TABLE.TITLE" | translate}}</h3>
+            <div ng-scrollbars ng-scrollbars-config="scrollConfig">
+                <table class="table  table-striped header-fixed">
+                    <thead>
+                        <tr>
+                            <th>/</th>
+                            <th ng-repeat="char in table.alphabet" ng-bind-html="char | to_trusted"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(key, value) in table.states" ng-class="value.class">
+                            <th ng-bind-html="value.name | to_trusted"></th>
+                            <td ng-repeat="name in value.trans track by $index" ng-bind-html="name.State | to_trusted"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="bot-content bot-right">
+        <div class="bot-content bot-right" ng-scrollbars ng-scrollbars-config="scrollConfig">
             <h3 class="bot-title">{{"STF.TITLE" | translate}}</h3>
-            <p class="stf-element" uib-tooltip="{{'STF.TTSIGMA' | translate}}" tooltip-placement="left">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</p>
-            <p class="stf-element" uib-tooltip="{{'STF.TTSTATES' | translate}}" tooltip-placement="left">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</p>
-            <p class="stf-element" uib-tooltip="{{'STF.TTSTF' | translate}}" tooltip-placement="left">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</p>
-            <p class="stf-element" uib-tooltip="{{'STF.TTSTART' | translate}}" tooltip-placement="left">S<sub>0</sub>= <span ng-bind-html="statetransitionfunction.functionData.startState | to_trusted"></span> </p>
-            <p class="stf-element" uib-tooltip="{{'STF.TTFINAL' | translate}}" tooltip-placement="left">{{"STF.F" | translate}} = { <span ng-bind="statetransitionfunction.functionData.finalStates | to_trusted"></span> }</p>
-        </div>
+            <div class="stf-element" uib-tooltip="{{ 'STF.TTSIGMA' | translate}}" tooltip-placement="right">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</div>
+            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTATES' | translate}}" tooltip-placement="right">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</div>
+            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</div>
+            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTART' | translate}}" tooltip-placement="right">S<sub>0</sub>= <span ng-bind-html="statetransitionfunction.functionData.startState | to_trusted"></span> </div>
+            <p class="stf-element" uib-tooltip="{{ 'STF.TTFINAL' | translate}}" tooltip-placement="right">{{"STF.F" | translate}} = { <span ng-bind="statetransitionfunction.functionData.finalStates | to_trusted"></span> }</div>
     </div>
+</div>
 </div>
 <div class="right-menu">
     <!--Diagramm Settigns -->
     <menuitem titlename="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu && !graphdesigner.showTransitionMenu">
         <p class="right-indextab-subtitle">{{'DIA_SET.VIEW' | translate}}</p>
         <p class="dia-option">
-            <input class="checkbox-item" type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">{{"DIA_SET.GRID" | translate}}
+            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">{{"DIA_SET.GRID" | translate}}
         </p>
         <p class="dia-option">
-            <input class="checkbox-item" type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">{{"DIA_SET.SNAPPING" | translate}}
+            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">{{"DIA_SET.SNAPPING" | translate}}
         </p>
     </menuitem>
     <!--State Menu -->
@@ -180,10 +177,10 @@
             <input class="form-control" id="state-input-name" ng-model="graphdesigner.input.stateName" maxlength="5" uib-tooltip="{{graphdesigner.input.ttt | translate}}" tooltip-is-open="graphdesigner.input.tttisopen" tooltip-placement="left" tooltip-trigger="none" show-focus="graphdesigner.showStateMenu" ng-disabled="simulator.isInPlay">
         </div>
         <div>
-            <input class="checkbox-item" type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState" ng-disabled="simulator.isInPlay">{{ "STATE_MENU.STARTSTATE" | translate}}
+            <input class="checkbox-item" type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState" ng-disabled="simulator.isInPlay">{{"STATE_MENU.STARTSTATE" | translate}}
         </div>
         <div>
-            <input class="checkbox-item" type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState" ng-disabled="simulator.isInPlay">{{ "STATE_MENU.FINALSTATE" | translate}}
+            <input class="checkbox-item" type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState" ng-disabled="simulator.isInPlay">{{"STATE_MENU.FINALSTATE" | translate}}
 
         </div>
         <button class="btn btn-danger" ng-click="removeState(graphdesigner.input.state.id)" ng-disabled="simulator.isInPlay">Delete</button>

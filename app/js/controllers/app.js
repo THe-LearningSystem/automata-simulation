@@ -4,7 +4,8 @@ var autoSim = angular.module('automata-simulation', [
   'ui.bootstrap',
   'pascalprecht.translate',
   'jsonFormatter',
-  'rzModule'
+  'rzModule',
+  'ngScrollbars'
 ]).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/dfa', {
         templateUrl: 'view/dfa.html',
@@ -52,7 +53,7 @@ autoSim.directive("menubutton", function () {
             action: '&',
             tttext: '@'
         },
-        template: '<button class="menu-button" type="button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}"><span class="icon icon-{{icon}} icon-position" aria-hidden="true"></span></button>'
+        template: '<button class="menu-button" type="button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}" tooltip-placement="bottom"><span class="icon icon-{{icon}} icon-position" aria-hidden="true"></span></button>'
     };
 });
 

@@ -499,7 +499,6 @@ button:disabled .icon {
 
 .bot-content {
     height: 250px;
-    overflow-y: scroll;
 }
 
 .bot-title {
@@ -592,6 +591,7 @@ button:disabled .icon {
 }
 
 .stf-element {
+    display:table;
     margin: 10px 10px 10px 10px;
 }
 
@@ -627,4 +627,13 @@ body .transbutton {
 
 .sim-input-not-accepted {
     border-left: 0;
+}
+
+//OWN Scrollbar
+.mCSB_container_wrapper {
+    margin-right: 0;
+}
+
+.mCSB_container_wrapper>.mCSB_container {
+    padding-right: 20px;
 }
