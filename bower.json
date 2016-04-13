@@ -22,6 +22,7 @@
     "flag-icon-css": "https://github.com/lipis/flag-icon-css.git#^1.4.0",
     "saveSvgAsPng": "https://github.com/exupero/saveSvgAsPng.git#^1.0.1",
     "angularjs-slider": "~2.11.0",
-    "ng-scrollbars": "^0.0.10"
+    "ng-scrollbars": "^0.0.10",
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#^1.7.0"
   }
 }

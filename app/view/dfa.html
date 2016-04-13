@@ -56,7 +56,7 @@
     </div>
     <div class="button-group">
         <menubutton icon="plus-circle" action="graphdesigner.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
-        <menubutton icon="long-arrow-right" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+        <menubutton icon=" long-arrow-right" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
         <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
@@ -66,15 +66,18 @@
         </a>
             <!-- here you can see all selectable languages in a simple dropdown -->
             <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
-                <li> <a ng-click="changeLang('en_EN')"><span class="flag-icon flag-icon-gb"></span> {{"LANG_DROP.ENGLISH" | translate}}</a></li>
-                <li> <a ng-click="changeLang('de_DE')"><span class="flag-icon flag-icon-de"></span> {{"LANG_DROP.GERMAN" | translate}}</a></li>
+                <li> <a ng-click="changeLang( 'en_EN')"><span class="flag-icon flag-icon-gb"></span> {{"LANG_DROP.ENGLISH" | translate}}</a></li>
+                <li> <a ng-click="changeLang( 'de_DE')"><span class="flag-icon flag-icon-de"></span> {{"LANG_DROP.GERMAN" | translate}}</a></li>
             </ul>
         </button>
+    </div>
+    <div class="button-group">
+        <menubutton icon="question" action="openCheatSheet()" tttext="HOTKEY.CHEATSHEET"></menubutton>
     </div>
 </div>
 
 
-<div class="left-menu">
+<div class=" left-menu">
     <menuitemextendable titlename="SIM.TITLE">
         <div class="sim-buttons">
             <menubutton icon="play" action="simulator.playOrPause()" tttext="SIM.PLAY" ng-hide="simulator.isInPlay"></menubutton>
@@ -83,10 +86,10 @@
             <menubutton icon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
             <menubutton icon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         </div>
-        <div class="input-group" uib-tooltip="{{'SIM.INPUT' |translate}}" tooltip-placement="bottom">
+        <div class="input-group" uib-tooltip="{{ 'SIM.INPUT' |translate}}" tooltip-placement="bottom">
             <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" ng-disabled="simulator.isInPlay" />
-            <span class="input-group-addon icon-times sim-input-not-accepted" aria-hidden="true" ng-show="!simulator.isInputAccepted && (config.inputWord.length !== 0)"></span>
-            <span class="input-group-addon icon-check" aria-hidden="true" ng-show="simulator.isInputAccepted && (config.inputWord.length !== 0)"></span>
+            <span class="input-group-addon icon-times sim-input-not-accepted" aria-hidden="true" ng-show="!simulator.isInputAccepted && (config.inputWord.length !==0 )"></span>
+            <span class="input-group-addon icon-check" aria-hidden="true" ng-show="simulator.isInputAccepted && (config.inputWord.length !==0 )"></span>
         </div>
     </menuitemextendable>
     <menuitemextendable titlename="SIM_SET.TITLE">
