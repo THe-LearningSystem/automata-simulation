@@ -6,6 +6,7 @@
         </span>
         <input class="currentAutomatonName" ng-keypress="keypressCallback($event)" id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" ng-show="inNameEdit">
     </div>
+    <div class=" unsaved-changes"><span class="alert alert-info" ng-show="config.unSavedChanges">Unsaved Changes.</span></div>
     <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
 
@@ -82,14 +83,10 @@
             <menubutton icon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
             <menubutton icon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         </div>
-        <div uib-tooltip="{{'SIM.INPUT' |translate}}" tooltip-placement="bottom">
-            <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" ng-disabled="simulator.isInPlay" ng-show="config.inputWord.length === 0" />
-        </div>
         <div class="input-group" uib-tooltip="{{'SIM.INPUT' |translate}}" tooltip-placement="bottom">
-            <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" ng-disabled="simulator.isInPlay" ng-show="simulator.isInputAccepted && (config.inputWord.length !== 0)" /><span class="input-group-addon icon-check" aria-hidden="true" ng-show="simulator.isInputAccepted && (config.inputWord.length !== 0)"></span>
-        </div>
-        <div class="input-group" uib-tooltip="{{'SIM.INPUT' |translate}}" tooltip-placement="bottom">
-            <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" ng-disabled="simulator.isInPlay" ng-show="!simulator.isInputAccepted && (config.inputWord.length !== 0)" /><span class="input-group-addon icon-times" aria-hidden="true" ng-show="!simulator.isInputAccepted && (config.inputWord.length !== 0)"></span>
+            <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" ng-disabled="simulator.isInPlay" />
+            <span class="input-group-addon icon-times sim-input-not-accepted" aria-hidden="true" ng-show="!simulator.isInputAccepted && (config.inputWord.length !== 0)"></span>
+            <span class="input-group-addon icon-check" aria-hidden="true" ng-show="simulator.isInputAccepted && (config.inputWord.length !== 0)"></span>
         </div>
     </menuitemextendable>
     <menuitemextendable titlename="SIM_SET.TITLE">

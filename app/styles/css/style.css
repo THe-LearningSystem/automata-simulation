@@ -6020,15 +6020,6 @@ button.close {
 button:disabled .icon {
   color: #AAA; }
 
-.currentAutomatonName {
-  display: table;
-  height: 30px;
-  float: left;
-  font-size: 18px;
-  max-width: 100%;
-  cursor: pointer;
-  vertical-align: middle; }
-
 .inputField {
   z-index: 1; }
 
@@ -6053,7 +6044,9 @@ button:disabled .icon {
   border-bottom: 1px solid #e0e0e0; }
 
 .th-koeln-logo {
-  float: right; }
+  position: absolute;
+  top: 0;
+  right: 0; }
 
 .th-koeln-logo img {
   height: 50px;
@@ -6077,7 +6070,7 @@ button:disabled .icon {
   border-right: 1px solid #e0e0e0; }
 
 .left-indextab {
-  height: 29.8px;
+  height: 30px;
   padding: 5px;
   background-color: #eeeeee;
   cursor: pointer;
@@ -6108,11 +6101,8 @@ button:disabled .icon {
   background-color: whitesmoke;
   border-left: 1px solid #e0e0e0; }
 
-.menu-item {
-  margin: 15px 0; }
-
 .right-indextab {
-  height: 29.8px;
+  height: 30px;
   padding: 5px;
   background-color: whitesmoke;
   cursor: pointer;
@@ -6132,9 +6122,6 @@ button:disabled .icon {
   padding: 0 5px;
   float: left;
   border-right: 1px solid #e0e0e0; }
-
-.menu-item .content {
-  padding: 5px 10px; }
 
 .right-indextab-title {
   text-align: center;
@@ -6168,7 +6155,7 @@ button:disabled .icon {
   bottom: 150px; }
 
 .diagram-title {
-  height: 30.5px;
+  height: 30px;
   padding-top: 8px;
   background-color: #cedde9;
   cursor: pointer;
@@ -6192,8 +6179,8 @@ button:disabled .icon {
   overflow-y: scroll; }
 
 .bot-title {
-  height: 29.8px;
-  padding-top: 7.5px;
+  height: 30px;
+  padding-top: 7px;
   background-color: #cedde9;
   cursor: pointer;
   font-size: 14px;
@@ -6226,6 +6213,11 @@ button:disabled .icon {
 
 .icon {
   font-size: 18px; }
+
+.automataName {
+  overflow: auto;
+  width: 200px;
+  float: left; }
 
 .currentAutomatonName {
   margin: 5px;
@@ -6270,3 +6262,15 @@ rzslider .rz-pointer:after {
   left: 5px;
   width: 6px;
   height: 6px; }
+
+.unsaved-changes {
+  padding: 0 !important;
+  width: 200px;
+  float: left;
+  margin-top: 30px; }
+
+.unsaved-changes .alert {
+  padding: 1px; }
+
+.sim-input-not-accepted {
+  border-left: 0; }
