@@ -10,7 +10,7 @@ function DFACtrl($scope) {
 
     $scope.scrollConfig = {
         autoHideScrollbar: false,
-        theme: 'dark-2',
+        theme: 'dark-thick',
         advanced: {
             updateOnContentResize: true
         },
