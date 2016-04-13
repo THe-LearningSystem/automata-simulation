@@ -5869,7 +5869,7 @@ button.close {
   fill: #ff7b00; }
 
 .grid-line {
-  stroke: #000; }
+  stroke: #B3AEAE; }
 
 .state {
   cursor: context-menu; }
@@ -6012,7 +6012,8 @@ button.close {
 .button-group {
   padding: 0 5px;
   float: left;
-  border-right: 1px solid #e0e0e0; }
+  border-right: 1px solid #e0e0e0;
+  height: 40px; }
 
 .menu-item .content {
   padding: 5px 10px; }
@@ -6038,7 +6039,7 @@ button:disabled .icon {
 
 .top-menu {
   padding: 0 0 0 200px;
-  height: 30px;
+  height: 40px;
   background-color: whitesmoke;
   border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0; }
@@ -6062,7 +6063,7 @@ button:disabled .icon {
 
 .left-menu {
   position: absolute;
-  top: 80px;
+  top: 90px;
   left: 0;
   bottom: 0;
   width: 200px;
@@ -6094,7 +6095,7 @@ button:disabled .icon {
 
 .right-menu {
   position: absolute;
-  top: 80px;
+  top: 90px;
   right: 0;
   bottom: 0;
   width: 200px;
@@ -6118,10 +6119,12 @@ button:disabled .icon {
 .menu-button:hover {
   border: 1px solid #e0e0e0; }
 
-.button-group {
-  padding: 0 5px;
-  float: left;
-  border-right: 1px solid #e0e0e0; }
+.dropbutton {
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 5px;
+  padding: 2px; }
 
 .right-indextab-title {
   text-align: center;
@@ -6151,7 +6154,7 @@ button:disabled .icon {
   position: absolute;
   left: 200px;
   right: 200px;
-  top: 80px;
+  top: 90px;
   bottom: 150px; }
 
 .diagram-title {

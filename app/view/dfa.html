@@ -17,7 +17,7 @@
 <div class="top-menu">
     <div class="button-group">
         <!-- Simple dropdown -->
-        <button type="button" class="menu-button" uib-dropdown on-toggle="toggled(open)">
+        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)">
 
             <a href id="simple-dropdown" uib-dropdown-toggle>
                    {{config.diagramm.scale*100 | number:0}}%   
@@ -60,7 +60,7 @@
         <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
-        <button type="button" class="menu-button" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
+        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
             <!-- Here is the current language shown -->
             <a href id="simple-dropdown" uib-dropdown-toggle><span ng-bind-html="activeLanguage | to_trusted"></span><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
         </a>
@@ -175,16 +175,16 @@
     <menuitem titlename="STATE_MENU.TITLE" ng-show="graphdesigner.showStateMenu">
         <div class="input-group">
             <span class="input-group-addon">{{"STATE_MENU.NAME" | translate}}</span>
-            <input class="form-control" id="state-input-name" ng-model="graphdesigner.input.stateName" maxlength="5" uib-tooltip="{{graphdesigner.input.ttt | translate}}" tooltip-is-open="graphdesigner.input.tttisopen" tooltip-placement="left" tooltip-trigger="none" show-focus="graphdesigner.showStateMenu">
+            <input class="form-control" id="state-input-name" ng-model="graphdesigner.input.stateName" maxlength="5" uib-tooltip="{{graphdesigner.input.ttt | translate}}" tooltip-is-open="graphdesigner.input.tttisopen" tooltip-placement="left" tooltip-trigger="none" show-focus="graphdesigner.showStateMenu" ng-disabled="simulator.isInPlay">
         </div>
         <div>
-            <input class="checkbox-item" type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState">{{ "STATE_MENU.STARTSTATE" | translate}}
+            <input class="checkbox-item" type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState" ng-disabled="simulator.isInPlay">{{ "STATE_MENU.STARTSTATE" | translate}}
         </div>
         <div>
-            <input class="checkbox-item" type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState">{{ "STATE_MENU.FINALSTATE" | translate}}
+            <input class="checkbox-item" type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState" ng-disabled="simulator.isInPlay">{{ "STATE_MENU.FINALSTATE" | translate}}
 
         </div>
-        <button class="btn btn-danger" ng-click="removeState(graphdesigner.input.state.id)">Delete</button>
+        <button class="btn btn-danger" ng-click="removeState(graphdesigner.input.state.id)" ng-disabled="simulator.isInPlay">Delete</button>
 
     </menuitem>
     <!--Transition Menu -->
@@ -195,8 +195,8 @@
             <li ng-repeat="(key, value) in graphdesigner.input.transitions">
                 <div class="input-group">
                     <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
-                    <input class="form-control" type="text" ng-model="value.name" maxlength="1" uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen" tooltip-placement="left" tooltip-trigger="none" ng-attr-show-focus="{{value.isFocus || undefined}}">
-                    <span class="input-group-addon btn btn-danger transbutton" ng-click="removeTransition(value.id)">Delete</span>
+                    <input class="form-control" type="text" ng-model="value.name" maxlength="1" uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen" tooltip-placement="left" tooltip-trigger="none" ng-attr-show-focus="{{value.isFocus || undefined}}" ng-disabled="simulator.isInPlay">
+                    <span class="input-group-addon btn btn-danger transbutton" ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(value.id)" ng-disabled="simulator.isInPlay">Delete</span>
                 </div>
 
             </li>
