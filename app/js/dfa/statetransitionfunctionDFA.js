@@ -59,7 +59,7 @@ function StatetransitionfunctionDFA($scope) {
         //Update of statetransitionfunction
         self.functionData.statetransitionfunction = [];
         //we go through every state and check if there is a transition and then we save them in the statetransitionfunction array
-        _.forEach($scope.config.states, function (state, key) {
+        _.forEach($scope.config.states, function (state, keyOuter) {
             _.forEach($scope.config.transitions, function (transition, key) {
 
                 if (transition.fromState === state.id) {
@@ -82,11 +82,6 @@ function StatetransitionfunctionDFA($scope) {
                     stringStateTransitions += $scope.getStateById(stateTransition.fromState).name + ', ';
                     stringStateTransitions += stateTransition.name + ', ';
                     stringStateTransitions += $scope.getStateById(stateTransition.toState).name + '</span>)';
-
-
-                    if (key < $scope.config.transitions.length - 1) {
-                        stringStateTransitions += ', ';
-                    }
 
                     self.functionData.statetransitionfunction.push(stringStateTransitions);
                 }

@@ -21,8 +21,9 @@ function DFACtrl($scope, hotkeys) {
     hotkeys.add({
         combo: 'ctrl+q',
         allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-        description: 'Create a new state.',
-        callback: function () {
+        description: 'Create state',
+        callback: function (event) {
+            event.preventDefault();
             $scope.graphdesigner.addState();
         }
     });
@@ -30,8 +31,59 @@ function DFACtrl($scope, hotkeys) {
         combo: 'ctrl+e',
         description: 'Create transition',
         allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
-        callback: function () {
+        callback: function (event) {
+            event.preventDefault();
             $scope.graphdesigner.addTransition();
+        }
+    });
+
+    //Simulation
+    hotkeys.add({
+        combo: 'ctrl+1',
+        description: 'Simulation: Play/Pause??',
+        allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+        callback: function (event) {
+            event.preventDefault();
+            $scope.simulator.playOrPause();
+        }
+    });
+    hotkeys.add({
+        combo: 'ctrl+2',
+        description: 'Simulation: Stop',
+        allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+        callback: function (event) {
+            event.preventDefault();
+            $scope.simulator.stop();
+        }
+    });
+    hotkeys.add({
+        combo: 'ctrl+3',
+        description: 'Simulation: Step Backwards',
+        allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+        callback: function (event) {
+            event.preventDefault();
+            $scope.simulator.stepBackward();
+        }
+    });
+    hotkeys.add({
+        combo: 'ctrl+4',
+        description: 'Simulation: Step Forward',
+        allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+        callback: function (event) {
+            event.preventDefault();
+            $scope.simulator.stepForward();
+        }
+    });
+
+    //create image
+    hotkeys.add({
+        combo: 'ctrl+p',
+        description: 'Download Svg as Png',
+        allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+        callback: function (event) {
+            var scope = angular.element(document.getElementById("portationCtrl")).scope();
+            event.preventDefault();
+            scope.saveAsPng();
         }
     });
     $scope.openCheatSheet = function () {
@@ -67,7 +119,16 @@ function DFACtrl($scope, hotkeys) {
             type: "title",
             heading: "Next Demo Page",
             text: 'And Content.'
-
+            }, {
+            type: "element",
+            selector: "#simulation-tab",
+            heading: "Custom Title",
+            text: "The demo finishes.Head over to github to learn more"
+            }, {
+            type: "element",
+            selector: "#portationCtrl",
+            heading: "Custom Title",
+            text: "The demo finishes.Head over to github to learn more"
             }
         ];
 }

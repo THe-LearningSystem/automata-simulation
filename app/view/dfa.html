@@ -31,6 +31,7 @@
                 <li> <a ng-click="graphdesigner.zoomTo(150)">150%</a></li>
                 <li> <a ng-click="graphdesigner.zoomTo(200)">200%</a></li>
                 <li> <a ng-click="graphdesigner.zoomTo(250)">250%</a></li>
+                <li class="border-top"><a ng-click="graphdesigner.zoomFitWindow()">{{"ZOOM.FIT_WINDOW" | translate}}</a></li>
                 </li>
 
             </ul>
@@ -39,12 +40,11 @@
     <div class="button-group">
         <menubutton icon="search-plus" action="graphdesigner.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
         <menubutton icon="search-minus" action="graphdesigner.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
-        <menubutton icon="expand" action="graphdesigner.zoomFitWindow()" tttext="NAVBAR.TTTEXT_RESCALE"></menubutton>
     </div>
 
     <!--scaleAndTranslateToDefault()-->
 
-    <div class="button-group" ng-controller="portationCtrl">
+    <div class="button-group" id="portationCtrl" ng-controller="portationCtrl">
 
         <menubutton icon="upload" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
         <input id="hidden-file-upload" type="file" name="file">
@@ -73,13 +73,13 @@
     </div>
     <div class="button-group">
         <menubutton icon="question" action="openCheatSheet()" tttext="HOTKEY.CHEATSHEET"></menubutton>
-        <menubutton icon="question" action="intro.Start()" tttext="INTRO.INTROBUTTONTITLE"></menubutton>
+        <!--<menubutton icon="question" action="intro.Start()" tttext="INTRO.INTROBUTTONTITLE"></menubutton>-->
     </div>
 </div>
 
 
 <div class=" left-menu">
-    <menuitemextendable titlename="SIM.TITLE">
+    <menuitemextendable titlename="SIM.TITLE" id="simulation-tab">
         <div class="sim-buttons">
             <menubutton icon="play" action="simulator.playOrPause()" tttext="SIM.PLAY" ng-hide="simulator.isInPlay"></menubutton>
             <menubutton icon="pause" action="simulator.playOrPause()" tttext="SIM.PAUSE" ng-hide="!simulator.isInPlay"></menubutton>
@@ -109,6 +109,7 @@
             <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
         </p>
     </menuitemextendable>
+
     <menuitemextendable titlename="DEV.TITLE">
         <menubutton icon="wrench" action="testData.testDFA()">
 
@@ -125,11 +126,13 @@
             <json-formatter json="graphdesigner.input" open="1"></json-formatter>
         </p>
     </menuitemextendable>
+
 </div>
 
 <div class="mid-wrapper">
+    <h3 class="diagram-title">{{"DIA.TITLE" | translate}}</h3>
     <div class="diagram">
-        <h3 class="diagram-title">{{"DIA.TITLE" | translate}}</h3>
+
         <svg id="diagramm-svg">
         </svg>
     </div>
@@ -157,7 +160,9 @@
             <h3 class="bot-title">{{"STF.TITLE" | translate}}</h3>
             <div class="stf-element" uib-tooltip="{{ 'STF.TTSIGMA' | translate}}" tooltip-placement="right">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</div>
             <div class="stf-element" uib-tooltip="{{ 'STF.TTSTATES' | translate}}" tooltip-placement="right">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</div>
-            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">&delta; = { <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index" ng-bind-html="x | to_trusted"> </span> }</div>
+            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">&delta; = {
+                <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index">
+                    <span ng-bind-html="x | to_trusted"></span> {{$last ? '' : ', '}}</span>}</div>
             <div class="stf-element" uib-tooltip="{{ 'STF.TTSTART' | translate}}" tooltip-placement="right">S<sub>0</sub>= <span ng-bind-html="statetransitionfunction.functionData.startState | to_trusted"></span> </div>
             <p class="stf-element" uib-tooltip="{{ 'STF.TTFINAL' | translate}}" tooltip-placement="right">{{"STF.F" | translate}} = { <span ng-bind="statetransitionfunction.functionData.finalStates | to_trusted"></span> }</div>
     </div>

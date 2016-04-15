@@ -294,7 +294,8 @@ $disabledColor: #AAA;
 .button-group a {
     color: #000;
 }
-.button-group :hover {
+
+.button-group:hover {
     color: #000;
     text-decoration: none;
 }
@@ -414,7 +415,19 @@ button:disabled .icon {
     position: absolute;
     bottom: 0;
     padding: 5px;
-    right: 0;
+    right:0;
+}
+
+.right-menu-bottom .icon {
+    font-size: 25px !important;
+}
+
+.right-menu-bottom a {
+    color: #707070;
+}
+
+.right-menu-bottom a:hover {
+    text-decoration: none;
 }
 
 .right-indextab {
@@ -485,8 +498,8 @@ button:disabled .icon {
     position: absolute;
     left: 200px;
     right: 200px;
-    top: 90px;
-    bottom: 150px;
+    top: 120px;
+    bottom: 250px;
 }
 
 .diagram-title {
@@ -652,4 +665,8 @@ body .transbutton {
 
 .mCSB_container_wrapper>.mCSB_container {
     padding-right: 20px;
+}
+
+.border-top {
+    border-top: 1px solid #CCC;
 }
