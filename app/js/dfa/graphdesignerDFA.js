@@ -136,7 +136,24 @@ function GraphdesignerDFA($scope, svgSelector) {
         var maxX = 0;
         var minY = 0;
         var maxY = 0;
+        var topShifting = 0;
+        var leftShifting = 0;
         var i;
+        var obj;
+        var width = self.svgOuter.style("width").replace("px", "");
+        var height = self.svgOuter.style("height").replace("px", "");
+
+        /*
+         * set the diagrammscale on 100%. We got the advantage, that the method also zoom in, if the automaton doesn't fit the window. 
+         * But the method doesn't really zoom in. It sets the scale on 100% an then zoom out.
+         */
+        $scope.config.diagramm.scale = 1.0;
+
+        /**
+         * check if there exist at least one state. If the diagram is empty, there is nothing to fit the window.
+         * The state with the lowest x- and y-coordinate defines the minimum-x- and minimum-y-coordinate from the automaton.
+         * The state with the highest x- and y-coordinate defines the maximum-x- and maximum-y-coordiante from the automaten
+         */
 
         if ($scope.config.states.length > 0) {
             for (i = 0; i < $scope.config.states.length; i++) {
@@ -146,29 +163,28 @@ function GraphdesignerDFA($scope, svgSelector) {
             for (i = 0; i < $scope.config.states.length; i++) {
                 stateYCoor[i] = $scope.config.states[i].y;
             }
-            minX = _.min(stateXCoor) - 100;
+            minX = _.min(stateXCoor);
             maxX = _.max(stateXCoor);
-            minY = _.min(stateYCoor) - 50;
+            minY = _.min(stateYCoor);
             maxY = _.max(stateYCoor);
-            console.log(minX);
-            console.log(minY);
-            console.log(self.svgOuter.style("width"));
-            console.log(self.svgOuter.style("height"));
-            console.log($scope.config.diagramm.scale);
-            console.log(maxX - minX);
-            console.log(maxY - minY);
-            $scope.config.diagramm.x = -minX;
-            $scope.config.diagramm.y = -minY;
-            while (((maxX - minX) > (1000 / $scope.config.diagramm.scale)) || ((maxY - minY) > (300 / $scope.config.diagramm.scale))) {
+
+            /* 
+             * While the size of the automaton is bigger than the diagram, zoom out. 
+             * We work with the width and the height from the diagram proportional to the scale.
+             */
+            while (((maxX - minX + 150) > (width / $scope.config.diagramm.scale)) || ((maxY - minY + 200) > (height / $scope.config.diagramm.scale))) {
                 $scope.config.diagramm.scale -= 0.01;
             }
-            //            while (((maxX - minX) < (1000 / $scope.config.diagramm.scale)) || ((maxY - minY) < (300 / $scope.config.diagramm.scale))) {
-            //                $scope.config.diagramm.scale += 0.01;
-            //            }
-            console.log($scope.config.diagramm.scale);
-            self.updateZoomBehaviour();
+            $scope.safeApply();
 
-            //(((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale))
+            //Calculation of a topshifting and a leftshifting, so the automaton is centered in the diagram.
+            topShifting = (((height / $scope.config.diagramm.scale) - (maxY - minY)) / 2);
+            leftShifting = (((width / $scope.config.diagramm.scale) - (maxX - minX)) / 2);
+
+            //set the diagram-x and -y values and update the diagram.
+            $scope.config.diagramm.x = -(minX * $scope.config.diagramm.scale) + (leftShifting * $scope.config.diagramm.scale);
+            $scope.config.diagramm.y = -(minY * $scope.config.diagramm.scale) + (topShifting * $scope.config.diagramm.scale);
+            self.updateZoomBehaviour();
         } else {
             self.scaleAndTranslateToDefault();
         }
