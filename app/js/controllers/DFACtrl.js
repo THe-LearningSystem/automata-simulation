@@ -39,4 +39,35 @@ function DFACtrl($scope, hotkeys) {
         hotkeys.toggleCheatSheet()();
     };
 
+
+
+    //INTRO
+    $scope.intro = {};
+    $scope.intro.Active = false;
+    $scope.intro.Start = function () {
+        console.log("startIntro");
+        $scope.intro.Active = true;
+    };
+
+    $scope.intro.Finish = function () {
+        console.log("introFinish");
+    };
+
+    $scope.intro.Skip = function () {
+        console.log("introskip");
+    };
+
+    $scope.intro.Config = [
+        {
+            type: "title",
+            heading: "This is a demo",
+            text: 'This is a Demo Text!<em>This can have custom html too !!!</em></span>'
+
+            }, {
+            type: "title",
+            heading: "Next Demo Page",
+            text: 'And Content.'
+
+            }
+        ];
 }
