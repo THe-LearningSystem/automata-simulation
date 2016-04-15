@@ -5869,7 +5869,7 @@ button.close {
   fill: #ff7b00; }
 
 .grid-line {
-  stroke: #000; }
+  stroke: #B3AEAE; }
 
 .state {
   cursor: context-menu; }
@@ -6012,22 +6012,21 @@ button.close {
 .button-group {
   padding: 0 5px;
   float: left;
-  border-right: 1px solid #e0e0e0; }
+  border-right: 1px solid #e0e0e0;
+  height: 40px; }
+
+.button-group a {
+  color: #000; }
+
+.button-group:hover {
+  color: #000;
+  text-decoration: none; }
 
 .menu-item .content {
   padding: 5px 10px; }
 
 button:disabled .icon {
   color: #AAA; }
-
-.currentAutomatonName {
-  display: table;
-  height: 30px;
-  float: left;
-  font-size: 18px;
-  max-width: 100%;
-  cursor: pointer;
-  vertical-align: middle; }
 
 .inputField {
   z-index: 1; }
@@ -6047,20 +6046,23 @@ button:disabled .icon {
 
 .top-menu {
   padding: 0 0 0 200px;
-  height: 30px;
+  height: 40px;
   background-color: whitesmoke;
   border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0; }
 
-.th-koeln-logo img {
+.th-koeln-logo {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 0; }
+
+.th-koeln-logo img {
   height: 50px;
   padding: 7px; }
 
 .automata-simulation-logo {
-  width: 50px; }
+  width: 50px;
+  float: left; }
 
 .automata-simulation-logo img {
   height: 50px;
@@ -6068,7 +6070,7 @@ button:disabled .icon {
 
 .left-menu {
   position: absolute;
-  top: 80px;
+  top: 90px;
   left: 0;
   bottom: 0;
   width: 200px;
@@ -6076,7 +6078,7 @@ button:disabled .icon {
   border-right: 1px solid #e0e0e0; }
 
 .left-indextab {
-  height: 29.8px;
+  height: 30px;
   padding: 5px;
   background-color: #eeeeee;
   cursor: pointer;
@@ -6100,18 +6102,30 @@ button:disabled .icon {
 
 .right-menu {
   position: absolute;
-  top: 80px;
+  top: 90px;
   right: 0;
   bottom: 0;
   width: 200px;
   background-color: whitesmoke;
   border-left: 1px solid #e0e0e0; }
 
-.menu-item {
-  margin: 15px 0; }
+.right-menu-bottom {
+  position: absolute;
+  bottom: 0;
+  padding: 5px;
+  right: 0; }
+
+.right-menu-bottom .icon {
+  font-size: 25px !important; }
+
+.right-menu-bottom a {
+  color: #707070; }
+
+.right-menu-bottom a:hover {
+  text-decoration: none; }
 
 .right-indextab {
-  height: 29.8px;
+  height: 30px;
   padding: 5px;
   background-color: whitesmoke;
   cursor: pointer;
@@ -6127,13 +6141,12 @@ button:disabled .icon {
 .menu-button:hover {
   border: 1px solid #e0e0e0; }
 
-.button-group {
-  padding: 0 5px;
-  float: left;
-  border-right: 1px solid #e0e0e0; }
-
-.menu-item .content {
-  padding: 5px 10px; }
+.dropbutton {
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 5px;
+  padding: 2px; }
 
 .right-indextab-title {
   text-align: center;
@@ -6163,11 +6176,11 @@ button:disabled .icon {
   position: absolute;
   left: 200px;
   right: 200px;
-  top: 80px;
-  bottom: 150px; }
+  top: 120px;
+  bottom: 250px; }
 
 .diagram-title {
-  height: 30.5px;
+  height: 30px;
   padding-top: 8px;
   background-color: #cedde9;
   cursor: pointer;
@@ -6187,12 +6200,11 @@ button:disabled .icon {
   border-top: 1px solid #e0e0e0; }
 
 .bot-content {
-  height: 250px;
-  overflow-y: scroll; }
+  height: 250px; }
 
 .bot-title {
-  height: 29.8px;
-  padding-top: 7.5px;
+  height: 30px;
+  padding-top: 7px;
   background-color: #cedde9;
   cursor: pointer;
   font-size: 14px;
@@ -6226,15 +6238,26 @@ button:disabled .icon {
 .icon {
   font-size: 18px; }
 
-#automatonNameEdit {
-  font-size: 24px;
-  border: 0; }
+.automataName {
+  overflow: auto;
+  width: 200px;
+  float: left; }
 
 .currentAutomatonName {
-  float: left;
-  font-size: 24px;
-  max-width: 100%;
-  cursor: pointer; }
+  margin: 5px;
+  display: inline-block;
+  width: 180px;
+  height: 30px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid white;
+  overflow: hidden; }
+
+.currentAutomatonName:hover {
+  border: 1px solid #B7B5B5; }
 
 .inputField {
   z-index: 1; }
@@ -6252,6 +6275,7 @@ button:disabled .icon {
   color: red; }
 
 .stf-element {
+  display: table;
   margin: 10px 10px 10px 10px; }
 
 rzslider .rz-pointer {
@@ -6264,3 +6288,24 @@ rzslider .rz-pointer:after {
   left: 5px;
   width: 6px;
   height: 6px; }
+
+.unsaved-changes {
+  padding: 0 !important;
+  width: 200px;
+  float: left;
+  margin-top: 30px; }
+
+.unsaved-changes .alert {
+  padding: 1px; }
+
+.sim-input-not-accepted {
+  border-left: 0; }
+
+.mCSB_container_wrapper {
+  margin-right: 0; }
+
+.mCSB_container_wrapper > .mCSB_container {
+  padding-right: 20px; }
+
+.border-top {
+  border-top: 1px solid #CCC; }

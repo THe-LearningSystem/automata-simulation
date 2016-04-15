@@ -127,6 +127,70 @@ function GraphdesignerDFA($scope, svgSelector) {
     };
 
     /**
+     * This method zooms the svg to a calculated scale, so the complete svg fits in the window
+     */
+    self.zoomFitWindow = function () {
+        var stateXCoor = [];
+        var stateYCoor = [];
+        var minX = 0;
+        var maxX = 0;
+        var minY = 0;
+        var maxY = 0;
+        var topShifting = 0;
+        var leftShifting = 0;
+        var i;
+        var obj;
+        var width = self.svgOuter.style("width").replace("px", "");
+        var height = self.svgOuter.style("height").replace("px", "");
+
+        /*
+         * set the diagrammscale on 100%. We got the advantage, that the method also zoom in, if the automaton doesn't fit the window. 
+         * But the method doesn't really zoom in. It sets the scale on 100% an then zoom out.
+         */
+        $scope.config.diagramm.scale = 1.0;
+
+        /**
+         * check if there exist at least one state. If the diagram is empty, there is nothing to fit the window.
+         * The state with the lowest x- and y-coordinate defines the minimum-x- and minimum-y-coordinate from the automaton.
+         * The state with the highest x- and y-coordinate defines the maximum-x- and maximum-y-coordiante from the automaten
+         */
+
+        if ($scope.config.states.length > 0) {
+            for (i = 0; i < $scope.config.states.length; i++) {
+                stateXCoor[i] = $scope.config.states[i].x;
+            }
+
+            for (i = 0; i < $scope.config.states.length; i++) {
+                stateYCoor[i] = $scope.config.states[i].y;
+            }
+            minX = _.min(stateXCoor);
+            maxX = _.max(stateXCoor);
+            minY = _.min(stateYCoor);
+            maxY = _.max(stateYCoor);
+
+            /* 
+             * While the size of the automaton is bigger than the diagram, zoom out. 
+             * We work with the width and the height from the diagram proportional to the scale.
+             */
+            while (((maxX - minX + 150) > (width / $scope.config.diagramm.scale)) || ((maxY - minY + 200) > (height / $scope.config.diagramm.scale))) {
+                $scope.config.diagramm.scale -= 0.01;
+            }
+            $scope.safeApply();
+
+            //Calculation of a topshifting and a leftshifting, so the automaton is centered in the diagram.
+            topShifting = (((height / $scope.config.diagramm.scale) - (maxY - minY)) / 2);
+            leftShifting = (((width / $scope.config.diagramm.scale) - (maxX - minX)) / 2);
+
+            //set the diagram-x and -y values and update the diagram.
+            $scope.config.diagramm.x = -(minX * $scope.config.diagramm.scale) + (leftShifting * $scope.config.diagramm.scale);
+            $scope.config.diagramm.y = -(minY * $scope.config.diagramm.scale) + (topShifting * $scope.config.diagramm.scale);
+            self.updateZoomBehaviour();
+        } else {
+            self.scaleAndTranslateToDefault();
+        }
+    };
+
+    /**
      * Scale and Translate the Svg to the default Value
      */
     self.scaleAndTranslateToDefault = function () {
@@ -607,6 +671,8 @@ function GraphdesignerDFA($scope, svgSelector) {
     self.removeStartState = function (stateId) {
         var state = $scope.getStateById($scope.config.startState);
         state.objReference.select(".start-line").remove();
+        $scope.config.startState = null;
+        $scope.updateListener();
     };
 
     /**
@@ -1034,11 +1100,24 @@ function GraphdesignerDFA($scope, svgSelector) {
             z: 1
         };
 
+
         var vecX = {
             x: 1,
             y: 0,
             z: 0
         };
+
+
+
+        var stretchValue, movingPoint;
+        //OLD:stretchValue = (70 * (1 / obj.distance * 1.1) * 1.4);
+        stretchValue = 20;
+
+        movingPoint = crossPro(vecA, vecB);
+        movingPoint = fixVectorLength(movingPoint);
+
+        movingPoint = expandVector(movingPoint, stretchValue);
+
         /**4:Calc the curvestart and end if there is and approach transition**/
         if (obj.approachTransition) {
 
@@ -1065,7 +1144,6 @@ function GraphdesignerDFA($scope, svgSelector) {
             obj.yEnd = y2 - (self.settings.stateRadius * Math.sin(toRadians(xEnd.lowerAngle)));
         }
 
-        var stretchValue, movingPoint;
         //OLD:stretchValue = (70 * (1 / obj.distance * 1.1) * 1.4);
         stretchValue = 35;
 
@@ -1297,7 +1375,6 @@ function GraphdesignerDFA($scope, svgSelector) {
 
         _.forEach(self.selectedTransition.names, function (value, key) {
             var tmpObject = {};
-            console.log("asd" + key);
             tmpObject = cloneObject(value);
 
             if (transitionId !== undefined) {
@@ -1435,5 +1512,15 @@ function GraphdesignerDFA($scope, svgSelector) {
                 self.setStateClassAs(newValue, true, "animated-nextstate-svg");
             }
         }
+    });
+    $scope.$watch('simulator.status', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            if ($scope.simulator.status === "accepted") {
+                self.setStateClassAs($scope.simulator.animated.currentState, true, "animated-accepted-svg");
+            } else if ($scope.simulator.status === "not accepted") {
+                self.setStateClassAs($scope.simulator.animated.currentState, true, "animated-not-accepted-svg");
+            }
+        }
+
     });
 }

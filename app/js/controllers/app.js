@@ -4,7 +4,10 @@ var autoSim = angular.module('automata-simulation', [
   'ui.bootstrap',
   'pascalprecht.translate',
   'jsonFormatter',
-  'rzModule'
+  'rzModule',
+  'ngScrollbars',
+  'cfp.hotkeys',
+  'ngJoyRide'
 ]).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/dfa', {
         templateUrl: 'view/dfa.html',
@@ -52,7 +55,7 @@ autoSim.directive("menubutton", function () {
             action: '&',
             tttext: '@'
         },
-        template: '<button class="menu-button" type="button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}"><span class="icon icon-{{icon}} icon-position" aria-hidden="true"></span></button>'
+        template: '<button class="menu-button" type="button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}" tooltip-placement="bottom"><span class="icon icon-{{icon}} icon-position" aria-hidden="true"></span></button>'
     };
 });
 
@@ -149,8 +152,9 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
             });
             return allStates;
         }
-
-
+        $scope.config.unSavedChanges = false;
+        //workaround: couldnt add new states after export
+        $scope.$parent.graphdesigner.resetAddActions();
         var exportData = {};
         exportData = $scope.config;
         exportData.transitions = getTransitions();
@@ -161,7 +165,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
             type: "application/json",
         });
         saveAs(blob, $scope.config.name + ".json");
-        $scope.config.unSavedChanges = false;
+
     };
 
     $scope.saveAsPng = function () {
@@ -216,6 +220,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
         $scope.$parent.config = tmpObject;
         createOtherObjects(jsonObj);
         console.log($scope.$parent.config);
+        $scope.$parent.graphdesigner.updateZoomBehaviour();
     };
 
     function createOtherObjects(jsonObj) {
