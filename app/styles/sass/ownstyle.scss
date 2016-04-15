@@ -291,6 +291,14 @@ $disabledColor: #AAA;
     height: 40px;
 }
 
+.button-group a {
+    color: #000;
+}
+.button-group :hover {
+    color: #000;
+    text-decoration: none;
+}
+
 .menu-item .content {
     padding: 5px 10px;
 }
@@ -400,6 +408,13 @@ button:disabled .icon {
     width: 200px;
     background-color: whitesmoke;
     border-left: 1px solid #e0e0e0;
+}
+
+.right-menu-bottom {
+    position: absolute;
+    bottom: 0;
+    padding: 5px;
+    right: 0;
 }
 
 .right-indextab {

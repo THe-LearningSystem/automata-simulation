@@ -15,9 +15,9 @@
 <div class="top-menu">
     <div class="button-group">
         <!-- Simple dropdown -->
-        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)" uib-tooltip="{{ 'NAVBAR.ZOOM' | translate}}" tooltip-placement="bottom">
+        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)">
 
-            <a href id="simple-dropdown" uib-dropdown-toggle>
+            <a href id="simple-dropdown" uib-dropdown-toggle uib-tooltip="{{ 'NAVBAR.ZOOM' | translate}}" tooltip-placement="bottom">
                    {{config.diagramm.scale*100 | number:0}}%   
         <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
         </a>
@@ -60,9 +60,9 @@
         <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
-        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl" uib-tooltip="{{ 'LANG_DROP.TITLE' | translate}}" tooltip-placement="bottom">
+        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
             <!-- Here is the current language shown -->
-            <a href id="simple-dropdown" uib-dropdown-toggle><span ng-bind-html="activeLanguage | to_trusted"></span><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            <a href id="simple-dropdown" uib-dropdown-toggle><span ng-bind-html="activeLanguage | to_trusted" uib-tooltip="{{ 'LANG_DROP.TITLE' | translate}}" tooltip-placement="bottom"></span><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
         </a>
             <!-- here you can see all selectable languages in a simple dropdown -->
             <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
@@ -205,4 +205,10 @@
             </li>
         </ul>
     </menuitem>
+    <div class="right-menu-bottom">
+        <a href="https://github.com/AutoSimDevelopers/automata-simulation"><span class="icon icon-social-octocat"></span></a>
+        <a href="https://github.com/AutoSimDevelopers/automata-simulation/issues">
+            <span class="icon icon-bug"></span>
+        </a>
+    </div>
 </div>

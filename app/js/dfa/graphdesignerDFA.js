@@ -655,6 +655,8 @@ function GraphdesignerDFA($scope, svgSelector) {
     self.removeStartState = function (stateId) {
         var state = $scope.getStateById($scope.config.startState);
         state.objReference.select(".start-line").remove();
+        $scope.config.startState = null;
+        $scope.updateListener();
     };
 
     /**

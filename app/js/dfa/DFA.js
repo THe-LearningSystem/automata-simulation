@@ -393,9 +393,11 @@ function DFA($scope, $translate) {
         if ($scope.existsStateWithId(stateId)) {
             //change on graphdesigner and others
             $scope.graphdesigner.changeStartState(stateId);
-            $scope.updateListener();
             //change the startState then
             $scope.config.startState = stateId;
+
+            //update the listeners after the startState is set
+            $scope.updateListener();
         } else {
             //TODO: BETTER DEBUG
         }
