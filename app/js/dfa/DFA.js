@@ -63,6 +63,37 @@ function DFA($scope, $translate) {
     //for the showing/hiding of the Input Field of the automaton name
     $scope.inNameEdit = false;
 
+    //modal headline
+    $scope.headline = "Überschrift";
+    //modal message (errors or advices)
+    $scope.message = "Dies ist eine Beschreibung eines Fehlers";
+
+    $scope.modalType = "";
+
+    /**
+     * Add the options to the modal.
+     * @param {String} newHeadline Headline of the shown modal.
+     * @param {String} newMessage Message of the shown modal. 
+     */
+    $scope.showModalWithMessage = function (newHeadline, newMessage, type) {
+        $scope.headline = newHeadline;
+        $scope.message = newMessage;
+        $scope.modalType = type;
+
+        //change it to angular function
+        $("#modal").modal();
+    };
+
+    /**
+     * Start the method, if the modal is accepted
+     */
+    $scope.modalAction = function () {
+        if ($scope.modalType == "reset") {
+            $scope.resetAutomaton();
+            console.log("resetButton");
+        }
+    };
+
     /**
      * Options for the stepTimeOut-Slider
      */
@@ -98,7 +129,6 @@ function DFA($scope, $translate) {
      */
     $scope.keypressCallback = function ($event) {
         if ($event.charCode == 13) {
-            console.log($event);
             document.getElementById("automatonNameEdit").blur();
         }
     };

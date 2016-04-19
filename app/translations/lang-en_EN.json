@@ -11,7 +11,7 @@
         "TTTEXT_ADDTRANS": "Add Transition",
         "TTTEXT_REMALL": "Reset Automaton"
     },
-    
+
     "LANG_DROP": {
         "ENGLISH": "English",
         "GERMAN": "German"
@@ -55,12 +55,12 @@
         "FINALSTATE": "FinalState",
         "SAVE": "Save"
     },
-    
-    "TABLE":{
+
+    "TABLE": {
         "TITLE": "Statetable"
     },
-    
-    
+
+
     "STF": {
         "TITLE": "Statetransitionfunction",
         "TTSIGMA": "Alphabet",
@@ -69,6 +69,16 @@
         "TTSTART": "Startstate",
         "TTFINAL": "Finalstates",
         "F": "F"
-        
+
+    },
+
+    "BUTTON_MODAL": {
+        "ACCEPT_BUTTON": "Continue",
+        "DECLINE_BUTTON": "Abort"
+    },
+    
+    "RESET_BUTTON_MODAL": {
+        "HEADLINE": "Reset automaton",
+        "MESSAGE": "Are you sure you want to reset the automaton?"
     }
 }

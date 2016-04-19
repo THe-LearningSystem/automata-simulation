@@ -11,6 +11,29 @@
 <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{headline | translate}}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{message | translate}}</p>
+                </div>
+                <div id="modal-footer" class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="modalAction()">{{"BUTTON_MODAL.ACCEPT_BUTTON" | translate}}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{"BUTTON_MODAL.DECLINE_BUTTON" | translate}}</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <div class="top-menu">
 
@@ -56,7 +79,7 @@
     <div class="button-group">
         <menubutton icon="plus-circle" action="graphdesigner.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
         <menubutton icon="long-arrow-right" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
-        <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
+        <menubutton icon="trash" action="showModalWithMessage('RESET_BUTTON_MODAL.HEADLINE', 'RESET_BUTTON_MODAL.MESSAGE', 'reset')" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
         <button type="button" class="menu-button" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">

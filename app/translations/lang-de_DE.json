@@ -78,5 +78,15 @@
         "TTSTART": "Startzustand",
         "TTFINAL": "Endzustände",
         "F": "E"
+    },
+
+    "BUTTON_MODAL": {
+        "ACCEPT_BUTTON": "Fortfahren",
+        "DECLINE_BUTTON": "Abbrechen"
+    },
+
+    "RESET_BUTTON_MODAL": {
+        "HEADLINE": "Reset Automat",
+        "MESSAGE": "Soll der vorhandene Automat wirklich gelöscht werden?"
     }
 }
