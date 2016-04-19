@@ -23,23 +23,23 @@
         </a>
 
             <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
-                <li> <a ng-click="graphdesigner.zoomTo(25)">25%</a></li>
-                <li> <a ng-click="graphdesigner.zoomTo(50)">50%</a></li>
-                <li> <a ng-click="graphdesigner.zoomTo(75)">75%</a></li>
-                <li> <a ng-click="graphdesigner.zoomTo(100)">100%</a></li>
-                <li> <a ng-click="graphdesigner.zoomTo(125)">125%</a></li>
-                <li> <a ng-click="graphdesigner.zoomTo(150)">150%</a></li>
-                <li> <a ng-click="graphdesigner.zoomTo(200)">200%</a></li>
-                <li> <a ng-click="graphdesigner.zoomTo(250)">250%</a></li>
-                <li class="border-top"><a ng-click="graphdesigner.zoomFitWindow()">{{"ZOOM.FIT_WINDOW" | translate}}</a></li>
+                <li> <a ng-click="statediagram.zoomTo(25)">25%</a></li>
+                <li> <a ng-click="statediagram.zoomTo(50)">50%</a></li>
+                <li> <a ng-click="statediagram.zoomTo(75)">75%</a></li>
+                <li> <a ng-click="statediagram.zoomTo(100)">100%</a></li>
+                <li> <a ng-click="statediagram.zoomTo(125)">125%</a></li>
+                <li> <a ng-click="statediagram.zoomTo(150)">150%</a></li>
+                <li> <a ng-click="statediagram.zoomTo(200)">200%</a></li>
+                <li> <a ng-click="statediagram.zoomTo(250)">250%</a></li>
+                <li class="border-top"><a ng-click="statediagram.zoomFitWindow()">{{"ZOOM.FIT_WINDOW" | translate}}</a></li>
                 </li>
 
             </ul>
         </button>
     </div>
     <div class="button-group">
-        <menubutton icon="search-plus" action="graphdesigner.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
-        <menubutton icon="search-minus" action="graphdesigner.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
+        <menubutton icon="search-plus" action="statediagram.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
+        <menubutton icon="search-minus" action="statediagram.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
     </div>
 
     <!--scaleAndTranslateToDefault()-->
@@ -55,8 +55,8 @@
 
     </div>
     <div class="button-group">
-        <menubutton icon="plus-circle" action="graphdesigner.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
-        <menubutton icon=" long-arrow-right" action="graphdesigner.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+        <menubutton icon="plus-circle" action="statediagram.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+        <menubutton icon=" long-arrow-right" action="statediagram.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
         <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
@@ -122,8 +122,8 @@
         <p>DrawnTransitions:
             <json-formatter json="drawnTransitions" open="1"></json-formatter>
         </p>
-        <p>Graphdesigner Input:
-            <json-formatter json="graphdesigner.input" open="1"></json-formatter>
+        <p>statediagram Input:
+            <json-formatter json="statediagram.input" open="1"></json-formatter>
         </p>
     </menuitemextendable>
 
@@ -170,37 +170,37 @@
 </div>
 <div class="right-menu">
     <!--Diagramm Settigns -->
-    <menuitem titlename="DIA_SET.TITLE" ng-show="!graphdesigner.showStateMenu && !graphdesigner.showTransitionMenu">
+    <menuitem titlename="DIA_SET.TITLE" ng-show="!statediagram.showStateMenu && !statediagram.showTransitionMenu">
         <p class="right-indextab-subtitle">{{'DIA_SET.VIEW' | translate}}</p>
         <p class="dia-option">
-            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.isGrid">{{"DIA_SET.GRID" | translate}}
+            <input type="checkbox" id="statediagram-isGrid" ng-model="statediagram.isGrid">{{"DIA_SET.GRID" | translate}}
         </p>
         <p class="dia-option">
-            <input type="checkbox" id="graphdesigner-isGrid" ng-model="graphdesigner.snapping">{{"DIA_SET.SNAPPING" | translate}}
+            <input type="checkbox" id="statediagram-isGrid" ng-model="statediagram.snapping">{{"DIA_SET.SNAPPING" | translate}}
         </p>
     </menuitem>
     <!--State Menu -->
-    <menuitem titlename="STATE_MENU.TITLE" ng-show="graphdesigner.showStateMenu">
+    <menuitem titlename="STATE_MENU.TITLE" ng-show="statediagram.showStateMenu">
         <div class="input-group">
             <span class="input-group-addon">{{"STATE_MENU.NAME" | translate}}</span>
-            <input class="form-control" id="state-input-name" ng-model="graphdesigner.input.stateName" maxlength="5" uib-tooltip="{{graphdesigner.input.ttt | translate}}" tooltip-is-open="graphdesigner.input.tttisopen" tooltip-placement="left" tooltip-trigger="none" show-focus="graphdesigner.showStateMenu" ng-disabled="simulator.isInPlay">
+            <input class="form-control" id="state-input-name" ng-model="statediagram.input.stateName" maxlength="5" uib-tooltip="{{statediagram.input.ttt | translate}}" tooltip-is-open="statediagram.input.tttisopen" tooltip-placement="left" tooltip-trigger="none" show-focus="statediagram.showStateMenu" ng-disabled="simulator.isInPlay">
         </div>
         <div>
-            <input class="checkbox-item" type="checkbox" id="state-input-startstate" ng-model="graphdesigner.input.startState" ng-disabled="simulator.isInPlay">{{"STATE_MENU.STARTSTATE" | translate}}
+            <input class="checkbox-item" type="checkbox" id="state-input-startstate" ng-model="statediagram.input.startState" ng-disabled="simulator.isInPlay">{{"STATE_MENU.STARTSTATE" | translate}}
         </div>
         <div>
-            <input class="checkbox-item" type="checkbox" id="state-input-finalstate" ng-model="graphdesigner.input.finalState" ng-disabled="simulator.isInPlay">{{"STATE_MENU.FINALSTATE" | translate}}
+            <input class="checkbox-item" type="checkbox" id="state-input-finalstate" ng-model="statediagram.input.finalState" ng-disabled="simulator.isInPlay">{{"STATE_MENU.FINALSTATE" | translate}}
 
         </div>
-        <button class="btn btn-danger" ng-click="removeState(graphdesigner.input.state.id)" ng-disabled="simulator.isInPlay">Delete</button>
+        <button class="btn btn-danger" ng-click="removeState(statediagram.input.state.id)" ng-disabled="simulator.isInPlay">Delete</button>
 
     </menuitem>
     <!--Transition Menu -->
-    <menuitem titlename="TRANS_MENU.TITLE" ng-show="graphdesigner.showTransitionMenu">
-        <p>{{"STATE_MENU.STARTSTATE" | translate}}:{{graphdesigner.input.fromState.name}}</p>
-        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{graphdesigner.input.toState.name}}</p>
+    <menuitem titlename="TRANS_MENU.TITLE" ng-show="statediagram.showTransitionMenu">
+        <p>{{"STATE_MENU.STARTSTATE" | translate}}:{{statediagram.input.fromState.name}}</p>
+        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{statediagram.input.toState.name}}</p>
         <ul class="transitions-menu-list">
-            <li ng-repeat="(key, value) in graphdesigner.input.transitions">
+            <li ng-repeat="(key, value) in statediagram.input.transitions">
                 <div class="input-group">
                     <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
                     <input class="form-control" type="text" ng-model="value.name" maxlength="1" uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen" tooltip-placement="left" tooltip-trigger="none" ng-attr-show-focus="{{value.isFocus || undefined}}" ng-disabled="simulator.isInPlay">

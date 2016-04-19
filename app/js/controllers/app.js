@@ -154,7 +154,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
         }
         $scope.config.unSavedChanges = false;
         //workaround: couldnt add new states after export
-        $scope.$parent.graphdesigner.resetAddActions();
+        $scope.$parent.statediagramm.resetAddActions();
         var exportData = {};
         exportData = $scope.config;
         exportData.transitions = getTransitions();
@@ -220,7 +220,7 @@ autoSim.controller("portationCtrl", ['$scope', function ($scope) {
         $scope.$parent.config = tmpObject;
         createOtherObjects(jsonObj);
         console.log($scope.$parent.config);
-        $scope.$parent.graphdesigner.updateZoomBehaviour();
+        $scope.$parent.statediagramm.updateZoomBehaviour();
     };
 
     function createOtherObjects(jsonObj) {

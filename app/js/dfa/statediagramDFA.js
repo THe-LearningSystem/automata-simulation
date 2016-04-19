@@ -1,5 +1,5 @@
-//GRAPHDESIGNER for the svg diagramm
-function GraphdesignerDFA($scope, svgSelector) {
+//statediagram for the svg diagramm
+function StateDiagramDFA($scope, svgSelector) {
     "use strict";
 
     var self = this;
@@ -17,7 +17,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     //user can snap the states to the grid -> toggles snapping
     self.snapping = true;
 
-    //graphdesigner settings
+    //statediagram settings
     self.settings = {
         stateRadius: 25,
         finalStateRadius: 29,
@@ -275,7 +275,7 @@ function GraphdesignerDFA($scope, svgSelector) {
     self.isGrid = true;
 
     //watcher for the grid when changed -> updateGrid
-    $scope.$watch('[graphdesigner.isGrid , config.diagramm]', function () {
+    $scope.$watch('[statediagram.isGrid , config.diagramm]', function () {
         self.drawGrid();
     }, true);
 
@@ -778,7 +778,7 @@ function GraphdesignerDFA($scope, svgSelector) {
         $scope.safeApply();
         self.stateMenuListener = [];
         //Menu watcher
-        self.stateMenuListener.push($scope.$watch('graphdesigner.input.startState', function (newValue, oldValue) {
+        self.stateMenuListener.push($scope.$watch('statediagram.input.startState', function (newValue, oldValue) {
             if (newValue !== oldValue) {
                 if (self.input.startState) {
                     $scope.changeStartState(self.input.state.id);
@@ -789,7 +789,7 @@ function GraphdesignerDFA($scope, svgSelector) {
             }
 
         }));
-        self.stateMenuListener.push($scope.$watch('graphdesigner.input.finalState', function (newValue, oldValue) {
+        self.stateMenuListener.push($scope.$watch('statediagram.input.finalState', function (newValue, oldValue) {
             if (newValue !== oldValue) {
                 if (self.input.finalState) {
                     $scope.addFinalState(self.input.state.id);
@@ -800,7 +800,7 @@ function GraphdesignerDFA($scope, svgSelector) {
             }
 
         }));
-        self.stateMenuListener.push($scope.$watch('graphdesigner.input.stateName', function (newValue, oldValue) {
+        self.stateMenuListener.push($scope.$watch('statediagram.input.stateName', function (newValue, oldValue) {
             //if the name got changed but is not empty
             //reset the tooltip
             self.input.tttisopen = false;
@@ -1395,7 +1395,7 @@ function GraphdesignerDFA($scope, svgSelector) {
 
         /*jshint -W083 */
         for (var i = 0; i < self.input.transitions.length; i++) {
-            self.transitionMenuListener.push($scope.$watchCollection("graphdesigner.input.transitions['" + i + "']", function (newValue, oldValue) {
+            self.transitionMenuListener.push($scope.$watchCollection("statediagram.input.transitions['" + i + "']", function (newValue, oldValue) {
                 if (newValue.name !== oldValue.name) {
                     newValue.tttisopen = false;
                     if (newValue.name !== "" && !$scope.existsTransition(fromState, toState, newValue.name)) {

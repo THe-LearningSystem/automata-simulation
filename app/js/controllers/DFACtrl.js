@@ -24,7 +24,7 @@ function DFACtrl($scope, hotkeys) {
         description: 'Create state',
         callback: function (event) {
             event.preventDefault();
-            $scope.graphdesigner.addState();
+            $scope.statediagram.addState();
         }
     });
     hotkeys.add({
@@ -33,7 +33,7 @@ function DFACtrl($scope, hotkeys) {
         allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
         callback: function (event) {
             event.preventDefault();
-            $scope.graphdesigner.addTransition();
+            $scope.statediagram.addTransition();
         }
     });
 
