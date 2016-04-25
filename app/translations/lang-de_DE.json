@@ -12,7 +12,8 @@
         "TTTEXT_IMPORT": "Importieren",
         "TTTEXT_ADDSTATE": "Zustand hinzufügen",
         "TTTEXT_ADDTRANS": "Übergang hinzufügen",
-        "TTTEXT_REMALL": "Reset Automat"
+        "TTTEXT_REMALL": "Reset Automat",
+        "TTTEXT_SAVEASPNG": "Bild speichern"
     },
 
     "LANG_DROP": {
@@ -61,6 +62,7 @@
         "NAME_ALREADY_EXIST": "Zustandsname bereits verwendet!",
         "NAME_TOO_SHORT": "Zustandsname zu kurz!"
     },
+    
     "TRANS_MENU": {
         "TITLE": "Zustandsübergangsmenü",
         "NEXTSTATE": "Nächster Zustand",

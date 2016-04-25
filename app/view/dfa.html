@@ -49,7 +49,7 @@
         <menubutton icon="upload" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
         <input id="hidden-file-upload" type="file" name="file">
         <menubutton id="exportButton" icon="download" action="export()" tttext="NAVBAR.TTTEXT_EXPORT" ng-disabled="config.states.length == 0 && config.transitions == 0"></menubutton>
-        <menubutton icon="camera" action="saveAsPng()" tttext="NAVBAR_TTTEXST_SAVEASPNG"></menubutton>
+        <menubutton icon="camera" action="saveAsPng()" tttext="NAVBAR.TTTEXT_SAVEASPNG"></menubutton>
     </div>
     <div class="button-group">
 
@@ -105,8 +105,8 @@
                 <rzslider rz-slider-model="simulator.loopTimeOut" rz-slider-options="loopTimeOutSlider.options"></rzslider>
             </div>
         </p>
-        <p> {{"SIM_SET.LOOP" | translate}}
-            <input id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">
+        <p>
+            <input class="checkbox-item" id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">{{"SIM_SET.LOOP" | translate}}
         </p>
     </menuitemextendable>
 
@@ -173,10 +173,10 @@
     <menuitem titlename="DIA_SET.TITLE" ng-show="!statediagram.showStateMenu && !statediagram.showTransitionMenu">
         <p class="right-indextab-subtitle">{{'DIA_SET.VIEW' | translate}}</p>
         <p class="dia-option">
-            <input type="checkbox" id="statediagram-isGrid" ng-model="statediagram.isGrid">{{"DIA_SET.GRID" | translate}}
+            <input class="checkbox-item" type="checkbox" id="statediagram-isGrid" ng-model="statediagram.isGrid">{{"DIA_SET.GRID" | translate}}
         </p>
         <p class="dia-option">
-            <input type="checkbox" id="statediagram-isGrid" ng-model="statediagram.snapping">{{"DIA_SET.SNAPPING" | translate}}
+            <input class="checkbox-item" type="checkbox" id="statediagram-isGrid" ng-model="statediagram.snapping">{{"DIA_SET.SNAPPING" | translate}}
         </p>
     </menuitem>
     <!--State Menu -->

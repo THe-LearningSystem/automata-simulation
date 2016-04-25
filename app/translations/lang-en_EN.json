@@ -1,5 +1,8 @@
 {
-    "APP_TITLE": "Automata Simulation",
+    "APP": {
+        "TITLE": "Automaten Simulation",
+        "UNSAVEDCHANGES": "unsaved changes"
+    },
 
     "NAVBAR": {
         "TTTEXT_ZOOM_IN": "Zoom In",
@@ -9,14 +12,14 @@
         "TTTEXT_IMPORT": "Import",
         "TTTEXT_ADDSTATE": "Add State",
         "TTTEXT_ADDTRANS": "Add Transition",
-        "TTTEXT_REMALL": "Reset Automaton"
+        "TTTEXT_REMALL": "Reset Automaton",
+        "TTTEXT_SAVEASPNG": "Save as png"
     },
     
     "LANG_DROP": {
         "ENGLISH": "English",
         "GERMAN": "German"
     },
-
 
     "SIM": {
         "TITLE": "Simulation",
@@ -40,21 +43,25 @@
         "TITLE": "Developer"
     },
 
-
+    "DIA": {
+        "TITLE": "Zustandsübergangsdiagramm"
+    },
+    
     "DIA_SET": {
         "TITLE": "Diagramm Settings",
         "VIEW": "View",
         "GRID": "Grid",
         "SNAPPING": "Snapping"
     },
-
-
-    "STATE_SET": {
-        "TITLE": "StateMenu",
+    
+    "STATE_MENU": {
+        "TITLE": "Statemenu",
         "NAME": "Name",
-        "STARTSTATE": "StartState",
-        "FINALSTATE": "FinalState",
-        "SAVE": "Save"
+        "STARTSTATE": "Startstate",
+        "FINALSTATE": "Finalstate",
+        "SAVE": "Save",
+        "NAME_ALREADY_EXIST": "Statename already exists!",
+        "NAME_TOO_SHORT": "Statename to short!"
     },
     
     "TABLE":{
