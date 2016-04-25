@@ -401,9 +401,9 @@ function StateDiagramDFA($scope, svgSelector) {
             //remove class
             self.selectedState.objReference.classed("state-in-creation", false);
             //update the stateData
-
             self.selectedState.x = (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale));
             self.selectedState.y = (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale));
+            self.selectedState.objReference.attr("transform", "translate(" + self.selectedState.x + " " + self.selectedState.y + ")");
             //remove mousemove listener
             self.svgOuter.on("mousemove", null);
             //overwrite the click listener

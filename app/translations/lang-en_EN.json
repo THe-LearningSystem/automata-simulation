@@ -66,7 +66,9 @@
         "FINALSTATE": "Finalstate",
         "SAVE": "Save",
         "NAME_ALREADY_EXIST": "Statename already exists!",
-        "NAME_TOO_SHORT": "Statename too short!"
+        "NAME_TOO_SHORT": "Statename too short!",
+        "DELETE_MODAL_TITLE": "Delete State",
+        "DELETE_MODAL_DESC": "Do you want to delete the state with all the connected transitions?"
     },
 
     "TRANS_MENU": {
@@ -74,13 +76,12 @@
         "NEXTSTATE": "Next State",
         "NAME": "Char",
         "NAME_TOO_SHORT": "Char too short!",
-        "NAME_ALREADY_EXIST": "Transition char already exists!",
+        "NAME_ALREADY_EXIST": "Transition char already exists!"
     },
 
     "TABLE": {
         "TITLE": "Statetable"
     },
-
 
     "STF": {
         "TITLE": "Statetransitionfunction",
@@ -90,6 +91,23 @@
         "TTSTART": "Startstate",
         "TTFINAL": "Finalstates",
         "F": "F"
+    },
 
+    "MODAL_BUTTON": {
+        "PROCEED": "Proceed",
+        "DELETE": "Delete",
+        "UPDATE": "Update",
+        "IMPORT": "Import",
+        "DECLINE": "Decline"
+    },
+
+    "RESET_BUTTON_MODAL": {
+        "TITLE": "Reset automaton",
+        "DESC": "Are you sure you want to reset the automaton?"
+    },
+
+    "IMPORT": {
+        "TITLE": "Import",
+        "DESC": "Do you want to override the current Automaton with the imported Automaton?"
     }
 }

@@ -1,3 +1,28 @@
+<!-- Modal:START -->
+<div class="modal fade" id="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{title | translate}}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{description | translate}}</p>
+                </div>
+                <div id="modal-footer" class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="executeModalAction()">{{button | translate}}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{"MODAL_BUTTON.DECLINE" | translate}}</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Modal:END -->
+
 <div class="hide" ng-joy-ride="intro.Active" config="intro.Config" on-finish="intro.Finish()" on-skip="intro.Skip()"></div>
 <div class="top-nav">
     <div class="automata-simulation-logo"><img src="images/logo_automaten.png"></div>
@@ -15,12 +40,11 @@
 <div class="top-menu">
     <div class="button-group">
         <!-- Simple dropdown -->
-        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)">
-
-            <a href id="simple-dropdown" uib-dropdown-toggle uib-tooltip="{{ 'NAVBAR.ZOOM' | translate}}" tooltip-placement="bottom">
-                   {{config.diagramm.scale*100 | number:0}}%   
-        <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-        </a>
+        <div uib-dropdown on-toggle="toggled(open)">
+            <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
+                {{config.diagramm.scale*100 | number:0}}%
+                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </button>
 
             <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
                 <li> <a ng-click="statediagram.zoomTo(25)">25%</a></li>
@@ -35,7 +59,7 @@
                 </li>
 
             </ul>
-        </button>
+        </div>
     </div>
     <div class="button-group">
         <menubutton icon="search-plus" action="statediagram.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
@@ -59,19 +83,20 @@
     </div>
 
     <div class="button-group">
-        <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
+        <menubutton icon="trash" action="showModalWithMessage('RESET_BUTTON_MODAL.TITLE', 'RESET_BUTTON_MODAL.DESC', 'resetAutomaton()')" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
-        <button type="button" class="menu-button dropbutton" uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
-            <!-- Here is the current language shown -->
-            <a href id="simple-dropdown" uib-dropdown-toggle><span ng-bind-html="activeLanguage | to_trusted" uib-tooltip="{{ 'LANG_DROP.TITLE' | translate}}" tooltip-placement="bottom"></span><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-        </a>
+        <div uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
+            <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
+                <!-- Here is the current language shown -->
+                <span ng-bind-html="activeLanguage | to_trusted"></span><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </button>
             <!-- here you can see all selectable languages in a simple dropdown -->
             <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
                 <li> <a ng-click="changeLang( 'en_EN')"><span class="flag-icon flag-icon-gb"></span> {{"LANG_DROP.ENGLISH" | translate}}</a></li>
                 <li> <a ng-click="changeLang( 'de_DE')"><span class="flag-icon flag-icon-de"></span> {{"LANG_DROP.GERMAN" | translate}}</a></li>
             </ul>
-        </button>
+        </div>
     </div>
     <div class="button-group">
         <menubutton icon="question" action="openCheatSheet()" tttext="NAVBAR.TTTEXT_CHEATSHEET"></menubutton>

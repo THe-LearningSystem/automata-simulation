@@ -63,6 +63,34 @@ function DFA($scope, $translate) {
     //for the showing/hiding of the Input Field of the automaton name
     $scope.inNameEdit = false;
 
+
+
+    /**
+     * Add the options to the modal.
+     * @param {String} newHeadline Headline of the shown modal.
+     * @param {String} newMessage Message of the shown modal. 
+     */
+    $scope.showModalWithMessage = function (newTitle, newDescription, action, button) {
+        $scope.title = newTitle;
+        $scope.description = newDescription;
+        $scope.modalAction = action;
+        if (button === undefined) {
+            $scope.button = "MODAL_BUTTON.PROCEED";
+        } else {
+            $scope.button = button;
+        }
+        //change it to angular function
+        $("#modal").modal();
+    };
+
+    /**
+     * Executes the modal action-> when clicking on the action button
+     */
+    $scope.executeModalAction = function () {
+        $scope.$eval($scope.modalAction);
+    };
+
+
     /**
      * Options for the stepTimeOut-Slider
      */
@@ -98,7 +126,6 @@ function DFA($scope, $translate) {
      */
     $scope.keypressCallback = function ($event) {
         if ($event.charCode == 13) {
-            console.log($event);
             document.getElementById("automatonNameEdit").blur();
         }
     };
@@ -350,6 +377,7 @@ function DFA($scope, $translate) {
     $scope.removeState = function (stateId) {
         if ($scope.hasStateTransitions(stateId)) {
             //TODO: BETTER DEBUG
+            $scope.showModalWithMessage('STATE_MENU.DELETE_MODAL_TITLE', 'STATE_MENU.DELETE_MODAL_DESC', 'forcedRemoveState(' + stateId + ')', 'MODAL_BUTTON.DELETE');
         } else {
             //if the state is a final state move this state from the final states
             if ($scope.isStateAFinalState(stateId)) {
@@ -365,6 +393,17 @@ function DFA($scope, $translate) {
             //update the other listeners when remove is finished
             $scope.updateListener();
         }
+    };
+
+    $scope.forcedRemoveState = function (stateId) {
+        for (var i = 0; i < $scope.config.transitions.length; i++) {
+            var tmpTransition = $scope.config.transitions[i];
+            if (tmpTransition.fromState === stateId || tmpTransition.toState === stateId) {
+                $scope.removeTransition(tmpTransition.id);
+                i--;
+            }
+        }
+        $scope.removeState(stateId);
     };
 
     /**
@@ -597,6 +636,8 @@ function DFA($scope, $translate) {
      * @param {number} transitionId      The id from the transition
      */
     $scope.removeTransition = function (transitionId) {
+        //remove old transition from alphabet if this transition only used this char
+        $scope.removeFromAlphabetIfNotUsedFromOthers(transitionId);
         //first remove the element from the svg after that remove it from the array
         $scope.statediagram.removeTransition(transitionId);
         $scope.config.transitions.splice($scope.getArrayTransitionIdByTransitionId(transitionId), 1);

@@ -64,7 +64,9 @@
         "FINALSTATE": "Endzustand",
         "SAVE": "Speichern",
         "NAME_ALREADY_EXIST": "Zustandsname bereits verwendet!",
-        "NAME_TOO_SHORT": "Zustandsname zu kurz!"
+        "NAME_TOO_SHORT": "Zustandsname zu kurz!",
+        "DELETE_MODAL_TITLE": "Zustand löschen",
+        "DELETE_MODAL_DESC": "Wollen sie den Zustand und alle zugehörigen Zustandsübergänge löschen?"
     },
 
     "TRANS_MENU": {
@@ -87,5 +89,23 @@
         "TTSTART": "Startzustand",
         "TTFINAL": "Endzustände",
         "F": "E"
+    },
+
+    "MODAL_BUTTON": {
+        "PROCEED": "Fortfahren",
+        "DELETE": "Löschen",
+        "UPDATE": "Aktualisieren",
+        "IMPORT": "Importieren",
+        "DECLINE": "Abbrechen"
+    },
+
+    "RESET_BUTTON_MODAL": {
+        "TITLE": "Reset Automat",
+        "DESC": "Soll der vorhandene Automat wirklich gelöscht werden?"
+    },
+
+    "IMPORT": {
+        "TITLE": "Import",
+        "DESC": "Wollen sie den aktuellen Automaten durch den importierten Automaten überschreiben?"
     }
 }
