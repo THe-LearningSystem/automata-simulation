@@ -334,6 +334,15 @@ function StateDiagramDFA($scope, svgSelector) {
         .append('svg:path')
         .attr('d', 'M0,0 L0,6 L9,3 z');
     self.defs.append('svg:marker')
+        .attr('id', 'marker-end-arrow-create')
+        .attr('refX', 7.5)
+        .attr('refY', 3)
+        .attr('markerWidth', 10)
+        .attr('markerHeight', 10)
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .attr('d', 'M0,0 L0,6 L9,3 z');
+    self.defs.append('svg:marker')
         .attr('id', 'marker-end-arrow-animated')
         .attr('refX', 7.5)
         .attr('refY', 3)
@@ -427,7 +436,7 @@ function StateDiagramDFA($scope, svgSelector) {
                 //the line itself with the arrow without the path itself
                 self.tmpTransitionline = self.tmpTransition.append("path")
                     .attr("class", "transition-line curvedLine in-creation")
-                    .attr("marker-end", "url(#marker-end-arrow)")
+                    .attr("marker-end", "url(#marker-end-arrow-create)")
                     .attr("fill", "none");
 
                 //if already selected a state then create transition to the clickedState
@@ -1407,6 +1416,7 @@ function StateDiagramDFA($scope, svgSelector) {
                         newValue.tttisopen = true;
                         newValue.ttt = 'TRANS_MENU.NAME_ALREAD_EXISTS';
                     }
+                    console.log(($scope.existsTransition(fromState, toState, newValue.name, newValue.id)));
                 }
             }));
         }

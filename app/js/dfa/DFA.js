@@ -482,8 +482,8 @@ function DFA($scope, $translate) {
         var tmp = false;
         for (var i = 0; i < $scope.config.transitions.length; i++) {
             var transition = $scope.config.transitions[i];
-            //NFA == if (transition.fromState == fromState && transition.toState == toState && transition.name == transitonName && transition.id !== transitionId) {
-            if (transition.fromState == fromState && transition.toState == toState && transition.name == transitonName && transition.id !== transitionId) {
+            //NFA == if (transition.fromState == fromState && transition.name == transitonName && transition.id !== transitionId) {
+            if (transition.fromState == fromState && transition.name == transitonName && transition.id !== transitionId) {
                 tmp = true;
             }
         }

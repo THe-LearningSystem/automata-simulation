@@ -27,7 +27,7 @@
 
     "SIM": {
         "TITLE": "Simulation",
-        "INPUT": "Eingabewort",
+        "INPUT": "Eingabe",
         "PLAY": "Start",
         "PAUSE": "Pause",
         "STOP": "Stop",
@@ -66,12 +66,13 @@
         "NAME_ALREADY_EXIST": "Zustandsname bereits verwendet!",
         "NAME_TOO_SHORT": "Zustandsname zu kurz!"
     },
-    
+
     "TRANS_MENU": {
         "TITLE": "Zustandsübergangsmenü",
         "NEXTSTATE": "Nächster Zustand",
         "NAME": "Zeichen",
-        "NAME_TOO_SHORT": "Zeichen zu kurz"
+        "NAME_TOO_SHORT": "Zeichen zu kurz",
+        "NAME_ALREADY_EXISTS": "Zeichen existiert bereits"
     },
 
     "TABLE": {

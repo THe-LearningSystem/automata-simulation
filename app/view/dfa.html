@@ -41,7 +41,13 @@
         <menubutton icon="search-plus" action="statediagram.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
         <menubutton icon="search-minus" action="statediagram.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
     </div>
+    <div class="button-group">
+        <menubutton icon="plus-circle" action="statediagram.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+        <menubutton icon=" long-arrow-right" action="statediagram.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+    </div>
+    <div class="button-group">
 
+    </div>
     <!--scaleAndTranslateToDefault()-->
 
     <div class="button-group" id="portationCtrl" ng-controller="portationCtrl">
@@ -51,12 +57,8 @@
         <menubutton id="exportButton" icon="download" action="export()" tttext="NAVBAR.TTTEXT_EXPORT" ng-disabled="config.states.length == 0 && config.transitions == 0"></menubutton>
         <menubutton icon="camera" action="saveAsPng()" tttext="NAVBAR.TTTEXT_SAVEASPNG"></menubutton>
     </div>
-    <div class="button-group">
 
-    </div>
     <div class="button-group">
-        <menubutton icon="plus-circle" action="statediagram.addState()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
-        <menubutton icon=" long-arrow-right" action="statediagram.addTransition()" ng-disabled="simulator.isInPlay" tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
         <menubutton icon="trash" action="resetAutomaton()" tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
     </div>
     <div class="button-group">
@@ -87,24 +89,26 @@
             <menubutton icon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
             <menubutton icon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         </div>
-        <div class="input-group" uib-tooltip="{{ 'SIM.INPUT' |translate}}" tooltip-placement="bottom">
+        <div class="input-group">
+            <span class="input-group-addon" aria-hidden="true">{{"SIM.INPUT" | translate}}</span>
             <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()" ng-disabled="simulator.isInPlay" />
-            <span class="input-group-addon icon-times sim-input-not-accepted" aria-hidden="true" ng-show="!simulator.isInputAccepted && (config.inputWord.length !==0 )"></span>
-            <span class="input-group-addon icon-check" aria-hidden="true" ng-show="simulator.isInputAccepted && (config.inputWord.length !==0 )"></span>
+            <span class="input-group-addon icon-times red sim-input-not-accepted" aria-hidden="true" ng-show="!simulator.isInputAccepted && (config.inputWord.length !==0 )"></span>
+            <span class="input-group-addon icon-check green" aria-hidden="true" ng-show="simulator.isInputAccepted && (config.inputWord.length !==0 )"></span>
         </div>
     </menuitemextendable>
     <menuitemextendable titlename="SIM_SET.TITLE">
 
-        <p> {{"SIM_SET.STO" | translate}}
-            <div>
-                <rzslider rz-slider-model="simulator.stepTimeOut" rz-slider-options="stepTimeOutSlider.options"></rzslider>
-            </div>
-        </p>
-        <p>{{"SIM_SET.LTO" | translate}}
-            <div>
-                <rzslider rz-slider-model="simulator.loopTimeOut" rz-slider-options="loopTimeOutSlider.options"></rzslider>
-            </div>
-        </p>
+
+        <div class="border-bottom">
+            <p>{{"SIM_SET.STO" | translate}}</p>
+            <rzslider rz-slider-model="simulator.stepTimeOut" rz-slider-options="stepTimeOutSlider.options"></rzslider>
+        </div>
+
+
+        <div class="border-bottom">
+            <p>{{"SIM_SET.LTO" | translate}}</p>
+            <rzslider rz-slider-model="simulator.loopTimeOut" rz-slider-options="loopTimeOutSlider.options"></rzslider>
+        </div>
         <p>
             <input class="checkbox-item" id="simulator-settings-input-loop" type="checkbox" ng-model="simulator.loopSimulation">{{"SIM_SET.LOOP" | translate}}
         </p>
@@ -149,7 +153,9 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="(key, value) in table.states" ng-class="value.class">
-                            <th ng-bind-html="value.name | to_trusted"></th>
+                            <th><span ng-bind-html="value.name | to_trusted"></span>
+                                <sub ng-show="value.startState == true">S<sub>0</sub></sub><sub ng-show="value.startState == true && value.finalState == true">, </sub><sub ng-show="value.finalState == true">{{"STF.F" | translate}}</sub>
+                            </th>
                             <td ng-repeat="name in value.trans track by $index" ng-bind-html="name.State | to_trusted"></td>
                         </tr>
                     </tbody>
@@ -172,10 +178,10 @@
     <!--Diagramm Settigns -->
     <menuitem titlename="DIA_SET.TITLE" ng-show="!statediagram.showStateMenu && !statediagram.showTransitionMenu">
         <p class="right-indextab-subtitle">{{'DIA_SET.VIEW' | translate}}</p>
-        <p class="dia-option">
+        <p>
             <input class="checkbox-item" type="checkbox" id="statediagram-isGrid" ng-model="statediagram.isGrid">{{"DIA_SET.GRID" | translate}}
         </p>
-        <p class="dia-option">
+        <p>
             <input class="checkbox-item" type="checkbox" id="statediagram-isGrid" ng-model="statediagram.snapping">{{"DIA_SET.SNAPPING" | translate}}
         </p>
     </menuitem>
@@ -204,7 +210,7 @@
                 <div class="input-group">
                     <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
                     <input class="form-control" type="text" ng-model="value.name" maxlength="1" uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen" tooltip-placement="left" tooltip-trigger="none" ng-attr-show-focus="{{value.isFocus || undefined}}" ng-disabled="simulator.isInPlay">
-                    <span class="input-group-addon btn btn-danger transbutton" ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(value.id)" ng-disabled="simulator.isInPlay">Delete</span>
+                    <span class="input-group-addon btn btn-danger transbutton" ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(value.id)" ng-disabled="simulator.isInPlay"><span class="icon-times"></span></span>
                 </div>
 
             </li>

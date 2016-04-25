@@ -18,7 +18,7 @@
         "TTTEXT_CHEATSHEET": "Hotkeys",
         "FIT_WINDOW": "Fit Window"
     },
-    
+
     "LANG_DROP": {
         "TITLE": "Language",
         "ENGLISH": "English",
@@ -27,7 +27,7 @@
 
     "SIM": {
         "TITLE": "Simulation",
-        "INPUT": "Inputword",
+        "INPUT": "Input",
         "PLAY": "Play",
         "PAUSE": "Pause",
         "STOP": "Stop",
@@ -51,14 +51,14 @@
     "DIA": {
         "TITLE": "Zustandsübergangsdiagramm"
     },
-    
+
     "DIA_SET": {
         "TITLE": "Diagramm Settings",
         "VIEW": "View",
         "GRID": "Grid",
         "SNAPPING": "Snapping"
     },
-    
+
     "STATE_MENU": {
         "TITLE": "Statemenu",
         "NAME": "Name",
@@ -68,19 +68,20 @@
         "NAME_ALREADY_EXIST": "Statename already exists!",
         "NAME_TOO_SHORT": "Statename too short!"
     },
-    
+
     "TRANS_MENU": {
         "TITLE": "Transitionmenu",
         "NEXTSTATE": "Next State",
         "NAME": "Char",
-        "NAME_TOO_SHORT": "Char too short!"
+        "NAME_TOO_SHORT": "Char too short!",
+        "NAME_ALREADY_EXIST": "Transition char already exists!",
     },
-    
-    "TABLE":{
+
+    "TABLE": {
         "TITLE": "Statetable"
     },
-    
-    
+
+
     "STF": {
         "TITLE": "Statetransitionfunction",
         "TTSIGMA": "Alphabet",
@@ -89,6 +90,6 @@
         "TTSTART": "Startstate",
         "TTFINAL": "Finalstates",
         "F": "F"
-        
+
     }
 }

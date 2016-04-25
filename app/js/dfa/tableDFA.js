@@ -40,7 +40,7 @@ function TableDFA($scope) {
             tmpObject.id = state.id;
             // marks the current active state at the simulation in the table
             var selectedClass = "";
-            if ($scope.statediagram.selectedState !== null && $scope.statediagram.selectedState.id == state.id) {
+            if (($scope.statediagram.selectedState !== null && $scope.statediagram.selectedState.id == state.id) || ($scope.statediagram.selectedTransition !== null && $scope.statediagram.selectedTransition.fromState === state.id)) {
                 selectedClass = "selected";
             }
             if ($scope.simulator.animated.currentState == state.id) {
@@ -52,10 +52,22 @@ function TableDFA($scope) {
                 } else {
                     animatedClass = "animated-currentstate";
                 }
+
                 tmpObject.name = '<span class="' + animatedClass + ' ' + selectedClass + '">' + state.name + '</span>';
             } else {
                 tmpObject.name = '<span class="' + selectedClass + '">' + state.name + '</span>';
             }
+
+            if ($scope.isStateAFinalState(state.id))
+                tmpObject.finalState = true;
+            else
+                tmpObject.finalState = false;
+
+            if ($scope.config.startState === state.id)
+                tmpObject.startState = true;
+            else
+                tmpObject.startState = false;
+
             tmpObject.trans = [];
 
 

@@ -86,6 +86,17 @@ function DFACtrl($scope, hotkeys) {
             scope.saveAsPng();
         }
     });
+    //zoomFit
+    hotkeys.add({
+        combo: 'ctrl+x',
+        description: 'ZoomFit Window',
+        allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+        callback: function (event) {
+            event.preventDefault();
+            $scope.statediagram.zoomFitWindow();
+
+        }
+    });
     $scope.openCheatSheet = function () {
         console.log("open cheatsheet");
         hotkeys.toggleCheatSheet()();
