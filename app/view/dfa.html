@@ -7,7 +7,7 @@
         </span>
         <input class="currentAutomatonName" ng-keypress="keypressCallback($event)" id="automatonNameEdit" type="text" name="newName" size="8" show-focus="inNameEdit" ng-model="config.name" ng-blur="inNameEdit = false" ng-show="inNameEdit">
     </div>
-    <div class=" unsaved-changes"><span class="alert alert-info" ng-show="config.unSavedChanges">Unsaved Changes.</span></div>
+    <div class=" unsaved-changes"><span class="alert alert-info" ng-show="config.unSavedChanges">{{"APP.UNSAVEDCHANGES" | translate}}</span></div>
     <div class="th-koeln-logo"><img src="images/th-koeln-logo.png"></div>
 </div>
 </div>
@@ -31,7 +31,7 @@
                 <li> <a ng-click="statediagram.zoomTo(150)">150%</a></li>
                 <li> <a ng-click="statediagram.zoomTo(200)">200%</a></li>
                 <li> <a ng-click="statediagram.zoomTo(250)">250%</a></li>
-                <li class="border-top"><a ng-click="statediagram.zoomFitWindow()">{{"ZOOM.FIT_WINDOW" | translate}}</a></li>
+                <li class="border-top"><a ng-click="statediagram.zoomFitWindow()">{{"NAVBAR.FIT_WINDOW" | translate}}</a></li>
                 </li>
 
             </ul>
@@ -72,7 +72,7 @@
         </button>
     </div>
     <div class="button-group">
-        <menubutton icon="question" action="openCheatSheet()" tttext="HOTKEY.CHEATSHEET"></menubutton>
+        <menubutton icon="question" action="openCheatSheet()" tttext="NAVBAR.TTTEXT_CHEATSHEET"></menubutton>
         <!--<menubutton icon="question" action="intro.Start()" tttext="INTRO.INTROBUTTONTITLE"></menubutton>-->
     </div>
 </div>
@@ -197,8 +197,8 @@
     </menuitem>
     <!--Transition Menu -->
     <menuitem titlename="TRANS_MENU.TITLE" ng-show="statediagram.showTransitionMenu">
-        <p>{{"STATE_MENU.STARTSTATE" | translate}}:{{statediagram.input.fromState.name}}</p>
-        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}:{{statediagram.input.toState.name}}</p>
+        <p>{{"STATE_MENU.STARTSTATE" | translate}}: {{statediagram.input.fromState.name}}</p>
+        <p>{{"TRANS_MENU.NEXTSTATE" | translate}}: {{statediagram.input.toState.name}}</p>
         <ul class="transitions-menu-list">
             <li ng-repeat="(key, value) in statediagram.input.transitions">
                 <div class="input-group">

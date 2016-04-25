@@ -1,10 +1,11 @@
 {
     "APP": {
         "TITLE": "Automaten Simulation",
-        "UNSAVEDCHANGES": "Ungesicherte Veränderungen."
+        "UNSAVEDCHANGES": "Ungesicherte Änderungen."
     },
 
     "NAVBAR": {
+        "ZOOM": "Zoom",
         "TTTEXT_ZOOM_IN": "Vergrößern",
         "TTTEXT_ZOOM_OUT": "Verkleinern",
         "TTTEXT_RESCALE": "Reskalieren",
@@ -13,10 +14,13 @@
         "TTTEXT_ADDSTATE": "Zustand hinzufügen",
         "TTTEXT_ADDTRANS": "Übergang hinzufügen",
         "TTTEXT_REMALL": "Reset Automat",
-        "TTTEXT_SAVEASPNG": "Bild speichern"
+        "TTTEXT_SAVEASPNG": "Bild speichern",
+        "TTTEXT_CHEATSHEET": "Tastenkürzel",
+        "FIT_WINDOW": "Fenster ausfüllen"
     },
 
     "LANG_DROP": {
+        "TITLE": "Sprache",
         "ENGLISH": "Englisch",
         "GERMAN": "Deutsch"
     },
@@ -66,7 +70,8 @@
     "TRANS_MENU": {
         "TITLE": "Zustandsübergangsmenü",
         "NEXTSTATE": "Nächster Zustand",
-        "NAME": "Name"
+        "NAME": "Zeichen",
+        "NAME_TOO_SHORT": "Zeichen zu kurz"
     },
 
     "TABLE": {
