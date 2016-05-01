@@ -38,7 +38,10 @@ function DFA($scope, $translate) {
     $scope.defaultConfig.name = "Untitled Automaton";
     //if there is something unsaved
     $scope.defaultConfig.unSavedChanges = false;
-
+    //has the drawn Transition
+    //{fromState:0,toState:0,names:["a","b"], objReference:};
+    //if there is already a transition with the right fromState and toState, thenn only add myname to the names array
+    $scope.defaultConfig.drawnTransitions = [];
 
     //Config Object
     $scope.config = cloneObject($scope.defaultConfig);

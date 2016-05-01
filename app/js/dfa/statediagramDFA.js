@@ -30,11 +30,6 @@ function StateDiagramDFA($scope, svgSelector) {
     //for the selfReference transition
     self.stateSelfReferenceNumber = Math.sin(45 * (Math.PI / 180)) * self.settings.stateRadius;
 
-    //has the drawn Transition
-    //{fromState:0,toState:0,names:["a","b"], objReference:};
-    //if there is already a transition with the right fromState and toState, thenn only add myname to the names array
-    $scope.drawnTransitions = [];
-
     /**
      * Check if transition already drawn
      * @param   {number}  fromState 
@@ -44,8 +39,8 @@ function StateDiagramDFA($scope, svgSelector) {
     self.existsDrawnTransition = function (fromState, toState) {
 
         var tmp = false;
-        for (var i = 0; i < $scope.drawnTransitions.length; i++) {
-            var transition = $scope.drawnTransitions[i];
+        for (var i = 0; i < $scope.config.drawnTransitions.length; i++) {
+            var transition = $scope.config.drawnTransitions[i];
             if (transition.fromState == fromState && transition.toState == toState) {
                 tmp = true;
             }
@@ -60,8 +55,8 @@ function StateDiagramDFA($scope, svgSelector) {
      * @returns {object} 
      */
     self.getDrawnTransition = function (fromState, toState) {
-        for (var i = 0; i < $scope.drawnTransitions.length; i++) {
-            var transition = $scope.drawnTransitions[i];
+        for (var i = 0; i < $scope.config.drawnTransitions.length; i++) {
+            var transition = $scope.config.drawnTransitions[i];
             if (transition.fromState == fromState && transition.toState == toState) {
                 return transition;
             }
@@ -79,7 +74,7 @@ function StateDiagramDFA($scope, svgSelector) {
         //Clear the content of the svg
         self.svgTransitions.html("");
         self.svgStates.html("");
-        $scope.drawnTransitions = [];
+        $scope.config.drawnTransitions = [];
         //change the scale and the translate to the defaultConfit
         self.svg.attr("transform", "translate(" + $scope.defaultConfig.diagramm.x + "," + $scope.defaultConfig.diagramm.y + ")" + " scale(" + $scope.defaultConfig.diagramm.scale + ")");
         svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
@@ -591,7 +586,7 @@ function StateDiagramDFA($scope, svgSelector) {
         //if its the only transition in the drawn transition -> then remove the drawn transition
         if (tmpDrawnTransition.names.length === 1) {
             tmpDrawnTransition.objReference.remove();
-            _.remove($scope.drawnTransitions, function (n) {
+            _.remove($scope.config.drawnTransitions, function (n) {
                 return n == tmpDrawnTransition;
             });
             //if there is an approad transition, then draw it with the new drawconfig
@@ -1303,7 +1298,7 @@ function StateDiagramDFA($scope, svgSelector) {
                     .attr("y", y);
             }
             //add the drawnTransition
-            group.attr("object-id", $scope.drawnTransitions.push({
+            group.attr("object-id", $scope.config.drawnTransitions.push({
                 fromState: transition.fromState,
                 toState: transition.toState,
                 names: [{
@@ -1447,7 +1442,7 @@ function StateDiagramDFA($scope, svgSelector) {
      */
     self.updateTransitionsAfterStateDrag = function (stateId) {
         var stateName = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)].name;
-        _.forEach($scope.drawnTransitions, function (n, key) {
+        _.forEach($scope.config.drawnTransitions, function (n, key) {
             if (n.fromState == stateId || n.toState == stateId) {
                 //if its not a selfreference
                 var obj = n.objReference,
