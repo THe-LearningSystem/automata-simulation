@@ -7,6 +7,8 @@
         "SimulationDFA": false,
         "TableDFA": false,
         "StatetransitionfunctionDFA": false,
+        "StateDiagramDPA": false,
+        "SimulationDPA": false,
         "Dbug": false,
         "TestData": false,
         "cloneObject": false,
@@ -28,6 +30,7 @@
         "it": false,
         "inject": false,
         "expect": false,
-        "simulator": false
+        "simulator": false,
+        "self": false
     }
 }
