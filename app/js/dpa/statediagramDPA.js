@@ -5,4 +5,8 @@ function StateDiagramDPA($scope, svgSelector) {
     var self = this;
     StateDiagramDFA.apply(self, arguments);
 
+    self.drawStack = function () {
+
+    };
+
 }

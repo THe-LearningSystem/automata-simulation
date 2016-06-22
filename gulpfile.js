@@ -28,7 +28,30 @@ var pipes = {};
 pipes.uglifyAndConcat = function () {
     return;
 };
+///////////////////////////
+// JAVASCRIPT
+////////////////////////////
+gulp.task('dpa', function () {
+    return gulp.src('app/js/dpa/*.js')
+        .pipe(concat('DPAall.js'))
+        .pipe(gulp.dest('app/js/dpa/'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('app/js/dpa/'));
+});
 
+gulp.task('dfa', function () {
+    return gulp.src('app/js/dfa/*.js')
+        .pipe(concat('DFAall.js'))
+        .pipe(gulp.dest('app/js/dfa/'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('app/js/dfa/'));
+});
 
 ///////////////////////////
 // Styles
@@ -142,6 +165,8 @@ gulp.task('live', function () {
         livereload: true,
     });
     gulp.watch(paths.sass, ['styles']);
+    gulp.watch("app/js/dfa/*.js", ['dfa']);
+    gulp.watch("app/js/dpa/*.js", ['dpa']);
     gulp.watch(paths.all, function (obj) {
         if (obj.type === 'changed') {
             console.log(obj.path + ' changed');

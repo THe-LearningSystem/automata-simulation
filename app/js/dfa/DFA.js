@@ -359,12 +359,7 @@ function DFA($scope, $translate) {
      * @returns {object} the created object
      */
     $scope.addStateWithId = function (stateId, stateName, x, y) {
-        var addedStateId = $scope.config.states.push({
-            id: stateId,
-            name: stateName,
-            x: x,
-            y: y
-        });
+        var addedStateId = $scope.config.states.push(new State(stateId, stateName, x, y));
         //draw the State after the State is added
         $scope.statediagram.drawState(stateId);
         $scope.updateListener();
@@ -580,12 +575,8 @@ function DFA($scope, $translate) {
      * @param {String} transistonName The name of the Transition
      */
     $scope.addTransitionWithId = function (transitionId, fromState, toState, transitonName) {
-        $scope.config.transitions.push({
-            id: transitionId,
-            fromState: fromState,
-            toState: toState,
-            name: transitonName
-        });
+        $scope.config.transitions.push(new TransitionDFA(transitionId, fromState, toState, transitonName));
+
         //drawTransistion
         $scope.statediagram.drawTransition(transitionId);
         $scope.updateListener();
