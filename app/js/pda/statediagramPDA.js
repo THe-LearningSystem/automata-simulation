@@ -1,5 +1,5 @@
-//statediagram for the DPA
-function StateDiagramDPA($scope, svgSelector) {
+//statediagram for the PDA
+function StateDiagramPDA($scope, svgSelector) {
     "use strict";
 
     var self = this;

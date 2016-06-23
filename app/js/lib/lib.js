@@ -49,7 +49,7 @@ function TransitionDFA(id, fromState, toState, transitionchar) {
 }
 
 
-function TransitionDPA(id, fromState, toState, transitionChar, beforeStack, afterStack) {
+function TransitionPDA(id, fromState, toState, transitionChar, beforeStack, afterStack) {
     var self = this;
     self.id = id;
     self.fromState = fromState;

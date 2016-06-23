@@ -31,19 +31,19 @@ pipes.uglifyAndConcat = function () {
 ///////////////////////////
 // JAVASCRIPT
 ////////////////////////////
-gulp.task('dpa', function () {
-    return gulp.src('app/js/dpa/*.js')
-        .pipe(concat('DPAall.js'))
-        .pipe(gulp.dest('app/js/dpa/'))
+gulp.task('pda', function () {
+    return gulp.src(['app/js/pda/*.js', '!app/js/pda/PDAall.js', '!app/js/pda/PDAall.min.js'])
+        .pipe(concat('PDAall.js'))
+        .pipe(gulp.dest('app/js/pda/'))
         .pipe(uglify())
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('app/js/dpa/'));
+        .pipe(gulp.dest('app/js/pda/'));
 });
 
 gulp.task('dfa', function () {
-    return gulp.src('app/js/dfa/*.js')
+    return gulp.src(['app/js/dfa/*.js', '!app/js/dfa/DFAall.js', '!app/js/dfa/DFAall.min.js'])
         .pipe(concat('DFAall.js'))
         .pipe(gulp.dest('app/js/dfa/'))
         .pipe(uglify())
@@ -166,7 +166,7 @@ gulp.task('live', function () {
     });
     gulp.watch(paths.sass, ['styles']);
     gulp.watch("app/js/dfa/*.js", ['dfa']);
-    gulp.watch("app/js/dpa/*.js", ['dpa']);
+    gulp.watch("app/js/pda/*.js", ['pda']);
     gulp.watch(paths.all, function (obj) {
         if (obj.type === 'changed') {
             console.log(obj.path + ' changed');

@@ -1,5 +1,5 @@
-//DPA
-function DPA($scope, $translate) {
+//PDA
+function PDA($scope, $translate) {
     "use strict";
 
     var self = this;
@@ -14,11 +14,11 @@ function DPA($scope, $translate) {
 
     /**Overrides**/
     //the statediagram controlling the svg diagramm
-    $scope.simulator = new SimulationDPA($scope);
+    $scope.simulator = new SimulationPDA($scope);
     //the statediagram controlling the svg diagramm
-    $scope.statediagram = new StateDiagramDPA($scope, "#diagramm-svg");
+    $scope.statediagram = new StateDiagramPDA($scope, "#diagramm-svg");
     // the table where states and transitions are shown
-    $scope.table = new TableDPA($scope);
+    $scope.table = new TablePDA($scope);
 
 
 

@@ -1,5 +1,5 @@
-//Simulator for the simulation of the DPA
-function SimulationDPA($scope) {
+//Simulator for the simulation of the PDA
+function SimulationPDA($scope) {
     "use strict";
 
     var self = this;

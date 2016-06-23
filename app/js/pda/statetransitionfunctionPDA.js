@@ -1,5 +1,5 @@
-//statediagram for the DPA
-function StatetransitionfunctionDPA($scope) {
+//statediagram for the PDA
+function StatetransitionfunctionPDA($scope) {
     "use strict";
 
     var self = this;

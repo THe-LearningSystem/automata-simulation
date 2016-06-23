@@ -13,13 +13,9 @@ var autoSim = angular.module('automata-simulation', [
         templateUrl: 'view/dfa.html',
         controller: 'DFACtrl'
     });
-    $routeProvider.when('/dfa2', {
-        templateUrl: 'view/dfa2.html',
-        controller: 'DFACtrl'
-    });
-    $routeProvider.when('/dpa', {
-        templateUrl: 'view/dpa.html',
-        controller: 'DPACtrl'
+    $routeProvider.when('/pda', {
+        templateUrl: 'view/pda.html',
+        controller: 'PDACtrl'
     });
     $routeProvider.otherwise({
         redirectTo: '/dfa'
