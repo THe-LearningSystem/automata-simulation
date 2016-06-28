@@ -73,6 +73,8 @@
         "TITLE": "Zustandsübergangsmenü",
         "NEXTSTATE": "Nächster Zustand",
         "NAME": "Zeichen",
+        "PDA_READ_FROM_STACK": "Stack davor",
+        "PDA_WRITE_TO_STACK": "Stack danach",
         "NAME_TOO_SHORT": "Zeichen zu kurz",
         "NAME_ALREADY_EXISTS": "Zeichen existiert bereits"
     },

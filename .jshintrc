@@ -12,6 +12,7 @@
         "TablePDA": false,
         "State": false,
         "TransitionDFA": false,
+        "TransitionPDA": false,
         "Dbug": false,
         "TestData": false,
         "cloneObject": false,
