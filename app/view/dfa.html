@@ -143,6 +143,7 @@
         <menubutton icon="wrench" action="testData.testDFA()">
 
         </menubutton>
+        <json-formatter json="statetransitionfunction.data" open="1"></json-formatter>
 
 
         <p>DiagrammValues:
@@ -189,13 +190,33 @@
         </div>
         <div class="bot-content bot-right" ng-scrollbars ng-scrollbars-config="scrollConfig">
             <h3 class="bot-title">{{"STF.TITLE" | translate}}</h3>
-            <div class="stf-element" uib-tooltip="{{ 'STF.TTSIGMA' | translate}}" tooltip-placement="right">&Sigma; = { <span ng-repeat="x in statetransitionfunction.functionData.transitions">{{x}}{{$last ? ' ' : ', '}}</span>}</div>
-            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTATES' | translate}}" tooltip-placement="right">S = { <span ng-repeat="x in statetransitionfunction.functionData.states track by $index" ng-bind-html="x | to_trusted"></span> }</div>
-            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">&delta; = {
-                <span ng-repeat="x in statetransitionfunction.functionData.statetransitionfunction track by $index">
-                    <span ng-bind-html="x | to_trusted"></span> {{$last ? '' : ', '}}</span>}</div>
-            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTART' | translate}}" tooltip-placement="right">S<sub>0</sub>= <span ng-bind-html="statetransitionfunction.functionData.startState | to_trusted"></span> </div>
-            <p class="stf-element" uib-tooltip="{{ 'STF.TTFINAL' | translate}}" tooltip-placement="right">{{"STF.F" | translate}} = { <span ng-bind="statetransitionfunction.functionData.finalStates | to_trusted"></span> }</div>
+            <div class="stf-element" uib-tooltip="{{ 'STF.TTSIGMA' | translate}}" tooltip-placement="right">
+                &Sigma; = {
+                <span ng-repeat="x in statetransitionfunction.data.alphabet">
+                    {{x}}{{$last ? ' ' : ', '}}
+                </span> }
+            </div>
+            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTATES' | translate}}" tooltip-placement="right">
+                S = {
+                <span ng-repeat="x in statetransitionfunction.data.states track by $index">
+                    <span class="{{x.selected}} {{x.animatedClass}}">{{x.name}}</span> {{$last ? '' : ', '}}
+                </span>
+                }
+            </div>
+            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">
+                &delta; = {
+                <span ng-repeat="x in statetransitionfunction.data.statetransitionfunction track by $index">
+                    <span class="{{x.selected}} {{x.animated}}">({{x.fromState}}, {{x.char}}, {{x.toState}})</span> {{$last ? '' : ', '}}
+                </span>
+                }
+            </div>
+            <div class="stf-element" uib-tooltip="{{ 'STF.TTSTART' | translate}}" tooltip-placement="right">
+                S<sub>0</sub>= {{statetransitionfunction.data.startState}}
+            </div>
+            <p class="stf-element" uib-tooltip="{{ 'STF.TTFINAL' | translate}}" tooltip-placement="right">
+                {{"STF.F" | translate}} = {
+                <span ng-repeat="x in statetransitionfunction.data.finalStates">{{x}}{{$last ? '' : ', '}}</span> }
+        </div>
     </div>
 </div>
 </div>
