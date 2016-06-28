@@ -507,7 +507,7 @@ function StateDiagramDFA($scope, svgSelector) {
                 } else {
                     //add the name to the drawnTransition
                     var drawnTransition = self.getDrawnTransition(transition.fromState, transition.toState);
-                    drawnTransition.names.push(transition.name);
+                    //drawnTransition.names.push(transition.name); //TODO: THIS IS WRONG! OBSOLETE?
                     //drawn the new name to the old transition (svg)
                     self.writeTransitionText(drawnTransition.objReference.select(".transition-text"), drawnTransition.names);
 
@@ -1301,10 +1301,7 @@ function StateDiagramDFA($scope, svgSelector) {
             group.attr("object-id", $scope.config.drawnTransitions.push({
                 fromState: transition.fromState,
                 toState: transition.toState,
-                names: [{
-                    "id": transition.id,
-                    "name": transition.name
-                }],
+                names: [self.createDrawnTransitionNameObject(transition)],
                 objReference: group
             }) - 1);
             self.writeTransitionText(text, self.getDrawnTransition(transition.fromState, transition.toState).names);
@@ -1321,10 +1318,7 @@ function StateDiagramDFA($scope, svgSelector) {
         } else {
             //add the name to the drawnTransition
             var drawnTransition = self.getDrawnTransition(transition.fromState, transition.toState);
-            drawnTransition.names.push({
-                "id": transition.id,
-                "name": transition.name
-            });
+            drawnTransition.names.push(self.createDrawnTransitionNameObject(transition));
             //drawn the new name to the old transition (svg)
             self.writeTransitionText(drawnTransition.objReference.select('.transition-text'), self.getDrawnTransition(transition.fromState, transition.toState).names);
             var drawConfigNew = self.getTransitionDrawConfig(transition);
@@ -1333,6 +1327,14 @@ function StateDiagramDFA($scope, svgSelector) {
                 .attr("y", (drawConfigNew.yText));
 
         }
+    };
+
+    /**For better overriting**/
+    self.createDrawnTransitionNameObject = function (transition) {
+        return {
+            "id": transition.id,
+            "name": transition.name
+        };
     };
 
     /**
@@ -1420,6 +1422,7 @@ function StateDiagramDFA($scope, svgSelector) {
         $scope.safeApply();
 
     };
+
 
     /**
      * closes the transitionmenu

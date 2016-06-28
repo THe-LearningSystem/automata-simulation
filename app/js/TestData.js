@@ -19,4 +19,18 @@ function TestData($scope) {
 
     };
 
+    self.testPDA = function () {
+        $scope.config.inputWord = "abc";
+        $scope.addStateWithPresets(200, 200);
+        $scope.addStateWithPresets(500, 200);
+        $scope.addFinalState(1);
+
+
+        $scope.addTransition(0, 0, "a", "#", "A");
+        $scope.addTransition(0, 0, "a", "A", "AA");
+        $scope.addTransition(0, 1, "b", "A", "");
+
+
+    };
+
 }

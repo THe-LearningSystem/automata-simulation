@@ -3,11 +3,6 @@ function StatetransitionfunctionDFA($scope) {
 
     var self = this;
     self.data = {};
-    self.data.states = [];
-    self.data.startState = '';
-    self.data.finalStates = '';
-    self.data.transitions = '';
-    self.data.statetransitionfunction = [];
     //ADD Listener
     $scope.updateListeners.push(self);
 
@@ -16,7 +11,7 @@ function StatetransitionfunctionDFA($scope) {
 
         self.data.alphabet = $scope.config.alphabet;
         self.updateStates();
-        self.updateStateTransitionFunction();
+        self.updateStateTransitionFunctions();
         self.updateStartState();
         self.updateFinalStates();
 

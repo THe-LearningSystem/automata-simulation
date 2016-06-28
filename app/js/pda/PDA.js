@@ -15,8 +15,12 @@ function PDA($scope, $translate) {
     /**Overrides**/
     //the statediagram controlling the svg diagramm
     $scope.simulator = new SimulationPDA($scope);
+    // the table where states and transitions are shown
+    $scope.table = new TablePDA($scope);
     //the statediagram controlling the svg diagramm
     $scope.statediagram = new StateDiagramPDA($scope, "#diagramm-svg");
+    //the statetransitionfunction controlling the statetransitionfunction-table
+    $scope.statetransitionfunction = new StatetransitionfunctionPDA($scope);
     // the table where states and transitions are shown
     $scope.table = new TablePDA($scope);
 

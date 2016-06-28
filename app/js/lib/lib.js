@@ -49,12 +49,12 @@ function TransitionDFA(id, fromState, toState, transitionchar) {
 }
 
 
-function TransitionPDA(id, fromState, toState, transitionChar, readFromStack, writeFromStack) {
+function TransitionPDA(id, fromState, toState, transitionChar, readFromStack, writeToStack) {
     var self = this;
     self.id = id;
     self.fromState = fromState;
     self.toState = toState;
     self.name = transitionChar;
     self.readFromStack = readFromStack;
-    self.writeFromStack = writeFromStack;
+    self.writeToStack = writeToStack;
 }
