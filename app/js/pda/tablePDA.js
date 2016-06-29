@@ -1,8 +1,8 @@
 //statediagram for the PDA
 function TablePDA($scope) {
-    "use strict";
+	"use strict";
 
-    var self = this;
-    TableDFA.apply(self, arguments);
+	var self = this;
+	TableDFA.apply(self, arguments);
 
 }
