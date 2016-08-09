@@ -1179,7 +1179,7 @@ function StateDiagramDFA($scope, svgSelector) {
                         newValue.ttt = 'TRANS_MENU.NAME_TOO_SHORT';
                     } else if ($scope.existsTransition(fromState, toState, newValue.name, newValue.id)) {
                         newValue.tttisopen = true;
-                        newValue.ttt = 'TRANS_MENU.NAME_ALREAD_EXISTS';
+                        newValue.ttt = 'TRANS_MENU.NAME_ALREADY_EXISTS';
                     }
                     console.log(($scope.existsTransition(fromState, toState, newValue.name, newValue.id)));
                 }

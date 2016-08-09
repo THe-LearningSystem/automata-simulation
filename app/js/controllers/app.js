@@ -9,6 +9,10 @@ var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 
             templateUrl: 'view/pda.html',
             controller: 'PDACtrl'
         });
+        $routeProvider.when('/nfa', {
+            templateUrl: 'view/nfa.html',
+            controller: 'NFACtrl'
+        });
         $routeProvider.otherwise({
             redirectTo: '/dfa'
         });

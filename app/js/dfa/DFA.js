@@ -507,18 +507,18 @@ function DFA($scope, $translate) {
      * Checks if a transition with the params already exists
      * @param  {number}  fromState      Id of the fromstate
      * @param  {number}  toState        id from the toState
-     * @param  {Strin}  transitonName The name of the transition
+     * @param  {String}  transitionName The name of the transition
      * @return {Boolean}
      */
-    $scope.existsTransition = function (fromState, toState, transitonName, transitionId) {
+    $scope.existsTransition = function (fromState, toState, transitionName, transitionId) {
         var tmp = false;
-        for (var i = 0; i < $scope.config.transitions.length; i++) {
-            var transition = $scope.config.transitions[i];
-            //NFA == if (transition.fromState == fromState && transition.name == transitonName && transition.id !== transitionId) {
-            if (transition.fromState == fromState && transition.name == transitonName && transition.id !== transitionId) {
+        _.forEach($scope.config.transitions, function (transition) {
+            if (transition.fromState == fromState && transition.name == transitionName && transition.id !== transitionId) {
                 tmp = true;
+                return;
             }
-        }
+        });
+
         return tmp;
     };
 
