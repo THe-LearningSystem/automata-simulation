@@ -68,7 +68,6 @@ function PDAStack() {
         if (char === "\u03b5") {
 
         } else if (char.length === 1) {
-            console.log("ADD TO STACK:" + char);
             self.stackContainer.push(char);
         } else {
             self.stackContainer.push(char[0]);
@@ -79,4 +78,6 @@ function PDAStack() {
     self.pop = function (char) {
         return self.stackContainer.pop();
     };
+
+
 }

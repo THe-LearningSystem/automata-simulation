@@ -8,12 +8,17 @@ function SimulationPDA($scope) {
     self.stack = new PDAStack();
 
     var parentReset = this.reset;
+
     /**
      * Should reset the simulation
      */
     self.reset = function () {
         self.stack = new PDAStack();
         parentReset.apply(this);
+        _.forEach($scope.statediagram.drawnStack, function (value) {
+            $scope.statediagram.removeFromStack();
+        });
+        $scope.statediagram.addToStack(self.stack.stackContainer);
     };
 
     /**
@@ -55,6 +60,7 @@ function SimulationPDA($scope) {
         //First: Paint the transition & wait
         if (!self.animatedTransition) {
             self.stack.pop();
+            $scope.statediagram.removeFromStack();
             self.animatedTransition = true;
             self.animated.transition = self.transition;
             self.goneTransitions.push(self.transition);
@@ -66,9 +72,15 @@ function SimulationPDA($scope) {
 
             //Third: clear transition & currentStatecolor and set currentState = nexsttate and wait
         } else if (self.animatedTransition && self.animatedNextState) {
-            console.log(self.stack);
             self.stack.push(self.animated.transition.writeToStack);
-            console.log(self.stack.stackContainer.length);
+            if (self.animated.transition.writeToStack === "\u03b5") {
+
+            } else if (self.animated.transition.writeToStack.length === 1) {
+                $scope.statediagram.addToStack(self.animated.transition.writeToStack);
+            } else {
+                $scope.statediagram.addToStack(self.animated.transition.writeToStack[0]);
+                $scope.statediagram.addToStack(self.animated.transition.writeToStack[1]);
+            }
 
             self.animated.transition = null;
             self.animated.nextState = null;

@@ -6318,3 +6318,6 @@ rzslider .rz-pointer:after {
 
 .input-group .form-control {
   height: auto !important; }
+
+.stack-item {
+  fill: #AAA; }

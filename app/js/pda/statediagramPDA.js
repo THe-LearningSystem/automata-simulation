@@ -6,6 +6,7 @@ function StateDiagramPDA($scope, svgSelector) {
     StateDiagramDFA.apply(self, arguments);
 
     //TODO: only first version needs rework
+    self.drawnStack = [];
     self.drawStack = function () {
         var width = self.svgOuter.style("width").replace("px", "");
         var height = self.svgOuter.style("height").replace("px", "");
@@ -32,9 +33,21 @@ function StateDiagramPDA($scope, svgSelector) {
             .attr("y2", height - 150)
             .attr("stroke-width", 2)
             .attr("stroke", "black");
-
     };
 
+    self.addToStack = function (character) {
+        var width = self.svgOuter.style("width").replace("px", "");
+        var height = self.svgOuter.style("height").replace("px", "");
+        var group = self.svgOuter.append("g");
+        var rectangle = group.append("rect").attr("class", "stack-item").attr("x", width - 125).attr("y", height - 35 - 25 * self.drawnStack.length).attr("width", 82).attr("height", 20);
+        var stackElement = group.append("text").text(character).attr("class", "stack-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("x", width - 82).attr("y", height - 25 - 25 * self.drawnStack.length);
+        self.drawnStack.push(group);
+    };
+
+    self.removeFromStack = function () {
+        self.drawnStack.pop().remove();
+
+    };
     self.drawStack();
 
     self.createTransition = function (fromState, toState) {

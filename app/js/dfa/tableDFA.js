@@ -131,5 +131,10 @@ function TableDFA($scope) {
             self.updateFunction();
         }
     });
+    $scope.$watch('simulator.status', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            self.updateFunction();
+        }
+    });
 
 }
