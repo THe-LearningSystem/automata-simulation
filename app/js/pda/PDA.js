@@ -24,8 +24,8 @@ function PDA($scope, $translate) {
     $scope.addToStackAlphabet = function (value) {
         for (var i = 0; i < value.length; i++) {
             if (!_.some($scope.config.stackAlphabet, function (a) {
-                return a === value[i];
-            })) {
+                    return a === value[i];
+                })) {
                 $scope.config.stackAlphabet.push(value[i]);
             }
         }
@@ -34,8 +34,6 @@ function PDA($scope, $translate) {
     $scope.removeFromStackAlphabetIfNotUsedFromOthers = function (transitionId) {
 
     };
-
-
 
 
     /**

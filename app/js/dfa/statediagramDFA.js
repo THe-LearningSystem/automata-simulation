@@ -182,6 +182,7 @@ function StateDiagramDFA($scope, svgSelector) {
         // stop zoom
         //dont translate on right click (3)
         if (d3.event.sourceEvent.which !== 3) {
+
             var newScale = Math.floor(d3.event.scale * 100) / 100;
             $scope.config.diagramm.scale = newScale;
             $scope.config.diagramm.x = d3.event.translate[0];
@@ -191,10 +192,11 @@ function StateDiagramDFA($scope, svgSelector) {
         } else {
             console.log("rightclick!");
         }
+        self.updateZoomBehaviour();
     });
     //prevents the normal rightclickcontextmenu and add zoom
     self.svgOuter = d3.select(svgSelector).call(svgOuterZoomAndDrag)
-        //prevents doubleclick zoom
+    //prevents doubleclick zoom
         .on("dblclick.zoom", null)
         //adds our custom context menu on rightclick
         .on("contextmenu", function () {
@@ -241,6 +243,7 @@ function StateDiagramDFA($scope, svgSelector) {
     /**
      * Draw the Grid
      */
+
     self.drawGrid = function () {
         if (self.isGrid) {
             console.log(self.isGrid);
@@ -266,6 +269,12 @@ function StateDiagramDFA($scope, svgSelector) {
         }
 
     };
+
+    //redraw the grid if the browser was resized
+    window.addEventListener('resize', function (event) {
+        self.drawGrid();
+    });
+
     //DEFS
     self.defs = self.svg.append('svg:defs');
     //Marker-Arrow ( for the transitions)
@@ -869,7 +878,7 @@ function StateDiagramDFA($scope, svgSelector) {
         /**1: Check if there is a transition aproach our transition**/
         obj.approachTransition = forceApproach || self.existsDrawnTransition(transition.toState, transition.fromState);
         /****2. Get the xStart,yStart and xEnd,yEnd  and xMid,yMid***/
-        //from and to State
+            //from and to State
         var fromState = $scope.getStateById(transition.fromState);
         var toState = $scope.getStateById(transition.toState);
         var isToStateAFinalState = $scope.isStateAFinalState(transition.toState);
@@ -906,12 +915,12 @@ function StateDiagramDFA($scope, svgSelector) {
         obj.yMid = (y1 + y2) / 2;
         obj.distance = Math.sqrt(obj.xDiff * obj.xDiff + obj.yDiff * obj.yDiff);
         /**3: Calc the CurvedPoint**/
-        //BETTER ONLY CALC WHEN obj.approachTransition = true;
+            //BETTER ONLY CALC WHEN obj.approachTransition = true;
         var vecA = {
-            x: obj.xMid - obj.xStart,
-            y: obj.yMid - obj.yStart,
-            z: 0
-        };
+                x: obj.xMid - obj.xStart,
+                y: obj.yMid - obj.yStart,
+                z: 0
+            };
         var vecB = {
             x: 0,
             y: 0,
@@ -1064,11 +1073,11 @@ function StateDiagramDFA($scope, svgSelector) {
             }
             //add the drawnTransition
             group.attr("object-id", $scope.config.drawnTransitions.push({
-                fromState: transition.fromState,
-                toState: transition.toState,
-                names: [self.createDrawnTransitionNameObject(transition)],
-                objReference: group
-            }) - 1);
+                    fromState: transition.fromState,
+                    toState: transition.toState,
+                    names: [self.createDrawnTransitionNameObject(transition)],
+                    objReference: group
+                }) - 1);
             self.writeTransitionText(text, self.getDrawnTransition(transition.fromState, transition.toState).names);
             group.attr("from-state-id", transition.fromState).attr("to-state-id", transition.toState).on('click', self.openTransitionMenu).on("mouseover", function () {
                 d3.select(this).select('.transition-line-hover').attr("style", "opacity:0.6");

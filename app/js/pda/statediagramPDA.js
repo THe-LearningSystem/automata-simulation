@@ -12,24 +12,24 @@ function StateDiagramPDA($scope, svgSelector) {
 
         //Draw the stackContainer
         var circle = self.svgOuter.append("line")
-            .attr("x1", width-150)
-            .attr("y1", height-150)
-            .attr("x2", width-150)
-            .attr("y2", height-10)
+            .attr("x1", width - 150)
+            .attr("y1", height - 150)
+            .attr("x2", width - 150)
+            .attr("y2", height - 10)
             .attr("stroke-width", 2)
             .attr("stroke", "black");
         var circle = self.svgOuter.append("line")
-            .attr("x1", width-150)
-            .attr("y1", height-10)
-            .attr("x2", width-50)
-            .attr("y2", height-10)
+            .attr("x1", width - 150)
+            .attr("y1", height - 10)
+            .attr("x2", width - 50)
+            .attr("y2", height - 10)
             .attr("stroke-width", 2)
             .attr("stroke", "black");
         var circle = self.svgOuter.append("line")
-            .attr("x1", width-50)
-            .attr("y1", height-10)
-            .attr("x2", width-50)
-            .attr("y2", height-150)
+            .attr("x1", width - 50)
+            .attr("y1", height - 10)
+            .attr("x2", width - 50)
+            .attr("y2", height - 150)
             .attr("stroke-width", 2)
             .attr("stroke", "black");
 

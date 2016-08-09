@@ -191,7 +191,9 @@
         <menubutton icon="wrench" action="testData.testDFA()">
 
         </menubutton>
-        <json-formatter json="statetransitionfunction.data" open="1"></json-formatter>
+
+        <json-formatter json="table" open="1"></json-formatter>
+
 
         <p>
             DiagrammValues:
@@ -223,15 +225,21 @@
                     <thead>
                     <tr>
                         <th>/</th>
-                        <th ng-repeat="char in table.alphabet" ng-bind-html="char | to_trusted"></th>
+                        <th ng-repeat="x in table.alphabet">
+                            <span class="{{x.selectedClass}} {{x.animatedClass}}">{{x.character}}</span>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="(key, value) in table.states" ng-class="value.class">
-                        <th><span ng-bind-html="value.name | to_trusted"></span><sub ng-show="value.startState == true">S<sub>0</sub></sub><sub
-                                ng-show="value.startState == true && value.finalState == true">, </sub><sub
-                                ng-show="value.finalState == true">{{"STF.F" | translate}}</sub></th>
-                        <td ng-repeat="name in value.trans track by $index" ng-bind-html="name.State | to_trusted"></td>
+                    <tr ng-repeat="(key, x) in table.states" ng-class="x.class">
+                        <th><span class="{{x.selectedClass}} {{x.animatedClass}}">{{x.name}}</span>
+                            <sub ng-show=" x.startState == true">S<sub>0</sub></sub>
+                            <sub ng-show="x.startState == true && x.finalState == true">, </sub>
+                            <sub ng-show="x.finalState == true">{{"STF.F" | translate}}</sub>
+                        </th>
+                        <td ng-repeat="y in x.trans track by $index">
+                            <span class="{{y.selectedClass}} {{y.animatedClass}}">{{y.stateName}}</span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -242,7 +250,7 @@
             <div class="stf-element" uib-tooltip="{{ 'STF.TTSTATES' | translate}}" tooltip-placement="right">
                 S = {
                 <span ng-repeat="x in statetransitionfunction.data.states track by $index"> <span
-                        class="{{x.selected}} {{x.animatedClass}}">{{x.name}}</span> {{$last ? '' : ', '}} </span>
+                        class="{{x.selectedClass}} {{x.animatedClass}}">{{x.name}}</span> {{$last ? '' : ', '}} </span>
                 }
             </div>
             <div class="stf-element" uib-tooltip="{{ 'STF.TTSIGMA' | translate}}" tooltip-placement="right">
@@ -252,7 +260,7 @@
             <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">
                 &delta; = {
                 <span ng-repeat="x in statetransitionfunction.data.statetransitionfunction track by $index"> <span
-                        class="{{x.selected}} {{x.animated}}">({{x.fromState}}, {{x.char}}, {{x.toState}})</span> {{$last ? '' : ', '}} </span>
+                        class="{{x.selectedClass}} {{x.animatedClass}}">({{x.fromState}}, {{x.char}}, {{x.toState}})</span> {{$last ? '' : ', '}} </span>
                 }
             </div>
             <div class="stf-element" uib-tooltip="{{ 'STF.TTFINAL' | translate}}" tooltip-placement="right">
@@ -303,7 +311,7 @@
         </div>
         <button class="btn btn-danger" ng-click="removeState(statediagram.input.state.id)"
                 ng-disabled="simulator.isInPlay">
-            Delete
+            {{"MODAL_BUTTON.DELETE" | translate}}
         </button>
 
     </menuitem>
