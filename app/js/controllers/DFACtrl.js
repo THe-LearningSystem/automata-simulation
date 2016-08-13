@@ -93,6 +93,19 @@ function DFACtrl($scope, hotkeys) {
 
         }
     });
+    hotkeys.add({
+        combo: 'del',
+        description: 'ZoomFit Window',
+        allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+        callback: function (event) {
+            event.preventDefault();
+            if ($scope.statediagram.selectedState != null) {
+                $scope.removeState($scope.statediagram.selectedState.id);
+            } else if ($scope.statediagram.selectedTransition != null) {
+                $scope.showModalWithMessage('TRANS_MENU.DELETE_MODAL_TITLE', 'TRANS_MENU.DELETE_MODAL_DESC', 'removeDrawnTransition(' + $scope.statediagram.selectedTransition.fromState + ',' + $scope.statediagram.selectedTransition.toState + ')', 'MODAL_BUTTON.DELETE');
+            }
+        }
+    });
     $scope.openCheatSheet = function () {
         console.log("open cheatsheet");
         hotkeys.toggleCheatSheet()();

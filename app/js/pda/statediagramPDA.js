@@ -4,6 +4,7 @@ function StateDiagramPDA($scope, svgSelector) {
 
     var self = this;
     StateDiagramDFA.apply(self, arguments);
+    self.transitionTextLength = 27;
 
     //TODO: only first version needs rework
     self.drawnStack = [];
@@ -13,16 +14,10 @@ function StateDiagramPDA($scope, svgSelector) {
     self.stackPaddingToBorder = 20;
 
     self.updateStackPosition = function () {
-        var width = self.svgOuter.style("width").replace("px", "");
-        console.log(document.getElementById("diagramm-svg").offsetWidth);
-        var height = self.svgOuter.style("height").replace("px", "");
-        console.log("width" + width + ",height" + height);
-        self.svgStack.attr("transform", "translate(" + width + " " + height + ")");
+        self.svgStack.attr("transform", "translate(" + self.svgOuterWidth + " " + self.svgOuterHeight + ")");
     };
 
     self.drawStack = function () {
-
-
         //Draw the stackContainer
         self.svgStack.append("line")
             .attr("class", "stack")
@@ -98,7 +93,7 @@ function StateDiagramPDA($scope, svgSelector) {
      */
     self.modifyTransition = function (fromState, toState, transitionId, newTransitionName, newReadFromStack, newWriteToStack) {
         //change it in drawnTransition
-        var drawnTransition = self.getDrawnTransition(fromState, toState);
+        var drawnTransition = $scope.getDrawnTransition(fromState, toState);
         var drawnTransitionName = _.find(drawnTransition.names, {
             "id": transitionId
         });
@@ -156,12 +151,12 @@ function StateDiagramPDA($scope, svgSelector) {
         if (transitionId === undefined) {
             fromState = d3.select(this).attr('from-state-id');
             toState = d3.select(this).attr('to-state-id');
-            self.selectedTransition = self.getDrawnTransition(fromState, toState);
+            self.selectedTransition = $scope.getDrawnTransition(fromState, toState);
         } else {
             var tmpTransition = $scope.getTransitionById(transitionId);
             fromState = tmpTransition.fromState;
             toState = tmpTransition.toState;
-            self.selectedTransition = self.getDrawnTransition(fromState, toState);
+            self.selectedTransition = $scope.getDrawnTransition(fromState, toState);
         }
 
         self.selectedTransition.objReference.classed("active", true);

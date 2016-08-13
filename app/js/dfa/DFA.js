@@ -65,6 +65,46 @@ function DFA($scope) {
     $scope.inNameEdit = false;
 
     /**
+     * Check if transition already drawn
+     * @param   {number}  fromState
+     * @param   {number}  toState
+     * @returns {boolean}
+     */
+    $scope.existsDrawnTransition = function (fromState, toState) {
+        var tmp = false;
+        for (var i = 0; i < $scope.config.drawnTransitions.length; i++) {
+            var transition = $scope.config.drawnTransitions[i];
+            if (transition.fromState == fromState && transition.toState == toState) {
+                tmp = true;
+            }
+        }
+        return tmp;
+    };
+    /**
+     * Get a drawn Transition
+     * @param   {number} fromState
+     * @param   {number} toState
+     * @returns {object}
+     */
+    $scope.getDrawnTransition = function (fromState, toState) {
+        for (var i = 0; i < $scope.config.drawnTransitions.length; i++) {
+            var transition = $scope.config.drawnTransitions[i];
+            if (transition.fromState == fromState && transition.toState == toState) {
+                return transition;
+            }
+        }
+        return undefined;
+    };
+    $scope.removeDrawnTransition = function (fromState, toState) {
+        for (var i = 0; i < $scope.config.transitions.length; i++) {
+            if ($scope.config.transitions[i].fromState === fromState || $scope.config.transitions[i].toState === toState) {
+                $scope.removeTransition($scope.config.transitions[i].id);
+                i--;
+            }
+        }
+    };
+
+    /**
      * Add the options to the modal.
      * @param newTitle
      * @param newDescription
@@ -328,8 +368,8 @@ function DFA($scope) {
     $scope.addStateWithPresets = function (x, y) {
         var obj = $scope.addState(($scope.config.statePrefix + $scope.config.countStateId), x, y);
         //if u created a state then make the first state as startState ( default)
-        if ($scope.config.countStateId == 1) {
-            $scope.changeStartState(0);
+        if ($scope.config.startState == null) {
+            $scope.changeStartState(obj.id);
         }
         return obj;
     };
@@ -363,9 +403,9 @@ function DFA($scope) {
         $scope.config.states.push(new State(stateId, stateName, x, y));
         //draw the State after the State is added
         $scope.statediagram.drawState(stateId);
-        $scope.updateListener();
         //fix changes wont update after addTransition from the statediagram
         $scope.safeApply();
+        $scope.updateListener();
         return $scope.getStateById(stateId);
     };
 
@@ -449,9 +489,9 @@ function DFA($scope) {
         if ($scope.config.startState !== null) {
             //change on statediagram and others
             $scope.statediagram.removeStartState();
-            $scope.updateListener();
             //change the startState
             $scope.config.startState = null;
+            $scope.updateListener();
         }
 
     };
@@ -500,8 +540,8 @@ function DFA($scope) {
         if ($scope.isStateAFinalState(stateId)) {
             //remove from statediagram
             $scope.statediagram.removeFinalState(stateId);
-            $scope.updateListener();
             $scope.config.finalStates.splice($scope.getFinalStateIndexByStateId(stateId), 1);
+            $scope.updateListener();
         } else {
             //TODO: Better DEBUG
         }
@@ -587,9 +627,9 @@ function DFA($scope) {
 
         //drawTransition
         $scope.statediagram.drawTransition(transitionId);
-        $scope.updateListener();
         //fix changes wont update after addTransition from the statediagram
         $scope.safeApply();
+        $scope.updateListener();
         return $scope.getTransitionById(transitionId);
     };
 
