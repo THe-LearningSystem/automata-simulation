@@ -7,40 +7,49 @@ function StateDiagramPDA($scope, svgSelector) {
 
     //TODO: only first version needs rework
     self.drawnStack = [];
-    self.drawStack = function () {
-        var width = self.svgOuter.style("width").replace("px", "");
-        var height = self.svgOuter.style("height").replace("px", "");
+    self.svgStack = self.svgOuter.append("g");
+    self.stackWidth = 75;
+    self.stackHeight = 120;
+    self.stackPaddingToBorder = 20;
 
-        //Draw the stackContainer
-        var circle = self.svgOuter.append("line")
-            .attr("x1", width - 150)
-            .attr("y1", height - 150)
-            .attr("x2", width - 150)
-            .attr("y2", height - 10)
-            .attr("stroke-width", 2)
-            .attr("stroke", "black");
-        var circle = self.svgOuter.append("line")
-            .attr("x1", width - 150)
-            .attr("y1", height - 10)
-            .attr("x2", width - 50)
-            .attr("y2", height - 10)
-            .attr("stroke-width", 2)
-            .attr("stroke", "black");
-        var circle = self.svgOuter.append("line")
-            .attr("x1", width - 50)
-            .attr("y1", height - 10)
-            .attr("x2", width - 50)
-            .attr("y2", height - 150)
-            .attr("stroke-width", 2)
-            .attr("stroke", "black");
+    self.updateStackPosition = function () {
+        var width = self.svgOuter.style("width").replace("px", "");
+        console.log(document.getElementById("diagramm-svg").offsetWidth);
+        var height = self.svgOuter.style("height").replace("px", "");
+        console.log("width" + width + ",height" + height);
+        self.svgStack.attr("transform", "translate(" + width + " " + height + ")");
     };
 
+    self.drawStack = function () {
+
+
+        //Draw the stackContainer
+        self.svgStack.append("line")
+            .attr("class", "stack")
+            .attr("x1", -self.stackWidth - self.stackPaddingToBorder)
+            .attr("y1", -self.stackHeight - self.stackPaddingToBorder)
+            .attr("x2", -self.stackWidth - self.stackPaddingToBorder)
+            .attr("y2", -self.stackPaddingToBorder);
+        self.svgStack.append("line")
+            .attr("class", "stack")
+            .attr("x1", -self.stackWidth - self.stackPaddingToBorder)
+            .attr("y1", -self.stackPaddingToBorder)
+            .attr("x2", -self.stackPaddingToBorder)
+            .attr("y2", -self.stackPaddingToBorder);
+        self.svgStack.append("line")
+            .attr("class", "stack")
+            .attr("x1", -self.stackPaddingToBorder)
+            .attr("y1", -self.stackPaddingToBorder)
+            .attr("x2", -self.stackPaddingToBorder)
+            .attr("y2", -self.stackHeight - self.stackPaddingToBorder);
+    };
+
+
     self.addToStack = function (character) {
-        var width = self.svgOuter.style("width").replace("px", "");
-        var height = self.svgOuter.style("height").replace("px", "");
-        var group = self.svgOuter.append("g");
-        var rectangle = group.append("rect").attr("class", "stack-item").attr("x", width - 125).attr("y", height - 35 - 25 * self.drawnStack.length).attr("width", 82).attr("height", 20);
-        var stackElement = group.append("text").text(character).attr("class", "stack-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("x", width - 82).attr("y", height - 25 - 25 * self.drawnStack.length);
+        var stackItemHeight = 20;
+        var group = self.svgStack.append("g");
+        var rectangle = group.append("rect").attr("class", "stack-item").attr("x", -self.stackWidth - self.stackPaddingToBorder + 1).attr("y", -self.stackPaddingToBorder - (stackItemHeight * (self.drawnStack.length + 1)) - 1).attr("width", 75 - 2).attr("height", stackItemHeight);
+        //var stackElement = group.append("text").text(character).attr("class", "stack-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("x", width - 82).attr("y", height - 25 - 25 * self.drawnStack.length);
         self.drawnStack.push(group);
     };
 
@@ -49,6 +58,16 @@ function StateDiagramPDA($scope, svgSelector) {
 
     };
     self.drawStack();
+
+    //redraw the stack if the browser was resized
+    window.addEventListener('resize', function (event) {
+        self.updateStackPosition();
+    });
+
+    //update the stack position when everything is already loaded
+    $(window).bind("load", function () {
+        self.updateStackPosition();
+    });
 
     self.createTransition = function (fromState, toState) {
         var tmpTransition = $scope.addTransition(fromState, toState, $scope.getNextTransitionName(self.selectedState.id), "X", "Y");
@@ -74,6 +93,8 @@ function StateDiagramPDA($scope, svgSelector) {
      * @param {number} toState           the toStateID
      * @param {number} transitionId      the transitionid
      * @param {char}   newTransitionName the new transitionname
+     * @param newReadFromStack
+     * @param newWriteToStack
      */
     self.modifyTransition = function (fromState, toState, transitionId, newTransitionName, newReadFromStack, newWriteToStack) {
         //change it in drawnTransition
@@ -151,8 +172,7 @@ function StateDiagramPDA($scope, svgSelector) {
         self.input.transitions = [];
 
         _.forEach(self.selectedTransition.names, function (value, key) {
-            var tmpObject = {};
-            tmpObject = cloneObject(value);
+            var tmpObject = cloneObject(value);
 
             if (transitionId !== undefined) {
                 if (value.id == transitionId) {

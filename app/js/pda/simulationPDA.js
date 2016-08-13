@@ -15,7 +15,7 @@ function SimulationPDA($scope) {
     self.reset = function () {
         self.stack = new PDAStack();
         parentReset.apply(this);
-        _.forEach($scope.statediagram.drawnStack, function (value) {
+        _.forEach($scope.statediagram.drawnStack, function () {
             $scope.statediagram.removeFromStack();
         });
         $scope.statediagram.addToStack(self.stack.stackContainer);

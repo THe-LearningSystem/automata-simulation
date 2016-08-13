@@ -40,11 +40,11 @@ function State(id, name, x, y) {
 
 }
 
-function TransitionDFA(id, fromState, toState, transitionchar) {
+function TransitionDFA(id, fromState, toState, transitionChar) {
     var self = this;
     self.id = id;
     self.fromState = fromState;
-    self.name = transitionchar;
+    self.name = transitionChar;
     self.toState = toState;
 }
 

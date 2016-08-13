@@ -21,7 +21,7 @@ function StatetransitionfunctionDFA($scope) {
      */
     self.updateStates = function () {
         self.data.states = [];
-        _.forEach($scope.config.states, function (state, key) {
+        _.forEach($scope.config.states, function (state) {
             var tmpObject = {};
             tmpObject.name = state.name;
             tmpObject.selectedClass = ($scope.statediagram.selectedState !== null && $scope.statediagram.selectedState.id == state.id) ? 'selected' : '';
@@ -46,13 +46,12 @@ function StatetransitionfunctionDFA($scope) {
     self.updateStateTransitionFunctions = function () {
         self.data.statetransitionfunction = [];
         //we go through every state and check if there is a transition and then we save them in the statetransitionfunction array
-        _.forEach($scope.config.states, function (state, keyOuter) {
-            _.forEach($scope.config.transitions, function (transition, key) {
+        _.forEach($scope.config.states, function (state) {
+            _.forEach($scope.config.transitions, function (transition) {
                 var tmpObject = {};
 
                 if (transition.fromState === state.id) {
                     var stateTransition = transition;
-                    var selectedTransition = false;
                     tmpObject.selectedClass = ($scope.statediagram.selectedTransition !== null && _.find($scope.statediagram.selectedTransition.names, {
                         id: transition.id
                     }) !== undefined) ? 'selected' : '';
@@ -71,10 +70,10 @@ function StatetransitionfunctionDFA($scope) {
     };
 
     /**
-     * Updates the startstate
+     * Updates the startState
      */
     self.updateStartState = function () {
-        //Update of Startstate
+        //Update of startState
         var startState = $scope.getStateById($scope.config.startState);
         self.data.startState = (startState !== undefined) ? startState.name : '';
     };
@@ -84,7 +83,7 @@ function StatetransitionfunctionDFA($scope) {
      */
     self.updateFinalStates = function () {
         self.data.finalStates = [];
-        _.forEach($scope.config.finalStates, function (finalState, key) {
+        _.forEach($scope.config.finalStates, function (finalState) {
             finalState = $scope.getStateById(finalState);
             self.data.finalStates.push(finalState.name);
         });

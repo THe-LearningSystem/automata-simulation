@@ -1,4 +1,5 @@
 <!-- Modal:START -->
+<!--suppress HtmlUnknownAttribute -->
 <div class="modal fade" id="modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-dialog">
@@ -54,7 +55,7 @@
         <!-- Simple dropdown -->
         <div uib-dropdown on-toggle="toggled(open)">
             <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
-                {{config.diagramm.scale*100 | number:0}}%
+                {{config.diagram.scale*100 | number:0}}%
                 <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
             </button>
 
@@ -197,7 +198,7 @@
 
 
         <p>
-            DiagrammValues:
+            diagramValues:
             <json-formatter json="config" open="1"></json-formatter>
         </p>
         <p>
@@ -216,7 +217,7 @@
     <h3 class="diagram-title">{{"DIA.TITLE" | translate}}</h3>
     <div class="diagram">
 
-        <svg id="diagramm-svg"></svg>
+        <svg id="diagram-svg"></svg>
     </div>
     <div class="bot-content-wrapper">
         <div class="bot-content bot-left">
@@ -276,7 +277,7 @@
     </div>
 </div>
 <div class="right-menu">
-    <!--Diagramm Settigns -->
+    <!--diagram Settigns -->
     <menuitem titlename="DIA_SET.TITLE" ng-show="!statediagram.showStateMenu && !statediagram.showTransitionMenu">
         <p class="right-indextab-subtitle">
             {{'DIA_SET.VIEW' | translate}}
@@ -297,7 +298,7 @@
             <input class="form-control" id="state-input-name" ng-model="statediagram.input.stateName" maxlength="5"
                    uib-tooltip="{{statediagram.input.ttt | translate}}" tooltip-is-open="statediagram.input.tttisopen"
                    tooltip-placement="left" tooltip-trigger="none" show-focus="statediagram.showStateMenu"
-                   ng-disabled="simulator.isInPlay">
+                   ng-disabled="simulator.isInPlay" title="">
         </div>
         <div>
             <input class="checkbox-item" type="checkbox" id="state-input-startstate"

@@ -1,4 +1,5 @@
 <!-- Modal:START -->
+<!--suppress HtmlUnknownAttribute -->
 <div class="modal fade" id="modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-dialog">
@@ -31,8 +32,6 @@
 </div>
 <!-- Modal:END -->
 
-<div class="hide" ng-joy-ride="intro.Active" config="intro.Config" on-finish="intro.Finish()"
-     on-skip="intro.Skip()"></div>
 <div class="top-nav">
     <div class="automata-simulation-logo"><img src="images/logo_automaten.png">
     </div>
@@ -54,7 +53,7 @@
         <!-- Simple dropdown -->
         <div uib-dropdown on-toggle="toggled(open)">
             <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
-                {{config.diagramm.scale*100 | number:0}}%
+                {{config.diagram.scale*100 | number:0}}%
                 <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
             </button>
 
@@ -155,7 +154,7 @@
             <menubutton icon="fast-backward" action="simulator.stepBackward()" tttext="SIM.STEPBACKWARD"></menubutton>
             <menubutton icon="fast-forward" action="simulator.stepForward()" tttext="SIM.STEPFORWARD"></menubutton>
         </div>
-        <div class="input-group">
+        <div class="input-group" ng-show="!simulator.isInPlay">
             <span class="input-group-addon" aria-hidden="true">{{"SIM.INPUT" | translate}}</span>
             <input class="inputWord form-control" ng-model="config.inputWord" ng-change="simulator.updateFunction()"
                    ng-disabled="simulator.isInPlay"/>
@@ -164,6 +163,17 @@
             <span class="input-group-addon icon-check green" aria-hidden="true"
                   ng-show="simulator.isInputAccepted && (config.inputWord.length !==0 )"></span>
         </div>
+        <!--
+        <div class="" ng-show="simulator.isInPlay">
+            <span class="input-group-addon" aria-hidden="true">{{"SIM.INPUT" | translate}}</span>
+            Processed Wort:<span>aab</span><span>bcc</span>
+            {{simulator.madeSteps}}
+            <span class="input-group-addon icon-times red sim-input-not-accepted" aria-hidden="true"
+                  ng-show="!simulator.isInputAccepted && (config.inputWord.length !==0 )"></span>
+            <span class="input-group-addon icon-check green" aria-hidden="true"
+                  ng-show="simulator.isInputAccepted && (config.inputWord.length !==0 )"></span>
+
+        </div>-->
     </menuitemextendable>
     <menuitemextendable titlename="SIM_SET.TITLE">
 
@@ -182,7 +192,7 @@
         </div>
         <p>
             <input class="checkbox-item" id="simulator-settings-input-loop" type="checkbox"
-                   ng-model="simulator.loopSimulation">
+                   ng-model="simulator.loopSimulation" title="">
             {{"SIM_SET.LOOP" | translate}}
         </p>
     </menuitemextendable>
@@ -197,7 +207,7 @@
 
 
         <p>
-            DiagrammValues:
+            DiagramValues:
             <json-formatter json="config" open="1"></json-formatter>
         </p>
         <p>
@@ -216,7 +226,7 @@
     <h3 class="diagram-title">{{"DIA.TITLE" | translate}}</h3>
     <div class="diagram">
 
-        <svg id="diagramm-svg"></svg>
+        <svg id="diagram-svg"></svg>
     </div>
     <div class="bot-content-wrapper">
         <div class="bot-content bot-left">
@@ -276,7 +286,7 @@
     </div>
 </div>
 <div class="right-menu">
-    <!--Diagramm Settigns -->
+    <!--Diagram Settings -->
     <menuitem titlename="DIA_SET.TITLE" ng-show="!statediagram.showStateMenu && !statediagram.showTransitionMenu">
         <p class="right-indextab-subtitle">
             {{'DIA_SET.VIEW' | translate}}

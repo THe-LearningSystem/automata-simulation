@@ -1,7 +1,6 @@
 //PDA
 function PDA($scope, $translate) {
     "use strict";
-    var self = this;
     DFA.apply(this, arguments);
 
     $scope.defaultConfig.stackAlphabet = [];
@@ -10,10 +9,10 @@ function PDA($scope, $translate) {
     $scope.config = cloneObject($scope.defaultConfig);
 
     /**Overrides**/
-    //the statediagram controlling the svg diagramm
+    //the statediagram controlling the svg diagram
     $scope.simulator = new SimulationPDA($scope);
-    //the statediagram controlling the svg diagramm
-    $scope.statediagram = new StateDiagramPDA($scope, "#diagramm-svg");
+    //the statediagram controlling the svg diagram
+    $scope.statediagram = new StateDiagramPDA($scope, "#diagram-svg");
     //the statetransitionfunction controlling the statetransitionfunction-table
     $scope.statetransitionfunction = new StatetransitionfunctionPDA($scope);
     //TRANSITION OVERRIDES
@@ -38,18 +37,21 @@ function PDA($scope, $translate) {
 
     /**
      * Checks if a transition with the params already exists
-     * @param  {number}  fromState      Id of the fromstate
+     * @param  {number}  fromState      Id of the fromState
      * @param  {number}  toState        id from the toState
-     * @param  {Strin}  transitonName The name of the transition
+     * @param name
+     * @param readFromStack
+     * @param writeToStack
+     * @param transitionId
      * @return {Boolean}
      */
     $scope.existsTransition = function (fromState, toState, name, readFromStack, writeToStack, transitionId) {
         var tmp = false;
-        _.forEach($scope.config.transitions, function (transition, key) {
+        _.forEach($scope.config.transitions, function (transition) {
             if (transition.fromState == fromState && transition.toState == toState && transition.name == name && transition.readFromStack == readFromStack && transition.writeToStack == writeToStack && transitionId !== transition.id) {
                 tmp = true;
                 console.log(transition);
-                return;
+                return false;
             }
         });
         return tmp;
@@ -80,14 +82,16 @@ function PDA($scope, $translate) {
      * Adds a transition at the end of the transitions array
      * @param {number} fromState      The id from the fromState
      * @param {number} toState        The id from the toState
-     * @param {String} transistonName The name of the Transition
+     * @param char
+     * @param readFromStack
+     * @param writeToStack
      */
     $scope.addTransition = function (fromState, toState, char, readFromStack, writeToStack) {
         //can only create the transition if it is unique-> not for the ndfa
         //there must be a fromState and toState, before adding a transition
         if (!$scope.existsTransition(fromState, toState, char) && $scope.existsStateWithId(fromState) && $scope.existsStateWithId(toState)) {
             $scope.addToAlphabet(char);
-            //Add to the stackalphabet
+            //Add to the stackAlphabet
             $scope.addToStackAlphabet(readFromStack);
             $scope.addToStackAlphabet(writeToStack);
 
@@ -100,17 +104,20 @@ function PDA($scope, $translate) {
 
     /**
      * Adds a transition at the end of the transitions array -> for import
-     * !!!dont use at other places!!!!! ONLY FOR IMPORT
+     * !!!don't use at other places!!!!! ONLY FOR IMPORT
+     * @param transitionId
      * @param {number} fromState      The id from the fromState
      * @param {number} toState        The id from the toState
-     * @param {String} transistonName The name of the Transition
+     * @param char
+     * @param readFromStack
+     * @param writeToStack
      */
     $scope.addTransitionWithId = function (transitionId, fromState, toState, char, readFromStack, writeToStack) {
         $scope.config.transitions.push(new TransitionPDA(transitionId, fromState, toState, char, readFromStack, writeToStack));
-        //drawTransistion
+        //drawTransition
         $scope.statediagram.drawTransition(transitionId);
         $scope.updateListener();
-        //fix changes wont update after addTransisiton from the statediagram
+        //fix changes wont update after addTransition from the statediagram
         $scope.safeApply();
         return $scope.getTransitionById(transitionId);
     };
@@ -118,7 +125,7 @@ function PDA($scope, $translate) {
     /**
      * Get the array index from the transition with the given transitionId
      * @param  {number} transitionId
-     * @return {number}         Returns the index and -1 when state with transistionId not found
+     * @return {number}         Returns the index and -1 when state with transitionId not found
      */
     $scope.getArrayTransitionIdByTransitionId = function (transitionId) {
         return _.findIndex($scope.config.transitions, function (transition) {
@@ -131,18 +138,20 @@ function PDA($scope, $translate) {
     /**
      * Returns the transition of the given transitionId
      * @param  {number} transitionId
-     * @return {object}        Returns the objectreference of the state
+     * @return {object}        Returns the objectReference of the state
      */
     $scope.getTransitionById = function (transitionId) {
         return $scope.config.transitions[$scope.getArrayTransitionIdByTransitionId(transitionId)];
     };
 
     /**
-     * Checks if a transition with the params already exists
-     * @param  {number}  fromState      Id of the fromstate
+     * Returns a transition
+     * @param  {number}  fromState      Id of the fromState
      * @param  {number}  toState        id from the toState
-     * @param  {Strin}  transitonName The name of the transition
-     * @return {Boolean}
+     * @param char
+     * @param readFromStack
+     * @param writeToStack
+     * @return {Object}
      */
     $scope.getTransition = function (fromState, toState, char, readFromStack, writeToStack) {
         for (var i = 0; i < $scope.config.transitions.length; i++) {
@@ -155,7 +164,7 @@ function PDA($scope, $translate) {
     };
 
     /**
-     * Removes the transistion
+     * Removes the transition
      * @param {number} transitionId      The id from the transition
      */
     $scope.removeTransition = function (transitionId) {
@@ -169,26 +178,26 @@ function PDA($scope, $translate) {
     };
 
     /**
-     * Modify a transition if is uniqe with the new name
+     * Modify a transition if is unique with the new name
      * @param  {number} transitionId
-     * @param  {String} newTransitionName
+     * @param newChar
+     * @param newReadFromStack
+     * @param newWriteToStack
      */
     $scope.modifyTransition = function (transitionId, newChar, newReadFromStack, newWriteToStack) {
         var transition = $scope.getTransitionById(transitionId);
         if (!$scope.existsTransition(transition.fromState, transition.toState, newChar, newReadFromStack, newWriteToStack, transitionId)) {
-            var tmpTransition = $scope.getTransitionById(transitionId);
             console.log("want to change");
             //remove old transition from alphabet if this transition only used this char
             $scope.removeFromAlphabetIfNotUsedFromOthers(transitionId);
-            //add new transitionname to the alphabet
+            //add new transitionName to the alphabet
             $scope.addToAlphabet(newChar);
-            //remove old transition from stackalphabet if this transition only used this char
+            //remove old transition from stackAlphabet if this transition only used this char
             $scope.removeFromStackAlphabetIfNotUsedFromOthers(transitionId);
             //add to stackAlphabet
             $scope.addToStackAlphabet(newReadFromStack);
             $scope.addToStackAlphabet(newWriteToStack);
-            //save the new transitionname
-            var transition = $scope.getTransitionById(transitionId);
+            //save the new transitionName
             transition.name = newChar;
             transition.readFromStack = newReadFromStack;
             transition.writeToStack = newWriteToStack;

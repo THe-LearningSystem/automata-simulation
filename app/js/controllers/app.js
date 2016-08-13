@@ -61,7 +61,7 @@ autoSim.directive("menuitemextendable", function () {
             $scope.extended = true;
         },
         scope: {
-            titlename: '@',
+            titlename: '@'
         },
         template: '<div class="menu-item"><p class="left-indextab" ng-click="extended=!extended"><span class="icon-extendable icon-chevron-down icon-extendable-set" aria-hidden="true" ng-show="extended"></span><span class="icon-extendable icon-chevron-right icon-extendable-set" aria-hidden="true" ng-show="!extended"></span><span class="left-indextab-title">{{titlename | translate}}</span></p><div class="content" ng-transclude ng-show="extended"></div></div>'
 
@@ -75,7 +75,7 @@ autoSim.directive("menuitem", function () {
         replace: true,
         transclude: true,
         scope: {
-            titlename: '@',
+            titlename: '@'
         },
         template: '<div class="menu-item"><p class="right-indextab right-indextab-title">{{titlename | translate}}</p><div class="content" ng-transclude></div></div>'
 
@@ -87,12 +87,9 @@ autoSim.directive("menuitem", function () {
 autoSim.controller("LangCtrl", ['$scope', '$translate',
     function ($scope, $translate) {
         $scope.changeLang = function (key) {
-            console.log(key);
             $translate.use(key).then(function (key) {
-                console.log("Sprache zu " + key + " gewechselt.");
                 $scope.getCurrentLanguage();
             }, function (key) {
-                console.log("Irgendwas lief schief.");
             });
         };
         $scope.getCurrentLanguage = function () {
@@ -147,21 +144,20 @@ autoSim.controller("portationCtrl", ['$scope',
             $scope.$parent.config.unSavedChanges = false;
             //workaround: couldnt add new states after export
             $scope.$parent.statediagram.resetAddActions();
-            var exportData = {};
-            exportData = $scope.config;
+            var exportData = $scope.config;
             exportData.transitions = getTransitions();
             exportData.states = getStates();
             var data = window.JSON.stringify(exportData);
             console.log(exportData);
             var blob = new Blob([data], {
-                type: "application/json",
+                type: "application/json"
             });
             saveAs(blob, $scope.config.name + ".json");
 
         };
 
         $scope.saveAsPng = function () {
-            saveSvgAsPng(document.getElementById("diagramm-svg"), $scope.config.name + ".png");
+            saveSvgAsPng(document.getElementById("diagram-svg"), $scope.config.name + ".png");
         };
 
         $scope.import = function () {
@@ -235,7 +231,7 @@ autoSim.controller("portationCtrl", ['$scope',
             _.forEach(jsonObj.transitions, function (value, key) {
                 $scope.$parent.addTransitionWithId(value.id, value.fromState, value.toState, value.name);
             });
-            //create startstate
+            //create startState
             $scope.$parent.changeStartState(jsonObj.startState);
             //create finalStates
             _.forEach(jsonObj.finalStates, function (value, key) {
@@ -256,7 +252,7 @@ autoSim.filter('to_trusted', ['$sce',
         };
     }]);
 
-// to defocus an field, when clicked on someother place than the focused field
+// to deFocus an field, when clicked on someOther place than the focused field
 /* jshint -W030 */
 autoSim.directive('showFocus', function ($timeout) {
     return function (scope, element, attrs) {

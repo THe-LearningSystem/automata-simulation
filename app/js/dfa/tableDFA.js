@@ -7,14 +7,10 @@ function TableDFA($scope) {
     self.updateFunction = function () {
         self.states = [];
         self.alphabet = [];
-        var dfa = $scope.config;
-
-        var alphabetCounter;
-
 
         //prepare alphabet
         var tmpObject;
-        _.forEach($scope.config.alphabet, function (character, key) {
+        _.forEach($scope.config.alphabet, function (character) {
             tmpObject = {};
             tmpObject.character = character;
 
@@ -32,7 +28,7 @@ function TableDFA($scope) {
 
         // iterates over all States
 
-        _.forEach($scope.config.states, function (state, key) {
+        _.forEach($scope.config.states, function (state) {
 
             tmpObject = {};
             tmpObject.name = state.name;
@@ -51,27 +47,22 @@ function TableDFA($scope) {
                 }
             }
 
-            if ($scope.isStateAFinalState(state.id))
-                tmpObject.finalState = true;
-            else
-                tmpObject.finalState = false;
+            tmpObject.finalState = $scope.isStateAFinalState(state.id);
 
-            if ($scope.config.startState === state.id)
-                tmpObject.startState = true;
-            else
-                tmpObject.startState = false;
+            tmpObject.startState = ($scope.config.startState === state.id);
+
 
             tmpObject.trans = [];
 
-            // iterates over all aplphabet
-            _.forEach($scope.config.alphabet, function (character, key) {
+            // iterates over all alphabet
+            _.forEach($scope.config.alphabet, function (character) {
                 var foundTransition = null;
 
                 // iterates over the available transitions and saves found transitions
-                _.forEach($scope.config.transitions, function (transition, key) {
+                _.forEach($scope.config.transitions, function (transition) {
                     if (transition.fromState === state.id && transition.name === character) {
                         foundTransition = transition;
-                        return;
+                        return false;
                     }
                 });
 

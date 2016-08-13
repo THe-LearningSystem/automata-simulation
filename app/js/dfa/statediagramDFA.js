@@ -1,11 +1,11 @@
-//statediagram for the svg diagramm
+//statediagram for the svg diagram
 function StateDiagramDFA($scope, svgSelector) {
     "use strict";
     var self = this;
     self.preventStateDragging = false;
     self.inAddTransition = false;
     self.selectedState = null;
-    //prevents call from the svouterclicklistener
+    //prevents call from the svgOuterClickListener
     self.preventSvgOuterClick = false;
     self.selectedTransition = null;
     self.showStateMenu = false;
@@ -67,10 +67,10 @@ function StateDiagramDFA($scope, svgSelector) {
         self.svgTransitions.html("");
         self.svgStates.html("");
         $scope.config.drawnTransitions = [];
-        //change the scale and the translate to the defaultConfit
-        self.svg.attr("transform", "translate(" + $scope.defaultConfig.diagramm.x + "," + $scope.defaultConfig.diagramm.y + ")" + " scale(" + $scope.defaultConfig.diagramm.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
-        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
+        //change the scale and the translate to the defaultConfig
+        self.svg.attr("transform", "translate(" + $scope.defaultConfig.diagram.x + "," + $scope.defaultConfig.diagram.y + ")" + " scale(" + $scope.defaultConfig.diagram.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagram.scale);
+        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagram.x, $scope.defaultConfig.diagram.y]);
     };
     /****ZOOMHANDLER START***/
     //amount the user can zoom out
@@ -79,12 +79,12 @@ function StateDiagramDFA($scope, svgSelector) {
     self.zoomMin = 0.5;
     self.zoomValue = 0.1;
     self.zoomIn = function () {
-        $scope.config.diagramm.scale = ($scope.config.diagramm.scale + self.zoomValue) > self.zoomMax ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale + self.zoomValue) * 100) / 100;
+        $scope.config.diagram.scale = ($scope.config.diagram.scale + self.zoomValue) > self.zoomMax ? $scope.config.diagram.scale : Math.floor(($scope.config.diagram.scale + self.zoomValue) * 100) / 100;
         self.updateZoomBehaviour();
     };
     self.zoomOut = function () {
 
-        $scope.config.diagramm.scale = ($scope.config.diagramm.scale - self.zoomValue) <= self.zoomMin ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale - self.zoomValue) * 100) / 100;
+        $scope.config.diagram.scale = ($scope.config.diagram.scale - self.zoomValue) <= self.zoomMin ? $scope.config.diagram.scale : Math.floor(($scope.config.diagram.scale - self.zoomValue) * 100) / 100;
         self.updateZoomBehaviour();
     };
     /**
@@ -92,26 +92,25 @@ function StateDiagramDFA($scope, svgSelector) {
      * @param {number} value the zoom value
      */
     self.zoomTo = function (value) {
-        console.log("zoomtedto");
-        $scope.config.diagramm.scale = value / 100;
+        $scope.config.diagram.scale = value / 100;
         $scope.safeApply();
         self.updateZoomBehaviour();
     };
     /**
-     * This method updates the d3 zoombehaviour (fixes weird bugs)
+     * This method updates the d3 zoomBehaviour (fixes weird bugs)
      */
     self.updateZoomBehaviour = function () {
         $scope.safeApply();
-        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.config.diagramm.scale);
-        svgOuterZoomAndDrag.translate([$scope.config.diagramm.x, $scope.config.diagramm.y]);
+        self.svg.attr("transform", "translate(" + $scope.config.diagram.x + "," + $scope.config.diagram.y + ")" + " scale(" + $scope.config.diagram.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.config.diagram.scale);
+        svgOuterZoomAndDrag.translate([$scope.config.diagram.x, $scope.config.diagram.y]);
     };
     /**
      * This method zooms the svg to a calculated scale, so the complete svg fits in the window
      */
     self.zoomFitWindow = function () {
-        var stateXCoor = [];
-        var stateYCoor = [];
+        var stateX = [];
+        var stateY = [];
         var minX = 0;
         var maxX = 0;
         var minY = 0;
@@ -119,46 +118,45 @@ function StateDiagramDFA($scope, svgSelector) {
         var topShifting = 0;
         var leftShifting = 0;
         var i;
-        var obj;
         var width = self.svgOuter.style("width").replace("px", "");
         var height = self.svgOuter.style("height").replace("px", "");
         /*
-         * set the diagrammscale on 100%. We got the advantage, that the method also zoom in, if the automaton doesn't fit the window.
+         * set the diagramScale on 100%. We got the advantage, that the method also zoom in, if the automaton doesn't fit the window.
          * But the method doesn't really zoom in. It sets the scale on 100% an then zoom out.
          */
-        $scope.config.diagramm.scale = 1.0;
+        $scope.config.diagram.scale = 1.0;
         /**
          * check if there exist at least one state. If the diagram is empty, there is nothing to fit the window.
          * The state with the lowest x- and y-coordinate defines the minimum-x- and minimum-y-coordinate from the automaton.
-         * The state with the highest x- and y-coordinate defines the maximum-x- and maximum-y-coordiante from the automaten
+         * The state with the highest x- and y-coordinate defines the maximum-x- and maximum-y-coordinate from the automaton
          */
 
         if ($scope.config.states.length > 0) {
             for (i = 0; i < $scope.config.states.length; i++) {
-                stateXCoor[i] = $scope.config.states[i].x;
+                stateX[i] = $scope.config.states[i].x;
             }
 
             for (i = 0; i < $scope.config.states.length; i++) {
-                stateYCoor[i] = $scope.config.states[i].y;
+                stateY[i] = $scope.config.states[i].y;
             }
-            minX = _.min(stateXCoor);
-            maxX = _.max(stateXCoor);
-            minY = _.min(stateYCoor);
-            maxY = _.max(stateYCoor);
+            minX = _.min(stateX);
+            maxX = _.max(stateX);
+            minY = _.min(stateY);
+            maxY = _.max(stateY);
             /*
              * While the size of the automaton is bigger than the diagram, zoom out.
              * We work with the width and the height from the diagram proportional to the scale.
              */
-            while (((maxX - minX + 150) > (width / $scope.config.diagramm.scale)) || ((maxY - minY + 200) > (height / $scope.config.diagramm.scale))) {
-                $scope.config.diagramm.scale -= 0.01;
+            while (((maxX - minX + 150) > (width / $scope.config.diagram.scale)) || ((maxY - minY + 200) > (height / $scope.config.diagram.scale))) {
+                $scope.config.diagram.scale -= 0.01;
             }
             $scope.safeApply();
-            //Calculation of a topshifting and a leftshifting, so the automaton is centered in the diagram.
-            topShifting = (((height / $scope.config.diagramm.scale) - (maxY - minY)) / 2);
-            leftShifting = (((width / $scope.config.diagramm.scale) - (maxX - minX)) / 2);
+            //Calculation of a topShifting and a leftShifting, so the automaton is centered in the diagram.
+            topShifting = (((height / $scope.config.diagram.scale) - (maxY - minY)) / 2);
+            leftShifting = (((width / $scope.config.diagram.scale) - (maxX - minX)) / 2);
             //set the diagram-x and -y values and update the diagram.
-            $scope.config.diagramm.x = -(minX * $scope.config.diagramm.scale) + (leftShifting * $scope.config.diagramm.scale);
-            $scope.config.diagramm.y = -(minY * $scope.config.diagramm.scale) + (topShifting * $scope.config.diagramm.scale);
+            $scope.config.diagram.x = -(minX * $scope.config.diagram.scale) + (leftShifting * $scope.config.diagram.scale);
+            $scope.config.diagram.y = -(minY * $scope.config.diagram.scale) + (topShifting * $scope.config.diagram.scale);
             self.updateZoomBehaviour();
         } else {
             self.scaleAndTranslateToDefault();
@@ -168,37 +166,34 @@ function StateDiagramDFA($scope, svgSelector) {
      * Scale and Translate the Svg to the default Value
      */
     self.scaleAndTranslateToDefault = function () {
-        $scope.config.diagramm.scale = $scope.defaultConfig.diagramm.scale;
-        $scope.config.diagramm.x = $scope.defaultConfig.diagramm.x;
-        $scope.config.diagramm.y = $scope.defaultConfig.diagramm.y;
+        $scope.config.diagram.scale = $scope.defaultConfig.diagram.scale;
+        $scope.config.diagram.x = $scope.defaultConfig.diagram.x;
+        $scope.config.diagram.y = $scope.defaultConfig.diagram.y;
         $scope.safeApply();
         self.updateZoomBehaviour();
     };
-    //the svgouterzoom and drag listener
+    //the svgOuterZoom and drag listener
     var svgOuterZoomAndDrag = d3.behavior.zoom().scaleExtent([self.zoomMin, self.zoomMax]).on("zoom", function () {
         var stop = d3.event.button || d3.event.ctrlKey;
         if (stop)
             d3.event.stopImmediatePropagation();
         // stop zoom
-        //dont translate on right click (3)
+        //don't translate on right click (3)
         if (d3.event.sourceEvent.which !== 3) {
-
-            var newScale = Math.floor(d3.event.scale * 100) / 100;
-            $scope.config.diagramm.scale = newScale;
-            $scope.config.diagramm.x = d3.event.translate[0];
-            $scope.config.diagramm.y = d3.event.translate[1];
+            $scope.config.diagram.scale = Math.floor(d3.event.scale * 100) / 100;
+            $scope.config.diagram.x = d3.event.translate[0];
+            $scope.config.diagram.y = d3.event.translate[1];
             $scope.safeApply();
-            self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
+            self.svg.attr("transform", "translate(" + $scope.config.diagram.x + "," + $scope.config.diagram.y + ")" + " scale(" + $scope.config.diagram.scale + ")");
         } else {
-            console.log("rightclick!");
         }
         self.updateZoomBehaviour();
     });
-    //prevents the normal rightclickcontextmenu and add zoom
+    //prevents the normal rightClickContextMenu and add zoom
     self.svgOuter = d3.select(svgSelector).call(svgOuterZoomAndDrag)
-    //prevents doubleclick zoom
+    //prevents doubleClick zoom
         .on("dblclick.zoom", null)
-        //adds our custom context menu on rightclick
+        //adds our custom context menu on rightClick
         .on("contextmenu", function () {
             d3.event.preventDefault();
         });
@@ -212,7 +207,7 @@ function StateDiagramDFA($scope, svgSelector) {
                 self.closeTransitionMenu();
                 $scope.safeApply();
             } else {
-                //remove clickbool
+                //remove ListenerBoolean
                 self.preventSvgOuterClick = false;
             }
         });
@@ -234,8 +229,8 @@ function StateDiagramDFA($scope, svgSelector) {
     self.isGrid = true;
     //watcher for the grid when changed -> updateGrid
 
-    $scope.$watch('[statediagram.isGrid , config.diagramm]', function () {
-        //dont do this if in debug, causes problems with junit test
+    $scope.$watch('[statediagram.isGrid , config.diagram]', function () {
+        //don't do this if in debug, causes problems with junit test
         if (!$scope.debug) {
             self.drawGrid();
         }
@@ -251,27 +246,27 @@ function StateDiagramDFA($scope, svgSelector) {
             self.svgGrid.html("");
             var width = self.svgOuter.style("width").replace("px", "");
             var height = self.svgOuter.style("height").replace("px", "");
-            var thickness = 1 * $scope.config.diagramm.scale * 0.5;
-            var xOffset = ($scope.config.diagramm.x % (self.gridSpace * $scope.config.diagramm.scale));
-            var yOffset = ($scope.config.diagramm.y % (self.gridSpace * $scope.config.diagramm.scale));
+            var thickness = 1 * $scope.config.diagram.scale * 0.5;
+            var xOffset = ($scope.config.diagram.x % (self.gridSpace * $scope.config.diagram.scale));
+            var yOffset = ($scope.config.diagram.y % (self.gridSpace * $scope.config.diagram.scale));
             var i;
             //xGrid
-            for (i = xOffset; i < width; i += self.gridSpace * $scope.config.diagramm.scale) {
+            for (i = xOffset; i < width; i += self.gridSpace * $scope.config.diagram.scale) {
                 self.svgGrid.append("line").attr("stroke-width", thickness).attr("class", "grid-line xgrid-line").attr("x1", i).attr("y1", 0).attr("x2", i).attr("y2", height);
             }
             //yGrid
-            for (i = yOffset; i < height; i += self.gridSpace * $scope.config.diagramm.scale) {
+            for (i = yOffset; i < height; i += self.gridSpace * $scope.config.diagram.scale) {
                 self.svgGrid.append("line").attr("stroke-width", thickness).attr("class", "grid-line ygrid-line").attr("x1", 0).attr("y1", i).attr("x2", width).attr("y2", i);
             }
         } else {
-            //undraw Grid
+            //unDraw Grid
             //self.svgGrid.html("");
         }
 
     };
 
     //redraw the grid if the browser was resized
-    window.addEventListener('resize', function (event) {
+    window.addEventListener('resize', function () {
         self.drawGrid();
     });
 
@@ -298,10 +293,10 @@ function StateDiagramDFA($scope, svgSelector) {
      */
     self.addState = function () {
         self.resetAddActions();
-        //add listener that the selectedstate follows the mouse
+        //add listener that the selectedState follows the mouse
         self.svgOuter.on("mousemove", function () {
             //move the state (only moved visually not saved)
-            self.selectedState.objReference.attr("transform", "translate(" + (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale)) + " " + (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale)) + ")");
+            self.selectedState.objReference.attr("transform", "translate(" + (((d3.mouse(this)[0]) - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale)) + " " + (((d3.mouse(this)[1]) - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale)) + ")");
         });
         //create a new selectedState in a position not viewable
         self.selectedState = $scope.addStateWithPresets(-10000, -10000);
@@ -311,10 +306,10 @@ function StateDiagramDFA($scope, svgSelector) {
             //remove class
             self.selectedState.objReference.classed("state-in-creation", false);
             //update the stateData
-            self.selectedState.x = (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale));
-            self.selectedState.y = (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale));
+            self.selectedState.x = (((d3.mouse(this)[0]) - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale));
+            self.selectedState.y = (((d3.mouse(this)[1]) - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale));
             self.selectedState.objReference.attr("transform", "translate(" + self.selectedState.x + " " + self.selectedState.y + ")");
-            //remove mousemove listener
+            //remove mouseMove listener
             self.svgOuter.on("mousemove", null);
             //overwrite the click listener
             self.addSvgOuterClickListener();
@@ -323,7 +318,7 @@ function StateDiagramDFA($scope, svgSelector) {
         });
     };
     /**
-     * Addtransition function for the icon
+     * addTransition function for the icon
      */
     self.addTransition = function () {
         self.resetAddActions();
@@ -350,14 +345,14 @@ function StateDiagramDFA($scope, svgSelector) {
         //2. if the mouse moves on the svgOuter and not on a state, then update the tmpLine
         self.svgOuter.on("mousemove", function () {
             if (!self.mouseInState && self.selectedState !== null) {
-                var x = (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale));
-                var y = (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale));
+                var x = (((d3.mouse(this)[0]) - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale));
+                var y = (((d3.mouse(this)[1]) - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale));
                 var pathLine = self.bezierLine([[self.selectedState.x, self.selectedState.y], [x, y]]);
                 self.tmpTransitionline.attr("d", pathLine);
             }
         });
         //3. if the mouse moves on a state then give a visual feedback how the line connects with the state
-        d3.selectAll(".state").on("mouseover", function (i) {
+        d3.selectAll(".state").on("mouseover", function () {
             //see 2.
             self.mouseInState = true;
             //we need an other state to connect the line
@@ -382,7 +377,7 @@ function StateDiagramDFA($scope, svgSelector) {
                             //update the transition text position
                             self.otherTransition = otherTrans;
                         }
-                        //get the curve data ( depends if there is a transition in the oposite direction)
+                        //get the curve data ( depends if there is a transition in the opposite direction)
                         line.attr("d", drawConfig.path);
                         //if it is a selfreference
                     } else {
@@ -454,8 +449,8 @@ function StateDiagramDFA($scope, svgSelector) {
      * Modify a transition
      * @param {number} fromState         the fromStateId
      * @param {number} toState           the toStateID
-     * @param {number} transitionId      the transitionid
-     * @param {char}   newTransitionName the new transitionname
+     * @param {number} transitionId      the transitionId
+     * @param {char}   newTransitionName the newTransitionName
      */
     self.modifyTransition = function (fromState, toState, transitionId, newTransitionName) {
         //change it in drawnTransition
@@ -482,7 +477,7 @@ function StateDiagramDFA($scope, svgSelector) {
             _.remove($scope.config.drawnTransitions, function (n) {
                 return n == tmpDrawnTransition;
             });
-            //if there is an approad transition, then draw it with the new drawconfig
+            //if there is a transition aproach ours, then draw it with the new drawConfig
             if (drawConfig.approachTransition) {
                 //other transition in the other direction
                 var otherTrans = self.getDrawnTransition(tmpTransition.toState, tmpTransition.fromState);
@@ -493,16 +488,25 @@ function StateDiagramDFA($scope, svgSelector) {
                 self.otherTransition = otherTrans;
             }
         }
-        //if there are other transitions with the same from- and tostate, then remove the transition from the names and redraw the text
+        //if there are other transitions with the same from- and toState, then remove the transition from the names and redraw the text
         else {
             _.remove(tmpDrawnTransition.names, function (n) {
                 return n.id == tmpTransition.id;
             });
             self.writeTransitionText(tmpDrawnTransition.objReference.select(".transition-text"), tmpDrawnTransition.names);
             drawConfig = self.getTransitionDrawConfig(tmpTransition);
-            tmpDrawnTransition.objReference.select(".transition-text").attr("x", drawConfig.xText).attr("y", drawConfig.yText);
-            console.log(tmpDrawnTransition);
-            self.openTransitionMenu(tmpDrawnTransition.names[tmpDrawnTransition.names.length - 1].id);
+            //if the transition is not a selfreference
+            if (tmpTransition.fromState != tmpTransition.toState) {
+                tmpDrawnTransition.objReference.select('.transition-text').attr("x", (drawConfig.xText)).attr("y", (drawConfig.yText));
+                //if it is a self reference
+            } else {
+                var stateId = $scope.getArrayStateIdByStateId(tmpDrawnTransition.fromState);
+                var x = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)].x;
+                var y = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)].y;
+                tmpDrawnTransition.objReference.select('.transition-text').attr("x", x - self.settings.stateRadius - 50).attr("y", y);
+
+            }
+            self.openTransitionMenu(tmpDrawnTransition.names[0].id);
         }
 
     };
@@ -526,7 +530,7 @@ function StateDiagramDFA($scope, svgSelector) {
         //TODO update the transitions to the state
     };
     /**
-     * Changes the StartState to the stateid
+     * Changes the StartState to the stateId
      * @param {number} stateId
      */
     self.changeStartState = function (stateId) {
@@ -540,11 +544,11 @@ function StateDiagramDFA($scope, svgSelector) {
         var otherState = $scope.getStateById(stateId);
         otherState.objReference.append("line").attr("class", "transition-line start-line").attr("x1", 0).attr("y1", 0 - 75).attr("x2", 0).attr("y2", 0 - self.settings.stateRadius - 4).attr("marker-end", "url(#marker-end-arrow)");
     };
+
     /**
-     * removes the stateId
-     * @param {number} stateId
+     * Removes the startState
      */
-    self.removeStartState = function (stateId) {
+    self.removeStartState = function () {
         var state = $scope.getStateById($scope.config.startState);
         state.objReference.select(".start-line").remove();
         $scope.config.startState = null;
@@ -552,19 +556,19 @@ function StateDiagramDFA($scope, svgSelector) {
     };
     /**
      * Draws a State
-     * @param  {number} id the stateid
-     * @return {Reference}    Returns the reference of the group object
+     * @param  {number} id the stateId
+     * @return {group}    Returns the reference of the group object
      */
     self.drawState = function (id) {
         var state = $scope.getStateById(id);
         var group = self.svgStates.append("g").attr("transform", "translate(" + state.x + " " + state.y + ")").attr("class", "state " + "state-" + state.id).attr("object-id", state.id);
         //save the state-id
 
-        var circle = group.append("circle").attr("class", "state-circle").attr("r", self.settings.stateRadius);
+        group.append("circle").attr("class", "state-circle").attr("r", self.settings.stateRadius);
         //for outer circle dotted when selected
 
-        var hoverCircle = group.append("circle").attr("class", "state-circle hover-circle").attr("r", self.settings.stateRadius);
-        var text = group.append("text").text(state.name).attr("class", "state-text").attr("dominant-baseline", "central").attr("text-anchor", "middle");
+        group.append("circle").attr("class", "state-circle hover-circle").attr("r", self.settings.stateRadius);
+        group.append("text").text(state.name).attr("class", "state-text").attr("dominant-baseline", "central").attr("text-anchor", "middle");
         state.objReference = group;
         group.on('click', self.openStateMenu).call(self.dragState);
         return group;
@@ -583,7 +587,7 @@ function StateDiagramDFA($scope, svgSelector) {
      * Sets a transition class to a specific class or removes the specific class
      * @param {number}   transitionId
      * @param {boolean} state        if the class should be added or removed
-     * @param {string}  className    the classname
+     * @param {string}  className    the className
      */
     self.setTransitionClassAs = function (transitionId, state, className) {
         var trans = $scope.getTransitionById(transitionId);
@@ -596,8 +600,8 @@ function StateDiagramDFA($scope, svgSelector) {
         }
     };
     /**
-     * sets the arrow marker of a transition, cause we couldnt change the color of an arrow marker
-     * @param {object} transLine the transitionlineobject
+     * sets the arrow marker of a transition, cause we couldn't change the color of an arrow marker
+     * @param {object} transLine the transitionLineObject
      * @param {string} suffix    which arrow should be changed
      */
     self.setArrowMarkerTo = function (transLine, suffix) {
@@ -660,9 +664,9 @@ function StateDiagramDFA($scope, svgSelector) {
             //reset the tooltip
             self.input.tttisopen = false;
             if (newValue !== oldValue) {
-                //change if the name doesnt exists and isnt empty
+                //change if the name doesn't exists and isn't empty
                 if (newValue !== "" && !$scope.existsStateWithName(newValue)) {
-                    var renameError = !$scope.renameState(self.input.state.id, newValue);
+                    !$scope.renameState(self.input.state.id, newValue);
                 } else if (newValue === "") {
                     //FEEDBACK
                     self.input.tttisopen = true;
@@ -679,7 +683,7 @@ function StateDiagramDFA($scope, svgSelector) {
      */
     self.closeStateMenu = function () {
         //remove old StateMenuListeners
-        _.forEach(self.stateMenuListener, function (value, key) {
+        _.forEach(self.stateMenuListener, function (value) {
             value();
         });
         if (self.selectedState !== null) {
@@ -737,7 +741,7 @@ function StateDiagramDFA($scope, svgSelector) {
                     }
                 }
 
-                //on drag isnt allowed workaround for bad drags when wanted to click
+                //on drag isn't allowed workaround for bad drags when wanted to click
                 if (self.dragAmount > 1) {
 
                     //update the shown node
@@ -746,7 +750,7 @@ function StateDiagramDFA($scope, svgSelector) {
 
                     var stateId = d3.select(this).attr("object-id");
                     var tmpState = $scope.getStateById(stateId);
-                    //update the state coordinates in the dataobject
+                    //update the state coordinates in the dataObject
                     tmpState.x = x;
                     tmpState.y = y;
                     //update the transitions after dragging a node
@@ -774,16 +778,14 @@ function StateDiagramDFA($scope, svgSelector) {
      * Crossproduct helper function
      * @param   {object}   a vector
      * @param   {object}   b vector
-     * @returns {object}   crossproduct vetor
+     * @returns {object}   crossproduct vector
      */
     function crossPro(a, b) {
-
-        var vecC = {
+        return {
             x: a.y * b.z,
             y: -a.x * b.z
 
         };
-        return vecC;
     }
 
     function toDegrees(angle) {
@@ -797,7 +799,7 @@ function StateDiagramDFA($scope, svgSelector) {
     /**
      * expands a vector with a given factor
      * @param   {object} a      vector
-     * @param   {number} factor expandfactor
+     * @param   {number} factor expand factor
      * @returns {object} expanded vector
      */
     function expandVector(a, factor) {
@@ -866,16 +868,16 @@ function StateDiagramDFA($scope, svgSelector) {
         return d[1];
     }).interpolate("basis");
     /**
-     * Returns the transitionDrawConfig with all the data like xstart, xend, xtext....
-     * @param   {object}  transition    the transitionobj
-     * @param   {boolean} forceApproach if we force an approachedtransition ->needed when the transition was writed to the array, or for the addtransition
+     * Returns the transitionDrawConfig with all the data like xstart, xEnd, xText....
+     * @param   {object}  transition    the transitionObj
+     * @param   {boolean} forceApproach if we force an approachedTransition ->needed when the transition was written to the array, or for the addTransition
      * @returns {object}  the drawConfig
      */
     self.getTransitionDrawConfig = function (transition, forceApproach) {
         //the distance the endPoint of the transition is away from the state
         var gapBetweenTransitionLineAndState = 3;
         var obj = {};
-        /**1: Check if there is a transition aproach our transition**/
+        /**1: Check if there is a transition approach our transition**/
         obj.approachTransition = forceApproach || self.existsDrawnTransition(transition.toState, transition.fromState);
         /****2. Get the xStart,yStart and xEnd,yEnd  and xMid,yMid***/
             //from and to State
@@ -887,16 +889,12 @@ function StateDiagramDFA($scope, svgSelector) {
         var y1 = fromState.y;
         var x2 = toState.x;
         var y2 = toState.y;
-        var xCurv1,
-            yCurv1,
-            xCurv2,
-            yCurv2;
         //needed for the calculation of the coordinates
-        var directionvector = {
+        var directionVector = {
             x: x2 - x1,
             y: y2 - y1
         };
-        var directionVectorLength = Math.sqrt(directionvector.x * directionvector.x + directionvector.y * directionvector.y);
+        var directionVectorLength = Math.sqrt(directionVector.x * directionVector.x + directionVector.y * directionVector.y);
         var nStart = self.settings.stateRadius / directionVectorLength;
         var nEnd;
         if (isToStateAFinalState) {
@@ -905,10 +903,10 @@ function StateDiagramDFA($scope, svgSelector) {
             nEnd = (self.settings.stateRadius + gapBetweenTransitionLineAndState) / directionVectorLength;
         }
 
-        obj.xStart = x1 + nStart * directionvector.x;
-        obj.yStart = y1 + nStart * directionvector.y;
-        obj.xEnd = x2 - nEnd * directionvector.x;
-        obj.yEnd = y2 - nEnd * directionvector.y;
+        obj.xStart = x1 + nStart * directionVector.x;
+        obj.yStart = y1 + nStart * directionVector.y;
+        obj.xEnd = x2 - nEnd * directionVector.x;
+        obj.yEnd = y2 - nEnd * directionVector.y;
         obj.xDiff = x2 - x1;
         obj.yDiff = y2 - y1;
         obj.xMid = (x1 + x2) / 2;
@@ -933,12 +931,7 @@ function StateDiagramDFA($scope, svgSelector) {
         };
         var stretchValue,
             movingPoint;
-        //OLD:stretchValue = (70 * (1 / obj.distance * 1.1) * 1.4);
-        stretchValue = 20;
-        movingPoint = crossPro(vecA, vecB);
-        movingPoint = fixVectorLength(movingPoint);
-        movingPoint = expandVector(movingPoint, stretchValue);
-        /**4:Calc the curvestart and end if there is and approach transition**/
+        /**4:Calc the curveStart and end if there is and approach transition**/
         if (obj.approachTransition) {
 
             var xStart = getAngles({
@@ -968,8 +961,7 @@ function StateDiagramDFA($scope, svgSelector) {
         movingPoint = expandVector(movingPoint, stretchValue);
         obj.xMidCurv = movingPoint.x + obj.xMid;
         obj.yMidCurv = movingPoint.y + obj.yMid;
-        /**5:Calc the textposition**/
-        var existsDrawnTrans = self.existsDrawnTransition(fromState.id, toState.id);
+        /**5:Calc the textPosition**/
         var drawnTrans = self.getDrawnTransition(fromState.id, toState.id);
         var transNamesLength;
         if (drawnTrans) {
@@ -1028,8 +1020,8 @@ function StateDiagramDFA($scope, svgSelector) {
     };
     /**
      * Draw a Transition
-     * @param  {number} id
-     * @return {object}  Retruns the reference of the group object
+     * @param  {number} transitionId
+     * @return {object}  Returns the reference of the group object
      */
     self.drawTransition = function (transitionId) {
         //variables for self transition
@@ -1040,14 +1032,14 @@ function StateDiagramDFA($scope, svgSelector) {
         //if there is not a transition with the same from and toState
         if (!self.existsDrawnTransition(transition.fromState, transition.toState)) {
             //the group element
-            var group = self.svgTransitions.append("g").attr("class", "transition"),
-                //the line itself with the arrow
-                lineSelection = group.append("path").attr("class", "transition-line-selection").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-selection)"),
-                line = group.append("path").attr("class", "transition-line").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow)"),
-                lineClickArea = group.append("path").attr("class", "transition-line-click").attr("stroke-width", 20).attr("stroke", "transparent").attr("fill", "none"),
-                lineHover = group.append("path").attr("class", "transition-line-hover").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-hover)"),
-                //the text of the transition
-                text = group.append("text").attr("class", "transition-text").attr("dominant-baseline", "central").attr("fill", "black");
+            var group = self.svgTransitions.append("g").attr("class", "transition");
+            //the line itself with the arrow
+            group.append("path").attr("class", "transition-line-selection").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-selection)");
+            var line = group.append("path").attr("class", "transition-line").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow)");
+            group.append("path").attr("class", "transition-line-click").attr("stroke-width", 20).attr("stroke", "transparent").attr("fill", "none");
+            group.append("path").attr("class", "transition-line-hover").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-hover)");
+            //the text of the transition
+            var text = group.append("text").attr("class", "transition-text").attr("dominant-baseline", "central").attr("fill", "black");
             //if it is not a self Reference
             if (transition.fromState != transition.toState) {
                 var drawConfig = self.getTransitionDrawConfig(transition);
@@ -1055,10 +1047,10 @@ function StateDiagramDFA($scope, svgSelector) {
                 if (drawConfig.approachTransition) {
                     //other transition in the other direction
                     var otherTrans = self.getDrawnTransition(transition.toState, transition.fromState);
-                    var otherTransdrawConfig = self.getTransitionDrawConfig(otherTrans, true);
-                    self.updateTransitionLines(otherTrans.objReference, otherTransdrawConfig.path);
+                    var otherTransDrawConfig = self.getTransitionDrawConfig(otherTrans, true);
+                    self.updateTransitionLines(otherTrans.objReference, otherTransDrawConfig.path);
                     //update the transition text position
-                    otherTrans.objReference.select(".transition-text").attr("x", (otherTransdrawConfig.xText)).attr("y", (otherTransdrawConfig.yText));
+                    otherTrans.objReference.select(".transition-text").attr("x", (otherTransDrawConfig.xText)).attr("y", (otherTransDrawConfig.yText));
                 }
                 //draw the text
                 text.attr("class", "transition-text").attr("x", (drawConfig.xText)).attr("y", (drawConfig.yText));
@@ -1106,7 +1098,7 @@ function StateDiagramDFA($scope, svgSelector) {
 
         }
     };
-    /**For better overriting**/
+    /**For better overwriting**/
     self.createDrawnTransitionNameObject = function (transition) {
         return {
             "id": transition.id,
@@ -1115,18 +1107,18 @@ function StateDiagramDFA($scope, svgSelector) {
     };
     /**
      * helper function updates all the transition lines
-     * @param {object}   transitionobjReference
+     * @param {object}   transitionObjReference
      * @param {string}   path
      */
-    self.updateTransitionLines = function (transitionobjReference, path) {
-        transitionobjReference.select(".transition-line").attr("d", path);
-        transitionobjReference.select(".transition-line-selection").attr("d", path);
-        transitionobjReference.select(".transition-line-hover").attr("d", path);
-        transitionobjReference.select(".transition-line-click").attr("d", path);
+    self.updateTransitionLines = function (transitionObjReference, path) {
+        transitionObjReference.select(".transition-line").attr("d", path);
+        transitionObjReference.select(".transition-line-selection").attr("d", path);
+        transitionObjReference.select(".transition-line-hover").attr("d", path);
+        transitionObjReference.select(".transition-line-click").attr("d", path);
     };
     /**
-     * opens the transitionmenu
-     * @param {number} transitionId when there is a transitionId we open the transitionmenu with the given id
+     * opens the transitionMenu
+     * @param {number} transitionId when there is a transitionId we open the transitionMenu with the given id
      */
     self.openTransitionMenu = function (transitionId) {
         self.closeStateMenu();
@@ -1152,8 +1144,7 @@ function StateDiagramDFA($scope, svgSelector) {
         self.input.toState = $scope.getStateById(toState);
         self.input.transitions = [];
         _.forEach(self.selectedTransition.names, function (value, key) {
-            var tmpObject = {};
-            tmpObject = cloneObject(value);
+            var tmpObject = cloneObject(value);
             if (transitionId !== undefined) {
                 if (value.id == transitionId) {
                     tmpObject.isFocus = true;
@@ -1189,10 +1180,10 @@ function StateDiagramDFA($scope, svgSelector) {
         $scope.safeApply();
     };
     /**
-     * closes the transitionmenu
+     * closes the transitionMenu
      */
     self.closeTransitionMenu = function () {
-        _.forEach(self.transitionMenuListener, function (value, key) {
+        _.forEach(self.transitionMenuListener, function (value) {
             value();
         });
         self.showTransitionMenu = false;
@@ -1206,8 +1197,7 @@ function StateDiagramDFA($scope, svgSelector) {
      * @param  {number} stateId Moved stateId
      */
     self.updateTransitionsAfterStateDrag = function (stateId) {
-        var stateName = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)].name;
-        _.forEach($scope.config.drawnTransitions, function (n, key) {
+        _.forEach($scope.config.drawnTransitions, function (n) {
             if (n.fromState == stateId || n.toState == stateId) {
                 //if its not a selfreference
                 var obj = n.objReference,
@@ -1221,7 +1211,7 @@ function StateDiagramDFA($scope, svgSelector) {
                     var moveStateId = n.fromState;
                     var x = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].x;
                     var y = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].y;
-                    //update Transistion with self reference
+                    //update Transition with self reference
                     self.updateTransitionLines(obj, self.selfTransition(x, y));
                     transitionText.attr("x", x - self.settings.stateRadius - 50).attr("y", y);
                 }
@@ -1255,12 +1245,12 @@ function StateDiagramDFA($scope, svgSelector) {
             if (oldValue !== null) {
                 self.setTransitionClassAs(oldValue.id, false, "animated-transition");
                 d3.selectAll("[transition-id='" + oldValue.id + "'").classed("animated-transition-text", false);
-                //remove transitionname animation
+                //remove transitionName animation
             }
             if (newValue !== null) {
                 self.setTransitionClassAs(newValue.id, true, "animated-transition");
                 d3.selectAll("[transition-id='" + newValue.id + "'").classed("animated-transition-text", true);
-                //animate transitionname
+                //animate transitionName
             }
         }
     });

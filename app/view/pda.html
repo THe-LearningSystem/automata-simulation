@@ -53,7 +53,7 @@
         <!-- Simple dropdown -->
         <div uib-dropdown on-toggle="toggled(open)">
             <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
-                {{config.diagramm.scale * 100| number:0}}%
+                {{config.diagram.scale * 100| number:0}}%
                 <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
             </button>
 
@@ -194,7 +194,7 @@
         <json-formatter json="simulator.stack" open="1"></json-formatter>
 
         <p>
-            DiagrammValues:
+            diagramValues:
             <json-formatter json="config" open="1"></json-formatter>
 
             <json-formatter json="simulator" open="1"></json-formatter>
@@ -216,7 +216,7 @@
     <h3 class="diagram-title">{{"DIA.TITLE"| translate}}</h3>
     <div class="diagram">
 
-        <svg id="diagramm-svg"></svg>
+        <svg id="diagram-svg"></svg>
     </div>
     <div class="bot-content-wrapper">
         <div class="bot-content bot-left">
@@ -252,7 +252,7 @@
     </div>
 </div>
 <div class="right-menu">
-    <!--Diagramm Settigns -->
+    <!--diagram Settigns -->
     <menuitem titlename="DIA_SET.TITLE" ng-show="!statediagram.showStateMenu && !statediagram.showTransitionMenu">
         <p class="right-indextab-subtitle">
             {{'DIA_SET.VIEW'| translate}}

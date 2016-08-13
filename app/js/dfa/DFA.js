@@ -1,19 +1,19 @@
 //Simulator for the simulation of the automata
-function DFA($scope, $translate) {
+function DFA($scope) {
     "use strict";
     //selfReference
-    //for debug puposes better way for acessing in console?
+    //for debug purposes better way for accessing in console?
     window.debugScope = $scope;
-    //is in debugmode?
+    //Debug Mode (that the browser doesn't ask if you want to reload, or for the unit testing)
     $scope.debug = true;
 
     //Default Config for the automaton
     $scope.defaultConfig = {};
-    //the default prefix for autonaming for example S0,S1,... after the prefix it saves the id
+    //the default prefix for auto naming for example S0,S1,... after the prefix it saves the id
     $scope.defaultConfig.statePrefix = 'S';
     //Suffix after a transition name on the statediagram
     $scope.defaultConfig.transitionNameSuffix = '|';
-    $scope.defaultConfig.diagramm = {
+    $scope.defaultConfig.diagram = {
         x: 0,
         y: 0,
         scale: 1,
@@ -41,7 +41,7 @@ function DFA($scope, $translate) {
     $scope.defaultConfig.unSavedChanges = false;
     //has the drawn Transition
     //{fromState:0,toState:0,names:["a","b"], objReference:};
-    //if there is already a transition with the right fromState and toState, thenn only add myname to the names array
+    //if there is already a transition with the right fromState and toState, then only add myName to the names array
     $scope.defaultConfig.drawnTransitions = [];
 
     //Config Object
@@ -54,11 +54,11 @@ function DFA($scope, $translate) {
     $scope.simulator = new SimulationDFA($scope);
     // the table where states and transitions are shown
     $scope.table = new TableDFA($scope);
-    //the statediagram controlling the svg diagramm
-    $scope.statediagram = new StateDiagramDFA($scope, "#diagramm-svg");
+    //the statediagram controlling the svg diagram
+    $scope.statediagram = new StateDiagramDFA($scope, "#diagram-svg");
     //the statetransitionfunction controlling the statetransitionfunction-table
     $scope.statetransitionfunction = new StatetransitionfunctionDFA($scope);
-    //for the testdata
+    //for the test data
     $scope.testData = new TestData($scope);
 
     //for the showing/hiding of the Input Field of the automaton name
@@ -66,8 +66,10 @@ function DFA($scope, $translate) {
 
     /**
      * Add the options to the modal.
-     * @param {String} newHeadline Headline of the shown modal.
-     * @param {String} newMessage Message of the shown modal.
+     * @param newTitle
+     * @param newDescription
+     * @param action
+     * @param button
      */
     $scope.showModalWithMessage = function (newTitle, newDescription, action, button) {
         $scope.title = newTitle;
@@ -134,14 +136,14 @@ function DFA($scope, $translate) {
     window.onbeforeunload = function (event) {
         //turn true when you want the leaving protection
         if (!$scope.debug && $scope.config.unSavedChanges) {
-            var closemessage = "All Changes will be Lost. Save before continue!";
+            var closeMessage = "All Changes will be Lost. Save before continue!";
             if (typeof event == 'undefined') {
                 event = window.event;
             }
             if (event) {
-                event.returnValue = closemessage;
+                event.returnValue = closeMessage;
             }
-            return closemessage;
+            return closeMessage;
 
         }
     };
@@ -197,7 +199,7 @@ function DFA($scope, $translate) {
     };
 
     /**
-     * Removes a char from the alphavet if this char is only used from the given transition
+     * Removes a char from the alphabet if this char is only used from the given transition
      * @param   {number}  transitionId
      * @returns {boolean} true if it was removed false if not removed
      */
@@ -208,7 +210,7 @@ function DFA($scope, $translate) {
         for (var i = 0; i < $scope.config.transitions.length; i++) {
             if (tmpTransition.name === $scope.config.transitions[i].name && $scope.config.transitions[i].id !== transitionId) {
                 usedByOthers = true;
-                return;
+                break;
             }
         }
 
@@ -225,7 +227,7 @@ function DFA($scope, $translate) {
      */
     $scope.updateListener = function () {
         //call each updateListener
-        _.forEach($scope.updateListeners, function (value, key) {
+        _.forEach($scope.updateListeners, function (value) {
             value.updateFunction();
         });
         //after every update we show the user that he has unsaved changes
@@ -238,7 +240,7 @@ function DFA($scope, $translate) {
     /**
      * Checks if a state exists with the given name
      * @param  {String}  stateName
-     * @param {Int} stateID optionally dont check with this stateid
+     * @param {Number} stateID optionally don't check with this stateID
      * @return {Boolean}
      */
     $scope.existsStateWithName = function (stateName, stateID) {
@@ -246,7 +248,7 @@ function DFA($scope, $translate) {
         _.forEach($scope.config.states, function (state) {
             if (state.name == stateName && state.id !== stateID) {
                 tmp = true;
-                return;
+                return false;
             }
         });
         return tmp;
@@ -254,7 +256,7 @@ function DFA($scope, $translate) {
 
     /**
      * Checks if a state exists with the given id
-     * @param  {Id} stateId
+     * @param  {Number} stateId
      * @return {Boolean}
      */
     $scope.existsStateWithId = function (stateId) {
@@ -296,7 +298,7 @@ function DFA($scope, $translate) {
     /**
      * Returns the State with the given stateId
      * @param  {number} stateId
-     * @return {object}        Returns the objectreference of the state undefined if not found
+     * @return {object}        Returns the objectReference of the state undefined if not found
      */
     $scope.getStateById = function (stateId) {
 
@@ -305,14 +307,17 @@ function DFA($scope, $translate) {
 
     /**
      * Returns the State with the given stateName
-     * @param  {number} stateId
-     * @return {object}        Returns the objectreference of the state undefined if not found
+     * @param stateName
      */
     $scope.getStateByName = function (stateName) {
-
-        return $scope.config.states[$scope.getArrayStateIdByStateId(function (stateName) {
-
-        })];
+        var tmp = -1;
+        _.forEach($scope.config.states, function (value) {
+            if (stateName === value.name) {
+                tmp = value.id;
+                return false;
+            }
+        });
+        return tmp === -1 ? undefined : $scope.config.states[$scope.getArrayStateIdByStateId(tmp)];
     };
     /**
      * Add a state with default name
@@ -347,18 +352,19 @@ function DFA($scope, $translate) {
 
     /**
      * Adds a state at the end of the states array with a variable id
-     * !!!dont use at other places!!!!
+     * !!!don't use at other places!!!!
+     * @param stateId
      * @param {String} stateName
      * @param {number} x
      * @param {number} y
      * @returns {object} the created object
      */
     $scope.addStateWithId = function (stateId, stateName, x, y) {
-        var addedStateId = $scope.config.states.push(new State(stateId, stateName, x, y));
+        $scope.config.states.push(new State(stateId, stateName, x, y));
         //draw the State after the State is added
         $scope.statediagram.drawState(stateId);
         $scope.updateListener();
-        //fix changes wont update after addTransisiton from the statediagram
+        //fix changes wont update after addTransition from the statediagram
         $scope.safeApply();
         return $scope.getStateById(stateId);
     };
@@ -400,10 +406,10 @@ function DFA($scope, $translate) {
     };
 
     /**
-     * Rename a state if the newStatename isnt already used
+     * Rename a state if the newStateName isn't already used
      * @param  {number}  stateId
      * @param  {State}   newStateName
-     * @returns {boolean} true if success false if no succes
+     * @returns {boolean} true if success false if no success
      */
     $scope.renameState = function (stateId, newStateName) {
         if ($scope.existsStateWithName(newStateName)) {
@@ -473,7 +479,7 @@ function DFA($scope, $translate) {
     };
 
     /**
-     * Add a state as final State if it isnt already added and if their is a state with such a id
+     * Add a state as final State if it isn't already added and if their is a state with such a id
      */
     $scope.addFinalState = function (stateId) {
         if (!$scope.isStateAFinalState(stateId)) {
@@ -497,17 +503,18 @@ function DFA($scope, $translate) {
             $scope.updateListener();
             $scope.config.finalStates.splice($scope.getFinalStateIndexByStateId(stateId), 1);
         } else {
-            //TODO: Better DBUG
+            //TODO: Better DEBUG
         }
     };
 
-    //TRANSITIONS
+//TRANSITIONS
 
     /**
      * Checks if a transition with the params already exists
-     * @param  {number}  fromState      Id of the fromstate
+     * @param  {number}  fromState      Id of the fromState
      * @param  {number}  toState        id from the toState
      * @param  {String}  transitionName The name of the transition
+     * @param transitionId
      * @return {Boolean}
      */
     $scope.existsTransition = function (fromState, toState, transitionName, transitionId) {
@@ -515,13 +522,18 @@ function DFA($scope, $translate) {
         _.forEach($scope.config.transitions, function (transition) {
             if (transition.fromState == fromState && transition.name == transitionName && transition.id !== transitionId) {
                 tmp = true;
-                return;
+                return false;
             }
         });
 
         return tmp;
     };
 
+    /**
+     * Return the next possible transitionName (a,b,c already used -> returns d)
+     * @param fromState
+     * @returns {string}
+     */
     $scope.getNextTransitionName = function (fromState) {
         var namesArray = [];
         for (var i = 0; i < $scope.config.transitions.length; i++) {
@@ -536,6 +548,7 @@ function DFA($scope, $translate) {
             if (value === -1) {
                 foundNextName = true;
             } else {
+                //noinspection JSCheckFunctionSignatures
                 tryChar = String.fromCharCode(tryChar.charCodeAt() + 1);
             }
         }
@@ -547,14 +560,14 @@ function DFA($scope, $translate) {
      * Adds a transition at the end of the transitions array
      * @param {number} fromState      The id from the fromState
      * @param {number} toState        The id from the toState
-     * @param {String} transistonName The name of the Transition
+     * @param transitionName
      */
-    $scope.addTransition = function (fromState, toState, transitonName) {
+    $scope.addTransition = function (fromState, toState, transitionName) {
         //can only create the transition if it is unique-> not for the ndfa
         //there must be a fromState and toState, before adding a transition
-        if (!$scope.existsTransition(fromState, toState, transitonName) && $scope.existsStateWithId(fromState) && $scope.existsStateWithId(toState)) {
-            $scope.addToAlphabet(transitonName);
-            return $scope.addTransitionWithId($scope.config.countTransitionId++, fromState, toState, transitonName);
+        if (!$scope.existsTransition(fromState, toState, transitionName) && $scope.existsStateWithId(fromState) && $scope.existsStateWithId(toState)) {
+            $scope.addToAlphabet(transitionName);
+            return $scope.addTransitionWithId($scope.config.countTransitionId++, fromState, toState, transitionName);
 
         } else {
             //TODO: BETTER DEBUG
@@ -563,18 +576,19 @@ function DFA($scope, $translate) {
 
     /**
      * Adds a transition at the end of the transitions array -> for import
-     * !!!dont use at other places!!!!! ONLY FOR IMPORT
-     * @param {number} fromState      The id from the fromState
-     * @param {number} toState        The id from the toState
-     * @param {String} transistonName The name of the Transition
+     * !!!don't use at other places!!!!! ONLY FOR IMPORT
+     * @param transitionId
+     * @param fromState
+     * @param toState
+     * @param transitionName
      */
-    $scope.addTransitionWithId = function (transitionId, fromState, toState, transitonName) {
-        $scope.config.transitions.push(new TransitionDFA(transitionId, fromState, toState, transitonName));
+    $scope.addTransitionWithId = function (transitionId, fromState, toState, transitionName) {
+        $scope.config.transitions.push(new TransitionDFA(transitionId, fromState, toState, transitionName));
 
-        //drawTransistion
+        //drawTransition
         $scope.statediagram.drawTransition(transitionId);
         $scope.updateListener();
-        //fix changes wont update after addTransisiton from the statediagram
+        //fix changes wont update after addTransition from the statediagram
         $scope.safeApply();
         return $scope.getTransitionById(transitionId);
     };
@@ -582,7 +596,7 @@ function DFA($scope, $translate) {
     /**
      * Get the array index from the transition with the given transitionId
      * @param  {number} transitionId
-     * @return {number}         Returns the index and -1 when state with transistionId not found
+     * @return {number}         Returns the index and -1 when state with transitionId not found
      */
     $scope.getArrayTransitionIdByTransitionId = function (transitionId) {
         return _.findIndex($scope.config.transitions, function (transition) {
@@ -595,23 +609,23 @@ function DFA($scope, $translate) {
     /**
      * Returns the transition of the given transitionId
      * @param  {number} transitionId
-     * @return {object}        Returns the objectreference of the state
+     * @return {object}        Returns the objectReference of the state
      */
     $scope.getTransitionById = function (transitionId) {
         return $scope.config.transitions[$scope.getArrayTransitionIdByTransitionId(transitionId)];
     };
 
     /**
-     * Checks if a transition with the params already exists
-     * @param  {number}  fromState      Id of the fromstate
+     * Returns the transition with the given information
+     * @param  {number}  fromState      Id of the fromState
      * @param  {number}  toState        id from the toState
-     * @param  {Strin}  transitonName The name of the transition
-     * @return {Boolean}
+     * @param  {String}  transitionName The name of the transition
+     * @return {Object}
      */
-    $scope.getTransition = function (fromState, toState, transitonName) {
+    $scope.getTransition = function (fromState, toState, transitionName) {
         for (var i = 0; i < $scope.config.transitions.length; i++) {
             var transition = $scope.config.transitions[i];
-            if (transition.fromState == fromState && transition.toState == toState && transition.name == transitonName) {
+            if (transition.fromState == fromState && transition.toState == toState && transition.name == transitionName) {
                 return transition;
             }
         }
@@ -619,7 +633,7 @@ function DFA($scope, $translate) {
     };
 
     /**
-     * Removes the transistion
+     * Removes the transition
      * @param {number} transitionId      The id from the transition
      */
     $scope.removeTransition = function (transitionId) {
@@ -633,19 +647,18 @@ function DFA($scope, $translate) {
     };
 
     /**
-     * Modify a transition if is uniqe with the new name
+     * Modify a transition if is unique with the new name
      * @param  {number} transitionId
      * @param  {String} newTransitionName
      */
     $scope.modifyTransition = function (transitionId, newTransitionName) {
         var transition = $scope.getTransitionById(transitionId);
         if (!$scope.existsTransition(transition.fromState, transition.toState, newTransitionName)) {
-            var tmpTransition = $scope.getTransitionById(transitionId);
             //remove old transition from alphabet if this transition only used this char
             $scope.removeFromAlphabetIfNotUsedFromOthers(transitionId);
-            //add new transitionname to the alphabet
+            //add new transitionName to the alphabet
             $scope.addToAlphabet(newTransitionName);
-            //save the new transitionname
+            //save the new transitionName
             $scope.getTransitionById(transitionId).name = newTransitionName;
             //Rename the state on the statediagram
             $scope.statediagram.modifyTransition(transition.fromState, transition.toState, transitionId, newTransitionName);

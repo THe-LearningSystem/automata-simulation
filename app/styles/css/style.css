@@ -5831,18 +5831,18 @@ button.close {
 .automataWrapper {
   border: 1px solid #000; }
 
-#diagramm {
+#diagram {
   border: 1px solid #000;
   width: 100%;
   height: 500px;
   min-width: auto;
   position: relative; }
 
-#diagramm-buttons {
+#diagram-buttons {
   position: absolute;
   z-index: 5; }
 
-#diagramm-svg {
+#diagram-svg {
   width: 100%;
   height: 100%;
   min-width: auto;
@@ -5851,7 +5851,7 @@ button.close {
 #state-context {
   padding: 5px;
   position: absolute;
-  right: 0px;
+  right: 0;
   width: auto;
   height: 100%;
   background-color: #888; }
@@ -6000,7 +6000,7 @@ button.close {
   padding: 5px;
   background-color: #cedde9;
   cursor: pointer;
-  margin: 0px 0px 0px 0px !important;
+  margin: 0 0 0 0 !important;
   vertical-align: middle;
   font-size: 15px; }
 
@@ -6087,7 +6087,7 @@ button:disabled .icon {
   cursor: pointer;
   vertical-align: middle;
   border-bottom: 1px solid #e5e5e5;
-  margin: 0px 0px 0px 0px !important; }
+  margin: 0 0 0 0 !important; }
 
 .left-indextab-title {
   color: #505050; }
@@ -6134,7 +6134,7 @@ button:disabled .icon {
   cursor: pointer;
   vertical-align: middle;
   border-bottom: 1px solid silver;
-  margin: 0px 0px 0px 0px !important; }
+  margin: 0 0 0 0 !important; }
 
 .menu-button {
   background-color: transparent;
@@ -6162,7 +6162,7 @@ button:disabled .icon {
   color: #707070; }
 
 .dia-option {
-  margin: 6px 0px 0px 0px;
+  margin: 6px 0 0 0;
   color: #707070;
   font-family: "Helvetica Neue"; }
 
@@ -6187,7 +6187,7 @@ button:disabled .icon {
   padding-top: 8px;
   background-color: #cedde9;
   cursor: pointer;
-  margin: 0px 0px 0px 0px;
+  margin: 0 0 0 0;
   font-size: 14px;
   color: #505050;
   font-weight: bold;
@@ -6199,7 +6199,7 @@ button:disabled .icon {
   background-color: whitesmoke;
   right: 200px;
   left: 200px;
-  bottom: 0px;
+  bottom: 0;
   border-top: 1px solid #e0e0e0; }
 
 .bot-content {
@@ -6215,7 +6215,7 @@ button:disabled .icon {
   font-weight: bold;
   text-align: center;
   vertical-align: middle;
-  margin: 0px 0px 0px 0px; }
+  margin: 0 0 0 0; }
 
 .bot-left {
   float: left;
@@ -6252,12 +6252,11 @@ button:disabled .icon {
   width: 180px;
   height: 30px;
   white-space: nowrap;
-  overflow: hidden !important;
   text-overflow: ellipsis;
   font-size: 20px;
   cursor: pointer;
   border: 1px solid white;
-  overflow: hidden; }
+  overflow: hidden !important; }
 
 .currentAutomatonName:hover {
   border: 1px solid #B7B5B5; }
@@ -6321,3 +6320,7 @@ rzslider .rz-pointer:after {
 
 .stack-item {
   fill: #AAA; }
+
+.stack {
+  stroke: #000;
+  stroke-width: 2; }
