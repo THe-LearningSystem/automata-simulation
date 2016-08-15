@@ -201,6 +201,8 @@ function StateDiagramDFA($scope, svgSelector) {
     //first draw the transitions -> nodes are in front of them if they overlap
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");
     self.svgStates = self.svg.append("g").attr("id", "states");
+
+    /**GRID-START**/
     //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
     self.gridSpace = 100;
     //the distance when the state is snapped to the next SnappingPoint (Rectangle form)
@@ -227,22 +229,21 @@ function StateDiagramDFA($scope, svgSelector) {
             var i;
             //xGrid
             for (i = xOffset; i < self.svgOuterWidth; i += self.gridSpace * $scope.config.diagram.scale) {
-                self.svgGrid.append("line").attr("stroke-width", thickness).attr("class", "grid-line xgrid-line").attr("x1", i).attr("y1", 0).attr("x2", i).attr("y2", height);
+                self.svgGrid.append("line").attr("stroke-width", thickness).attr("class", "grid-line xgrid-line").attr("x1", i).attr("y1", 0).attr("x2", i).attr("y2", self.svgOuterHeight);
             }
             //yGrid
             for (i = yOffset; i < self.svgOuterHeight; i += self.gridSpace * $scope.config.diagram.scale) {
-                self.svgGrid.append("line").attr("stroke-width", thickness).attr("class", "grid-line ygrid-line").attr("x1", 0).attr("y1", i).attr("x2", width).attr("y2", i);
+                self.svgGrid.append("line").attr("stroke-width", thickness).attr("class", "grid-line ygrid-line").attr("x1", 0).attr("y1", i).attr("x2", self.svgOuterWidth).attr("y2", i);
             }
         } else {
         }
 
     };
-
     //redraw the grid if the browser was resized
     window.addEventListener('resize', function () {
         self.drawGrid();
     });
-
+    /**GRID-END**/
     //DEFS
     self.defs = self.svg.append('svg:defs');
     //Marker-Arrow ( for the transitions)
@@ -1003,79 +1004,70 @@ function StateDiagramDFA($scope, svgSelector) {
      * @return {object}  Returns the reference of the group object
      */
     self.drawTransition = function (transitionId) {
-        //variables for self transition
-        var stateId,
-            x,
-            y;
         var transition = $scope.getTransitionById(transitionId);
-        //if there is not a transition with the same from and toState
+        //if there is not a drawn transition with the same from and toState
         if (!$scope.existsDrawnTransition(transition.fromState, transition.toState)) {
             //the group element
-            var group = self.svgTransitions.append("g").attr("class", "transition");
-            //the line itself with the arrow
-            group.append("path").attr("class", "transition-line-selection").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-selection)");
-            var line = group.append("path").attr("class", "transition-line").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow)");
-            group.append("path").attr("class", "transition-line-click").attr("stroke-width", 20).attr("stroke", "transparent").attr("fill", "none");
-            group.append("path").attr("class", "transition-line-hover").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-hover)");
-            //the text of the transition
-            var text = group.append("text").attr("class", "transition-text").attr("dominant-baseline", "central").attr("fill", "black");
-            //if it is not a self Reference
-            if (transition.fromState != transition.toState) {
-                var drawConfig = self.getTransitionDrawConfig(transition);
-                //if there is an approached transition update the approached transition
-                if (drawConfig.approachTransition) {
-                    //other transition in the other direction
-                    var otherTrans = $scope.getDrawnTransition(transition.toState, transition.fromState);
-                    var otherTransDrawConfig = self.getTransitionDrawConfig(otherTrans, true);
-                    self.updateTransitionLines(otherTrans.objReference, otherTransDrawConfig.path);
-                    //update the transition text position
-                    otherTrans.objReference.select(".transition-text").attr("x", (otherTransDrawConfig.xText)).attr("y", (otherTransDrawConfig.yText));
-                }
-                //draw the text
-                text.attr("class", "transition-text").attr("x", (drawConfig.xText)).attr("y", (drawConfig.yText));
-                self.updateTransitionLines(group, drawConfig.path);
-                //if it is a selfreference
-            } else {
-                stateId = $scope.getArrayStateIdByStateId(transition.fromState);
-                x = $scope.config.states[stateId].x;
-                y = $scope.config.states[stateId].y;
-                self.updateTransitionLines(group, self.selfTransition(x, y));
-                text.attr("x", x - self.settings.stateRadius - 50).attr("y", y);
-            }
+            var group = self.createTransitionGroup(transition);
             //add the drawnTransition
-            group.attr("object-id", $scope.config.drawnTransitions.push({
-                    fromState: transition.fromState,
-                    toState: transition.toState,
-                    names: [self.createDrawnTransitionNameObject(transition)],
-                    objReference: group
-                }) - 1);
-            self.writeTransitionText(text, $scope.getDrawnTransition(transition.fromState, transition.toState).names);
-            group.attr("from-state-id", transition.fromState).attr("to-state-id", transition.toState).on('click', self.openTransitionMenu).on("mouseover", function () {
-                d3.select(this).select('.transition-line-hover').attr("style", "opacity:0.6");
-            }).on("mouseleave", function () {
-                d3.select(this).select('.transition-line-hover').attr("style", "");
-            });
-            return group;
-            //if there is already a transition with the same fromState and toState then the current
-        } else {
-            //add the name to the drawnTransition
             var drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
+            //if it is a self Reference
+            if (transition.fromState === transition.toState) {
+                self.updateDrawnTransition(drawnTransition);
+            } else {
+                //if there is an approached transition update the approached transition
+                if (self.getTransitionDrawConfig(transition).approachTransition) {
+                    //update Approached Transition
+                    self.updateDrawnTransition($scope.getDrawnTransition(transition.toState, transition.fromState), true);
+                }
+                //update new Transition
+                self.updateDrawnTransition(drawnTransition);
+            }
+            return group;
+        } else {
+            //get the drawnTransition
+            var drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
+            //add the name to the drawnTransition
             drawnTransition.names.push(self.createDrawnTransitionNameObject(transition));
-            //drawn the new name to the old transition (svg)
-            self.writeTransitionText(drawnTransition.objReference.select('.transition-text'), $scope.getDrawnTransition(transition.fromState, transition.toState).names);
-            var drawConfigNew = self.getTransitionDrawConfig(transition);
             //if the transition is not a selfreference
             if (transition.fromState != transition.toState) {
-                drawnTransition.objReference.select('.transition-text').attr("x", (drawConfigNew.xText)).attr("y", (drawConfigNew.yText));
+                self.updateDrawnTransition(drawnTransition);
                 //if it is a selfreference
             } else {
-                stateId = $scope.getArrayStateIdByStateId(transition.fromState);
-                x = $scope.config.states[stateId].x;
-                y = $scope.config.states[stateId].y;
-                drawnTransition.objReference.select('.transition-text').attr("x", x - self.settings.stateRadius - 50).attr("y", y);
+                self.updateDrawnTransition(drawnTransition);
             }
-
         }
+    };
+
+    self.createTransitionGroup = function (transition) {
+        var group = self.svgTransitions.append("g").attr("class", "transition");
+        //the line itself with the arrow
+        group.append("path").attr("class", "transition-line-selection").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-selection)");
+        group.append("path").attr("class", "transition-line").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow)");
+        group.append("path").attr("class", "transition-line-click").attr("stroke-width", 20).attr("stroke", "transparent").attr("fill", "none");
+        group.append("path").attr("class", "transition-line-hover").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-hover)");
+        //the text
+        group.append("text").attr("class", "transition-text").attr("dominant-baseline", "central");
+
+        group.attr("object-id", $scope.config.drawnTransitions.push({
+                fromState: transition.fromState,
+                toState: transition.toState,
+                names: [self.createDrawnTransitionNameObject(transition)],
+                objReference: group
+            }) - 1);
+        group.attr("from-state-id", transition.fromState).attr("to-state-id", transition.toState).on('click', self.openTransitionMenu).on("mouseover", function () {
+            d3.select(this).select('.transition-line-hover').attr("style", "opacity:0.6");
+        }).on("mouseleave", function () {
+            d3.select(this).select('.transition-line-hover').attr("style", "");
+        });
+        return group
+    }
+
+    self.updateSelfReference = function (drawnTransition) {
+        var x = $scope.config.states[drawnTransition.fromState].x;
+        var y = $scope.config.states[drawnTransition.fromState].y;
+        self.updateTransitionLines(drawnTransition.objReference, self.selfTransition(x, y));
+        drawnTransition.objReference.select(".transition-text").attr("x", x - self.settings.stateRadius - 50).attr("y", y);
     };
     /**For better overwriting**/
     self.createDrawnTransitionNameObject = function (transition) {
@@ -1083,6 +1075,21 @@ function StateDiagramDFA($scope, svgSelector) {
             "id": transition.id,
             "name": transition.name
         };
+    };
+
+    self.updateDrawnTransition = function (drawnTransition, forcedApproach) {
+        if (drawnTransition.fromState === drawnTransition.toState) {
+            self.writeTransitionText(drawnTransition.objReference.select(".transition-text"), $scope.getDrawnTransition(drawnTransition.fromState, drawnTransition.toState).names);
+            self.updateSelfReference(drawnTransition);
+
+        } else {
+            self.writeTransitionText(drawnTransition.objReference.select(".transition-text"), $scope.getDrawnTransition(drawnTransition.fromState, drawnTransition.toState).names);
+            var transDrawConfig = self.getTransitionDrawConfig(drawnTransition, forcedApproach);
+            self.updateTransitionLines(drawnTransition.objReference, transDrawConfig.path);
+            //update the transition text position
+            drawnTransition.objReference.select(".transition-text").attr("x", (transDrawConfig.xText)).attr("y", (transDrawConfig.yText));
+        }
+
     };
     /**
      * helper function updates all the transition lines
@@ -1199,7 +1206,6 @@ function StateDiagramDFA($scope, svgSelector) {
     /**************
      **SIMULATION**
      *************/
-
     $scope.$watch('simulator.animated.currentState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
