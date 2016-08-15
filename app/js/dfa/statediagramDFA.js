@@ -808,7 +808,6 @@ function StateDiagramDFA($scope, svgSelector) {
         var dot2 = a.x * b.y - a.y * b.x;
         //determinant
         return Math.atan2(dot2, dot1);
-        //atan2(y, x) or atan2(sin, cos)
     }
 
     var degreeConstant = 30;
@@ -818,7 +817,6 @@ function StateDiagramDFA($scope, svgSelector) {
         if (angle < 0) {
             angle = angle + 360;
         }
-
         var upperAngle = angle + degreeConstant;
         if (upperAngle > 360) {
             upperAngle -= 360;
@@ -827,7 +825,6 @@ function StateDiagramDFA($scope, svgSelector) {
         if (lowerAngle < 0) {
             lowerAngle += 360;
         }
-
         return {
             angle: angle,
             lowerAngle: lowerAngle,
@@ -1061,13 +1058,14 @@ function StateDiagramDFA($scope, svgSelector) {
             d3.select(this).select('.transition-line-hover').attr("style", "");
         });
         return group
-    }
+    };
 
+    self.selfTransitionTextLength = 10;
     self.updateSelfReference = function (drawnTransition) {
         var x = $scope.config.states[drawnTransition.fromState].x;
         var y = $scope.config.states[drawnTransition.fromState].y;
         self.updateTransitionLines(drawnTransition.objReference, self.selfTransition(x, y));
-        drawnTransition.objReference.select(".transition-text").attr("x", x - self.settings.stateRadius - 50).attr("y", y);
+        drawnTransition.objReference.select(".transition-text").attr("x", x - self.settings.stateRadius - 35 - self.selfTransitionTextLength * drawnTransition.names.length).attr("y", y);
     };
     /**For better overwriting**/
     self.createDrawnTransitionNameObject = function (transition) {

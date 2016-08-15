@@ -5,6 +5,7 @@ function StateDiagramPDA($scope, svgSelector) {
     var self = this;
     StateDiagramDFA.apply(self, arguments);
     self.transitionTextLength = 27;
+    self.selfTransitionTextLength = 30;
 
     //TODO: only first version needs rework
     self.drawnStack = [];
