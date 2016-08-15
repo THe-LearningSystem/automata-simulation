@@ -147,7 +147,7 @@ autoSim.controller("portationCtrl", ['$scope',
             var exportData = $scope.config;
             exportData.transitions = getTransitions();
             exportData.states = getStates();
-            var data = window.JSON.stringify(exportData);
+            var data = window.JSON.stringify(exportData, null, 4);
             console.log(exportData);
             var blob = new Blob([data], {
                 type: "application/json"

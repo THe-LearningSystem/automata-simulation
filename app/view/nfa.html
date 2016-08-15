@@ -239,8 +239,12 @@
                             <sub ng-show="x.startState == true && x.finalState == true">, </sub>
                             <sub ng-show="x.finalState == true">{{"STF.F" | translate}}</sub>
                         </th>
-                        <td ng-repeat="y in x.trans track by $index">
-                            <span class="{{y.selectedClass}} {{y.animatedClass}}">{{y.stateName}}</span>
+                        <td ng-repeat="stateTrans in x.trans track by $index">
+                            <span ng-repeat="state in stateTrans.stateNames">
+                                <span class="{{state.selectedClass}} {{state.animatedClass}}">{{state.name}}</span>
+                                {{$last ? '' : ', '}}
+                            </span>
+
                         </td>
                     </tr>
                     </tbody>
