@@ -1182,22 +1182,7 @@ function StateDiagramDFA($scope, svgSelector) {
     self.updateTransitionsAfterStateDrag = function (stateId) {
         _.forEach($scope.config.drawnTransitions, function (n) {
             if (n.fromState == stateId || n.toState == stateId) {
-                //if its not a selfreference
-                var obj = n.objReference,
-                    transitionText = obj.select("text");
-                if (n.fromState != n.toState) {
-                    var drawConfig = self.getTransitionDrawConfig(n);
-                    //if there is a transition in the other direction
-                    self.updateTransitionLines(obj, drawConfig.path);
-                    transitionText.attr("x", drawConfig.xText).attr("y", drawConfig.yText);
-                } else {
-                    var moveStateId = n.fromState;
-                    var x = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].x;
-                    var y = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].y;
-                    //update Transition with self reference
-                    self.updateTransitionLines(obj, self.selfTransition(x, y));
-                    transitionText.attr("x", x - self.settings.stateRadius - 50).attr("y", y);
-                }
+                self.updateDrawnTransition($scope.getDrawnTransition(n.fromState, n.toState));
             }
         });
     };
