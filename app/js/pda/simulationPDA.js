@@ -14,6 +14,7 @@ function SimulationPDA($scope) {
      */
     self.reset = function () {
         self.stack = new PDAStack();
+        self.stack.listener.push($scope.statediagram);
         parentReset.apply(this);
         _.forEach($scope.statediagram.drawnStack, function () {
             $scope.statediagram.removeFromStack();
@@ -60,7 +61,6 @@ function SimulationPDA($scope) {
         //First: Paint the transition & wait
         if (!self.animatedTransition) {
             self.stack.pop();
-            $scope.statediagram.removeFromStack();
             self.animatedTransition = true;
             self.animated.transition = self.transition;
             self.goneTransitions.push(self.transition);
@@ -70,17 +70,9 @@ function SimulationPDA($scope) {
             self.animatedNextState = true;
             self.animated.nextState = self.nextState;
 
-            //Third: clear transition & currentStatecolor and set currentState = nexsttate and wait
+            //Third: clear transition & currentStateColor and set currentState = nextState and wait
         } else if (self.animatedTransition && self.animatedNextState) {
             self.stack.push(self.animated.transition.writeToStack);
-            if (self.animated.transition.writeToStack === "\u03b5") {
-
-            } else if (self.animated.transition.writeToStack.length === 1) {
-                $scope.statediagram.addToStack(self.animated.transition.writeToStack);
-            } else {
-                $scope.statediagram.addToStack(self.animated.transition.writeToStack[0]);
-                $scope.statediagram.addToStack(self.animated.transition.writeToStack[1]);
-            }
 
             self.animated.transition = null;
             self.animated.nextState = null;
@@ -120,16 +112,16 @@ function SimulationPDA($scope) {
      */
     self.animateLastMove = function () {
         if (self.animatedTransition && self.animatedNextState) {
-            self.stack.push(self.animated.transition.writeToStack);
+            self.stack.tryToPop(self.animated.transition.writeToStack);
             self.animated.nextState = null;
             self.animatedNextState = false;
-        } else if (self.animatedTransition) {
+        }
+        else if (self.animatedTransition) {
             self.stack.push(self.animated.transition.readFromStack);
             self.animated.transition = null;
             self.animatedTransition = false;
             self.goneTransitions.pop();
         } else {
-            //self.stack.pop();
             self.calcLastStep();
         }
 

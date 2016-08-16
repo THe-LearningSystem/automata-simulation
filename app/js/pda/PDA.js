@@ -18,13 +18,13 @@ function PDA($scope, $translate) {
     //TRANSITION OVERRIDES
     /**
      * Adds a char to the input alphabet if the char is not available
-     * @param   {value} value the char, which is to be added
+     * @param   {object} value the char, which is to be added
      */
     $scope.addToStackAlphabet = function (value) {
         for (var i = 0; i < value.length; i++) {
             if (!_.some($scope.config.stackAlphabet, function (a) {
                     return a === value[i];
-                })) {
+                }) && value !== "\u03b5") {
                 $scope.config.stackAlphabet.push(value[i]);
             }
         }

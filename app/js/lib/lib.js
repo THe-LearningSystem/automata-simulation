@@ -63,21 +63,38 @@ function PDAStack() {
     var self = this;
     self.stackFirstSymbol = "\u22a5";
     self.stackContainer = [self.stackFirstSymbol];
+    self.listener = [];
 
     self.push = function (char) {
         if (char === "\u03b5") {
-
-        } else if (char.length === 1) {
-            self.stackContainer.push(char);
         } else {
-            self.stackContainer.push(char[0]);
-            self.stackContainer.push(char[1]);
+            for (var i = 0; i < char.length; i++) {
+                self.stackContainer.push(char[i]);
+                _.forEach(self.listener, function (value) {
+                    value.addToStack(char[i]);
+                });
+            }
         }
+
     };
 
-    self.pop = function (char) {
+    self.pop = function () {
+        _.forEach(self.listener, function (value) {
+            value.removeFromStack();
+        });
         return self.stackContainer.pop();
     };
 
+    self.tryToPop = function (char) {
+        if (char === "\u03b5") {
+        } else {
+            for (var i = 0; i < char.length; i++) {
+                self.stackContainer.pop();
+                _.forEach(self.listener, function (value) {
+                    value.removeFromStack();
+                });
+            }
+        }
+    };
 
 }

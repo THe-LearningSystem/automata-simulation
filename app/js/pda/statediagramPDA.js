@@ -44,19 +44,18 @@ function StateDiagramPDA($scope, svgSelector) {
     self.addToStack = function (character) {
         var stackItemHeight = 20;
         var group = self.svgStack.append("g");
-        var rectangle = group.append("rect").attr("class", "stack-item").attr("x", -self.stackWidth - self.stackPaddingToBorder + 1).attr("y", -self.stackPaddingToBorder - (stackItemHeight * (self.drawnStack.length + 1)) - 1).attr("width", 75 - 2).attr("height", stackItemHeight);
-        //var stackElement = group.append("text").text(character).attr("class", "stack-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("x", width - 82).attr("y", height - 25 - 25 * self.drawnStack.length);
+        group.append("rect").attr("class", "stack-item").attr("x", -self.stackWidth - self.stackPaddingToBorder + 1).attr("y", -self.stackPaddingToBorder - (stackItemHeight * (self.drawnStack.length + 1)) - 1).attr("width", 75 - 2).attr("height", stackItemHeight);
+        var stackElement = group.append("text").text(character).attr("class", "stack-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("x", -55).attr("y", -28 - 20 * self.drawnStack.length);
         self.drawnStack.push(group);
     };
 
     self.removeFromStack = function () {
         self.drawnStack.pop().remove();
-
     };
     self.drawStack();
 
     //redraw the stack if the browser was resized
-    window.addEventListener('resize', function (event) {
+    window.addEventListener('resize', function () {
         self.updateStackPosition();
     });
 
@@ -85,10 +84,8 @@ function StateDiagramPDA($scope, svgSelector) {
 
     /**
      * Modify a transition
-     * @param {number} fromState         the fromStateId
-     * @param {number} toState           the toStateID
      * @param {object} transition     the transition
-     * @param {char}   newTransitionName the new transitionname
+     * @param {char}   newTransitionName the new transitionName
      * @param newReadFromStack
      * @param newWriteToStack
      */
@@ -109,7 +106,7 @@ function StateDiagramPDA($scope, svgSelector) {
     /**
      * Adds the transition names to the text of a transition
      * @param {object} textObj the transition textObjReference
-     * @param {array}  names   the names array of the transition
+     * @param {object}  names   the names array of the transition
      */
     self.writeTransitionText = function (textObj, names) {
         textObj.selectAll("*").remove();
@@ -127,7 +124,7 @@ function StateDiagramPDA($scope, svgSelector) {
 
     };
 
-    /**For better overriting**/
+    /**For better overwriting**/
     self.createDrawnTransitionNameObject = function (transition) {
         return {
             "id": transition.id,
@@ -138,7 +135,7 @@ function StateDiagramPDA($scope, svgSelector) {
     };
 
     /**
-     * opens the transitionmenu
+     * opens the transitionMenu
      * @param {number} transitionId when there is a transitionId we open the transitionmenu with the given id
      */
     self.openTransitionMenu = function (transitionId) {

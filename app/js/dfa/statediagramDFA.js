@@ -978,7 +978,7 @@ function StateDiagramDFA($scope, svgSelector) {
     /**
      * Adds the transition names to the text of a transition
      * @param {object} textObj the transition textObjReference
-     * @param {array}  names   the names array of the transition
+     * @param {object}  names   the names array of the transition
      */
     self.writeTransitionText = function (textObj, names) {
         textObj.selectAll("*").remove();
@@ -1003,11 +1003,12 @@ function StateDiagramDFA($scope, svgSelector) {
     self.drawTransition = function (transitionId) {
         var transition = $scope.getTransitionById(transitionId);
         //if there is not a drawn transition with the same from and toState
+        var drawnTransition;
         if (!$scope.existsDrawnTransition(transition.fromState, transition.toState)) {
             //the group element
             var group = self.createTransitionGroup(transition);
             //add the drawnTransition
-            var drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
+            drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
             //if it is a self Reference
             if (transition.fromState === transition.toState) {
                 self.updateDrawnTransition(drawnTransition);
@@ -1023,7 +1024,7 @@ function StateDiagramDFA($scope, svgSelector) {
             return group;
         } else {
             //get the drawnTransition
-            var drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
+            drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
             //add the name to the drawnTransition
             drawnTransition.names.push(self.createDrawnTransitionNameObject(transition));
             //if the transition is not a selfreference
