@@ -4,81 +4,24 @@ function TableDFA($scope) {
     self.states = [];
     $scope.updateListeners.push(self);
 
-
-    self.updateFunction = function () {
-        self.states = [];
-        self.alphabet = [];
-        var dfa = $scope.config;
-
-
-
-        var alphabetCounter;
-
-        //prepare alphabet
-        _.forEach($scope.config.alphabet, function (character, key) {
-            var selectedTrans = "";
-            if ($scope.statediagram.selectedTransition !== null && _.find($scope.statediagram.selectedTransition.names, {
-                    name: character
-                }) !== undefined) {
-                selectedTrans = "selected";
-            }
-
-            var tmp;
-            if ($scope.simulator.animated.transition && $scope.simulator.animated.transition.name === character) {
-                tmp = '<span class="animated-transition ' + selectedTrans + '">' + character + '</span>';
-            } else {
-                tmp = '<span class="' + selectedTrans + '">' + character + '</span>';
-            }
-            self.alphabet.push(tmp);
-        });
-
-        // iterates over all States
-        _.forEach($scope.config.states, function (state, key) {
-
-
-            var tmpObject = {};
-            tmpObject.id = state.id;
-            // marks the current active state at the simulation in the table
-            var selectedClass = "";
-            if (($scope.statediagram.selectedState !== null && $scope.statediagram.selectedState.id == state.id) || ($scope.statediagram.selectedTransition !== null && $scope.statediagram.selectedTransition.fromState === state.id)) {
-                selectedClass = "selected";
-            }
-            if ($scope.simulator.animated.currentState == state.id) {
-                var animatedClass = "";
-                if ($scope.simulator.status === "accepted") {
-                    animatedClass = "animated-accepted";
-                } else if ($scope.simulator.status === "not accepted") {
-                    animatedClass = "animated-not-accepted";
-                } else {
-                    animatedClass = "animated-currentstate";
-                }
-
-                tmpObject.name = '<span class="' + animatedClass + ' ' + selectedClass + '">' + state.name + '</span>';
-            } else {
-                tmpObject.name = '<span class="' + selectedClass + '">' + state.name + '</span>';
-            }
-
-            if ($scope.isStateAFinalState(state.id))
-                tmpObject.finalState = true;
-            else
-                tmpObject.finalState = false;
-
-            if ($scope.config.startState === state.id)
-                tmpObject.startState = true;
-            else
-                tmpObject.startState = false;
-
+    /**
+     * Creates the state array for the views
+     */
+    self.getStatesWithTransition = function () {
+        var tmpObject;
+        _.forEach($scope.config.states, function (state) {
+            tmpObject = {};
+            self.prepareFromState(tmpObject, state);
             tmpObject.trans = [];
 
-
-            // iterates over all aplphabet 
-            _.forEach($scope.config.alphabet, function (character, key) {
-                var foundTransition = null;
+            // iterates over all alphabet
+            _.forEach($scope.config.alphabet, function (character) {
+                var foundTransition = [];
 
                 // iterates over the available transitions and saves found transitions
-                _.forEach($scope.config.transitions, function (transition, key) {
+                _.forEach($scope.config.transitions, function (transition) {
                     if (transition.fromState === state.id && transition.name === character) {
-                        foundTransition = transition;
+                        foundTransition.push(transition);
                     }
                 });
 
@@ -86,17 +29,21 @@ function TableDFA($scope) {
                 trans.alphabet = character;
 
                 // saves the found Transition in "Trans.State"
-                if (foundTransition !== null) {
-                    var tmpToState = $scope.getStateById(foundTransition.toState);
-                    var selectedTrans = "";
-                    if ($scope.statediagram.selectedTransition !== null && $scope.statediagram.selectedTransition.toState === tmpToState.id) {
-                        selectedTrans = "selected";
-                    }
-                    if ($scope.simulator.animated.nextState == tmpToState.id && foundTransition.name == $scope.simulator.animated.transition.name) {
-                        trans.State = '<span class="animated-nextstate ' + selectedTrans + '">' + tmpToState.name + '</span>';
-                    } else {
-                        trans.State = '<span class="' + selectedTrans + '">' + tmpToState.name + '</span>';
-                    }
+                if (foundTransition.length !== 0) {
+                    trans.stateNames = [];
+                    _.forEach(foundTransition, function (value) {
+                        var tmpToState = $scope.getStateById(value.toState);
+                        var tmpStateTrans = {};
+                        tmpStateTrans.name = tmpToState.name;
+                        if ($scope.statediagram.selectedTransition !== null && $scope.statediagram.selectedTransition.fromState === state.id && $scope.statediagram.selectedTransition.toState === tmpToState.id) {
+                            tmpStateTrans.selectedClass = "selected";
+                        }
+                        if ($scope.simulator.animated.nextState == tmpToState.id && value.name == $scope.simulator.animated.transition.name) {
+                            tmpStateTrans.animatedClass = "animated-nextstate";
+                        }
+                        trans.stateNames.push(tmpStateTrans);
+                    });
+
                 } else {
                     trans.State = "";
                 }
@@ -104,11 +51,72 @@ function TableDFA($scope) {
                 tmpObject.trans.push(trans);
             });
             self.states.push(tmpObject);
-
         });
-
     };
 
+    /**
+     * Prepares the firstState (the fromState)
+     * @param tmpObject
+     */
+    self.prepareFromState = function (tmpObject, state) {
+        tmpObject.name = state.name;
+        tmpObject.id = state.id;
+        // marks the current active state at the simulation in the table
+        if (($scope.statediagram.selectedState !== null && $scope.statediagram.selectedState.id == state.id) || ($scope.statediagram.selectedTransition !== null && $scope.statediagram.selectedTransition.fromState === state.id)) {
+            tmpObject.selectedClass = "selected";
+        }
+        if ($scope.simulator.animated.currentState == state.id) {
+            if ($scope.simulator.status === "accepted") {
+                tmpObject.animatedClass = "animated-accepted";
+            } else if ($scope.simulator.status === "not accepted") {
+                tmpObject.animatedClass = "animated-not-accepted";
+            } else {
+                tmpObject.animatedClass = "animated-currentstate";
+            }
+        }
+
+        tmpObject.finalState = $scope.isStateAFinalState(state.id);
+
+        tmpObject.startState = ($scope.config.startState === state.id);
+    };
+
+    /**
+     * creates the alphabet array for the view
+     */
+    self.getAlphabet = function () {
+        var tmpObject;
+        _.forEach($scope.config.alphabet, function (character) {
+            tmpObject = {};
+            tmpObject.character = character;
+
+            if ($scope.statediagram.selectedTransition !== null && _.find($scope.statediagram.selectedTransition.names, {
+                    name: character
+                }) !== undefined) {
+                tmpObject.selectedClass = "selected";
+            }
+
+            if ($scope.simulator.animated.transition && $scope.simulator.animated.transition.name === character) {
+                tmpObject.animatedClass = 'animated-transition';
+            }
+            self.alphabet.push(tmpObject);
+        });
+    };
+
+    /**
+     * called by the listener
+     */
+    self.updateFunction = function () {
+        self.states = [];
+        self.alphabet = [];
+
+        //prepare alphabet
+        self.getAlphabet();
+
+        // iterates over all States
+        self.getStatesWithTransition();
+
+
+    };
 
     /**************
      **SIMULATION**
@@ -138,6 +146,11 @@ function TableDFA($scope) {
     });
 
     $scope.$watch('statediagram.selectedTransition', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            self.updateFunction();
+        }
+    });
+    $scope.$watch('simulator.status', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             self.updateFunction();
         }

@@ -3,7 +3,7 @@ function SimulationDFA($scope) {
     "use strict";
     var self = this;
 
-    //saves if the animation is in playmode
+    //saves if the animation is in playMode
     self.isInPlay = false;
     //if the simulation loops (start at the end again)
     self.loopSimulation = true;
@@ -13,14 +13,13 @@ function SimulationDFA($scope) {
     self.loopTimeOut = 2000;
     //if the simulation is paused
     self.simulationPaused = false;
-    //simulationsettings
+    //simulationSettings
     self.simulationSettings = true;
 
     //
     self.currentState = null;
     self.nextState = null;
     self.transition = null;
-
 
     //
     self.isInputAccepted = false;
@@ -109,12 +108,13 @@ function SimulationDFA($scope) {
                 //loop through the steps
                 if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
                     self.animateNextMove();
-                    $scope.safeApply(function () {});
+                    $scope.safeApply(function () {
+                    });
                     if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
                         setTimeout(self.play, self.stepTimeOut);
                     }
                 }
-                //end the animation & reset it if loop through is activated the animation loop throuh play
+                //end the animation & reset it if loop through is activated the animation loop through play
                 if (!self.isNextStepCalculated && self.status == 'accepted') {
                     if (self.loopSimulation) {
                         setTimeout(self.play, self.loopTimeOut);
@@ -123,11 +123,10 @@ function SimulationDFA($scope) {
                         self.isInPlay = false;
                     }
                     self.simulationStarted = false;
-                    $scope.safeApply(function () {});
+                    $scope.safeApply(function () {
+                    });
                 }
             }
-        } else {
-            return;
         }
     };
 
@@ -163,8 +162,7 @@ function SimulationDFA($scope) {
             self.animatedNextState = true;
             self.animated.nextState = self.nextState;
 
-
-            //Third: clear transition & currentStatecolor and set currentState = nexsttate and wait
+            //Third: clear transition & currentStateColor and set currentState = nextState and wait
         } else if (self.animatedTransition && self.animatedNextState) {
             self.animated.transition = null;
             self.animated.nextState = null;
@@ -181,8 +179,6 @@ function SimulationDFA($scope) {
                     self.status = 'not accepted';
                 }
             }
-
-
 
             //Reset the step & start the next step
             self.isNextStepCalculated = false;
@@ -201,7 +197,7 @@ function SimulationDFA($scope) {
     };
 
     /**
-     * calcs the next step
+     * calculates the next step
      */
     self.calcNextStep = function () {
         self.isNextStepCalculated = true;
@@ -239,16 +235,15 @@ function SimulationDFA($scope) {
         if (!self.simulationStarted) {
             self.prepareSimulation();
             self.status = 'step';
-            // return if automat is not running
+            // return if automaton is not running
         } else if (!(_.include(['step', 'stopped', 'accepted', 'not accepted'], self.status))) {
             //TODO:DEBUG
             console.log(self.status);
-            return;
+            return false;
         } else if (!_.include(['accepted', 'not accepted'], self.status)) {
             self.animateNextMove();
         }
     };
-
 
     /**
      * pause the simulation and then steps back to the lastAnimation ( not a whole step)
@@ -258,10 +253,10 @@ function SimulationDFA($scope) {
         if (!self.simulationPaused) {
             self.pause();
         }
-        // return if automat is not running
+        // return if automaton is not running
         if (!(_.include(['step', 'accepted', 'not accepted'], self.status))) {
             //TODO:DEBUG
-            return;
+            return false;
         }
         self.status = 'step';
 
@@ -275,11 +270,10 @@ function SimulationDFA($scope) {
     };
 
     /**
-     * animates the last move if there is no lastmove, then calcLastStep
+     * animates the last move if there is no lastMove, then calcLastStep
      * @return {[type]} [description]
      */
     self.animateLastMove = function () {
-        console.log(self.animatedTransition + " " + self.animatedNextState);
         if (self.animatedTransition && self.animatedNextState) {
             self.animated.nextState = null;
             self.animatedNextState = false;
@@ -320,10 +314,10 @@ function SimulationDFA($scope) {
         self.processedWord = self.processedWord.slice(0, -1);
     };
 
-    self.getNextTransition = function (fromState, transitonName) {
+    self.getNextTransition = function (fromState, transitionName) {
         for (var i = 0; i < $scope.config.transitions.length; i++) {
             var transition = $scope.config.transitions[i];
-            if (transition.fromState == fromState && transition.name == transitonName) {
+            if (transition.fromState == fromState && transition.name == transitionName) {
                 return transition;
             }
         }
@@ -331,7 +325,7 @@ function SimulationDFA($scope) {
     };
     /**
      * checks if a word is accepted from the automata
-     * @return {Boolean} [description]
+     * @return {Boolean}
      */
     self.check = function () {
         //init needed variables
@@ -353,8 +347,8 @@ function SimulationDFA($scope) {
             //push the new State to the sequence
             statusSequence.push(transition.toState);
             madeSteps++;
-            //if outmadeSteps is equal to the length of the inputWord 
-            //and our currenState is a finalState then the inputWord is accepted, if not its not accepted
+            //if our madeSteps is equal to the length of the inputWord
+            //and our currentState is a finalState then the inputWord is accepted, if not its not accepted
             if ($scope.config.inputWord.length == madeSteps) {
                 if (_.include($scope.config.finalStates, _.last(statusSequence))) {
                     accepted = true;
@@ -367,22 +361,20 @@ function SimulationDFA($scope) {
         return accepted;
     };
 
-
     //BUTTONS NEED DIRECTIVES
     /**
-     *  Checks if the automata is playable ( has min. 1 states and 1 transition and automat has a start and a finalstate)
-     * @return {Boolean} [description]
+     *  Checks if the automata is playable ( has min. 1 states and 1 transition and automaton has a start and a finalState)
+     * @return {Boolean}
      */
     self.isPlayable = function () {
         return $scope.config.states.length >= 1 && $scope.config.transitions.length >= 1 && $scope.config.startState !== null && $scope.config.finalStates.length >= 1;
     };
 
     /**
-     * [playOrPause description]
-     * @return {[type]} [description]
+     * Starts or Pauses the Simulation
      */
     self.playOrPause = function () {
-        //the automat needs to be playable
+        //the automaton needs to be playable
         if (self.isPlayable()) {
             //change the icon and the state to Play or Pause
             self.isInPlay = !self.isInPlay;
@@ -394,7 +386,7 @@ function SimulationDFA($scope) {
             }
 
         } else {
-            //$scope.dbug.debugDanger("Kein Automat vorhanden!");
+
         }
 
     };
@@ -403,8 +395,5 @@ function SimulationDFA($scope) {
     self.updateFunction = function () {
         self.isInputAccepted = self.check();
     };
-
-
-
 
 }

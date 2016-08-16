@@ -1,68 +1,38 @@
-//statediagram for the svg diagramm
+//statediagram for the svg diagram
 function StateDiagramDFA($scope, svgSelector) {
     "use strict";
-
     var self = this;
-
     self.preventStateDragging = false;
-    self.inAddTransition = false;
     self.selectedState = null;
-
-    //prevents call from the svouterclicklistener
+    //prevents call from the svgOuterClickListener
     self.preventSvgOuterClick = false;
     self.selectedTransition = null;
     self.showStateMenu = false;
     self.showTransitionMenu = false;
-    self.selectedStateName = "selectedForTransition";
     //user can snap the states to the grid -> toggles snapping
     self.snapping = true;
-
     //statediagram settings
     self.settings = {
         stateRadius: 25,
         finalStateRadius: 29,
         selected: false
     };
+    //fixes bug with wrong width and height values, when the browser isn't finished loading
+    $(window).bind("load", function () {
+        self.svgOuterWidth = self.svgOuter.style("width").replace("px", "");
+        self.svgOuterHeight = self.svgOuter.style("height").replace("px", "");
+    });
+    //updates values after resizing
+    window.addEventListener('resize', function () {
+        self.svgOuterWidth = self.svgOuter.style("width").replace("px", "");
+        self.svgOuterHeight = self.svgOuter.style("height").replace("px", "");
+    });
+
     //is for the selfReference
     var stretchX = 40;
     var stretchY = 18;
-
     //for the selfReference transition
     self.stateSelfReferenceNumber = Math.sin(45 * (Math.PI / 180)) * self.settings.stateRadius;
-
-    /**
-     * Check if transition already drawn
-     * @param   {number}  fromState 
-     * @param   {number}  toState   
-     * @returns {boolean}
-     */
-    self.existsDrawnTransition = function (fromState, toState) {
-
-        var tmp = false;
-        for (var i = 0; i < $scope.config.drawnTransitions.length; i++) {
-            var transition = $scope.config.drawnTransitions[i];
-            if (transition.fromState == fromState && transition.toState == toState) {
-                tmp = true;
-            }
-        }
-        return tmp;
-    };
-
-    /**
-     * Get a drawn Transition
-     * @param   {number} fromState 
-     * @param   {number} toState   
-     * @returns {object} 
-     */
-    self.getDrawnTransition = function (fromState, toState) {
-        for (var i = 0; i < $scope.config.drawnTransitions.length; i++) {
-            var transition = $scope.config.drawnTransitions[i];
-            if (transition.fromState == fromState && transition.toState == toState) {
-                return transition;
-            }
-        }
-        return undefined;
-    };
 
     /**
      * Clears the svgContent, resets scale and translate and delete drawnTransitionContent
@@ -75,58 +45,55 @@ function StateDiagramDFA($scope, svgSelector) {
         self.svgTransitions.html("");
         self.svgStates.html("");
         $scope.config.drawnTransitions = [];
-        //change the scale and the translate to the defaultConfit
-        self.svg.attr("transform", "translate(" + $scope.defaultConfig.diagramm.x + "," + $scope.defaultConfig.diagramm.y + ")" + " scale(" + $scope.defaultConfig.diagramm.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagramm.scale);
-        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagramm.x, $scope.defaultConfig.diagramm.y]);
-
+        //change the scale and the translate to the defaultConfig
+        self.svg.attr("transform", "translate(" + $scope.defaultConfig.diagram.x + "," + $scope.defaultConfig.diagram.y + ")" + " scale(" + $scope.defaultConfig.diagram.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagram.scale);
+        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagram.x, $scope.defaultConfig.diagram.y]);
     };
-
     /****ZOOMHANDLER START***/
     //amount the user can zoom out
     self.zoomMax = 2.5;
     //amount the user can zoom in
     self.zoomMin = 0.5;
     self.zoomValue = 0.1;
-
+    /**
+     * zooms in in the svg
+     */
     self.zoomIn = function () {
-        $scope.config.diagramm.scale = ($scope.config.diagramm.scale + self.zoomValue) > self.zoomMax ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale + self.zoomValue) * 100) / 100;
+        $scope.config.diagram.scale = ($scope.config.diagram.scale + self.zoomValue) > self.zoomMax ? $scope.config.diagram.scale : Math.floor(($scope.config.diagram.scale + self.zoomValue) * 100) / 100;
         self.updateZoomBehaviour();
     };
+    /**
+     * zooms out of the svg
+     */
     self.zoomOut = function () {
-
-        $scope.config.diagramm.scale = ($scope.config.diagramm.scale - self.zoomValue) <= self.zoomMin ? $scope.config.diagramm.scale : Math.floor(($scope.config.diagramm.scale - self.zoomValue) * 100) / 100;
+        $scope.config.diagram.scale = ($scope.config.diagram.scale - self.zoomValue) <= self.zoomMin ? $scope.config.diagram.scale : Math.floor(($scope.config.diagram.scale - self.zoomValue) * 100) / 100;
         self.updateZoomBehaviour();
-
     };
-
     /**
      * This method zooms the svg to a specific scale
      * @param {number} value the zoom value
      */
     self.zoomTo = function (value) {
-        console.log("zoomtedto");
-        $scope.config.diagramm.scale = value / 100;
+        $scope.config.diagram.scale = value / 100;
         $scope.safeApply();
         self.updateZoomBehaviour();
     };
-
     /**
-     * This method updates the d3 zoombehaviour (fixes weird bugs)
+     * This method updates the d3 zoomBehaviour (fixes weird bugs)
      */
     self.updateZoomBehaviour = function () {
         $scope.safeApply();
-        self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.config.diagramm.scale);
-        svgOuterZoomAndDrag.translate([$scope.config.diagramm.x, $scope.config.diagramm.y]);
+        self.svg.attr("transform", "translate(" + $scope.config.diagram.x + "," + $scope.config.diagram.y + ")" + " scale(" + $scope.config.diagram.scale + ")");
+        svgOuterZoomAndDrag.scale($scope.config.diagram.scale);
+        svgOuterZoomAndDrag.translate([$scope.config.diagram.x, $scope.config.diagram.y]);
     };
-
     /**
      * This method zooms the svg to a calculated scale, so the complete svg fits in the window
      */
     self.zoomFitWindow = function () {
-        var stateXCoor = [];
-        var stateYCoor = [];
+        var stateX = [];
+        var stateY = [];
         var minX = 0;
         var maxX = 0;
         var minY = 0;
@@ -134,100 +101,82 @@ function StateDiagramDFA($scope, svgSelector) {
         var topShifting = 0;
         var leftShifting = 0;
         var i;
-        var obj;
-        var width = self.svgOuter.style("width").replace("px", "");
-        var height = self.svgOuter.style("height").replace("px", "");
-
         /*
-         * set the diagrammscale on 100%. We got the advantage, that the method also zoom in, if the automaton doesn't fit the window. 
+         * set the diagramScale on 100%. We got the advantage, that the method also zoom in, if the automaton doesn't fit the window.
          * But the method doesn't really zoom in. It sets the scale on 100% an then zoom out.
          */
-        $scope.config.diagramm.scale = 1.0;
-
+        $scope.config.diagram.scale = 1.0;
         /**
          * check if there exist at least one state. If the diagram is empty, there is nothing to fit the window.
          * The state with the lowest x- and y-coordinate defines the minimum-x- and minimum-y-coordinate from the automaton.
-         * The state with the highest x- and y-coordinate defines the maximum-x- and maximum-y-coordiante from the automaten
+         * The state with the highest x- and y-coordinate defines the maximum-x- and maximum-y-coordinate from the automaton
          */
-
         if ($scope.config.states.length > 0) {
             for (i = 0; i < $scope.config.states.length; i++) {
-                stateXCoor[i] = $scope.config.states[i].x;
+                stateX[i] = $scope.config.states[i].x;
             }
 
             for (i = 0; i < $scope.config.states.length; i++) {
-                stateYCoor[i] = $scope.config.states[i].y;
+                stateY[i] = $scope.config.states[i].y;
             }
-            minX = _.min(stateXCoor);
-            maxX = _.max(stateXCoor);
-            minY = _.min(stateYCoor);
-            maxY = _.max(stateYCoor);
-
-            /* 
-             * While the size of the automaton is bigger than the diagram, zoom out. 
+            minX = _.min(stateX);
+            maxX = _.max(stateX);
+            minY = _.min(stateY);
+            maxY = _.max(stateY);
+            /*
+             * While the size of the automaton is bigger than the diagram, zoom out.
              * We work with the width and the height from the diagram proportional to the scale.
              */
-            while (((maxX - minX + 150) > (width / $scope.config.diagramm.scale)) || ((maxY - minY + 200) > (height / $scope.config.diagramm.scale))) {
-                $scope.config.diagramm.scale -= 0.01;
+            while (((maxX - minX + 150) > (self.svgOuterWidth / $scope.config.diagram.scale)) || ((maxY - minY + 200) > (self.svgOuterHeight / $scope.config.diagram.scale))) {
+                $scope.config.diagram.scale -= 0.01;
             }
             $scope.safeApply();
-
-            //Calculation of a topshifting and a leftshifting, so the automaton is centered in the diagram.
-            topShifting = (((height / $scope.config.diagramm.scale) - (maxY - minY)) / 2);
-            leftShifting = (((width / $scope.config.diagramm.scale) - (maxX - minX)) / 2);
-
+            //Calculation of a topShifting and a leftShifting, so the automaton is centered in the diagram.
+            topShifting = (((self.svgOuterHeight / $scope.config.diagram.scale) - (maxY - minY)) / 2);
+            leftShifting = (((self.svgOuterWidth / $scope.config.diagram.scale) - (maxX - minX)) / 2);
             //set the diagram-x and -y values and update the diagram.
-            $scope.config.diagramm.x = -(minX * $scope.config.diagramm.scale) + (leftShifting * $scope.config.diagramm.scale);
-            $scope.config.diagramm.y = -(minY * $scope.config.diagramm.scale) + (topShifting * $scope.config.diagramm.scale);
+            $scope.config.diagram.x = -(minX * $scope.config.diagram.scale) + (leftShifting * $scope.config.diagram.scale);
+            $scope.config.diagram.y = -(minY * $scope.config.diagram.scale) + (topShifting * $scope.config.diagram.scale);
             self.updateZoomBehaviour();
         } else {
             self.scaleAndTranslateToDefault();
         }
     };
-
     /**
      * Scale and Translate the Svg to the default Value
      */
     self.scaleAndTranslateToDefault = function () {
-        $scope.config.diagramm.scale = $scope.defaultConfig.diagramm.scale;
-        $scope.config.diagramm.x = $scope.defaultConfig.diagramm.x;
-        $scope.config.diagramm.y = $scope.defaultConfig.diagramm.y;
+        $scope.config.diagram.scale = $scope.defaultConfig.diagram.scale;
+        $scope.config.diagram.x = $scope.defaultConfig.diagram.x;
+        $scope.config.diagram.y = $scope.defaultConfig.diagram.y;
         $scope.safeApply();
         self.updateZoomBehaviour();
     };
-
-    //the svgouterzoom and drag listener
-    var svgOuterZoomAndDrag = d3.behavior
-        .zoom()
-        .scaleExtent([self.zoomMin, self.zoomMax])
-        .on("zoom", function () {
-            var stop = d3.event.button || d3.event.ctrlKey;
-            if (stop) d3.event.stopImmediatePropagation(); // stop zoom
-            //dont translate on right click (3)
-            if (d3.event.sourceEvent.which !== 3) {
-                var newScale = Math.floor(d3.event.scale * 100) / 100;
-
-                $scope.config.diagramm.scale = newScale;
-                $scope.config.diagramm.x = d3.event.translate[0];
-                $scope.config.diagramm.y = d3.event.translate[1];
-                $scope.safeApply();
-                self.svg.attr("transform", "translate(" + $scope.config.diagramm.x + "," + $scope.config.diagramm.y + ")" + " scale(" + $scope.config.diagramm.scale + ")");
-            } else {
-                console.log("rightclick!");
-            }
-        });
-
-
-    //prevents the normal rightclickcontextmenu and add zoom
-    self.svgOuter = d3.select(svgSelector)
-        .call(svgOuterZoomAndDrag)
-        //prevents doubleclick zoom
+    //the svgOuterZoom and drag listener
+    var svgOuterZoomAndDrag = d3.behavior.zoom().scaleExtent([self.zoomMin, self.zoomMax]).on("zoom", function () {
+        var stop = d3.event.button || d3.event.ctrlKey;
+        if (stop)
+            d3.event.stopImmediatePropagation();
+        // stop zoom
+        //don't translate on right click (3)
+        if (d3.event.sourceEvent.which !== 3) {
+            $scope.config.diagram.scale = Math.floor(d3.event.scale * 100) / 100;
+            $scope.config.diagram.x = d3.event.translate[0];
+            $scope.config.diagram.y = d3.event.translate[1];
+            $scope.safeApply();
+            self.svg.attr("transform", "translate(" + $scope.config.diagram.x + "," + $scope.config.diagram.y + ")" + " scale(" + $scope.config.diagram.scale + ")");
+        } else {
+        }
+        self.updateZoomBehaviour();
+    });
+    //prevents the normal rightClickContextMenu and add zoom
+    self.svgOuter = d3.select(svgSelector).call(svgOuterZoomAndDrag)
+    //prevents doubleClick zoom
         .on("dblclick.zoom", null)
-        //adds our custom context menu on rightclick
+        //adds our custom context menu on rightClick
         .on("contextmenu", function () {
             d3.event.preventDefault();
         });
-
     /**
      * Click Listener when clicking on the outer svg =(not clicking on state or transition)
      */
@@ -238,42 +187,35 @@ function StateDiagramDFA($scope, svgSelector) {
                 self.closeTransitionMenu();
                 $scope.safeApply();
             } else {
-                //remove clickbool
+                //remove ListenerBoolean
                 self.preventSvgOuterClick = false;
             }
         });
     };
-
     //add at the start
     self.addSvgOuterClickListener();
-
     //the html element where we put the svgGrid into
     self.svgGrid = self.svgOuter.append("g").attr("id", "grid");
-
     //inner svg
-    self.svg = self.svgOuter
-        .append("g")
-        .attr("id", "svg-items");
-
-
+    self.svg = self.svgOuter.append("g").attr("id", "svg-items");
     //first draw the transitions -> nodes are in front of them if they overlap
     self.svgTransitions = self.svg.append("g").attr("id", "transitions");
     self.svgStates = self.svg.append("g").attr("id", "states");
 
-
-
+    /**GRID-START**/
     //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
     self.gridSpace = 100;
     //the distance when the state is snapped to the next SnappingPoint (Rectangle form)
     self.gridSnapDistance = 20;
     //is Grid drawn
     self.isGrid = true;
-
     //watcher for the grid when changed -> updateGrid
-    $scope.$watch('[statediagram.isGrid , config.diagramm]', function () {
-        self.drawGrid();
+    $scope.$watch('[statediagram.isGrid , config.diagram]', function () {
+        //don't do this if in debug, causes problems with junit test
+        if (!$scope.debug) {
+            self.drawGrid();
+        }
     }, true);
-
     /**
      * Draw the Grid
      */
@@ -281,91 +223,35 @@ function StateDiagramDFA($scope, svgSelector) {
         if (self.isGrid) {
             //clear grid
             self.svgGrid.html("");
-            var width = self.svgOuter.style("width").replace("px", "");
-            var height = self.svgOuter.style("height").replace("px", "");
-            var thickness = 1 * $scope.config.diagramm.scale * 0.5;
-            var xOffset = ($scope.config.diagramm.x % (self.gridSpace * $scope.config.diagramm.scale));
-            var yOffset = ($scope.config.diagramm.y % (self.gridSpace * $scope.config.diagramm.scale));
+            var thickness = 1 * $scope.config.diagram.scale * 0.5;
+            var xOffset = ($scope.config.diagram.x % (self.gridSpace * $scope.config.diagram.scale));
+            var yOffset = ($scope.config.diagram.y % (self.gridSpace * $scope.config.diagram.scale));
             var i;
             //xGrid
-            for (i = xOffset; i < width; i += self.gridSpace * $scope.config.diagramm.scale) {
-                self.svgGrid
-                    .append("line")
-                    .attr("stroke-width", thickness)
-                    .attr("class", "grid-line xgrid-line")
-                    .attr("x1", i)
-                    .attr("y1", 0)
-                    .attr("x2", i)
-                    .attr("y2", height);
+            for (i = xOffset; i < self.svgOuterWidth; i += self.gridSpace * $scope.config.diagram.scale) {
+                self.svgGrid.append("line").attr("stroke-width", thickness).attr("class", "grid-line xgrid-line").attr("x1", i).attr("y1", 0).attr("x2", i).attr("y2", self.svgOuterHeight);
             }
             //yGrid
-            for (i = yOffset; i < height; i += self.gridSpace * $scope.config.diagramm.scale) {
-                self.svgGrid
-                    .append("line")
-                    .attr("stroke-width", thickness)
-                    .attr("class", "grid-line ygrid-line")
-                    .attr("x1", 0)
-                    .attr("y1", i)
-                    .attr("x2", width)
-                    .attr("y2", i);
+            for (i = yOffset; i < self.svgOuterHeight; i += self.gridSpace * $scope.config.diagram.scale) {
+                self.svgGrid.append("line").attr("stroke-width", thickness).attr("class", "grid-line ygrid-line").attr("x1", 0).attr("y1", i).attr("x2", self.svgOuterWidth).attr("y2", i);
             }
         } else {
-            //undraw Grid
-            self.svgGrid.html("");
         }
+
     };
-
-
+    //redraw the grid if the browser was resized
+    window.addEventListener('resize', function () {
+        self.drawGrid();
+    });
+    /**GRID-END**/
     //DEFS
     self.defs = self.svg.append('svg:defs');
     //Marker-Arrow ( for the transitions)
-    self.defs.append('svg:marker')
-        .attr('id', 'marker-end-arrow')
-        .attr('refX', 7.5)
-        .attr('refY', 3)
-        .attr('markerWidth', 10)
-        .attr('markerHeight', 10)
-        .attr('orient', 'auto')
-        .append('svg:path')
-        .attr('d', 'M0,0 L0,6 L9,3 z');
-    self.defs.append('svg:marker')
-        .attr('id', 'marker-end-arrow-create')
-        .attr('refX', 7.5)
-        .attr('refY', 3)
-        .attr('markerWidth', 10)
-        .attr('markerHeight', 10)
-        .attr('orient', 'auto')
-        .append('svg:path')
-        .attr('d', 'M0,0 L0,6 L9,3 z');
-    self.defs.append('svg:marker')
-        .attr('id', 'marker-end-arrow-animated')
-        .attr('refX', 7.5)
-        .attr('refY', 3)
-        .attr('markerWidth', 10)
-        .attr('markerHeight', 10)
-        .attr('orient', 'auto')
-        .append('svg:path')
-        .attr('d', 'M0,0 L0,6 L9,3 z');
-    self.defs.append('svg:marker')
-        .attr('id', 'marker-end-arrow-hover')
-        .attr('refX', 7.5)
-        .attr('refY', 3)
-        .attr('markerWidth', 10)
-        .attr('markerHeight', 10)
-        .attr('orient', 'auto')
-        .append('svg:path')
-        .attr('d', 'M0,0 L0,6 L9,3 z');
-    self.defs.append('svg:marker')
-        .attr('id', 'marker-end-arrow-selection')
-        .attr('refX', 4)
-        .attr('refY', 3)
-        .attr('markerWidth', 5)
-        .attr('markerHeight', 10)
-        .attr('orient', 'auto')
-        .append('svg:path')
-        .attr('d', 'M0,0 L0,6 L9,3 z');
-
-
+    self.defs.append('svg:marker').attr('id', 'marker-end-arrow').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+    self.defs.append('svg:marker').attr('id', 'marker-end-arrow-create').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+    self.defs.append('svg:marker').attr('id', 'marker-end-arrow-animated').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+    self.defs.append('svg:marker').attr('id', 'marker-end-arrow-hover').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+    self.defs.append('svg:marker').attr('id', 'marker-end-arrow-selection').attr('refX', 4).attr('refY', 3).attr('markerWidth', 5).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
     /**
      * Reset all the AddListeners
      */
@@ -373,20 +259,16 @@ function StateDiagramDFA($scope, svgSelector) {
         self.closeStateMenu();
         self.closeTransitionMenu();
         self.svgOuter.on("click", null);
-        self.inAddTransition = false;
-        self.inAddState = false;
     };
-
     /**
      * AddState -> creates a new state when clicked on the button with visual feedback
      */
     self.addState = function () {
         self.resetAddActions();
-        //add listener that the selectedstate follows the mouse
+        //add listener that the selectedState follows the mouse
         self.svgOuter.on("mousemove", function () {
             //move the state (only moved visually not saved)
-            self.selectedState.objReference.attr("transform", "translate(" + (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale)) + " " +
-                (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale)) + ")");
+            self.selectedState.objReference.attr("transform", "translate(" + (((d3.mouse(this)[0]) - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale)) + " " + (((d3.mouse(this)[1]) - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale)) + ")");
         });
         //create a new selectedState in a position not viewable
         self.selectedState = $scope.addStateWithPresets(-10000, -10000);
@@ -396,21 +278,19 @@ function StateDiagramDFA($scope, svgSelector) {
             //remove class
             self.selectedState.objReference.classed("state-in-creation", false);
             //update the stateData
-            self.selectedState.x = (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale));
-            self.selectedState.y = (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale));
+            self.selectedState.x = (((d3.mouse(this)[0]) - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale));
+            self.selectedState.y = (((d3.mouse(this)[1]) - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale));
             self.selectedState.objReference.attr("transform", "translate(" + self.selectedState.x + " " + self.selectedState.y + ")");
-            //remove mousemove listener
+            //remove mouseMove listener
             self.svgOuter.on("mousemove", null);
             //overwrite the click listener
             self.addSvgOuterClickListener();
             self.preventSvgOuterClick = false;
             $scope.safeApply();
-
         });
     };
-
     /**
-     * Addtransition function for the icon
+     * addTransition function for the icon
      */
     self.addTransition = function () {
         self.resetAddActions();
@@ -424,49 +304,27 @@ function StateDiagramDFA($scope, svgSelector) {
             if (self.selectedState === null) {
                 self.selectedState = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
                 self.toggleState(self.selectedState.id, true);
-
                 //create tmpLine
-                self.tmpTransition = self.svgTransitions.append("g")
-                    .attr("class", "transition");
+                self.tmpTransition = self.svgTransitions.append("g").attr("class", "transition");
                 //the line itself with the arrow without the path itself
-                self.tmpTransitionline = self.tmpTransition.append("path")
-                    .attr("class", "transition-line curvedLine in-creation")
-                    .attr("marker-end", "url(#marker-end-arrow-create)")
-                    .attr("fill", "none");
-
+                self.tmpTransitionline = self.tmpTransition.append("path").attr("class", "transition-line curvedLine in-creation").attr("marker-end", "url(#marker-end-arrow-create)").attr("fill", "none");
                 //if already selected a state then create transition to the clickedState
             } else {
-                var tmpTransition = $scope.addTransition(self.selectedState.id, parseInt(d3.select(this).attr("object-id")), $scope.getNextTransitionName(self.selectedState.id));
-                self.toggleState(self.selectedState.id, false);
-                self.tmpTransition.remove();
-                self.tmpTransition = null;
-                self.tmpTransitionline = null;
-                self.preventStateDragging = false;
-                //update the svgOuter listeners
-                self.addSvgOuterClickListener();
-                self.svgOuter.on("mousemove", null);
-                //update state listeners
-                d3.selectAll(".state").on("mouseover", null);
-                d3.selectAll(".state").on("mouseleave", null);
-                d3.selectAll('.state').on('click', self.openStateMenu);
-
-                //openTransitionMenu
-                self.openTransitionMenu(tmpTransition.id);
+                self.createTransition(self.selectedState.id, parseInt(d3.select(this).attr("object-id")));
             }
 
         });
         //2. if the mouse moves on the svgOuter and not on a state, then update the tmpLine
         self.svgOuter.on("mousemove", function () {
             if (!self.mouseInState && self.selectedState !== null) {
-                var x = (((d3.mouse(this)[0]) - $scope.config.diagramm.x) * (1 / $scope.config.diagramm.scale));
-                var y = (((d3.mouse(this)[1]) - $scope.config.diagramm.y) * (1 / $scope.config.diagramm.scale));
+                var x = (((d3.mouse(this)[0]) - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale));
+                var y = (((d3.mouse(this)[1]) - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale));
                 var pathLine = self.bezierLine([[self.selectedState.x, self.selectedState.y], [x, y]]);
                 self.tmpTransitionline.attr("d", pathLine);
             }
         });
-
         //3. if the mouse moves on a state then give a visual feedback how the line connects with the state
-        d3.selectAll(".state").on("mouseover", function (i) {
+        d3.selectAll(".state").on("mouseover", function () {
             //see 2.
             self.mouseInState = true;
             //we need an other state to connect the line
@@ -476,7 +334,7 @@ function StateDiagramDFA($scope, svgSelector) {
                 transition.fromState = self.selectedState.id;
                 transition.toState = otherState.id;
                 var line = self.tmpTransitionline;
-                if (!self.existsDrawnTransition(self.selectedState.fromState, self.selectedState.toState)) {
+                if (!$scope.existsDrawnTransition(self.selectedState.fromState, self.selectedState.toState)) {
                     //the group element
                     //if it is not a self Reference
                     if (transition.fromState != transition.toState) {
@@ -484,17 +342,14 @@ function StateDiagramDFA($scope, svgSelector) {
                         //if there is a transition in the other direction
                         if (drawConfig.approachTransition) {
                             //other transition in the other direction
-                            var otherTrans = self.getDrawnTransition(transition.toState, transition.fromState);
+                            var otherTrans = $scope.getDrawnTransition(transition.toState, transition.fromState);
                             var otherDrawConfig = self.getTransitionDrawConfig(otherTrans, true);
                             self.updateTransitionLines(otherTrans.objReference, otherDrawConfig.path);
-                            otherTrans.objReference.select(".transition-text")
-                                .attr("x", otherDrawConfig.xText)
-                                .attr("y", otherDrawConfig.yText);
+                            otherTrans.objReference.select(".transition-text").attr("x", otherDrawConfig.xText).attr("y", otherDrawConfig.yText);
                             //update the transition text position
                             self.otherTransition = otherTrans;
-
                         }
-                        //get the curve data ( depends if there is a transition in the oposite direction)
+                        //get the curve data ( depends if there is a transition in the opposite direction)
                         line.attr("d", drawConfig.path);
                         //if it is a selfreference
                     } else {
@@ -506,17 +361,12 @@ function StateDiagramDFA($scope, svgSelector) {
                     //if there is already a transition with the same fromState and toState then the current
                 } else {
                     //add the name to the drawnTransition
-                    var drawnTransition = self.getDrawnTransition(transition.fromState, transition.toState);
-                    drawnTransition.names.push(transition.name);
+                    var drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
+                    //drawnTransition.names.push(transition.name); //TODO: THIS IS WRONG! OBSOLETE?
                     //drawn the new name to the old transition (svg)
                     self.writeTransitionText(drawnTransition.objReference.select(".transition-text"), drawnTransition.names);
-
-
                 }
-                self.tmpTransitionline.attr("x1", self.selectedState.x)
-                    .attr("y1", self.selectedState.y)
-                    .attr("x2", otherState.x)
-                    .attr("y2", otherState.y);
+                self.tmpTransitionline.attr("x1", self.selectedState.x).attr("y1", self.selectedState.y).attr("x2", otherState.x).attr("y2", otherState.y);
             }
         }).on("mouseleave", function () {
             self.mouseInState = false;
@@ -524,27 +374,42 @@ function StateDiagramDFA($scope, svgSelector) {
             if (self.otherTransition !== null && self.otherTransition !== undefined) {
                 var otherDrawConfig = self.getTransitionDrawConfig(self.otherTransition);
                 self.updateTransitionLines(self.otherTransition.objReference, otherDrawConfig.path);
-                self.otherTransition.objReference.select(".transition-text")
-                    .attr("x", (otherDrawConfig.xText))
-                    .attr("y", (otherDrawConfig.yText));
+                self.otherTransition.objReference.select(".transition-text").attr("x", (otherDrawConfig.xText)).attr("y", (otherDrawConfig.yText));
             }
         });
     };
 
+
+    self.createTransition = function (fromState, toState) {
+        var tmpTransition = $scope.addTransition(fromState, toState, $scope.getNextTransitionName(self.selectedState.id));
+        self.toggleState(self.selectedState.id, false);
+        self.tmpTransition.remove();
+        self.tmpTransition = null;
+        self.tmpTransitionline = null;
+        self.preventStateDragging = false;
+        //update the svgOuter listeners
+        self.addSvgOuterClickListener();
+        self.svgOuter.on("mousemove", null);
+        //update state listeners
+        d3.selectAll(".state").on("mouseover", null);
+        d3.selectAll(".state").on("mouseleave", null);
+        d3.selectAll('.state').on('click', self.openStateMenu);
+        //openTransitionMenu
+        self.openTransitionMenu(tmpTransition.id);
+    };
     /**
      * Renames the state in the svg after the $scope variable was changed
-     * @param  {number} stateId      
-     * @param  {String} newStateName          
+     * @param  {number} stateId
+     * @param  {String} newStateName
      */
     self.renameState = function (stateId, newStateName) {
         var state = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)];
         var objReference = state.objReference;
         objReference.select("text").text(newStateName);
     };
-
     /**
      * Removes the state with the given id
-     * @param  {number} stateId 
+     * @param  {number} stateId
      */
     self.removeState = function (stateId) {
         self.closeStateMenu();
@@ -552,35 +417,30 @@ function StateDiagramDFA($scope, svgSelector) {
         var objReference = state.objReference;
         objReference.remove();
     };
-
-
     /**
-     * Renames a transition
+     * Modify a transition
      * @param {number} fromState         the fromStateId
      * @param {number} toState           the toStateID
-     * @param {number} transitionId      the transitionid
-     * @param {char}   newTransitionName the new transitionname
+     * @param {number} transitionId      the transitionId
+     * @param {char}   newTransitionName the newTransitionName
      */
-    self.renameTransition = function (fromState, toState, transitionId, newTransitionName) {
+    self.modifyTransition = function (fromState, toState, transitionId, newTransitionName) {
         //change it in drawnTransition
-        var drawnTransition = self.getDrawnTransition(fromState, toState);
+        var drawnTransition = $scope.getDrawnTransition(fromState, toState);
         var drawnTransitionName = _.find(drawnTransition.names, {
             "id": transitionId
         });
         drawnTransitionName.name = newTransitionName;
-
         //change it on the svg
         self.writeTransitionText(drawnTransition.objReference.select(".transition-text"), drawnTransition.names);
     };
-
-
     /**
      * removes a transition from the svg
      * @param   {number}   transitionId
      */
     self.removeTransition = function (transitionId) {
         var tmpTransition = $scope.getTransitionById(transitionId);
-        var tmpDrawnTransition = self.getDrawnTransition(tmpTransition.fromState, tmpTransition.toState);
+        var tmpDrawnTransition = $scope.getDrawnTransition(tmpTransition.fromState, tmpTransition.toState);
         var drawConfig = self.getTransitionDrawConfig(tmpTransition);
         self.closeTransitionMenu();
         //if its the only transition in the drawn transition -> then remove the drawn transition
@@ -589,66 +449,64 @@ function StateDiagramDFA($scope, svgSelector) {
             _.remove($scope.config.drawnTransitions, function (n) {
                 return n == tmpDrawnTransition;
             });
-            //if there is an approad transition, then draw it with the new drawconfig
-            if (drawConfig.approachTransition) {
-                //other transition in the other direction
-                var otherTrans = self.getDrawnTransition(tmpTransition.toState, tmpTransition.fromState);
-                var otherDrawConfig = self.getTransitionDrawConfig(otherTrans, false);
-                self.updateTransitionLines(otherTrans.objReference, otherDrawConfig.path);
-                otherTrans.objReference.select(".transition-text")
-                    .attr("x", otherDrawConfig.xText)
-                    .attr("y", otherDrawConfig.yText);
-                //update the transition text position
-                self.otherTransition = otherTrans;
+            //if this is not a selfReference
+            if (tmpTransition.fromState !== tmpTransition.toState) {
+                //if there is a transition aproach ours, then draw it with the new drawConfig
+                if (drawConfig.approachTransition) {
+                    //other transition in the other direction
+                    var otherTrans = $scope.getDrawnTransition(tmpTransition.toState, tmpTransition.fromState);
+                    var otherDrawConfig = self.getTransitionDrawConfig(otherTrans, false);
+                    self.updateTransitionLines(otherTrans.objReference, otherDrawConfig.path);
+                    otherTrans.objReference.select(".transition-text").attr("x", otherDrawConfig.xText).attr("y", otherDrawConfig.yText);
+                    //update the transition text position
+                    self.otherTransition = otherTrans;
+                }
+            } else {
 
             }
         }
-        //if there are other transitions with the same from- and tostate, then remove the transition from the names and redraw the text
+        //if there are other transitions with the same from- and toState, then remove the transition from the names and redraw the text
         else {
             _.remove(tmpDrawnTransition.names, function (n) {
                 return n.id == tmpTransition.id;
             });
             self.writeTransitionText(tmpDrawnTransition.objReference.select(".transition-text"), tmpDrawnTransition.names);
             drawConfig = self.getTransitionDrawConfig(tmpTransition);
-            tmpDrawnTransition.objReference.select(".transition-text")
-                .attr("x", drawConfig.xText)
-                .attr("y", drawConfig.yText);
-            console.log(tmpDrawnTransition);
+            //if the transition is not a selfreference
+            if (tmpTransition.fromState !== tmpTransition.toState) {
+                tmpDrawnTransition.objReference.select('.transition-text').attr("x", (drawConfig.xText)).attr("y", (drawConfig.yText));
+                //if it is a self reference
+            } else {
+                var state = $scope.getStateById(tmpDrawnTransition.fromState);
+                tmpDrawnTransition.objReference.select('.transition-text').attr("x", state.x - self.settings.stateRadius - 50).attr("y", state.y);
 
-            self.openTransitionMenu(tmpDrawnTransition.names[tmpDrawnTransition.names.length - 1].id);
-
+            }
+            self.openTransitionMenu(tmpDrawnTransition.names[0].id);
         }
 
-
     };
-
     /**
      * Adds a stateId to the final states on the svg (visual feedback)
      * @param {number} stateId
      */
     self.addFinalState = function (stateId) {
         var state = $scope.getStateById(stateId);
-        state.objReference.insert("circle", ".state-circle")
-            .attr("class", "final-state")
-            .attr("r", self.settings.finalStateRadius);
-
+        state.objReference.insert("circle", ".state-circle").attr("class", "final-state").attr("r", self.settings.finalStateRadius);
         //TODO: update the transitions to the state
 
     };
-
     /**
      * Removes a final state on the svg
-     * @param {number} stateId 
+     * @param {number} stateId
      */
     self.removeFinalState = function (stateId) {
         var state = $scope.getStateById(stateId);
         state.objReference.select(".final-state").remove();
         //TODO update the transitions to the state
     };
-
     /**
-     * Changes the StartState to the stateid
-     * @param {number} stateId 
+     * Changes the StartState to the stateId
+     * @param {number} stateId
      */
     self.changeStartState = function (stateId) {
         //TODO:
@@ -659,79 +517,56 @@ function StateDiagramDFA($scope, svgSelector) {
         }
 
         var otherState = $scope.getStateById(stateId);
-        otherState.objReference.append("line")
-            .attr("class", "transition-line start-line")
-            .attr("x1", 0)
-            .attr("y1", 0 - 75)
-            .attr("x2", 0)
-            .attr("y2", 0 - self.settings.stateRadius - 4)
-            .attr("marker-end", "url(#marker-end-arrow)");
+        otherState.objReference.append("line").attr("class", "transition-line start-line").attr("x1", 0).attr("y1", 0 - 75).attr("x2", 0).attr("y2", 0 - self.settings.stateRadius - 4).attr("marker-end", "url(#marker-end-arrow)");
     };
 
     /**
-     * removes the stateId
-     * @param {number} stateId
+     * Removes the startState
      */
-    self.removeStartState = function (stateId) {
+    self.removeStartState = function () {
         var state = $scope.getStateById($scope.config.startState);
         state.objReference.select(".start-line").remove();
         $scope.config.startState = null;
         $scope.updateListener();
     };
-
     /**
-     * Draws a State 
-     * @param  {number} id the stateid
-     * @return {Reference}    Returns the reference of the group object
+     * Draws a State
+     * @param  {number} id the stateId
+     * @return {group}    Returns the reference of the group object
      */
     self.drawState = function (id) {
         var state = $scope.getStateById(id);
-        var group = self.svgStates.append("g")
-            .attr("transform", "translate(" + state.x + " " + state.y + ")")
-            .attr("class", "state " + "state-" + state.id)
-            .attr("object-id", state.id); //save the state-id
+        var group = self.svgStates.append("g").attr("transform", "translate(" + state.x + " " + state.y + ")").attr("class", "state " + "state-" + state.id).attr("object-id", state.id);
+        //save the state-id
 
-        var circle = group.append("circle")
-            .attr("class", "state-circle")
-            .attr("r", self.settings.stateRadius);
+        group.append("circle").attr("class", "state-circle").attr("r", self.settings.stateRadius);
         //for outer circle dotted when selected
 
-        var hoverCircle = group.append("circle")
-            .attr("class", "state-circle hover-circle")
-            .attr("r", self.settings.stateRadius);
-
-        var text = group.append("text")
-            .text(state.name)
-            .attr("class", "state-text")
-            .attr("dominant-baseline", "central")
-            .attr("text-anchor", "middle");
-
+        group.append("circle").attr("class", "state-circle hover-circle").attr("r", self.settings.stateRadius);
+        group.append("text").text(state.name).attr("class", "state-text").attr("dominant-baseline", "central").attr("text-anchor", "middle");
         state.objReference = group;
-        group.on('click', self.openStateMenu)
-            .call(self.dragState);
+        group.on('click', self.openStateMenu).call(self.dragState);
         return group;
     };
-
     /**
      * Adds or remove a class to a state ( only the svg state)
-     * @param {number} stateId 
-     * @param {Boolean} state   
-     * @param {String} className  
+     * @param {number} stateId
+     * @param {Boolean} state
+     * @param {String} className
      */
     self.setStateClassAs = function (stateId, state, className) {
         var objReference = $scope.getStateById(stateId).objReference;
         objReference.classed(className, state);
     };
-
     /**
      * Sets a transition class to a specific class or removes the specific class
      * @param {number}   transitionId
      * @param {boolean} state        if the class should be added or removed
-     * @param {string}  className    the classname
+     * @param {string}  className    the className
      */
     self.setTransitionClassAs = function (transitionId, state, className) {
         var trans = $scope.getTransitionById(transitionId);
-        var objReference = self.getDrawnTransition(trans.fromState, trans.toState).objReference;
+        var objReference = $scope.getDrawnTransition(trans.fromState, trans.toState).objReference;
         objReference.classed(className, state);
         if (state && className == 'animated-transition') {
             objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow-animated)");
@@ -739,10 +574,9 @@ function StateDiagramDFA($scope, svgSelector) {
             objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow)");
         }
     };
-
     /**
-     * sets the arrow marker of a transition, cause we couldnt change the color of an arrow marker
-     * @param {object} transLine the transitionlineobject
+     * sets the arrow marker of a transition, cause we couldn't change the color of an arrow marker
+     * @param {object} transLine the transitionLineObject
      * @param {string} suffix    which arrow should be changed
      */
     self.setArrowMarkerTo = function (transLine, suffix) {
@@ -753,24 +587,19 @@ function StateDiagramDFA($scope, svgSelector) {
             transLine.select('.transition-line').attr("marker-end", "url(#marker-end-arrow)");
         }
     };
-
-
     /**
      * Opens the StateMenu
      */
     self.openStateMenu = function () {
-        console.log("open state menu");
         self.closeStateMenu();
         self.closeTransitionMenu();
         //fixes weird errors
         $scope.safeApply();
-
         self.preventSvgOuterClick = true;
         self.showStateMenu = true;
         self.selectedState = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
         //add new state as selected
         self.toggleState(self.selectedState.id, true);
-
         //save the state values in the state context as default value
         self.input = {};
         self.input.state = self.selectedState;
@@ -809,9 +638,9 @@ function StateDiagramDFA($scope, svgSelector) {
             //reset the tooltip
             self.input.tttisopen = false;
             if (newValue !== oldValue) {
-                //change if the name doesnt exists and isnt empty
+                //change if the name doesn't exists and isn't empty
                 if (newValue !== "" && !$scope.existsStateWithName(newValue)) {
-                    var renameError = !$scope.renameState(self.input.state.id, newValue);
+                    !$scope.renameState(self.input.state.id, newValue);
                 } else if (newValue === "") {
                     //FEEDBACK
                     self.input.tttisopen = true;
@@ -823,13 +652,12 @@ function StateDiagramDFA($scope, svgSelector) {
             }
         }));
     };
-
     /**
      * closes the state menu
      */
     self.closeStateMenu = function () {
         //remove old StateMenuListeners
-        _.forEach(self.stateMenuListener, function (value, key) {
+        _.forEach(self.stateMenuListener, function (value) {
             value();
         });
         if (self.selectedState !== null) {
@@ -837,14 +665,12 @@ function StateDiagramDFA($scope, svgSelector) {
         }
         self.stateMenuListener = null;
         self.showStateMenu = false;
-
         //delete input
         self.input = null;
     };
-
     /**
      * toggle a state
-     * @param {number} stateId 
+     * @param {number} stateId
      * @param {bool}   bool
      */
     self.toggleState = function (stateId, bool) {
@@ -854,106 +680,86 @@ function StateDiagramDFA($scope, svgSelector) {
         }
 
     };
-
-
     //Node drag and drop behaviour
-    self.dragState = d3.behavior.drag()
-        .on("dragstart", function () {
-            //stops drag bugs when wanted to click
-            self.dragAmount = 0;
-            d3.event.sourceEvent.stopPropagation();
-        })
-        .on("drag", function () {
+    self.dragState = d3.behavior.drag().on("dragstart", function () {
+        //stops drag bugs when wanted to click
+        self.dragAmount = 0;
+        d3.event.sourceEvent.stopPropagation();
+    }).on("drag", function () {
 
-            if (d3.event.sourceEvent.which == 1) {
-                if (!self.preventStateDragging) {
-                    self.dragAmount++;
+        if (d3.event.sourceEvent.which == 1) {
+            if (!self.preventStateDragging) {
+                self.dragAmount++;
+                var x = d3.event.x;
+                var y = d3.event.y;
+                if (self.snapping) {
 
-                    var x = d3.event.x;
-                    var y = d3.event.y;
-
-                    if (self.snapping) {
-
-
-                        var snapPointX = x - (x % self.gridSpace);
-                        var snapPointY = y - (y % self.gridSpace);
-
-                        //check first snapping Point (top left)
-                        if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
-                            x = snapPointX;
-                            y = snapPointY;
-                            //second snapping point (top right)
-                        } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
-                            x = snapPointX + self.gridSpace;
-                            y = snapPointY;
-                            //third snapping point (bot left)
-                        } else if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
-                            x = snapPointX;
-                            y = snapPointY + self.gridSpace;
-                            //fourth snapping point (bot right)
-                        } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
-                            x = snapPointX + self.gridSpace;
-                            y = snapPointY + self.gridSpace;
-                        }
-                    }
-
-                    //on drag isnt allowed workaround for bad drags when wanted to click
-                    if (self.dragAmount > 1) {
-
-                        //update the shown node
-                        d3.select(this)
-                            .attr("transform", "translate(" + x + " " + y + ")");
-                        //update the node in the array
-
-                        var stateId = d3.select(this).attr("object-id");
-                        var tmpState = $scope.getStateById(stateId);
-                        //update the state coordinates in the dataobject
-                        tmpState.x = x;
-                        tmpState.y = y;
-
-                        //update the transitions after dragging a node
-                        self.updateTransitionsAfterStateDrag(d3.select(this).attr("object-id"));
+                    var snapPointX = x - (x % self.gridSpace);
+                    var snapPointY = y - (y % self.gridSpace);
+                    //check first snapping Point (top left)
+                    if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
+                        x = snapPointX;
+                        y = snapPointY;
+                        //second snapping point (top right)
+                    } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
+                        x = snapPointX + self.gridSpace;
+                        y = snapPointY;
+                        //third snapping point (bot left)
+                    } else if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
+                        x = snapPointX;
+                        y = snapPointY + self.gridSpace;
+                        //fourth snapping point (bot right)
+                    } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance && x < snapPointX + self.gridSpace + self.gridSnapDistance && y > snapPointY + self.gridSpace - self.gridSnapDistance && y < snapPointY + self.gridSpace + self.gridSnapDistance) {
+                        x = snapPointX + self.gridSpace;
+                        y = snapPointY + self.gridSpace;
                     }
                 }
+
+                //on drag isn't allowed workaround for bad drags when wanted to click
+                if (self.dragAmount > 1) {
+
+                    //update the shown node
+                    d3.select(this).attr("transform", "translate(" + x + " " + y + ")");
+                    //update the node in the array
+
+                    var stateId = d3.select(this).attr("object-id");
+                    var tmpState = $scope.getStateById(stateId);
+                    //update the state coordinates in the dataObject
+                    tmpState.x = x;
+                    tmpState.y = y;
+                    //update the transitions after dragging a node
+                    self.updateTransitionsAfterStateDrag(d3.select(this).attr("object-id"));
+                }
             }
+        }
 
-        }).on("dragend", function () {
-            //save the movement
-            if (self.dragAmount > 1) {
-                $scope.safeApply();
-            }
-        });
-
-
+    }).on("dragend", function () {
+        //save the movement
+        if (self.dragAmount > 1) {
+            $scope.safeApply();
+        }
+    });
     /**
      * gets the path for a selftransition
      * @param   {number} x
-     * @param   {number} y 
+     * @param   {number} y
      * @returns {String} path of the selftransition
      */
     self.selfTransition = function (x, y) {
-        return self.bezierLine([
-                [x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber],
-                [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY],
-                [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY],
-                [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]
-            ]);
+        return self.bezierLine([[x - self.stateSelfReferenceNumber, y - self.stateSelfReferenceNumber], [x - self.stateSelfReferenceNumber - stretchX, y - self.stateSelfReferenceNumber - stretchY], [x - self.stateSelfReferenceNumber - stretchX, y + self.stateSelfReferenceNumber + stretchY], [x - self.stateSelfReferenceNumber, y + self.stateSelfReferenceNumber]]);
     };
-
     /**
      * Crossproduct helper function
      * @param   {object}   a vector
      * @param   {object}   b vector
-     * @returns {object}   crossproduct vetor 
+     * @returns {object}   crossproduct vector
      */
     function crossPro(a, b) {
-
-        var vecC = {
+        return {
             x: a.y * b.z,
             y: -a.x * b.z
 
         };
-        return vecC;
     }
 
     function toDegrees(angle) {
@@ -967,7 +773,7 @@ function StateDiagramDFA($scope, svgSelector) {
     /**
      * expands a vector with a given factor
      * @param   {object} a      vector
-     * @param   {number} factor expandfactor
+     * @param   {number} factor expand factor
      * @returns {object} expanded vector
      */
     function expandVector(a, factor) {
@@ -997,9 +803,11 @@ function StateDiagramDFA($scope, svgSelector) {
     }
 
     function newAngle(a, b) {
-        var dot1 = a.x * b.x + a.y * b.y; //dot product
-        var dot2 = a.x * b.y - a.y * b.x; //determinant
-        return Math.atan2(dot2, dot1); //atan2(y, x) or atan2(sin, cos)
+        var dot1 = a.x * b.x + a.y * b.y;
+        //dot product
+        var dot2 = a.x * b.y - a.y * b.x;
+        //determinant
+        return Math.atan2(dot2, dot1);
     }
 
     var degreeConstant = 30;
@@ -1009,7 +817,6 @@ function StateDiagramDFA($scope, svgSelector) {
         if (angle < 0) {
             angle = angle + 360;
         }
-
         var upperAngle = angle + degreeConstant;
         if (upperAngle > 360) {
             upperAngle -= 360;
@@ -1018,7 +825,6 @@ function StateDiagramDFA($scope, svgSelector) {
         if (lowerAngle < 0) {
             lowerAngle += 360;
         }
-
         return {
             angle: angle,
             lowerAngle: lowerAngle,
@@ -1027,31 +833,27 @@ function StateDiagramDFA($scope, svgSelector) {
     }
 
     //Get the Path from an array -> for the transition
-    self.bezierLine = d3.svg.line()
-        .x(function (d) {
-            return d[0];
-        })
-        .y(function (d) {
-            return d[1];
-        })
-        .interpolate("basis");
+    self.bezierLine = d3.svg.line().x(function (d) {
+        return d[0];
+    }).y(function (d) {
+        return d[1];
+    }).interpolate("basis");
 
+    self.transitionTextLength = 8;
     /**
-     * Returns the transitionDrawConfig with all the data like xstart, xend, xtext....
-     * @param   {object}  transition    the transitionobj
-     * @param   {boolean} forceApproach if we force an approachedtransition ->needed when the transition was writed to the array, or for the addtransition
+     * Returns the transitionDrawConfig with all the data like xstart, xEnd, xText....
+     * @param   {object}  transition    the transitionObj
+     * @param   {boolean} forceApproach if we force an approachedTransition ->needed when the transition was written to the array, or for the addTransition
      * @returns {object}  the drawConfig
      */
     self.getTransitionDrawConfig = function (transition, forceApproach) {
         //the distance the endPoint of the transition is away from the state
         var gapBetweenTransitionLineAndState = 3;
         var obj = {};
-
-        /**1: Check if there is a transition aproach our transition**/
-        obj.approachTransition = forceApproach || self.existsDrawnTransition(transition.toState, transition.fromState);
-
+        /**1: Check if there is a transition approach our transition**/
+        obj.approachTransition = forceApproach || $scope.existsDrawnTransition(transition.toState, transition.fromState);
         /****2. Get the xStart,yStart and xEnd,yEnd  and xMid,yMid***/
-        //from and to State
+            //from and to State
         var fromState = $scope.getStateById(transition.fromState);
         var toState = $scope.getStateById(transition.toState);
         var isToStateAFinalState = $scope.isStateAFinalState(transition.toState);
@@ -1060,18 +862,12 @@ function StateDiagramDFA($scope, svgSelector) {
         var y1 = fromState.y;
         var x2 = toState.x;
         var y2 = toState.y;
-
-        var xCurv1,
-            yCurv1,
-            xCurv2,
-            yCurv2;
-
         //needed for the calculation of the coordinates
-        var directionvector = {
+        var directionVector = {
             x: x2 - x1,
             y: y2 - y1
         };
-        var directionVectorLength = Math.sqrt(directionvector.x * directionvector.x + directionvector.y * directionvector.y);
+        var directionVectorLength = Math.sqrt(directionVector.x * directionVector.x + directionVector.y * directionVector.y);
         var nStart = self.settings.stateRadius / directionVectorLength;
         var nEnd;
         if (isToStateAFinalState) {
@@ -1080,49 +876,35 @@ function StateDiagramDFA($scope, svgSelector) {
             nEnd = (self.settings.stateRadius + gapBetweenTransitionLineAndState) / directionVectorLength;
         }
 
-        obj.xStart = x1 + nStart * directionvector.x;
-        obj.yStart = y1 + nStart * directionvector.y;
-
-        obj.xEnd = x2 - nEnd * directionvector.x;
-        obj.yEnd = y2 - nEnd * directionvector.y;
+        obj.xStart = x1 + nStart * directionVector.x;
+        obj.yStart = y1 + nStart * directionVector.y;
+        obj.xEnd = x2 - nEnd * directionVector.x;
+        obj.yEnd = y2 - nEnd * directionVector.y;
         obj.xDiff = x2 - x1;
         obj.yDiff = y2 - y1;
         obj.xMid = (x1 + x2) / 2;
         obj.yMid = (y1 + y2) / 2;
         obj.distance = Math.sqrt(obj.xDiff * obj.xDiff + obj.yDiff * obj.yDiff);
         /**3: Calc the CurvedPoint**/
-        //BETTER ONLY CALC WHEN obj.approachTransition = true;
+            //BETTER ONLY CALC WHEN obj.approachTransition = true;
         var vecA = {
-            x: obj.xMid - obj.xStart,
-            y: obj.yMid - obj.yStart,
-            z: 0
-        };
-
+                x: obj.xMid - obj.xStart,
+                y: obj.yMid - obj.yStart,
+                z: 0
+            };
         var vecB = {
             x: 0,
             y: 0,
             z: 1
         };
-
-
         var vecX = {
             x: 1,
             y: 0,
             z: 0
         };
-
-
-
-        var stretchValue, movingPoint;
-        //OLD:stretchValue = (70 * (1 / obj.distance * 1.1) * 1.4);
-        stretchValue = 20;
-
-        movingPoint = crossPro(vecA, vecB);
-        movingPoint = fixVectorLength(movingPoint);
-
-        movingPoint = expandVector(movingPoint, stretchValue);
-
-        /**4:Calc the curvestart and end if there is and approach transition**/
+        var stretchValue,
+            movingPoint;
+        /**4:Calc the curveStart and end if there is and approach transition**/
         if (obj.approachTransition) {
 
             var xStart = getAngles({
@@ -1132,7 +914,6 @@ function StateDiagramDFA($scope, svgSelector) {
                 x: self.settings.stateRadius,
                 y: 0
             });
-
             var xEnd = getAngles({
                 x: obj.xEnd - x2,
                 y: obj.yEnd - y2
@@ -1140,27 +921,21 @@ function StateDiagramDFA($scope, svgSelector) {
                 x: self.settings.stateRadius,
                 y: 0
             });
-
             obj.xStart = x1 + (self.settings.stateRadius * Math.cos(toRadians(xStart.upperAngle)));
             obj.yStart = y1 - (self.settings.stateRadius * Math.sin(toRadians(xStart.upperAngle)));
-
             obj.xEnd = x2 + (self.settings.stateRadius * Math.cos(toRadians(xEnd.lowerAngle)));
             obj.yEnd = y2 - (self.settings.stateRadius * Math.sin(toRadians(xEnd.lowerAngle)));
         }
 
         //OLD:stretchValue = (70 * (1 / obj.distance * 1.1) * 1.4);
         stretchValue = 35;
-
         movingPoint = crossPro(vecA, vecB);
         movingPoint = fixVectorLength(movingPoint);
         movingPoint = expandVector(movingPoint, stretchValue);
         obj.xMidCurv = movingPoint.x + obj.xMid;
         obj.yMidCurv = movingPoint.y + obj.yMid;
-
-
-        /**5:Calc the textposition**/
-        var existsDrawnTrans = self.existsDrawnTransition(fromState.id, toState.id);
-        var drawnTrans = self.getDrawnTransition(fromState.id, toState.id);
+        /**5:Calc the textPosition**/
+        var drawnTrans = $scope.getDrawnTransition(fromState.id, toState.id);
         var transNamesLength;
         if (drawnTrans) {
             transNamesLength = drawnTrans.names.length;
@@ -1168,47 +943,38 @@ function StateDiagramDFA($scope, svgSelector) {
             transNamesLength = 1;
         }
         var angleAAndX = AngleBetweenTwoVectors(vecA, vecX);
-
-        var textStretchValue, textPoint;
+        var textStretchValue,
+            textPoint;
         var textAngle = angleAAndX.degree;
         if (textAngle > 90) {
-            textAngle = 90 - (textAngle % 90);
+            if (textAngle == 180) {
+                textAngle = 0;
+            } else {
+                textAngle = 90 - (textAngle % 90);
+            }
         }
         var x = Math.pow((textAngle / 90), 1 / 2);
-
         if (obj.approachTransition) {
-            textStretchValue = (40 + (8 * transNamesLength) * x);
+            textStretchValue = (40 + self.transitionTextLength * transNamesLength * x);
         } else {
-            textStretchValue = (12 + (transNamesLength * 8) * x);
+            textStretchValue = (12 + self.transitionTextLength * transNamesLength * x);
         }
-
 
         textPoint = crossPro(vecA, vecB);
         textPoint = fixVectorLength(textPoint);
         textPoint = expandVector(textPoint, textStretchValue);
-
         obj.xText = textPoint.x + obj.xMid;
         obj.yText = textPoint.y + obj.yMid;
-
-
         /**6:Calc the path**/
         var array = [];
         if (obj.approachTransition) {
-            array = [
-                [obj.xStart, obj.yStart],
-                [obj.xMidCurv, obj.yMidCurv],
-                [obj.xEnd, obj.yEnd]
-            ];
+            array = [[obj.xStart, obj.yStart], [obj.xMidCurv, obj.yMidCurv], [obj.xEnd, obj.yEnd]];
         } else {
-            array = [
-                [obj.xStart, obj.yStart],
-                [obj.xEnd, obj.yEnd]
-            ];
+            array = [[obj.xStart, obj.yStart], [obj.xEnd, obj.yEnd]];
         }
         obj.path = self.bezierLine(array);
         return obj;
     };
-
     /**
      * Adds the transition names to the text of a transition
      * @param {object} textObj the transition textObjReference
@@ -1228,256 +994,207 @@ function StateDiagramDFA($scope, svgSelector) {
                 textObj.append('tspan').text(' | ');
         }
 
-
     };
-
     /**
      * Draw a Transition
-     * @param  {number} id 
-     * @return {object}  Retruns the reference of the group object
+     * @param  {number} transitionId
+     * @return {object}  Returns the reference of the group object
      */
     self.drawTransition = function (transitionId) {
         var transition = $scope.getTransitionById(transitionId);
-        //if there is not a transition with the same from and toState
-        if (!self.existsDrawnTransition(transition.fromState, transition.toState)) {
+        //if there is not a drawn transition with the same from and toState
+        if (!$scope.existsDrawnTransition(transition.fromState, transition.toState)) {
             //the group element
-            var group = self.svgTransitions.append("g")
-                .attr("class", "transition"),
-                //the line itself with the arrow
-                lineSelection = group.append("path")
-                .attr("class", "transition-line-selection")
-                .attr("fill", "none")
-                .attr("marker-end", "url(#marker-end-arrow-selection)"),
-                line = group.append("path")
-                .attr("class", "transition-line")
-                .attr("fill", "none")
-                .attr("marker-end", "url(#marker-end-arrow)"),
-
-                lineClickArea = group.append("path")
-                .attr("class", "transition-line-click")
-                .attr("stroke-width", 20)
-                .attr("stroke", "transparent")
-                .attr("fill", "none"),
-                lineHover = group.append("path")
-                .attr("class", "transition-line-hover")
-                .attr("fill", "none")
-                .attr("marker-end", "url(#marker-end-arrow-hover)"),
-                //the text of the transition
-                text = group.append("text")
-                .attr("class", "transition-text")
-                .attr("dominant-baseline", "central")
-                .attr("fill", "black");
-            //if it is not a self Reference
-            if (transition.fromState != transition.toState) {
-                var drawConfig = self.getTransitionDrawConfig(transition);
+            var group = self.createTransitionGroup(transition);
+            //add the drawnTransition
+            var drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
+            //if it is a self Reference
+            if (transition.fromState === transition.toState) {
+                self.updateDrawnTransition(drawnTransition);
+            } else {
                 //if there is an approached transition update the approached transition
-                if (drawConfig.approachTransition) {
-                    //other transition in the other direction
-                    var otherTrans = self.getDrawnTransition(transition.toState, transition.fromState);
-                    var otherTransdrawConfig = self.getTransitionDrawConfig(otherTrans, true);
-                    self.updateTransitionLines(otherTrans.objReference, otherTransdrawConfig.path);
-                    //update the transition text position
-                    otherTrans.objReference.select(".transition-text")
-                        .attr("x", (otherTransdrawConfig.xText))
-                        .attr("y", (otherTransdrawConfig.yText));
+                if (self.getTransitionDrawConfig(transition).approachTransition) {
+                    //update Approached Transition
+                    self.updateDrawnTransition($scope.getDrawnTransition(transition.toState, transition.fromState), true);
                 }
-                //draw the text
-                text.attr("class", "transition-text")
-                    .attr("x", (drawConfig.xText))
-                    .attr("y", (drawConfig.yText));
-                self.updateTransitionLines(group, drawConfig.path);
-
+                //update new Transition
+                self.updateDrawnTransition(drawnTransition);
+            }
+            return group;
+        } else {
+            //get the drawnTransition
+            var drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
+            //add the name to the drawnTransition
+            drawnTransition.names.push(self.createDrawnTransitionNameObject(transition));
+            //if the transition is not a selfreference
+            if (transition.fromState != transition.toState) {
+                self.updateDrawnTransition(drawnTransition);
                 //if it is a selfreference
             } else {
-                var stateId = $scope.getArrayStateIdByStateId(transition.fromState);
-                var x = $scope.config.states[stateId].x;
-                var y = $scope.config.states[stateId].y;
-
-                self.updateTransitionLines(group, self.selfTransition(x, y));
-                text.attr("x", x - self.settings.stateRadius - 50)
-                    .attr("y", y);
+                self.updateDrawnTransition(drawnTransition);
             }
-            //add the drawnTransition
-            group.attr("object-id", $scope.config.drawnTransitions.push({
-                fromState: transition.fromState,
-                toState: transition.toState,
-                names: [{
-                    "id": transition.id,
-                    "name": transition.name
-                }],
-                objReference: group
-            }) - 1);
-            self.writeTransitionText(text, self.getDrawnTransition(transition.fromState, transition.toState).names);
-            group.attr("from-state-id", transition.fromState)
-                .attr("to-state-id", transition.toState)
-                .on('click', self.openTransitionMenu)
-                .on("mouseover", function () {
-                    d3.select(this).select('.transition-line-hover').attr("style", "opacity:0.6");
-                }).on("mouseleave", function () {
-                    d3.select(this).select('.transition-line-hover').attr("style", "");
-                });
-            return group;
-            //if there is already a transition with the same fromState and toState then the current
-        } else {
-            //add the name to the drawnTransition
-            var drawnTransition = self.getDrawnTransition(transition.fromState, transition.toState);
-            drawnTransition.names.push({
-                "id": transition.id,
-                "name": transition.name
-            });
-            //drawn the new name to the old transition (svg)
-            self.writeTransitionText(drawnTransition.objReference.select('.transition-text'), self.getDrawnTransition(transition.fromState, transition.toState).names);
-            var drawConfigNew = self.getTransitionDrawConfig(transition);
-            drawnTransition.objReference.select('.transition-text')
-                .attr("x", (drawConfigNew.xText))
-                .attr("y", (drawConfigNew.yText));
-
         }
     };
 
-    /**
-     * helper function updates all the transition lines
-     * @param {object}   transitionobjReference
-     * @param {string}   path                   
-     */
-    self.updateTransitionLines = function (transitionobjReference, path) {
-        transitionobjReference.select(".transition-line").attr("d", path);
-        transitionobjReference.select(".transition-line-selection").attr("d", path);
-        transitionobjReference.select(".transition-line-hover").attr("d", path);
-        transitionobjReference.select(".transition-line-click").attr("d", path);
+    self.createTransitionGroup = function (transition) {
+        var group = self.svgTransitions.append("g").attr("class", "transition");
+        //the line itself with the arrow
+        group.append("path").attr("class", "transition-line-selection").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-selection)");
+        group.append("path").attr("class", "transition-line").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow)");
+        group.append("path").attr("class", "transition-line-click").attr("stroke-width", 20).attr("stroke", "transparent").attr("fill", "none");
+        group.append("path").attr("class", "transition-line-hover").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-hover)");
+        //the text
+        group.append("text").attr("class", "transition-text").attr("dominant-baseline", "central");
+
+        group.attr("object-id", $scope.config.drawnTransitions.push({
+                fromState: transition.fromState,
+                toState: transition.toState,
+                names: [self.createDrawnTransitionNameObject(transition)],
+                objReference: group
+            }) - 1);
+        group.attr("from-state-id", transition.fromState).attr("to-state-id", transition.toState).on('click', self.openTransitionMenu).on("mouseover", function () {
+            d3.select(this).select('.transition-line-hover').attr("style", "opacity:0.6");
+        }).on("mouseleave", function () {
+            d3.select(this).select('.transition-line-hover').attr("style", "");
+        });
+        return group
     };
 
+    self.selfTransitionTextLength = 10;
+    self.updateSelfReference = function (drawnTransition) {
+        var x = $scope.config.states[drawnTransition.fromState].x;
+        var y = $scope.config.states[drawnTransition.fromState].y;
+        self.updateTransitionLines(drawnTransition.objReference, self.selfTransition(x, y));
+        drawnTransition.objReference.select(".transition-text").attr("x", x - self.settings.stateRadius - 35 - self.selfTransitionTextLength * drawnTransition.names.length).attr("y", y);
+    };
+    /**For better overwriting**/
+    self.createDrawnTransitionNameObject = function (transition) {
+        return {
+            "id": transition.id,
+            "name": transition.name
+        };
+    };
+
+    self.updateDrawnTransition = function (drawnTransition, forcedApproach) {
+        if (drawnTransition.fromState === drawnTransition.toState) {
+            self.writeTransitionText(drawnTransition.objReference.select(".transition-text"), $scope.getDrawnTransition(drawnTransition.fromState, drawnTransition.toState).names);
+            self.updateSelfReference(drawnTransition);
+
+        } else {
+            self.writeTransitionText(drawnTransition.objReference.select(".transition-text"), $scope.getDrawnTransition(drawnTransition.fromState, drawnTransition.toState).names);
+            var transDrawConfig = self.getTransitionDrawConfig(drawnTransition, forcedApproach);
+            self.updateTransitionLines(drawnTransition.objReference, transDrawConfig.path);
+            //update the transition text position
+            drawnTransition.objReference.select(".transition-text").attr("x", (transDrawConfig.xText)).attr("y", (transDrawConfig.yText));
+        }
+
+    };
     /**
-     * opens the transitionmenu
-     * @param {number} transitionId when there is a transitionId we open the transitionmenu with the given id
+     * helper function updates all the transition lines
+     * @param {object}   transitionObjReference
+     * @param {string}   path
+     */
+    self.updateTransitionLines = function (transitionObjReference, path) {
+        transitionObjReference.select(".transition-line").attr("d", path);
+        transitionObjReference.select(".transition-line-selection").attr("d", path);
+        transitionObjReference.select(".transition-line-hover").attr("d", path);
+        transitionObjReference.select(".transition-line-click").attr("d", path);
+    };
+    /**
+     * opens the transitionMenu
+     * @param {number} transitionId when there is a transitionId we open the transitionMenu with the given id
      */
     self.openTransitionMenu = function (transitionId) {
         self.closeStateMenu();
         self.closeTransitionMenu();
         self.preventSvgOuterClick = true;
         self.showTransitionMenu = true;
-
-        var fromState, toState;
+        var fromState,
+            toState;
         if (transitionId === undefined) {
             fromState = d3.select(this).attr('from-state-id');
             toState = d3.select(this).attr('to-state-id');
-            self.selectedTransition = self.getDrawnTransition(fromState, toState);
+            self.selectedTransition = $scope.getDrawnTransition(fromState, toState);
         } else {
             var tmpTransition = $scope.getTransitionById(transitionId);
             fromState = tmpTransition.fromState;
             toState = tmpTransition.toState;
-            self.selectedTransition = self.getDrawnTransition(fromState, toState);
+            self.selectedTransition = $scope.getDrawnTransition(fromState, toState);
         }
 
         self.selectedTransition.objReference.classed("active", true);
-
         self.input = {};
         self.input.fromState = $scope.getStateById(fromState);
         self.input.toState = $scope.getStateById(toState);
         self.input.transitions = [];
-
-
         _.forEach(self.selectedTransition.names, function (value, key) {
-            var tmpObject = {};
-            tmpObject = cloneObject(value);
-
+            var tmpObject = cloneObject(value);
             if (transitionId !== undefined) {
                 if (value.id == transitionId) {
                     tmpObject.isFocus = true;
                 }
             } else if (self.selectedTransition.names.length - 1 === key) {
                 tmpObject.isFocus = true;
-
             }
             //add other variables
             tmpObject.ttt = "";
             tmpObject.tttisopen = false;
             self.input.transitions.push(tmpObject);
         });
-
         self.transitionMenuListener = [];
-
         /*jshint -W083 */
         for (var i = 0; i < self.input.transitions.length; i++) {
             self.transitionMenuListener.push($scope.$watchCollection("statediagram.input.transitions['" + i + "']", function (newValue, oldValue) {
                 if (newValue.name !== oldValue.name) {
                     newValue.tttisopen = false;
                     if (newValue.name !== "" && !$scope.existsTransition(fromState, toState, newValue.name)) {
-                        $scope.renameTransition(newValue.id, newValue.name);
+                        $scope.modifyTransition(newValue.id, newValue.name);
                     } else if (newValue.name === "") {
                         newValue.tttisopen = true;
                         newValue.ttt = 'TRANS_MENU.NAME_TOO_SHORT';
                     } else if ($scope.existsTransition(fromState, toState, newValue.name, newValue.id)) {
                         newValue.tttisopen = true;
-                        newValue.ttt = 'TRANS_MENU.NAME_ALREAD_EXISTS';
+                        newValue.ttt = 'TRANS_MENU.NAME_ALREADY_EXISTS';
                     }
-                    console.log(($scope.existsTransition(fromState, toState, newValue.name, newValue.id)));
                 }
             }));
         }
 
-
         $scope.safeApply();
-
     };
-
     /**
-     * closes the transitionmenu
+     * closes the transitionMenu
      */
     self.closeTransitionMenu = function () {
-        _.forEach(self.transitionMenuListener, function (value, key) {
+        _.forEach(self.transitionMenuListener, function (value) {
             value();
         });
         self.showTransitionMenu = false;
         if (self.selectedTransition !== null) {
             self.selectedTransition.objReference.classed("active", false);
             self.selectedTransition = null;
-
         }
     };
-
     /**
      * Update the transitions in the svg after moving a state
      * @param  {number} stateId Moved stateId
      */
     self.updateTransitionsAfterStateDrag = function (stateId) {
-        var stateName = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)].name;
-        _.forEach($scope.config.drawnTransitions, function (n, key) {
+        _.forEach($scope.config.drawnTransitions, function (n) {
             if (n.fromState == stateId || n.toState == stateId) {
-                //if its not a selfreference
-                var obj = n.objReference,
-                    transitionText = obj.select("text");
-                if (n.fromState != n.toState) {
-                    var drawConfig = self.getTransitionDrawConfig(n);
-                    //if there is a transition in the other direction
-                    self.updateTransitionLines(obj, drawConfig.path);
-                    transitionText.attr("x", drawConfig.xText).attr("y", drawConfig.yText);
-                } else {
-                    var moveStateId = n.fromState;
-                    var x = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].x;
-                    var y = $scope.config.states[$scope.getArrayStateIdByStateId(moveStateId)].y;
-                    //update Transistion with self reference
-                    self.updateTransitionLines(obj, self.selfTransition(x, y));
-                    transitionText.attr("x", x - self.settings.stateRadius - 50).attr("y", y);
-                }
+                self.updateDrawnTransition($scope.getDrawnTransition(n.fromState, n.toState));
             }
         });
     };
-
     /**************
      **SIMULATION**
      *************/
-
-
     $scope.$watch('simulator.animated.currentState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
-            console.log("CURRENTSTATE:oldValue " + oldValue + " newvalue " + newValue);
-            console.log("status" + $scope.simulator.status);
             if (oldValue !== null) {
                 self.setStateClassAs(oldValue, false, "animated-currentstate-svg");
                 self.setStateClassAs(oldValue, false, "animated-accepted-svg");
                 self.setStateClassAs(oldValue, false, "animated-not-accepted-svg");
-
             }
             if (newValue !== null) {
                 if ($scope.simulator.status === "accepted") {
@@ -1490,26 +1207,22 @@ function StateDiagramDFA($scope, svgSelector) {
             }
         }
     });
-
     $scope.$watch('simulator.animated.transition', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
                 self.setTransitionClassAs(oldValue.id, false, "animated-transition");
                 d3.selectAll("[transition-id='" + oldValue.id + "'").classed("animated-transition-text", false);
-                //remove transitionname animation
+                //remove transitionName animation
             }
             if (newValue !== null) {
                 self.setTransitionClassAs(newValue.id, true, "animated-transition");
-                console.log(newValue);
                 d3.selectAll("[transition-id='" + newValue.id + "'").classed("animated-transition-text", true);
-                //animate transitionname
+                //animate transitionName
             }
         }
     });
-
     $scope.$watch('simulator.animated.nextState', function (newValue, oldValue) {
         if (newValue !== oldValue) {
-            console.log("NEXTSTATE: oldValue " + oldValue + " newvalue " + newValue);
             if (oldValue !== null) {
                 self.setStateClassAs(oldValue, false, "animated-nextstate-svg");
             }

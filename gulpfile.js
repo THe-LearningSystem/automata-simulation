@@ -165,8 +165,6 @@ gulp.task('live', function () {
         livereload: true,
     });
     gulp.watch(paths.sass, ['styles']);
-    gulp.watch("app/js/dfa/*.js", ['dfa']);
-    gulp.watch("app/js/pda/*.js", ['pda']);
     gulp.watch(paths.all, function (obj) {
         if (obj.type === 'changed') {
             console.log(obj.path + ' changed');

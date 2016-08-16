@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="AutoSim" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="AutoSim" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="AutoSim" class="no-js lt-ie9"> <![endif]-->
+<!--[if lt IE 7]>
+<html lang="en" ng-app="AutoSim" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="AutoSim" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="AutoSim" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html lang="en" ng-app="automata-simulation" class="no-js">
 <!--<![endif]-->
@@ -15,11 +18,12 @@
     <link href="https://file.myfontastic.com/7CZ8hX584jz7dFx7nc4HnM/icons.css" rel="stylesheet">
     <!-- bower:css -->
     <link href="bower_components/flag-icon-css/css/flag-icon.css" rel="stylesheet">
-    <link rel="stylesheet" href="bower_components/angularjs-slider/dist/rzslider.css" />
+    <link rel="stylesheet" href="bower_components/angularjs-slider/dist/rzslider.css"/>
     <link rel="stylesheet" href="bower_components/json-formatter/dist/json-formatter.css">
-    <link rel="stylesheet" href="bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" type="text/css" />
-    <link rel="stylesheet" href="bower_components/angular-hotkeys/build/hotkeys.css" type="text/css" />
-    <link rel="stylesheet" href="bower_components/ng-joyride/ng-joyride.css" type="text/css" />
+    <link rel="stylesheet" href="bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css"
+          type="text/css"/>
+    <link rel="stylesheet" href="bower_components/angular-hotkeys/build/hotkeys.css" type="text/css"/>
+    <link rel="stylesheet" href="bower_components/ng-joyride/ng-joyride.css" type="text/css"/>
     <!-- endbower -->
     <!-- Our styles. To override the other styles it is important that this is the last link. -->
     <link rel="stylesheet" href="styles/css/style.css">
@@ -27,51 +31,61 @@
 
 <body>
 
-    <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-            <![endif]-->
-    <div class="container-fluid nopadding" ng-view></div>
-    <!-- bower:js -->
-    <script src="bower_components/jquery/jquery.js"></script>
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+<div class="container-fluid nopadding" ng-view></div>
+<!-- bower:js -->
+<script src="bower_components/jquery/jquery.js"></script>
 
-    <script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular/angular.js"></script>
 
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-loader/angular-loader.js"></script>
-    <script src="bower_components/angular-mocks/angular-mocks.js"></script>
-    <script src="bower_components/angular-translate/angular-translate.js"></script>
-    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
-    <script src="bower_components/angularjs-slider/dist/rzslider.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-loader/angular-loader.js"></script>
+<script src="bower_components/angular-mocks/angular-mocks.js"></script>
+<script src="bower_components/angular-translate/angular-translate.js"></script>
+<script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+<script src="bower_components/angularjs-slider/dist/rzslider.js"></script>
 
-    <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script src="bower_components/d3/d3.js"></script>
-    <script src="bower_components/filesaver/FileSaver.js"></script>
-    <script src="bower_components/lodash/lodash.js"></script>
-    <script src="bower_components/json-formatter/dist/json-formatter.js"></script>
-    <script src="bower_components/saveSvgAsPng/saveSvgAsPng.js"></script>
-    <script src="bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="bower_components/ng-scrollbars/dist/scrollbars.min.js"></script>
-    <script src="bower_components/angular-hotkeys/build/hotkeys.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/ng-joyride/ng-joyride.js"></script>
-
-
-    <!-- endbower -->
-    <script src="js/lib/lib.js"></script>
-    <script src="js/controllers/app.js"></script>
-    <script src="js/TestData.js"></script>
-    <!-- DFA:START-->
-    <script src="js/controllers/DFACtrl.js"></script>
-    <script src="js/dfa/DFAall.min.js"></script>
-    <!-- DFA:END-->
-    <!-- PDA:START-->
-    <script src="js/controllers/PDACtrl.js"></script>
-    <script src="js/PDA/PDA.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/d3/d3.js"></script>
+<script src="bower_components/filesaver/FileSaver.js"></script>
+<script src="bower_components/lodash/lodash.js"></script>
+<script src="bower_components/json-formatter/dist/json-formatter.js"></script>
+<script src="bower_components/saveSvgAsPng/saveSvgAsPng.js"></script>
+<script src="bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="bower_components/ng-scrollbars/dist/scrollbars.min.js"></script>
+<script src="bower_components/angular-hotkeys/build/hotkeys.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/ng-joyride/ng-joyride.js"></script>
 
 
-
-    <!-- PDA:END-->
+<!-- endbower -->
+<script src="js/lib/lib.js"></script>
+<script src="js/controllers/app.js"></script>
+<script src="js/TestData.js"></script>
+<!-- DFA:START-->
+<script src="js/controllers/DFACtrl.js"></script>
+<script src="js/dfa/DFA.js"></script>
+<script src="js/dfa/statediagramDFA.js"></script>
+<script src="js/dfa/simulationDFA.js"></script>
+<script src="js/dfa/tableDFA.js"></script>
+<script src="js/dfa/statetransitionfunctionDFA.js"></script>
+<!-- DFA:END-->
+<!-- PDA:START-->
+<script src="js/controllers/PDACtrl.js"></script>
+<script src="js/pda/PDA.js"></script>
+<script src="js/pda/statediagramPDA.js"></script>
+<script src="js/pda/simulationPDA.js"></script>
+<script src="js/pda/statetransitionfunctionPDA.js"></script>
+<!-- PDA:END-->
+<!-- NFA:START-->
+<script src="js/controllers/NFACtrl.js"></script>
+<script src="js/nfa/NFA.js"></script>
+<script src="js/nfa/simulationNFA.js"></script>
+<!-- NFA:END-->
 </body>
 
 </html>

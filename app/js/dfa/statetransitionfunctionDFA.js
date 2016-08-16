@@ -2,114 +2,92 @@ function StatetransitionfunctionDFA($scope) {
     "use strict";
 
     var self = this;
-    self.functionData = {};
-    self.functionData.states = [];
-    self.functionData.startState = '';
-    self.functionData.finalStates = '';
-    self.functionData.transitions = '';
-    self.functionData.statetransitionfunction = [];
+    self.data = {};
     //ADD Listener
     $scope.updateListeners.push(self);
 
-
     self.updateFunction = function () {
-        var arrayAlphabet = [];
-        var stringAlphabet = '';
-        var stringStates = '';
-        var stringStateTransitions = '';
-        var stringAllStateTransitions = '';
-        var stringStartState = '';
-        var startState;
-        var stringFinalStates = '';
-        var finalState;
-        var i;
 
-        self.functionData.transitions = $scope.config.alphabet;
+        self.data.alphabet = $scope.config.alphabet;
+        self.updateStates();
+        self.updateStateTransitionFunctions();
+        self.updateStartState();
+        self.updateFinalStates();
 
+    };
 
+    /**
+     * Updates the states in the stf
+     */
+    self.updateStates = function () {
+        self.data.states = [];
+        _.forEach($scope.config.states, function (state) {
+            var tmpObject = {};
+            tmpObject.name = state.name;
+            tmpObject.selectedClass = ($scope.statediagram.selectedState !== null && $scope.statediagram.selectedState.id == state.id) ? 'selected' : '';
 
-        //Update of States
-        self.functionData.states = [];
-        _.forEach($scope.config.states, function (state, key) {
-            stringStates = '';
-            var selectedClass = '';
-            if ($scope.statediagram.selectedState !== null && $scope.statediagram.selectedState.id == state.id) {
-                selectedClass = "selected";
-            }
             if (state.id == $scope.simulator.animated.currentState && $scope.simulator.status === "accepted") {
-                stringStates += '<span class="animated-accepted ' + selectedClass + '">';
+                tmpObject.animatedClass = 'animated-accepted';
             } else if (state.id == $scope.simulator.animated.currentState && $scope.simulator.status === "not accepted") {
-                stringStates += '<span class="animated-not-accepted ' + selectedClass + '">';
+                tmpObject.animatedClass = 'animated-not-accepted';
             } else if (state.id == $scope.simulator.animated.currentState) {
-                stringStates += '<span class="animated-currentstate ' + selectedClass + '">';
+                tmpObject.animatedClass = 'animated-currentstate';
             } else {
-                stringStates += '<span class="' + selectedClass + '">';
+                tmpObject.animatedClass = '';
             }
-
-            stringStates += state.name;
-            stringStates += '</span>';
-            if (key < $scope.config.states.length - 1) {
-                stringStates = stringStates + ', ';
-            }
-            self.functionData.states.push(stringStates);
+            self.data.states.push(tmpObject);
         });
 
+    };
 
-
-        //Update of statetransitionfunction
-        self.functionData.statetransitionfunction = [];
+    /**
+     * Updates the statetransitionfunctions
+     */
+    self.updateStateTransitionFunctions = function () {
+        self.data.statetransitionfunction = [];
         //we go through every state and check if there is a transition and then we save them in the statetransitionfunction array
-        _.forEach($scope.config.states, function (state, keyOuter) {
-            _.forEach($scope.config.transitions, function (transition, key) {
+        _.forEach($scope.config.states, function (state) {
+            _.forEach($scope.config.transitions, function (transition) {
+                var tmpObject = {};
 
                 if (transition.fromState === state.id) {
                     var stateTransition = transition;
-                    var selectedTransition = false;
-                    if ($scope.statediagram.selectedTransition !== null && _.find($scope.statediagram.selectedTransition.names, {
-                            id: transition.id
-                        }) !== undefined) {
-                        selectedTransition = true;
-                    }
-                    var animatedCurrentState = false;
-                    if ($scope.simulator.animated.transition && $scope.simulator.animated.transition.id === stateTransition.id) {
-                        animatedCurrentState = true;
-                    }
-                    if (animatedCurrentState || selectedTransition) {
-                        stringStateTransitions = '(<span class=" ' + (animatedCurrentState ? 'animated-transition' : '') + ' ' + (selectedTransition ? 'selected' : '') + '">';
-                    } else {
-                        stringStateTransitions = '(<span>';
-                    }
-                    stringStateTransitions += $scope.getStateById(stateTransition.fromState).name + ', ';
-                    stringStateTransitions += stateTransition.name + ', ';
-                    stringStateTransitions += $scope.getStateById(stateTransition.toState).name + '</span>)';
+                    tmpObject.selectedClass = ($scope.statediagram.selectedTransition !== null && _.find($scope.statediagram.selectedTransition.names, {
+                        id: transition.id
+                    }) !== undefined) ? 'selected' : '';
 
-                    self.functionData.statetransitionfunction.push(stringStateTransitions);
+                    tmpObject.animatedClass = ($scope.simulator.animated.transition && $scope.simulator.animated.transition.id === stateTransition.id) ? 'animated-transition' : '';
+
+                    tmpObject.fromState = $scope.getStateById(stateTransition.fromState).name;
+                    tmpObject.toState = $scope.getStateById(stateTransition.toState).name;
+                    tmpObject.char = stateTransition.name;
+
+                    self.data.statetransitionfunction.push(tmpObject);
                 }
             });
         });
 
-
-        //Update of Startstate
-        startState = $scope.getStateById($scope.config.startState);
-        if (startState !== undefined) {
-            stringStartState += '<span class="">' + startState.name + '</span>';
-        }
-
-        self.functionData.startState = stringStartState;
-
-        //Update of Finalstates
-        _.forEach($scope.config.finalStates, function (finalState, key) {
-            finalState = $scope.getStateById(finalState);
-            stringFinalStates = finalState.name;
-            if (key < $scope.config.finalStates.length - 1) {
-                stringFinalStates += ', ';
-            }
-        });
-
-        self.functionData.finalStates = stringFinalStates;
-
     };
 
+    /**
+     * Updates the startState
+     */
+    self.updateStartState = function () {
+        //Update of startState
+        var startState = $scope.getStateById($scope.config.startState);
+        self.data.startState = (startState !== undefined) ? startState.name : '';
+    };
+
+    /**
+     * Updates the final state
+     */
+    self.updateFinalStates = function () {
+        self.data.finalStates = [];
+        _.forEach($scope.config.finalStates, function (finalState) {
+            finalState = $scope.getStateById(finalState);
+            self.data.finalStates.push(finalState.name);
+        });
+    };
 
     /**************
      **SIMULATION**

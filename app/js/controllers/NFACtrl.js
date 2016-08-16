@@ -1,8 +1,8 @@
-angular.module('automata-simulation').controller('PDACtrl', PDACtrl);
+angular.module('automata-simulation').controller('NFACtrl', NFACtrl);
 
-function PDACtrl($scope, hotkeys) {
-    console.log("created DFA");
-    var pda = new PDA($scope);
+function NFACtrl($scope, hotkeys) {
+    console.log("created NFA");
+    var nfa = new NFA($scope);
 
     $scope.scrollConfig = {
         autoHideScrollbar: false,

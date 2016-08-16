@@ -40,21 +40,44 @@ function State(id, name, x, y) {
 
 }
 
-function TransitionDFA(id, fromState, toState, transitionchar) {
+function TransitionDFA(id, fromState, toState, transitionChar) {
     var self = this;
     self.id = id;
     self.fromState = fromState;
-    self.name = transitionchar;
+    self.name = transitionChar;
     self.toState = toState;
 }
 
-
-function TransitionPDA(id, fromState, toState, transitionChar, beforeStack, afterStack) {
+function TransitionPDA(id, fromState, toState, transitionChar, readFromStack, writeToStack) {
     var self = this;
     self.id = id;
     self.fromState = fromState;
     self.toState = toState;
     self.name = transitionChar;
-    self.beforeStack = beforeStack;
-    self.afterStack = afterStack;
+    self.readFromStack = readFromStack;
+    self.writeToStack = writeToStack;
+}
+
+
+function PDAStack() {
+    var self = this;
+    self.stackFirstSymbol = "\u22a5";
+    self.stackContainer = [self.stackFirstSymbol];
+
+    self.push = function (char) {
+        if (char === "\u03b5") {
+
+        } else if (char.length === 1) {
+            self.stackContainer.push(char);
+        } else {
+            self.stackContainer.push(char[0]);
+            self.stackContainer.push(char[1]);
+        }
+    };
+
+    self.pop = function (char) {
+        return self.stackContainer.pop();
+    };
+
+
 }
