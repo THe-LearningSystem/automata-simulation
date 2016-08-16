@@ -87,16 +87,16 @@ function StateDiagramPDA($scope, svgSelector) {
      * Modify a transition
      * @param {number} fromState         the fromStateId
      * @param {number} toState           the toStateID
-     * @param {number} transitionId      the transitionid
+     * @param {object} transition     the transition
      * @param {char}   newTransitionName the new transitionname
      * @param newReadFromStack
      * @param newWriteToStack
      */
-    self.modifyTransition = function (fromState, toState, transitionId, newTransitionName, newReadFromStack, newWriteToStack) {
+    self.modifyTransition = function (transition, newTransitionName, newReadFromStack, newWriteToStack) {
         //change it in drawnTransition
-        var drawnTransition = $scope.getDrawnTransition(fromState, toState);
+        var drawnTransition = $scope.getDrawnTransition(transition.fromState, transition.toState);
         var drawnTransitionName = _.find(drawnTransition.names, {
-            "id": transitionId
+            "id": transition.id
         });
         drawnTransitionName.name = newTransitionName;
         drawnTransitionName.readFromStack = newReadFromStack;

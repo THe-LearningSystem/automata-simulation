@@ -31,7 +31,51 @@ function PDA($scope, $translate) {
     };
 
     $scope.removeFromStackAlphabetIfNotUsedFromOthers = function (transitionId) {
-
+        var tmpTransition = $scope.getTransitionById(transitionId);
+        //search if an other transition use the same readFromStack
+        var i;
+        var notFound = true;
+        for (i = 0; i < $scope.config.transitions.length; i++) {
+            if (tmpTransition.readFromStack === $scope.config.transitions[i].readFromStack && $scope.config.transitions[i].id !== transitionId) {
+                notFound = false;
+                break;
+            }
+        }
+        if (notFound) {
+            _.pull($scope.config.stackAlphabet, tmpTransition.readFromStack);
+        }
+        //search if an other transition use the same writeToStack
+        if (tmpTransition.writeToStack.length > 1) {
+            notFound = true;
+            for (i = 0; i < $scope.config.transitions.length; i++) {
+                if ($scope.config.transitions[i].writeToStack.indexOf(tmpTransition.writeToStack[0]) && $scope.config.transitions[i].id !== transitionId) {
+                    notFound = false;
+                    break;
+                }
+            }
+            if (notFound)
+                _.pull($scope.config.stackAlphabet, tmpTransition.writeToStack[0]);
+            //second char
+            notFound = true;
+            for (i = 0; i < $scope.config.transitions.length; i++) {
+                if ($scope.config.transitions[i].writeToStack.indexOf(tmpTransition.writeToStack[1]) && $scope.config.transitions[i].id !== transitionId) {
+                    notFound = false;
+                    break;
+                }
+            }
+            if (notFound)
+                _.pull($scope.config.stackAlphabet, tmpTransition.writeToStack[1]);
+        } else {
+            notFound = true;
+            for (i = 0; i < $scope.config.transitions.length; i++) {
+                if ($scope.config.transitions[i].writeToStack.indexOf(tmpTransition.writeToStack) && $scope.config.transitions[i].id !== transitionId) {
+                    notFound = false;
+                    break;
+                }
+            }
+            if (notFound)
+                _.pull($scope.config.stackAlphabet, tmpTransition.writeToStack);
+        }
     };
 
 
@@ -50,7 +94,6 @@ function PDA($scope, $translate) {
         _.forEach($scope.config.transitions, function (transition) {
             if (transition.fromState == fromState && transition.toState == toState && transition.name == name && transition.readFromStack == readFromStack && transition.writeToStack == writeToStack && transitionId !== transition.id) {
                 tmp = true;
-                console.log(transition);
                 return false;
             }
         });
@@ -187,7 +230,6 @@ function PDA($scope, $translate) {
     $scope.modifyTransition = function (transitionId, newChar, newReadFromStack, newWriteToStack) {
         var transition = $scope.getTransitionById(transitionId);
         if (!$scope.existsTransition(transition.fromState, transition.toState, newChar, newReadFromStack, newWriteToStack, transitionId)) {
-            console.log("want to change");
             //remove old transition from alphabet if this transition only used this char
             $scope.removeFromAlphabetIfNotUsedFromOthers(transitionId);
             //add new transitionName to the alphabet
@@ -202,9 +244,8 @@ function PDA($scope, $translate) {
             transition.readFromStack = newReadFromStack;
             transition.writeToStack = newWriteToStack;
             //Rename the state on the statediagram
-            $scope.statediagram.modifyTransition(transition.fromState, transition.toState, transitionId, newChar, newReadFromStack, newWriteToStack);
+            $scope.statediagram.modifyTransition(transition, newChar, newReadFromStack, newWriteToStack);
             $scope.updateListener();
-            console.log("changed");
             return true;
         } else {
             //TODO: BETTER DEBUG
