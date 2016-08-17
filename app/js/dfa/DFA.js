@@ -45,7 +45,7 @@ function DFA($scope) {
     $scope.defaultConfig.drawnTransitions = [];
 
     //Config Object
-    $scope.config = cloneObject($scope.defaultConfig);
+    $scope.config = _.cloneDeep($scope.defaultConfig);
 
     //Array of all update Listeners
     $scope.updateListeners = [];
@@ -222,7 +222,8 @@ function DFA($scope) {
         $scope.simulator.reset();
 
         //get the new config
-        $scope.config = cloneObject($scope.defaultConfig);
+        $scope.config = _.cloneDeep($scope.defaultConfig);
+
         $scope.safeApply();
         $scope.updateListener();
     };
@@ -628,7 +629,6 @@ function DFA($scope) {
      */
     $scope.addTransitionWithId = function (transitionId, fromState, toState, transitionName) {
         $scope.config.transitions.push(new TransitionDFA(transitionId, fromState, toState, transitionName));
-        console.log("worked");
         //drawTransition
         $scope.statediagram.drawTransition(transitionId);
         //fix changes wont update after addTransition from the statediagram

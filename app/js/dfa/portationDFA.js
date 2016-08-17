@@ -7,19 +7,20 @@ function PortationDFA($scope) {
      */
     self.import = function (jsonObj) {
         //clear the config at the start
-        $scope.resetAutomaton();
-        var tmpObject = cloneObject(jsonObj);
+        var tmpObject = _.cloneDeep(jsonObj);
         //clear the objects we create after
         tmpObject.states = [];
         tmpObject.transitions = [];
         tmpObject.startState = null;
         tmpObject.finalStates = [];
         tmpObject.drawnTransitions = [];
-        $scope.config = cloneObject($scope.defaultConfig);
+        $scope.config = _.cloneDeep($scope.defaultConfig);
         $scope.config = tmpObject;
-        createOtherObjects(jsonObj);
+        self.createOtherObjects(jsonObj);
 
         $scope.statediagram.updateZoomBehaviour();
+        //clear input cache
+        angular.element('#hidden-file-upload').val('');
     };
 
     /**
@@ -27,6 +28,7 @@ function PortationDFA($scope) {
      */
     self.importAutomatonConfig = function () {
         if ($scope.config.states.length === 0) {
+            $scope.resetAutomaton();
             self.importFile();
         } else {
             $scope.showModalWithMessage('IMPORT.TITLE', 'IMPORT.DESC', 'portation.importFile()');
@@ -39,6 +41,7 @@ function PortationDFA($scope) {
      * open the file upload dialog
      */
     self.importFile = function () {
+        $scope.resetAutomaton();
         angular.element('#hidden-file-upload').trigger('click');
     };
 
@@ -46,7 +49,7 @@ function PortationDFA($scope) {
      * handles the FileSelection
      * @param evt
      */
-    function handleFileSelect(evt) {
+    self.handleFileSelect = function (evt) {
         var files = evt.target.files;
         // FileList object
         for (var i = 0,
@@ -59,20 +62,20 @@ function PortationDFA($scope) {
                         var json = JSON.parse(e.target.result);
                         //import the data to the automaton
                         self.import(json);
-
                     } catch (ex) {
                         alert('ex when trying to parse json = ' + ex);
                     }
                 };
             })(f);
             reader.readAsText(f);
+
         }
     }
 
     /**
      * when the user confirm the data, the handleFileSelect is called
      */
-    document.getElementById('hidden-file-upload').addEventListener('change', handleFileSelect, false);
+    document.getElementById('hidden-file-upload').addEventListener('change', self.handleFileSelect, false);
 
     /**
      * Exports the automatonConfig into an json object
@@ -82,8 +85,8 @@ function PortationDFA($scope) {
         //workaround: couldn't add new states after export
         $scope.statediagram.resetAddActions();
         var exportData = $scope.config;
-        exportData.transitions = getTransitions();
-        exportData.states = getStates();
+        exportData.transitions = self.getTransitions();
+        exportData.states = self.getStates();
         //remove drawnTransition
         delete exportData.drawnTransitions;
         return window.JSON.stringify(exportData, null, 4);
@@ -114,14 +117,13 @@ function PortationDFA($scope) {
      * Creates the imported states and transitions
      * @param jsonObj
      */
-    function createOtherObjects(jsonObj) {
+    self.createOtherObjects = function (jsonObj) {
         //create States
         _.forEach(jsonObj.states, function (value) {
             $scope.addStateWithId(value.id, value.name, value.x, value.y);
         });
         //create transitions
         _.forEach(jsonObj.transitions, function (value) {
-
             $scope.addTransitionWithId(value.id, value.fromState, value.toState, value.name);
         });
         //create startState
@@ -132,11 +134,12 @@ function PortationDFA($scope) {
         });
     }
 
+
     /**
      * Returns all transition without the objReference
      * @return {Array} array of transition objects
      */
-    function getTransitions() {
+    self.getTransitions = function () {
         var allTransitions = [];
         _.forEach($scope.config.transitions, function (transition) {
             var tmpTransition = JSON.parse(JSON.stringify(transition));
@@ -150,7 +153,7 @@ function PortationDFA($scope) {
      * Returns all transition without the objReference
      * @return {Array} array of transition objects
      */
-    function getStates() {
+    self.getStates = function () {
         var allStates = [];
         _.forEach($scope.config.states, function (state) {
             var tmpState = JSON.parse(JSON.stringify(state));
