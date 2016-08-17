@@ -88,7 +88,7 @@ function PortationDFA($scope) {
         $scope.config.unSavedChanges = false;
         //workaround: couldn't add new states after export
         $scope.statediagram.resetAddActions();
-        var exportData = $scope.config;
+        var exportData = _.cloneDeep($scope.config);
         exportData.transitions = self.getTransitions();
         exportData.states = self.getStates();
         //remove drawnTransition
@@ -169,7 +169,7 @@ function PortationDFA($scope) {
     self.getTransitions = function () {
         var allTransitions = [];
         _.forEach($scope.config.transitions, function (transition) {
-            var tmpTransition = JSON.parse(JSON.stringify(transition));
+            var tmpTransition = _.cloneDeep(transition);
             delete tmpTransition.objReference;
             allTransitions.push(tmpTransition);
         });
@@ -183,7 +183,7 @@ function PortationDFA($scope) {
     self.getStates = function () {
         var allStates = [];
         _.forEach($scope.config.states, function (state) {
-            var tmpState = JSON.parse(JSON.stringify(state));
+            var tmpState = _.cloneDeep(state);
             delete tmpState.objReference;
             allStates.push(tmpState);
         });
