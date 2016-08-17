@@ -105,13 +105,14 @@
     </div>
     <!--scaleAndTranslateToDefault()-->
 
-    <div class="button-group" id="portationCtrl" ng-controller="portationCtrl">
+    <div class="button-group">
 
-        <menubutton icon="upload" action="import()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
+        <menubutton icon="upload" action="portation.importAutomatonConfig()" tttext="NAVBAR.TTTEXT_IMPORT"></menubutton>
         <input id="hidden-file-upload" type="file" name="file">
-        <menubutton id="exportButton" icon="download" action="export()" tttext="NAVBAR.TTTEXT_EXPORT"
+        <menubutton id="exportButton" icon="download" action="portation.downloadAutomatonConfig()"
+                    tttext="NAVBAR.TTTEXT_EXPORT"
                     ng-disabled="config.states.length == 0 && config.transitions == 0"></menubutton>
-        <menubutton icon="camera" action="saveAsPng()" tttext="NAVBAR.TTTEXT_SAVEASPNG"></menubutton>
+        <menubutton icon="camera" action="portation.saveAsPng()" tttext="NAVBAR.TTTEXT_SAVEASPNG"></menubutton>
     </div>
 
     <div class="button-group">

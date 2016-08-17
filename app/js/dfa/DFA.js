@@ -60,6 +60,8 @@ function DFA($scope) {
     $scope.statetransitionfunction = new StatetransitionfunctionDFA($scope);
     //the bulkTester
     $scope.bulktester = new BulkTesterDFA($scope);
+    //the portation Component
+    $scope.portation = new PortationDFA($scope);
     //for the test data
     $scope.testData = new TestData($scope);
 
@@ -626,7 +628,7 @@ function DFA($scope) {
      */
     $scope.addTransitionWithId = function (transitionId, fromState, toState, transitionName) {
         $scope.config.transitions.push(new TransitionDFA(transitionId, fromState, toState, transitionName));
-
+        console.log("worked");
         //drawTransition
         $scope.statediagram.drawTransition(transitionId);
         //fix changes wont update after addTransition from the statediagram
