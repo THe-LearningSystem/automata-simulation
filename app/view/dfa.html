@@ -196,6 +196,13 @@
             {{"SIM_SET.LOOP" | translate}}
         </p>
     </menuitemextendable>
+    <menuitemextendable titlename="Bulk TEsting">
+        <label>Accept (one per line):</label>
+        <textarea id="acceptedInput" style="margin-bottom:5px;"></textarea>
+        <label>Reject (one per line):</label>
+        <textarea id="rejectedInput" style="margin-bottom:5px;"></textarea>
+        <button class="btn btn-default" ng-click="bulktester.bulkTest()">Test</button>
+    </menuitemextendable>
 
     <menuitemextendable titlename="DEV.TITLE">
         <menubutton icon="wrench" action="testData.testDFA()">
@@ -219,6 +226,7 @@
             <json-formatter json="statediagram.input" open="1"></json-formatter>
         </p>
     </menuitemextendable>
+
 
 </div>
 

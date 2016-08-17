@@ -328,6 +328,14 @@ function SimulationDFA($scope) {
      * @return {Boolean}
      */
     self.check = function () {
+        return self.isInputWordAccepted($scope.config.inputWord);
+    };
+
+    /**
+     * checks if a word is accepted from the automata
+     * @return {Boolean}
+     */
+    self.isInputWordAccepted = function (inputWord) {
         //init needed variables
         var accepted = false;
         var statusSequence = [];
@@ -336,8 +344,8 @@ function SimulationDFA($scope) {
         var madeSteps = 0;
         var transition = null;
 
-        while (madeSteps <= $scope.config.inputWord.length) {
-            nextChar = $scope.config.inputWord[madeSteps];
+        while (madeSteps <= inputWord.length) {
+            nextChar = inputWord[madeSteps];
             //get the next transition
             transition = self.getNextTransition(_.last(statusSequence), nextChar);
             //if there is no next transition, then the word is not accepted
@@ -349,7 +357,7 @@ function SimulationDFA($scope) {
             madeSteps++;
             //if our madeSteps is equal to the length of the inputWord
             //and our currentState is a finalState then the inputWord is accepted, if not its not accepted
-            if ($scope.config.inputWord.length == madeSteps) {
+            if (inputWord.length == madeSteps) {
                 if (_.include($scope.config.finalStates, _.last(statusSequence))) {
                     accepted = true;
                     break;

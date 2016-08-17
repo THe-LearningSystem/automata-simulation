@@ -1,7 +1,7 @@
 angular.module('automata-simulation').controller('PDACtrl', PDACtrl);
 
 function PDACtrl($scope, hotkeys) {
-    console.log("created DFA");
+    console.log("created PDA");
     var pda = new PDA($scope);
 
     $scope.scrollConfig = {

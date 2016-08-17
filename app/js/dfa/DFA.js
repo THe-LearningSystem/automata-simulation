@@ -58,6 +58,8 @@ function DFA($scope) {
     $scope.statediagram = new StateDiagramDFA($scope, "#diagram-svg");
     //the statetransitionfunction controlling the statetransitionfunction-table
     $scope.statetransitionfunction = new StatetransitionfunctionDFA($scope);
+    //the bulkTester
+    $scope.bulktester = new BulkTesterDFA($scope);
     //for the test data
     $scope.testData = new TestData($scope);
 
