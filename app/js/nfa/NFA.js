@@ -4,6 +4,8 @@ function NFA($scope, $translate) {
     var self = this;
     DFA.apply(this, arguments);
 
+    /**Overwriting**/
+    $scope.defaultConfig.type = "NFA";
     //Config Object
     $scope.config = cloneObject($scope.defaultConfig);
 

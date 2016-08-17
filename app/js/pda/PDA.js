@@ -3,6 +3,7 @@ function PDA($scope, $translate) {
     "use strict";
     DFA.apply(this, arguments);
 
+    $scope.defaultConfig.type = "PDA";
     $scope.defaultConfig.stackAlphabet = [];
 
     //Config Object
@@ -15,6 +16,8 @@ function PDA($scope, $translate) {
     $scope.statediagram = new StateDiagramPDA($scope, "#diagram-svg");
     //the statetransitionfunction controlling the statetransitionfunction-table
     $scope.statetransitionfunction = new StatetransitionfunctionPDA($scope);
+    //the portation
+    $scope.portation = new PortationPDA($scope);
     //TRANSITION OVERRIDES
     /**
      * Adds a char to the input alphabet if the char is not available

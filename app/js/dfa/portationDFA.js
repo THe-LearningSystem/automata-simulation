@@ -8,19 +8,23 @@ function PortationDFA($scope) {
     self.import = function (jsonObj) {
         //clear the config at the start
         var tmpObject = _.cloneDeep(jsonObj);
-        //clear the objects we create after
-        tmpObject.states = [];
-        tmpObject.transitions = [];
-        tmpObject.startState = null;
-        tmpObject.finalStates = [];
-        tmpObject.drawnTransitions = [];
-        $scope.config = _.cloneDeep($scope.defaultConfig);
-        $scope.config = tmpObject;
-        self.createOtherObjects(jsonObj);
+        if (tmpObject.type === $scope.defaultConfig.type) {
+            //clear the objects we create after
+            tmpObject.states = [];
+            tmpObject.transitions = [];
+            tmpObject.startState = null;
+            tmpObject.finalStates = [];
+            tmpObject.drawnTransitions = [];
+            $scope.config = _.cloneDeep($scope.defaultConfig);
+            $scope.config = tmpObject;
+            self.createOtherObjects(jsonObj);
 
-        $scope.statediagram.updateZoomBehaviour();
-        //clear input cache
-        angular.element('#hidden-file-upload').val('');
+            $scope.statediagram.updateZoomBehaviour();
+            //clear input cache
+            angular.element('#hidden-file-upload').val('');
+        } else {
+            console.log("the automaton has not the same type. AutomatonType:" + $scope.defaultConfig.type + ", uploaded automatonType:" + tmpObject.type);
+        }
     };
 
     /**
@@ -119,20 +123,43 @@ function PortationDFA($scope) {
      */
     self.createOtherObjects = function (jsonObj) {
         //create States
-        _.forEach(jsonObj.states, function (value) {
-            $scope.addStateWithId(value.id, value.name, value.x, value.y);
-        });
+        self.createStates(jsonObj);
         //create transitions
-        _.forEach(jsonObj.transitions, function (value) {
-            $scope.addTransitionWithId(value.id, value.fromState, value.toState, value.name);
-        });
+        self.createTransitions(jsonObj);
         //create startState
         $scope.changeStartState(jsonObj.startState);
         //create finalStates
+        self.addFinalStates(jsonObj);
+    };
+
+    /**
+     * Add the finalstates to the finalStateArray
+     * @param jsonObj
+     */
+    self.addFinalStates = function (jsonObj) {
         _.forEach(jsonObj.finalStates, function (value) {
             $scope.addFinalState(value);
         });
-    }
+    };
+    /**
+     * Creates the imported States
+     * @param jsonObj
+     */
+    self.createStates = function (jsonObj) {
+        _.forEach(jsonObj.states, function (value) {
+            $scope.addStateWithId(value.id, value.name, value.x, value.y);
+        });
+    };
+
+    /**
+     * Creates the imported transitions
+     * @param jsonObj
+     */
+    self.createTransitions = function (jsonObj) {
+        _.forEach(jsonObj.transitions, function (value) {
+            $scope.addTransitionWithId(value.id, value.fromState, value.toState, value.name);
+        });
+    };
 
 
     /**

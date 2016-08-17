@@ -9,6 +9,7 @@ function DFA($scope) {
 
     //Default Config for the automaton
     $scope.defaultConfig = {};
+    $scope.defaultConfig.type = "DFA";
     //the default prefix for auto naming for example S0,S1,... after the prefix it saves the id
     $scope.defaultConfig.statePrefix = 'S';
     //Suffix after a transition name on the statediagram
