@@ -13,12 +13,13 @@
                        uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen"
                        tooltip-placement="left" tooltip-trigger="none"
                        ng-attr-show-focus="{{value.isFocus || undefined}}" ng-disabled="simulator.isInPlay">
-                <div ng-show="config.type!=='PDA'">
-                    <span class="input-group-addon btn btn-danger transbutton"
-                          ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(value.id)"
-                          ng-disabled="simulator.isInPlay"><span class="icon-times"></span></span>
-                </div>
+                <span class="input-group-addon btn btn-danger transbutton" ng-show="config.type!=='PDA'"
+                      ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(value.id)"
+                      ng-disabled="simulator.isInPlay"><span class="icon-times"></span></span>
+
             </div>
+
+
             <div ng-show="config.type=='PDA'">
                 <div class="input-group">
                     <span class="input-group-addon">{{"TRANS_MENU.PDA_READ_FROM_STACK"| translate}}</span>

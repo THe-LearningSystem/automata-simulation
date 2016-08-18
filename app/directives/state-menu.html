@@ -12,7 +12,7 @@
         {{"STATE_MENU.STARTSTATE" | translate}}
     </div>
     <div>
-        <div ng-show="config.type=='DFA'">
+        <div ng-show="config.type!=='PDA'">
             <input class="checkbox-item" type="checkbox" id="state-input-finalstate"
                    ng-model="statediagram.input.finalState" ng-disabled="simulator.isInPlay">
             {{"STATE_MENU.FINALSTATE" | translate}}

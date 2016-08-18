@@ -28,7 +28,6 @@ function BulkTesterDFA($scope) {
                 var tmpObj = {};
                 tmpObj.word = acceptedWord;
                 tmpObj.accepted = $scope.simulator.isInputWordAccepted(acceptedWord);
-                console.log(tmpObj);
                 self.acceptedInput.push(tmpObj);
             }
         })
@@ -46,7 +45,6 @@ function BulkTesterDFA($scope) {
                 var tmpObj = {};
                 tmpObj.word = rejectedWord;
                 tmpObj.rejected = !$scope.simulator.isInputWordAccepted(rejectedWord);
-                console.log();
                 self.rejectedInput.push(tmpObj);
             }
         })
