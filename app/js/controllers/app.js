@@ -5,6 +5,10 @@ var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 
             templateUrl: 'view/dfa.html',
             controller: 'DFACtrl'
         });
+        $routeProvider.when('/dta', {
+            templateUrl: 'view/dta.html',
+            controller: 'DTACtrl'
+        });
         $routeProvider.when('/pda', {
             templateUrl: 'view/pda.html',
             controller: 'PDACtrl'
