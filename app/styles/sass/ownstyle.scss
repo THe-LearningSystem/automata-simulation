@@ -694,3 +694,12 @@ body .transbutton {
   stroke: #000;
   stroke-width: 2;
 }
+
+//BulkTester
+.fail-class {
+  background-color: $animatedNotAcceptedColor;
+}
+
+.pass-class {
+  background-color: $animatedAcceptedColor;
+}

@@ -205,15 +205,22 @@
         <button class="btn btn-default" ng-click="bulktester.bulkTest()">Test</button>
         <div class="bulktest-result" ng-show="bulktester.acceptedInput.length != 0">
             <h4>Result</h4>
-            <label>Accepted:</label>
+            <div>
+                <label>Accepted:</label>
 
-            <span ng-repeat="value in bulktester.acceptedInput" ng-class="value.accepted ? 'trueClass' : 'falseClass'">{{value.word}}</span>
+                <div ng-repeat="value in bulktester.acceptedInput"
+                     ng-class="value.accepted ? 'pass-class' : 'fail-class'">
+                    {{value.word}}--{{value.accepted === true ? "PASS" : "FAIL"}}
+                </div>
+            </div>
+            <div>
+                <label>Rejected:</label>
 
-            <label>Rejected:</label>
-
-            <span ng-repeat="value in bulktester.rejectedInput" ng-class="value.rejected? 'trueClass' : 'falseClass'">{{value.word}}</span>
-
-
+                <div ng-repeat="value in bulktester.rejectedInput"
+                     ng-class="value.rejected? 'pass-class' : 'fail-class'">
+                    {{value.word}}--{{value.rejected === true ? "PASS" : "FAIL"}}
+                </div>
+            </div>
         </div>
     </menuitemextendable>
 

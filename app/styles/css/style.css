@@ -6324,3 +6324,9 @@ rzslider .rz-pointer:after {
 .stack {
   stroke: #000;
   stroke-width: 2; }
+
+.fail-class {
+  background-color: #aa2200; }
+
+.pass-class {
+  background-color: #00ff7b; }
