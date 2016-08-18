@@ -203,6 +203,18 @@
         <label>Reject (one per line):</label>
         <textarea id="rejectedInput" style="margin-bottom:5px;"></textarea>
         <button class="btn btn-default" ng-click="bulktester.bulkTest()">Test</button>
+        <div class="bulktest-result" ng-show="bulktester.acceptedInput.length != 0">
+            <h4>Result</h4>
+            <label>Accepted:</label>
+
+            <span ng-repeat="value in bulktester.acceptedInput" ng-class="value.accepted ? 'trueClass' : 'falseClass'">{{value.word}}</span>
+
+            <label>Rejected:</label>
+
+            <span ng-repeat="value in bulktester.rejectedInput" ng-class="value.rejected? 'trueClass' : 'falseClass'">{{value.word}}</span>
+
+
+        </div>
     </menuitemextendable>
 
     <menuitemextendable titlename="DEV.TITLE">
