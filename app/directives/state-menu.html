@@ -1,0 +1,27 @@
+<menuitem titlename="STATE_MENU.TITLE" ng-show="statediagram.showStateMenu">
+    <div class="input-group">
+        <span class="input-group-addon">{{"STATE_MENU.NAME" | translate}}</span>
+        <input class="form-control" id="state-input-name" ng-model="statediagram.input.stateName" maxlength="5"
+               uib-tooltip="{{statediagram.input.ttt | translate}}" tooltip-is-open="statediagram.input.tttisopen"
+               tooltip-placement="left" tooltip-trigger="none" show-focus="statediagram.showStateMenu"
+               ng-disabled="simulator.isInPlay">
+    </div>
+    <div>
+        <input class="checkbox-item" type="checkbox" id="state-input-startstate"
+               ng-model="statediagram.input.startState" ng-disabled="simulator.isInPlay">
+        {{"STATE_MENU.STARTSTATE" | translate}}
+    </div>
+    <div>
+        <div ng-show="config.type=='DFA'">
+            <input class="checkbox-item" type="checkbox" id="state-input-finalstate"
+                   ng-model="statediagram.input.finalState" ng-disabled="simulator.isInPlay">
+            {{"STATE_MENU.FINALSTATE" | translate}}
+
+        </div>
+    </div>
+    <button class="btn btn-danger" ng-click="removeState(statediagram.input.state.id)"
+            ng-disabled="simulator.isInPlay">
+        {{"MODAL_BUTTON.DELETE" | translate}}
+    </button>
+
+</menuitem>

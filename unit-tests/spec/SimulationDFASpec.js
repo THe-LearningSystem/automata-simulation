@@ -1,5 +1,5 @@
 /*jshint -W030*/
-describe('Simulation Automata', function () {
+describe('', function () {
     var scope,
         controller;
     beforeEach(function () {
@@ -7,14 +7,14 @@ describe('Simulation Automata', function () {
     });
 
 
-    describe('DFA Test', function () {
+    describe('Simulation', function () {
         beforeEach(inject(function ($rootScope, $controller) {
             scope = $rootScope.$new();
             controller = $controller('DFACtrl', {
                 '$scope': scope
+
             });
-            //Prepare the scope for the unittest
-            scope.graphdesigner.isGrid = false;
+            scope.statediagram.isGrid = false;
             /*jshint -W020 */
             simulator = scope.simulator;
             scope.inputWord = "abc";
@@ -30,12 +30,11 @@ describe('Simulation Automata', function () {
             scope.changeStartState(0);
         }));
 
-        it('At the beginning the inputWord should be undefined', function() {
-            console.log(simulator.inputWord);
-            expect(simulator.inputWord).toBeUndeFined;
+        it('At the beginning the inputWord should be undefined', function () {
+            expect(scope.inputWord).toBe("abc");
         });
 
-        it('When resetting', function() {
+        it('When resetting', function () {
             simulator.reset();
             expect(simulator.transition).toBeNull();
             expect(simulator.inputWord).toBeUndeFined;

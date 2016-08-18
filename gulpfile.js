@@ -15,6 +15,7 @@ var gulp = require('gulp'),
 var paths = {
     js: 'app/js/**/*.js',
     views: 'app/view*/*.html',
+    directives: 'app/directives/*.html',
     sass: 'app/styles/**/*scss',
     css: 'app/styles/**/*.css',
     images: 'app/images/**/*',
@@ -28,7 +29,30 @@ var pipes = {};
 pipes.uglifyAndConcat = function () {
     return;
 };
+///////////////////////////
+// JAVASCRIPT
+////////////////////////////
+gulp.task('pda', function () {
+    return gulp.src(['app/js/pda/*.js', '!app/js/pda/PDAall.js', '!app/js/pda/PDAall.min.js'])
+        .pipe(concat('PDAall.js'))
+        .pipe(gulp.dest('app/js/pda/'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('app/js/pda/'));
+});
 
+gulp.task('dfa', function () {
+    return gulp.src(['app/js/dfa/*.js', '!app/js/dfa/DFAall.js', '!app/js/dfa/DFAall.min.js'])
+        .pipe(concat('DFAall.js'))
+        .pipe(gulp.dest('app/js/dfa/'))
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('app/js/dfa/'));
+});
 
 ///////////////////////////
 // Styles
@@ -146,8 +170,8 @@ gulp.task('live', function () {
         if (obj.type === 'changed') {
             console.log(obj.path + ' changed');
             gulp.src(obj.path, {
-                    base: './app/'
-                })
+                base: './app/'
+            })
                 .pipe(connect.reload());
         }
     });
@@ -156,8 +180,8 @@ gulp.task('live', function () {
         if (obj.type === 'changed') {
             console.log(obj.path + ' changed');
             gulp.src(obj.path, {
-                    base: './app/'
-                })
+                base: './app/'
+            })
                 .pipe(connect.reload());
         }
     });
@@ -171,10 +195,10 @@ gulp.task('liveDist', function () {
         root: './dist',
         middleware: function () {
             return [
-        modRewrite([
-          '^/api/v1/(.*)$ http://localhost:3000/api/v1/$1 [P]'
-        ])
-      ];
+                modRewrite([
+                    '^/api/v1/(.*)$ http://localhost:3000/api/v1/$1 [P]'
+                ])
+            ];
         }
     });
 });
