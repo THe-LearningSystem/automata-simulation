@@ -1,9 +1,7 @@
-angular
-    .module('automata-simulation')
-    .controller('DTACtrl', DTACtrl);
+angular.module('automata-simulation').controller('DTACtrl', DTACtrl);
 
 
-function TURINGCtrl($scope, hotkeys) {
+function DTACtrl($scope, hotkeys) {
     console.log("created DTA");
     var dta = new DTA($scope);
 
