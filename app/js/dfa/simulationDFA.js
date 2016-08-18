@@ -108,8 +108,7 @@ function SimulationDFA($scope) {
                 //loop through the steps
                 if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
                     self.animateNextMove();
-                    $scope.safeApply(function () {
-                    });
+                    $scope.safeApply();
                     if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
                         setTimeout(self.play, self.stepTimeOut);
                     }
@@ -123,8 +122,7 @@ function SimulationDFA($scope) {
                         self.isInPlay = false;
                     }
                     self.simulationStarted = false;
-                    $scope.safeApply(function () {
-                    });
+                    $scope.safeApply();
                 }
             }
         }

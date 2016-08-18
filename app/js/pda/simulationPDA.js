@@ -131,7 +131,7 @@ function SimulationPDA($scope) {
      * checks if a word is accepted from the automata
      * @return {Boolean} [description]
      */
-    self.check = function () {
+    self.isInputWordAccepted = function (inputWord) {
         //init needed variables
         var accepted = false;
         var statusSequence = [];
@@ -141,8 +141,8 @@ function SimulationPDA($scope) {
         var madeSteps = 0;
         var transition = null;
 
-        while (madeSteps <= $scope.config.inputWord.length) {
-            nextChar = $scope.config.inputWord[madeSteps];
+        while (madeSteps <= inputWord.length) {
+            nextChar = inputWord[madeSteps];
             //get the next transition
             transition = self.getNextTransition(_.last(statusSequence), nextChar, tmpStack.pop());
 
@@ -158,7 +158,7 @@ function SimulationPDA($scope) {
             //if outmadeSteps is equal to the length of the inputWord
             //and our currenState is a finalState then the inputWord is accepted, if not its not accepted
 
-            if ($scope.config.inputWord.length == madeSteps) {
+            if (inputWord.length == madeSteps) {
                 if (tmpStack.stackContainer.length === 0) {
                     accepted = true;
                     break;

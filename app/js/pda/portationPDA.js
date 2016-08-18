@@ -1,10 +1,12 @@
 function PortationPDA($scope) {
+    "use strict";
 
     var self = this;
 
     PortationDFA.apply(self, arguments);
-    self.createTransitions = null;
-    
+    self.type = "PDA";
+
+
     /**
      * Creates the imported transitions
      * @param jsonObj
@@ -13,6 +15,7 @@ function PortationPDA($scope) {
         _.forEach(jsonObj.transitions, function (value) {
             $scope.addTransitionWithId(value.id, value.fromState, value.toState, value.name, value.readFromStack, value.writeToStack);
         });
+
     };
 
 }

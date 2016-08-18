@@ -1,0 +1,43 @@
+<menuitem titlename="TRANS_MENU.TITLE" ng-show="statediagram.showTransitionMenu">
+    <p>
+        {{"STATE_MENU.STARTSTATE" | translate}}: {{statediagram.input.fromState.name}}
+    </p>
+    <p>
+        {{"TRANS_MENU.NEXTSTATE" | translate}}: {{statediagram.input.toState.name}}
+    </p>
+    <ul class="transitions-menu-list">
+        <li ng-repeat="(key, value) in statediagram.input.transitions">
+            <div class="input-group">
+                <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
+                <input class="form-control" type="text" ng-model="value.name" maxlength="1"
+                       uib-tooltip="{{value.ttt | translate}}" tooltip-is-open="value.tttisopen"
+                       tooltip-placement="left" tooltip-trigger="none"
+                       ng-attr-show-focus="{{value.isFocus || undefined}}" ng-disabled="simulator.isInPlay">
+                <span class="input-group-addon btn btn-danger transbutton"
+                      ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(value.id)"
+                      ng-disabled="simulator.isInPlay"><span class="icon-times"></span></span>
+            </div>
+            <div ng-show="config.type=='PDA'">
+                <div class="input-group">
+                    <span class="input-group-addon">{{"TRANS_MENU.PDA_READ_FROM_STACK"| translate}}</span>
+                    <input class="form-control" type="text" ng-model="value.readFromStack" maxlength="1"
+                           uib-tooltip="{{value.ttt| translate}}" tooltip-is-open="value.tttisopen"
+                           tooltip-placement="left" tooltip-trigger="none" ng-disabled="simulator.isInPlay">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">{{"TRANS_MENU.PDA_WRITE_TO_STACK"| translate}}</span>
+                    <input class="form-control" type="text" ng-model="value.writeToStack" maxlength="2"
+                           uib-tooltip="{{value.ttt| translate}}" tooltip-is-open="value.tttisopen"
+                           tooltip-placement="left" tooltip-trigger="none" ng-disabled="simulator.isInPlay">
+                </div>
+                <span class="input-group-addon btn btn-danger transbutton"
+                      ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(value.id)"
+                      ng-disabled="simulator.isInPlay"> <span class="icon-times"></span> </span>
+            </div>
+        </li>
+    </ul>
+    <div ng-show="config.type=='PDA'">
+        Epsilon:ε
+        Kellersymbol:⊥
+    </div>
+</menuitem>

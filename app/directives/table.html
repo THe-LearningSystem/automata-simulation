@@ -1,0 +1,26 @@
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>/</th>
+        <th ng-repeat="x in testas.table.alphabet">
+            <span class="{{x.selectedClass}} {{x.animatedClass}}">{{x.character}}</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(key, x) in testas.table.states" ng-class="x.class">
+        <th><span class="{{x.selectedClass}} {{x.animatedClass}}">{{x.name}}</span>
+            <sub ng-show=" x.startState == true">S<sub>0</sub></sub>
+            <sub ng-show="x.startState == true && x.finalState == true">, </sub>
+            <sub ng-show="x.finalState == true">{{"STF.F" | translate}}</sub>
+        </th>
+        <td ng-repeat="stateTrans in x.trans track by $index">
+                            <span ng-repeat="state in stateTrans.stateNames">
+                                <span class="{{state.selectedClass}} {{state.animatedClass}}">{{state.name}}</span>
+                                {{$last ? '' : ', '}}
+                            </span>
+
+        </td>
+    </tr>
+    </tbody>
+</table>

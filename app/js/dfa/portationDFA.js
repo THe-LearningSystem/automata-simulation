@@ -1,6 +1,7 @@
 function PortationDFA($scope) {
     var self = this;
 
+    self.type = "DFA";
     /**
      * Imports the jsonObj and saves it as the new automatonConfig
      * @param jsonObj
@@ -8,7 +9,7 @@ function PortationDFA($scope) {
     self.import = function (jsonObj) {
         //clear the config at the start
         var tmpObject = _.cloneDeep(jsonObj);
-        if (tmpObject.type === $scope.defaultConfig.type) {
+        if (tmpObject.type == self.type) {
             //clear the objects we create after
             tmpObject.states = [];
             tmpObject.transitions = [];
@@ -23,7 +24,7 @@ function PortationDFA($scope) {
             //clear input cache
             angular.element('#hidden-file-upload').val('');
         } else {
-            console.log("the automaton has not the same type. AutomatonType:" + $scope.defaultConfig.type + ", uploaded automatonType:" + tmpObject.type);
+            console.log("the automaton has not the same type. AutomatonType:" + self.type + ", uploaded automatonType:" + tmpObject.type);
         }
     };
 
@@ -77,9 +78,12 @@ function PortationDFA($scope) {
     }
 
     /**
-     * when the user confirm the data, the handleFileSelect is called
+     * add the listener to the hidden input field
      */
-    document.getElementById('hidden-file-upload').addEventListener('change', self.handleFileSelect, false);
+    self.addInputListener = function () {
+        document.getElementById('hidden-file-upload').addEventListener('change', self.handleFileSelect, false);
+    };
+
 
     /**
      * Exports the automatonConfig into an json object

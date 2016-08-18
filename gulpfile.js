@@ -15,6 +15,7 @@ var gulp = require('gulp'),
 var paths = {
     js: 'app/js/**/*.js',
     views: 'app/view*/*.html',
+    directives: 'app/directives/*.html',
     sass: 'app/styles/**/*scss',
     css: 'app/styles/**/*.css',
     images: 'app/images/**/*',
@@ -169,8 +170,8 @@ gulp.task('live', function () {
         if (obj.type === 'changed') {
             console.log(obj.path + ' changed');
             gulp.src(obj.path, {
-                    base: './app/'
-                })
+                base: './app/'
+            })
                 .pipe(connect.reload());
         }
     });
@@ -179,8 +180,8 @@ gulp.task('live', function () {
         if (obj.type === 'changed') {
             console.log(obj.path + ' changed');
             gulp.src(obj.path, {
-                    base: './app/'
-                })
+                base: './app/'
+            })
                 .pipe(connect.reload());
         }
     });
@@ -194,10 +195,10 @@ gulp.task('liveDist', function () {
         root: './dist',
         middleware: function () {
             return [
-        modRewrite([
-          '^/api/v1/(.*)$ http://localhost:3000/api/v1/$1 [P]'
-        ])
-      ];
+                modRewrite([
+                    '^/api/v1/(.*)$ http://localhost:3000/api/v1/$1 [P]'
+                ])
+            ];
         }
     });
 });

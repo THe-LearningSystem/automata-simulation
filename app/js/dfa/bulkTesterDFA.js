@@ -1,19 +1,25 @@
 //This components is used for bulkTesting words
 function BulkTesterDFA($scope) {
     var self = this;
+
+    //add to pdaListeners
+    $scope.updateListeners.push(self);
     self.acceptedInput = [];
     self.rejectedInput = [];
 
+    /**
+     * executes the bulkTest
+     */
     self.bulkTest = function () {
-        self.acceptedInput = [];
-        self.rejectedInput = [];
-        console.log("starting bulkTest");
         self.testAcceptedInput();
-
         self.testRejectedInput();
 
     };
+    /**
+     * prepares the acceptedInput
+     */
     self.testAcceptedInput = function () {
+        self.acceptedInput = [];
         var acceptedInputString = document.getElementById("acceptedInput").value;
         var acceptedInputArray = acceptedInputString.split("\n");
 
@@ -22,13 +28,16 @@ function BulkTesterDFA($scope) {
                 var tmpObj = {};
                 tmpObj.word = acceptedWord;
                 tmpObj.accepted = $scope.simulator.isInputWordAccepted(acceptedWord);
-                console.log();
+                console.log(tmpObj);
                 self.acceptedInput.push(tmpObj);
             }
         })
     };
-
+    /**
+     * prepares the rejectedInput
+     */
     self.testRejectedInput = function () {
+        self.rejectedInput = [];
         var rejectedInputString = document.getElementById("rejectedInput").value;
         var rejectedInputArray = rejectedInputString.split("\n");
 
@@ -42,6 +51,12 @@ function BulkTesterDFA($scope) {
             }
         })
     };
+    /**
+     * updateFunction for the Listener
+     */
+    self.updateFunction = function () {
+        self.bulkTest();
+    }
 
 
 }

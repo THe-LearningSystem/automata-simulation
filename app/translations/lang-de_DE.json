@@ -97,5 +97,8 @@
   "IMPORT": {
     "TITLE": "Import",
     "DESC": "Wollen sie den aktuellen Automaten durch den importierten Automaten überschreiben?"
+  },
+  "BULK": {
+    "TITLE": "BulkTester"
   }
 }

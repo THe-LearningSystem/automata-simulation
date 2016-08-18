@@ -1,0 +1,23 @@
+<menuitemextendable titlename="DEV.TITLE">
+
+    <menubutton icon="wrench" action="testData.testDFA()" ng-show="config.type== 'DFA'">
+    </menubutton>
+    <menubutton icon="wrench" action="testData.testPDA()" ng-show="config.type== 'PDA'">
+    </menubutton>
+    <menubutton icon="wrench" action="testData.testNFA()" ng-show="config.type== 'NFA'">
+    </menubutton>
+    <json-formatter json="table" open="1"></json-formatter>
+    <json-formatter json="simulator" open="1"></json-formatter>
+    <p>
+        DiagramValues:
+        <json-formatter json="config" open="1"></json-formatter>
+    </p>
+    <p>
+        DrawnTransitions:
+        <json-formatter json="drawnTransitions" open="1"></json-formatter>
+    </p>
+    <p>
+        statediagram Input:
+        <json-formatter json="statediagram.input" open="1"></json-formatter>
+    </p>
+</menuitemextendable>

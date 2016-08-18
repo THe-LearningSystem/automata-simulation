@@ -82,7 +82,75 @@ autoSim.directive("menuitem", function () {
     };
 
 });
+autoSim.directive("bulkTest", function () {
+    return {
+        templateUrl: 'directives/bulk-tester.html'
+    };
+});
+autoSim.directive("simulation", function () {
+    return {
+        templateUrl: 'directives/simulation.html'
+    };
+});
+autoSim.directive("simulationSettings", function () {
+    return {
 
+        templateUrl: 'directives/simulation-settings.html'
+    };
+});
+autoSim.directive("topMenu", function () {
+    return {
+        link: function (scope, elm, attrs) {
+            scope.portation.addInputListener();
+        },
+        templateUrl: 'directives/top-menu.html'
+    };
+});
+autoSim.directive("develop", function () {
+    return {
+        templateUrl: 'directives/develop.html'
+    };
+});
+autoSim.directive("automatonName", function () {
+    return {
+        templateUrl: 'directives/automaton-name.html'
+    };
+});
+autoSim.directive("modal", function () {
+    return {
+        templateUrl: 'directives/modal.html'
+    };
+});
+autoSim.directive("ownTable", function () {
+    return {
+        templateUrl: 'directives/own-table.html'
+    };
+});
+autoSim.directive("stateTransitionFunction", function () {
+    return {
+        templateUrl: 'directives/state-transition-function.html'
+    };
+});
+autoSim.directive("stateMenu", function () {
+    return {
+        templateUrl: 'directives/state-menu.html'
+    };
+});
+autoSim.directive("transitionMenu", function () {
+    return {
+        templateUrl: 'directives/transition-menu.html'
+    };
+});
+autoSim.directive("settings", function () {
+    return {
+        templateUrl: 'directives/settings.html'
+    };
+});
+autoSim.directive("credits", function () {
+    return {
+        templateUrl: 'directives/credits.html'
+    };
+});
 //Language Controller
 autoSim.controller("LangCtrl", ['$scope', '$translate',
     function ($scope, $translate) {

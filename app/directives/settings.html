@@ -1,0 +1,13 @@
+<menuitem titlename="DIA_SET.TITLE" ng-show="!statediagram.showStateMenu && !statediagram.showTransitionMenu">
+    <p class="right-indextab-subtitle">
+        {{'DIA_SET.VIEW' | translate}}
+    </p>
+    <p>
+        <input class="checkbox-item" type="checkbox" id="statediagram-isGrid" ng-model="statediagram.isGrid">
+        {{"DIA_SET.GRID" | translate}}
+    </p>
+    <p>
+        <input class="checkbox-item" type="checkbox" id="statediagram-snapping" ng-model="statediagram.snapping">
+        {{"DIA_SET.SNAPPING" | translate}}
+    </p>
+</menuitem>
