@@ -1,7 +1,9 @@
-function PortationDFA($scope) {
+function PortationDFA($scope, type) {
     var self = this;
-
-    self.type = "DFA";
+    if (type === undefined)
+        self.type = "DFA";
+    else
+        self.type = type;
     /**
      * Imports the jsonObj and saves it as the new automatonConfig
      * @param jsonObj

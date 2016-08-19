@@ -10,6 +10,7 @@ function NFA($scope, $translate) {
     $scope.config = cloneObject($scope.defaultConfig);
 
     $scope.simulator = new SimulationNFA($scope);
+    $scope.portation = new PortationDFA($scope, "NFA");
 
 
     /**
