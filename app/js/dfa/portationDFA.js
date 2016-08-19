@@ -110,7 +110,7 @@ function PortationDFA($scope, type) {
         var blob = new Blob([data], {
             type: "application/json"
         });
-        saveAs(blob, $scope.config.name + ".json");
+        saveAs(blob, $scope.config.name + "." + $scope.config.type.toLowerCase() + ".json");
     };
 
 
