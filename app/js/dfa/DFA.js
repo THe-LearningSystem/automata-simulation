@@ -69,7 +69,7 @@ function DFA($scope) {
     //for the showing/hiding of the Input Field of the automaton name
     $scope.inNameEdit = false;
 
-    
+
     /**
      * Check if transition already drawn
      * @param   {number}  fromState

@@ -9,6 +9,8 @@ function NFA($scope, $translate) {
     //Config Object
     $scope.config = cloneObject($scope.defaultConfig);
 
+    $scope.simulator = new SimulationNFA($scope);
+
 
     /**
      * Checks if a transition with the params already exists

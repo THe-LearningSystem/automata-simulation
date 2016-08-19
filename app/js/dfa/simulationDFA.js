@@ -171,7 +171,7 @@ function SimulationDFA($scope) {
             self.madeSteps++;
             //if the nextState is the finalState
             if (self.inputWord.length == self.madeSteps) {
-                if (_.include($scope.config.finalStates, self.currentState)) {
+                if (_.includes($scope.config.finalStates, self.currentState)) {
                     self.status = 'accepted';
                 } else {
                     self.status = 'not accepted';
@@ -234,11 +234,11 @@ function SimulationDFA($scope) {
             self.prepareSimulation();
             self.status = 'step';
             // return if automaton is not running
-        } else if (!(_.include(['step', 'stopped', 'accepted', 'not accepted'], self.status))) {
+        } else if (!(_.includes(['step', 'stopped', 'accepted', 'not accepted'], self.status))) {
             //TODO:DEBUG
             console.log(self.status);
             return false;
-        } else if (!_.include(['accepted', 'not accepted'], self.status)) {
+        } else if (!_.includes(['accepted', 'not accepted'], self.status)) {
             self.animateNextMove();
         }
     };
@@ -252,7 +252,7 @@ function SimulationDFA($scope) {
             self.pause();
         }
         // return if automaton is not running
-        if (!(_.include(['step', 'accepted', 'not accepted'], self.status))) {
+        if (!(_.includes(['step', 'accepted', 'not accepted'], self.status))) {
             //TODO:DEBUG
             return false;
         }
@@ -356,7 +356,7 @@ function SimulationDFA($scope) {
             //if our madeSteps is equal to the length of the inputWord
             //and our currentState is a finalState then the inputWord is accepted, if not its not accepted
             if (inputWord.length == madeSteps) {
-                if (_.include($scope.config.finalStates, _.last(statusSequence))) {
+                if (_.includes($scope.config.finalStates, _.last(statusSequence))) {
                     accepted = true;
                     break;
                 } else {
