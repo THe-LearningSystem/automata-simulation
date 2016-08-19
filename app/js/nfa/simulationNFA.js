@@ -36,10 +36,9 @@ function SimulationNFA($scope) {
                 });
                 stackSequences = _.concat(stackSequences, tmpSequences);
             }
-
         }
         return possibleSequences;
-    }
+    };
 
     self.getNextTransitions = function (fromState, transitionName) {
         var transitions = [];

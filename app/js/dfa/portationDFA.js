@@ -118,7 +118,10 @@ function PortationDFA($scope, type) {
      * Saves the svg as a png
      */
     self.saveAsPng = function () {
-        saveSvgAsPng(document.getElementById("diagram-svg"), $scope.config.name + ".png");
+        saveSvgAsPng(document.getElementById("diagram-svg"), $scope.config.name + "." + $scope.config.type.toLowerCase() + ".png", {
+            scale: 4,
+            encoderOptions: 1
+        });
     };
 
     /**Helper functions**/

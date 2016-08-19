@@ -1,5 +1,5 @@
 // Declare app level module which depends on views, and components
-var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 'pascalprecht.translate', 'jsonFormatter', 'rzModule', 'ngScrollbars', 'cfp.hotkeys', 'ngJoyRide']).config(['$routeProvider',
+var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 'pascalprecht.translate', 'jsonFormatter', 'rzModule', 'cfp.hotkeys']).config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.when('/dfa', {
             templateUrl: 'view/dfa.html',
@@ -149,6 +149,11 @@ autoSim.directive("settings", function () {
 autoSim.directive("credits", function () {
     return {
         templateUrl: 'directives/credits.html'
+    };
+});
+autoSim.directive("ownSvg", function () {
+    return {
+        templateUrl: 'directives/own-svg.html'
     };
 });
 //Language Controller

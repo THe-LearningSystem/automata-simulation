@@ -4,20 +4,43 @@ function StateDiagramPDA($scope, svgSelector) {
 
     var self = this;
     StateDiagramDFA.apply(self, arguments);
+    //overwritten variables
     self.transitionTextLength = 27;
     self.selfTransitionTextLength = 30;
 
-    //TODO: only first version needs rework
+    //reference to the parentInit function
+    var parentInit = self.init;
+
+    /**
+     * overwritten init function
+     */
+    self.init = function () {
+        parentInit();
+
+        //stack
+        self.svgStack = self.svgOuter.append("g");
+        self.drawStack();
+        self.updateStackPosition();
+
+    };
+
+    //Stack variables
     self.drawnStack = [];
-    self.svgStack = self.svgOuter.append("g");
     self.stackWidth = 75;
     self.stackHeight = 120;
     self.stackPaddingToBorder = 20;
 
+
+    /**
+     * update the stack position;
+     */
     self.updateStackPosition = function () {
         self.svgStack.attr("transform", "translate(" + self.svgOuterWidth + " " + self.svgOuterHeight + ")");
     };
 
+    /**
+     * draw the stack on the svg
+     */
     self.drawStack = function () {
         //Draw the stackContainer
         self.svgStack.append("line")
@@ -40,7 +63,10 @@ function StateDiagramPDA($scope, svgSelector) {
             .attr("y2", -self.stackHeight - self.stackPaddingToBorder);
     };
 
-
+    /**
+     * Add an item to the drawn stack
+     * @param character
+     */
     self.addToStack = function (character) {
         var stackItemHeight = 20;
         var group = self.svgStack.append("g");
@@ -49,21 +75,24 @@ function StateDiagramPDA($scope, svgSelector) {
         self.drawnStack.push(group);
     };
 
+    /**
+     * Removes the last item from the drawn stack
+     */
     self.removeFromStack = function () {
         self.drawnStack.pop().remove();
     };
-    self.drawStack();
 
     //redraw the stack if the browser was resized
     window.addEventListener('resize', function () {
         self.updateStackPosition();
     });
 
-    //update the stack position when everything is already loaded
-    $(window).bind("load", function () {
-        self.updateStackPosition();
-    });
 
+    /**
+     * creates a transition
+     * @param fromState
+     * @param toState
+     */
     self.createTransition = function (fromState, toState) {
         var tmpTransition = $scope.addTransition(fromState, toState, $scope.getNextTransitionName(self.selectedState.id), "X", "Y");
         self.toggleState(self.selectedState.id, false);
@@ -113,13 +142,13 @@ function StateDiagramPDA($scope, svgSelector) {
         for (var i = 0; i < names.length; i++) {
             //fix when creating new transition when in animation
             if ($scope.simulator.animated.transition !== null && names[i].id === $scope.simulator.animated.transition.id) {
-                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name).classed("animated-transition-text", true);
+                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name).classed("animated-transition-text", true).attr("style", "font-family:" + $scope.defaultConfig.font + ";");
             } else {
-                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name + ', ' + names[i].readFromStack + '; ' + names[i].writeToStack);
+                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name + ', ' + names[i].readFromStack + '; ' + names[i].writeToStack).attr("style", "font-family:" + $scope.defaultConfig.font + ";");
             }
 
             if (i < names.length - 1)
-                textObj.append('tspan').text(' | ');
+                textObj.append('tspan').text(' | ').attr("style", "font-family:" + $scope.defaultConfig.font + ";");
         }
 
     };
