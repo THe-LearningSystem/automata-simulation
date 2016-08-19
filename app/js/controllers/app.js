@@ -153,6 +153,9 @@ autoSim.directive("credits", function () {
 });
 autoSim.directive("ownSvg", function () {
     return {
+        link: function (scope, elm, attrs) {
+            scope.statediagram.init();
+        },
         templateUrl: 'directives/own-svg.html'
     };
 });
