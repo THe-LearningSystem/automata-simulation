@@ -1198,7 +1198,7 @@ function StateDiagramDFA($scope, svgSelector) {
         self.input.toState = $scope.getStateById(toState);
         self.input.transitions = [];
         _.forEach(self.selectedTransition.names, function (value, key) {
-            var tmpObject = cloneObject(value);
+            var tmpObject = _.cloneDeep(value);
             if (transitionId !== undefined) {
                 if (value.id == transitionId) {
                     tmpObject.isFocus = true;

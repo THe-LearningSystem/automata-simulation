@@ -7,7 +7,7 @@ function PDA($scope, $translate) {
     $scope.defaultConfig.stackAlphabet = [];
 
     //Config Object
-    $scope.config = cloneObject($scope.defaultConfig);
+    $scope.config = _.cloneDeep($scope.defaultConfig);
 
     /**Overrides**/
     //the statediagram controlling the svg diagram
