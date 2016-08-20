@@ -1207,25 +1207,33 @@ function StateDiagramDFA($scope, svgSelector) {
                 tmpObject.isFocus = true;
             }
             //add other variables
-            tmpObject.ttt = "";
-            tmpObject.tttisopen = false;
+            tmpObject.error = false;
             self.input.transitions.push(tmpObject);
         });
         self.transitionMenuListener = [];
         /*jshint -W083 */
         for (var i = 0; i < self.input.transitions.length; i++) {
             self.transitionMenuListener.push($scope.$watchCollection("statediagram.input.transitions['" + i + "']", function (newValue, oldValue) {
+                var nameErrorFound = false;
                 if (newValue.name !== oldValue.name) {
-                    newValue.tttisopen = false;
+                    newValue.error = false;
                     if (newValue.name !== "" && !$scope.existsTransition(fromState, toState, newValue.name)) {
                         $scope.modifyTransition(newValue.id, newValue.name);
                     } else if (newValue.name === "") {
-                        newValue.tttisopen = true;
-                        newValue.ttt = 'TRANS_MENU.NAME_TOO_SHORT';
-                    } else if ($scope.existsTransition(fromState, toState, newValue.name, newValue.id)) {
-                        newValue.tttisopen = true;
-                        newValue.ttt = 'TRANS_MENU.NAME_ALREADY_EXISTS';
+                        newValue.error = true;
+                        nameErrorFound = true;
                     }
+                }
+
+                if ($scope.existsTransition(fromState, toState, newValue.name, newValue.id)) {
+                    newValue.isUnique = false;
+                    newValue.error = true;
+                } else {
+                    if (!newValue.isUnique) {
+                        newValue.error = nameErrorFound ? true : false;
+                    }
+                    newValue.isUnique = true;
+
                 }
             }));
         }

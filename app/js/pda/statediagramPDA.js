@@ -198,14 +198,12 @@ function StateDiagramPDA($scope, svgSelector) {
             var tmp = tmpObject.readFromStack;
             tmpObject.readFromStack = {};
             tmpObject.readFromStack.value = tmp;
-            tmpObject.readFromStack.ttt = "";
-            tmpObject.readFromStack.tttisopen = false;
+            tmpObject.readFromStack.error = false;
 
             tmp = tmpObject.writeToStack;
             tmpObject.writeToStack = {};
             tmpObject.writeToStack.value = tmp;
-            tmpObject.writeToStack.ttt = "";
-            tmpObject.writeToStack.tttisopen = false;
+            tmpObject.writeToStack.error = false;
 
             if (transitionId !== undefined) {
                 if (value.id == transitionId) {
@@ -217,8 +215,7 @@ function StateDiagramPDA($scope, svgSelector) {
             }
             tmpObject.isUnique = true;
             //add other variables
-            tmpObject.ttt = "";
-            tmpObject.tttisopen = false;
+            tmpObject.error = false;
             self.input.transitions.push(tmpObject);
         });
 
@@ -227,36 +224,49 @@ function StateDiagramPDA($scope, svgSelector) {
         /*jshint -W083 */
         for (var i = 0; i < self.input.transitions.length; i++) {
             self.transitionMenuListener.push($scope.$watch("statediagram.input.transitions['" + i + "']", function (newValue, oldValue) {
-                if ($scope.existsTransition(fromState, toState, newValue.name, newValue.readFromStack.value, newValue.writeToStack.value)) {
-                    newValue.isUnique = false
-                    newValue.readFromStack.ttt = 'TRANS_MENU.NAME_ALREAD_EXISTS';
-                }
+                var nameErrorFound = false, readFromStackErrorFound = false, writeToStackErrorFound = false;
                 if (newValue.name !== oldValue.name) {
-                    newValue.tttisopen = false;
+                    newValue.error = false;
                     if (newValue.name !== "" && !$scope.existsTransition(fromState, toState, newValue.name)) {
                         $scope.modifyTransition(newValue.id, newValue.name, newValue.readFromStack.value, newValue.writeToStack.value);
                     } else if (newValue.name === "") {
-                        newValue.tttisopen = true;
-                        newValue.ttt = 'TRANS_MENU.NAME_TOO_SHORT';
+                        newValue.error = true;
+                        nameErrorFound = true;
                     }
                 }
                 if (newValue.readFromStack.value !== oldValue.readFromStack.value) {
-                    newValue.readFromStack.tttisopen = false;
+                    newValue.readFromStack.error = false;
                     if (newValue.readFromStack.value !== "" && !$scope.existsTransition(fromState, toState, newValue.name, newValue.readFromStack.value, newValue.writeToStack.value)) {
                         $scope.modifyTransition(newValue.id, newValue.name, newValue.readFromStack.value, newValue.writeToStack.value);
                     } else if (newValue.readFromStack.value === "") {
-                        newValue.readFromStack.tttisopen = true;
-                        newValue.readFromStack.ttt = '';
+                        newValue.readFromStack.error = true;
+                        readFromStackErrorFound = true;
                     }
 
                 }
                 if (newValue.writeToStack.value !== oldValue.writeToStack.value) {
-                    newValue.writeToStack.tttisopen = false;
+                    newValue.writeToStack.error = false;
                     if (newValue.writeToStack.value !== "" && !$scope.existsTransition(fromState, toState, newValue.name, newValue.readFromStack.value, newValue.writeToStack.value)) {
                         $scope.modifyTransition(newValue.id, newValue.name, newValue.readFromStack.value, newValue.writeToStack.value);
                     } else if (newValue.writeToStack.value === "") {
-                        newValue.writeToStack.tttisopen = true;
+                        newValue.writeToStack.error = true;
+                        writeToStackErrorFound = true;
                     }
+
+                }
+                if ($scope.existsTransition(fromState, toState, newValue.name, newValue.readFromStack.value, newValue.writeToStack.value, newValue.id)) {
+                    newValue.isUnique = false;
+                    newValue.error = true;
+                    newValue.readFromStack.error = true;
+                    newValue.writeToStack.error = true;
+                } else {
+                    if (!newValue.isUnique) {
+                        newValue.error = nameErrorFound ? true : false;
+                        newValue.readFromStack.error = readFromStackErrorFound ? true : false;
+                        newValue.writeToStack.error = writeToStackErrorFound ? true : false;
+                    }
+                    newValue.isUnique = true;
+
                 }
             }, true));
         }

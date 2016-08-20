@@ -6170,6 +6170,9 @@ button:disabled .icon {
 .transitions-menu-list li {
   list-style-type: none; }
 
+.alert-transition {
+  padding: 5px; }
+
 .icon {
   font-size: 18px; }
 
