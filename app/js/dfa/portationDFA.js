@@ -71,7 +71,7 @@ function PortationDFA($scope, type) {
                         //import the data to the automaton
                         self.import(json);
                     } catch (ex) {
-                        alert('ex when trying to parse json = ' + ex);
+                        console.log('ex when trying to parse json = ' + ex);
                     }
                 };
             })(f);

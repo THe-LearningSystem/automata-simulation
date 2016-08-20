@@ -129,57 +129,76 @@ function SimulationPDA($scope) {
 
     /**
      * checks if a word is accepted from the automata
-     * @return {Boolean} [description]
+     * @return {Boolean}
      */
     self.isInputWordAccepted = function (inputWord) {
+        return self.getAllPossibleSequences(inputWord).length !== 0;
+    };
+
+
+    /**
+     * Returns all possible sequences, if an empty array is returned, there is no possibleSequence
+     * @param inputWord
+     * @returns {Array}
+     */
+    self.getAllPossibleSequences = function (inputWord) {
         //init needed variables
-        var accepted = false;
-        var statusSequence = [];
-        statusSequence.push($scope.config.startState);
-        var tmpStack = new PDAStack();
-        var nextChar = '';
-        var madeSteps = 0;
-        var transition = null;
+        var possibleSequences = [];
+        var stackSequences = [];
+        var tmpSequences = {};
 
-        while (madeSteps <= inputWord.length) {
-            nextChar = inputWord[madeSteps];
-            //get the next transition
-            transition = self.getNextTransition(_.last(statusSequence), nextChar, tmpStack.pop());
 
-            //if there is no next transition, then the word is not accepted
-            if (_.isEmpty(transition)) {
-                break;
+        if (inputWord.length !== 0) {
+            tmpSequences = self.getNextTransitions($scope.config.startState, inputWord[0], new PDAStack().stackFirstSymbol);
+            for (var i = 0; i < tmpSequences.length; i++) {
+                var tmpSequence = {};
+                tmpSequence.stack = new PDAStack();
+                tmpSequence.stack.push(tmpSequences[i].writeToStack);
+                tmpSequence.value = [tmpSequences[i]];
+
+                stackSequences.push(tmpSequence);
             }
-            //if there is a transition then push the writeToStack Char to the stack
-            tmpStack.push(transition.writeToStack);
-            //push the new State to the sequence
-            statusSequence.push(transition.toState);
-            madeSteps++;
-            //if outmadeSteps is equal to the length of the inputWord
-            //and our currenState is a finalState then the inputWord is accepted, if not its not accepted
 
-            if (inputWord.length == madeSteps) {
-                if (tmpStack.stackContainer.length === 0) {
-                    accepted = true;
-                    break;
-                } else {
-                    break;
-                }
+        }
+
+        while (stackSequences.length !== 0) {
+            tmpSequence = stackSequences.pop();
+            if (tmpSequence.value.length === inputWord.length && tmpSequence.stack.stackContainer.length === 0) {
+                possibleSequences.push(tmpSequence.value);
+            } else if (inputWord.length > tmpSequence.value.length && tmpSequence.stack.stackContainer.length !== 0) {
+                var tmpSequences = [];
+                _.forEach(self.getNextTransitions(_.last(tmpSequence.value).toState, inputWord[tmpSequence.value.length], tmpSequence.stack.pop()), function (sequence) {
+                    var newTmpSequence = {};
+                    newTmpSequence.stack = new PDAStack(tmpSequence.stack.stackContainer);
+                    newTmpSequence.stack.push(sequence.writeToStack);
+                    newTmpSequence.value = _.concat(tmpSequence.value, sequence);
+                    tmpSequences.push(newTmpSequence);
+                });
+                stackSequences = _.concat(stackSequences, tmpSequences);
+
             }
         }
-        return accepted;
+        return possibleSequences;
+
     };
-    self.getNextTransition = function (fromState, transitionName, readFromStack) {
+
+
+    /**
+     * returns all possible transition, which go from the fromState with the transitionName to a state
+     * @param fromState
+     * @param transitionName
+     * @returns {Array}
+     */
+    self.getNextTransitions = function (fromState, transitionName, readFromStack) {
+        var transitions = [];
         for (var i = 0; i < $scope.config.transitions.length; i++) {
             var transition = $scope.config.transitions[i];
             if (transition.fromState == fromState && transition.name == transitionName && transition.readFromStack == readFromStack) {
-
-                return transition;
+                transitions.push(transition);
             }
         }
-        return undefined;
+        return transitions;
     };
-
     /**
      *  Checks if the automata is playable ( has min. 1 states and 1 transition and automat has a start and a finalstate)
      * @return {Boolean} [description]

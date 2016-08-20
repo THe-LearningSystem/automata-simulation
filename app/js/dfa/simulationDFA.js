@@ -380,7 +380,6 @@ function SimulationDFA($scope) {
         }
         return transitions;
     };
-    
     //BUTTONS NEED DIRECTIVES
     /**
      *  Checks if the automata is playable ( has min. 1 states and 1 transition and automaton has a start and a finalState)
