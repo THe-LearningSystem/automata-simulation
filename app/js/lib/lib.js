@@ -61,7 +61,7 @@ function TransitionPDA(id, fromState, toState, transitionChar, readFromStack, wr
 
 function PDAStack() {
     var self = this;
-    self.stackFirstSymbol = "​‌#";
+    self.stackFirstSymbol = "⊥";
     self.stackContainer = [self.stackFirstSymbol];
     self.listener = [];
 

@@ -33,6 +33,10 @@ function PDA($scope, $translate) {
         }
     };
 
+    /**
+     * Remove the readFromStack and WriteToStack from the stack
+     * @param transitionId
+     */
     $scope.removeFromStackAlphabetIfNotUsedFromOthers = function (transitionId) {
         var tmpTransition = $scope.getTransitionById(transitionId);
         //search if an other transition use the same readFromStack
@@ -103,27 +107,6 @@ function PDA($scope, $translate) {
         return tmp;
     };
 
-    $scope.getNextTransitionName = function (fromState) {
-        var namesArray = [];
-        for (var i = 0; i < $scope.config.transitions.length; i++) {
-            if ($scope.config.transitions[i].fromState == fromState) {
-                namesArray.push($scope.config.transitions[i].name);
-            }
-        }
-        var foundNextName = false;
-        var tryChar = "a";
-        while (!foundNextName) {
-            var value = _.indexOf(namesArray, tryChar);
-            if (value === -1) {
-                foundNextName = true;
-            } else {
-                tryChar = String.fromCharCode(tryChar.charCodeAt() + 1);
-            }
-        }
-        return tryChar;
-
-    };
-
     /**
      * Adds a transition at the end of the transitions array
      * @param {number} fromState      The id from the fromState
@@ -133,7 +116,6 @@ function PDA($scope, $translate) {
      * @param writeToStack
      */
     $scope.addTransition = function (fromState, toState, char, readFromStack, writeToStack) {
-        //can only create the transition if it is unique-> not for the ndfa
         //there must be a fromState and toState, before adding a transition
         if (!$scope.existsTransition(fromState, toState, char) && $scope.existsStateWithId(fromState) && $scope.existsStateWithId(toState)) {
             $scope.addToAlphabet(char);

@@ -23,12 +23,10 @@ function TestData($scope) {
         $scope.addStateWithPresets(200, 200);
         $scope.addStateWithPresets(500, 200);
 
-        $scope.addTransition(0, 0, "a", "​‌#", "A");
+        $scope.addTransition(0, 0, "a", "⊥", "A");
         $scope.addTransition(0, 0, "a", "A", "AA");
         $scope.addTransition(0, 1, "b", "A", "ε");
         $scope.addTransition(1, 1, "b", "A", "ε");
-        $scope.addTransition(1, 1, "b", "​‌#", "ε");
-
     };
 
     self.testPDA2 = function () {

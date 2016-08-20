@@ -25,6 +25,7 @@ function PortationDFA($scope, type) {
             $scope.statediagram.updateZoomBehaviour();
             //clear input cache
             angular.element('#hidden-file-upload').val('');
+            $scope.config.unSavedChanges = false;
         } else {
             console.log("the automaton has not the same type. AutomatonType:" + self.type + ", uploaded automatonType:" + tmpObject.type);
         }
