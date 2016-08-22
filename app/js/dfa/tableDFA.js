@@ -68,7 +68,7 @@ function TableDFA($scope) {
         if ($scope.simulator.animated.currentState == state.id) {
             if ($scope.simulator.status === "accepted") {
                 tmpObject.animatedClass = "animated-accepted";
-            } else if ($scope.simulator.status === "not accepted") {
+            } else if ($scope.simulator.status === "notAccepted") {
                 tmpObject.animatedClass = "animated-not-accepted";
             } else {
                 tmpObject.animatedClass = "animated-currentstate";

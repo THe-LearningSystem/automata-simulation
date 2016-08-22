@@ -7,6 +7,7 @@ function SimulationPDA($scope) {
 
     self.stack = new PDAStack();
 
+    //save the reference
     var parentReset = this.reset;
 
     /**
@@ -23,116 +24,21 @@ function SimulationPDA($scope) {
     };
 
     /**
-     * calcs the next step
+     * for stack pop used
      */
-    self.calcNextStep = function () {
-        self.isNextStepCalculated = true;
-        self.status = 'step';
-        self.nextChar = self.inputWord[self.madeSteps];
-        //get the next transition
-        self.transition = _.filter($scope.config.transitions, function (transition) {
-            //if there is no next char then the word is not accepted
-            if (self.nextChar === undefined) {
-                self.status = 'not accepted';
-                return;
-            }
-            //get the nextState
-            return transition.fromState == _.last(self.statusSequence) && transition.name == self.nextChar && transition.readFromStack === self.stack.stackContainer[self.stack.stackContainer.length - 1];
-        });
-        //if there is no next transition, then the word is not accepted
-        if (_.isEmpty(self.transition)) {
-            self.transition = null;
-            self.status = 'not accepted';
-            return;
-        }
-        //save transition and nextState for the animation
-        self.transition = self.transition[0];
-        self.nextState = self.transition.toState;
+    self.animateTransitionOverride = function () {
+        self.stack.pop();
     };
 
-    /**
-     * animate the next Move (a step has more than three moves)
-     */
-    self.animateNextMove = function () {
-        if (!self.isNextStepCalculated) {
-            self.calcNextStep();
-        }
-
-        //First: Paint the transition & wait
-        if (!self.animatedTransition) {
-            self.stack.pop();
-            self.animatedTransition = true;
-            self.animated.transition = self.transition;
-            self.goneTransitions.push(self.transition);
-
-            //Second: Paint the nextstate & wait
-        } else if (!self.animatedNextState && self.animatedTransition) {
-            self.animatedNextState = true;
-            self.animated.nextState = self.nextState;
-
-            //Third: clear transition & currentStateColor and set currentState = nextState and wait
-        } else if (self.animatedTransition && self.animatedNextState) {
-            self.stack.push(self.animated.transition.writeToStack);
-
-            self.animated.transition = null;
-            self.animated.nextState = null;
-            self.animated.currentState = self.nextState;
-
-            self.currentState = self.nextState;
-            //after the step was animated it adds a step to the madeSteps
-            self.madeSteps++;
-            //if the nextState is the finalState
-            if (self.inputWord.length == self.madeSteps) {
-                if (self.stack.stackContainer.length === 0) {
-                    self.status = 'accepted';
-                } else {
-                    self.status = 'not accepted';
-                }
-            }
-
-            //Reset the step & start the next step
-            self.isNextStepCalculated = false;
-            self.animatedNextState = false;
-            self.animatedTransition = false;
-            self.processedWord += self.nextChar;
-
-            //push the currentState to the statusSequence
-            self.statusSequence.push(self.currentState);
-
-            //check if there is a next transition
-            if (self.status !== "accepted" && self.status !== "not accepted")
-                self.calcNextStep();
-        }
-
-    };
+    //saving reference
+    var parentChangeNextStateToCurrentState = self.changeNextStateToCurrentState;
 
     /**
-     * animates the last move if there is no lastmove, then calcLastStep
-     * @return {[type]} [description]
+     * stack push integrated
      */
-    self.animateLastMove = function () {
-        if (self.animatedTransition && self.animatedNextState) {
-            self.stack.tryToPop(self.animated.transition.writeToStack);
-            self.animated.nextState = null;
-            self.animatedNextState = false;
-        }
-        else if (self.animatedTransition) {
-            self.stack.push(self.animated.transition.readFromStack);
-            self.animated.transition = null;
-            self.animatedTransition = false;
-            self.goneTransitions.pop();
-        } else {
-            self.calcLastStep();
-        }
-
-    };
-
-    /**
-     * checks if a word is accepted from the automata
-     * @return {Boolean}
-     */
-    self.isInputWordAccepted = function (inputWord) {
-        return self.getAllPossibleSequences(inputWord).length !== 0;
+    self.changeNextStateToCurrentState = function () {
+        self.stack.push(self.animated.transition.writeToStack);
+        parentChangeNextStateToCurrentState();
     };
 
 
@@ -153,16 +59,16 @@ function SimulationPDA($scope) {
             for (var i = 0; i < tmpSequences.length; i++) {
                 var tmpSequence = {};
                 tmpSequence.stack = new PDAStack();
+                tmpSequence.stack.pop();
                 tmpSequence.stack.push(tmpSequences[i].writeToStack);
                 tmpSequence.value = [tmpSequences[i]];
-
                 stackSequences.push(tmpSequence);
             }
-
         }
 
         while (stackSequences.length !== 0) {
             tmpSequence = stackSequences.pop();
+
             if (tmpSequence.value.length === inputWord.length && tmpSequence.stack.stackContainer.length === 0) {
                 possibleSequences.push(tmpSequence.value);
             } else if (inputWord.length > tmpSequence.value.length && tmpSequence.stack.stackContainer.length !== 0) {
@@ -175,11 +81,9 @@ function SimulationPDA($scope) {
                     tmpSequences.push(newTmpSequence);
                 });
                 stackSequences = _.concat(stackSequences, tmpSequences);
-
             }
         }
         return possibleSequences;
-
     };
 
 
@@ -198,12 +102,5 @@ function SimulationPDA($scope) {
             }
         }
         return transitions;
-    };
-    /**
-     *  Checks if the automata is playable ( has min. 1 states and 1 transition and automat has a start and a finalstate)
-     * @return {Boolean} [description]
-     */
-    self.isPlayable = function () {
-        return $scope.config.states.length >= 1 && $scope.config.transitions.length >= 1 && $scope.config.startState !== null;
     };
 }

@@ -28,7 +28,7 @@ function StatetransitionfunctionDFA($scope) {
 
             if (state.id == $scope.simulator.animated.currentState && $scope.simulator.status === "accepted") {
                 tmpObject.animatedClass = 'animated-accepted';
-            } else if (state.id == $scope.simulator.animated.currentState && $scope.simulator.status === "not accepted") {
+            } else if (state.id == $scope.simulator.animated.currentState && $scope.simulator.status === "notAccepted") {
                 tmpObject.animatedClass = 'animated-not-accepted';
             } else if (state.id == $scope.simulator.animated.currentState) {
                 tmpObject.animatedClass = 'animated-currentstate';

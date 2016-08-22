@@ -14,16 +14,27 @@
             <label>Accepted:</label>
 
             <div ng-repeat="value in bulktester.acceptedInput"
-                 ng-class="value.accepted ? 'pass-class' : 'fail-class'">
-                {{value.word}}--{{value.accepted === true ? "PASS" : "FAIL"}}
+                 ng-class="value.possible ? 'pass-class' : 'fail-class'">
+                {{value.word}}--{{value.possible === true ? "PASS" : "FAIL"}}
+                <span ng-repeat="sequence in value.sequences">
+                <button ng-click="simulator.animateSequence(sequence,value.possible)">Animate Path</button>
+                </span>
+                <button ng-click="simulator.animateSequence([],false)" ng-show="!value.sequences.length">Animate Path
+                </button>
+
             </div>
         </div>
         <div>
             <label>Rejected:</label>
 
             <div ng-repeat="value in bulktester.rejectedInput"
-                 ng-class="value.rejected? 'pass-class' : 'fail-class'">
-                {{value.word}}--{{value.rejected === true ? "PASS" : "FAIL"}}
+                 ng-class="!value.possible? 'pass-class' : 'fail-class'">
+                {{value.word}}--{{value.possible === false ? "PASS" : "FAIL"}}
+                <span ng-repeat="sequence in value.sequences">
+                <button ng-click="simulator.animateSequence(sequence,value.possible)">Animate Path</button>
+                </span>
+                <button ng-click="simulator.animateSequence([],false)" ng-show="!value.sequences.length">Animate Path
+                </button>
             </div>
         </div>
         <div>

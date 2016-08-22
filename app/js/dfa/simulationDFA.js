@@ -3,81 +3,57 @@ function SimulationDFA($scope) {
     "use strict";
     var self = this;
 
-    //saves if the animation is in playMode
-    self.isInPlay = false;
     //if the simulation loops (start at the end again)
     self.loopSimulation = true;
     //time between the steps
-    self.stepTimeOut = 1500;
+    self.stepTimeOut = 500;
     //Time between loops when the animation restarts
-    self.loopTimeOut = 2000;
-    //if the simulation is paused
+    self.loopTimeOut = 500;
+
+    //not in reset
+    self.isInPlay = false;
     self.simulationPaused = false;
-    //simulationSettings
-    self.simulationSettings = true;
-
-    //
-    self.currentState = null;
-    self.nextState = null;
-    self.transition = null;
-
-    //
-    self.isInputAccepted = false;
-
-    self.settings = function () {
-        self.simulationSettings = !self.simulationSettings;
-    };
-    self.animated = {
-        currentState: null,
-        transition: null,
-        nextState: null
-    };
 
     /**
-     * Should reset the simulation
+     * Reset the simulation
      */
     self.reset = function () {
-        //reset animation
+        if (self.animatedSequence != null) {
+            self.removeSequenceAnimation(self.animatedSequence, self.animatedSequencePossible);
+        }
+        self.animatedSequencePossible = null;
+        self.animatedSequence = null;
         self.animated = {
             currentState: null,
             transition: null,
             nextState: null
         };
-        //stack of the gone transitions
-        self.goneTransitions = [];
-        //Animation Settings
-        //saves the currentStateId -> for animating
-        self.currentState = $scope.config.startState;
-        //saves the nextTransition for animating
+        self.currentState = null;
         self.transition = null;
-        //saves if the transition is animated
-        self.animatedTransition = false;
-        //saves the nextState for animating
         self.nextState = null;
-        //saves if the nextState is animated
-        self.animatedNextState = false;
-        //saves if we already calculated the next step
-        self.isNextStepCalculated = false;
-        //saves if the simulationStarted
-        self.simulationStarted = false;
+        self.isInAnimation = false;
+        self.sequences = {};
+        self.processedWord = "";
+        self.currentPosition = 0;
+        //accepted,notAccepted,unknown
+        self.status = "unknown";
+        //is an empty inputWord Accepted
+        self.isEmptyWordAccepted = true;
+        $scope.safeApply();
+    };
+    self.reset();
 
-        //Simulation Settings
-        //saves the States we gone through
-        self.statusSequence = [$scope.config.startState];
-        //saves the steps we made T.
-        self.madeSteps = 0;
-        //the word we want to check
-        self.inputWord = $scope.config.inputWord;
-        //the word we already checked
-        self.processedWord = '';
-        //the char we checked at the step
-        self.nextChar = '';
-        //the status is stopped at when resetted
-        self.status = 'stopped';
+
+    /**
+     * stop the animation
+     */
+    self.stop = function () {
+        self.pause();
+        self.reset();
     };
 
     /**
-     * Pause the simulation
+     * Pause the animation
      */
     self.pause = function () {
         if (!self.simulationPaused) {
@@ -87,44 +63,34 @@ function SimulationDFA($scope) {
     };
 
     /**
-     * Stops the simulation
-     */
-    self.stop = function () {
-        self.pause();
-        self.reset();
-    };
-
-    /**
      * Play the simulation
      */
     self.play = function () {
-
         //if the simulation is paused then return
         if (!self.simulationPaused) {
             //start and prepare for the play
-            if (!self.simulationStarted) {
+            if (!self.isInAnimation) {
                 self.prepareSimulation();
+                setTimeout(self.play, self.loopTimeOut);
             } else {
-                //loop through the steps
-                if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
-                    self.animateNextMove();
-                    $scope.safeApply();
-                    if (self.isNextStepCalculated || ((self.status != 'accepted') && (self.status != 'not accepted'))) {
-                        setTimeout(self.play, self.stepTimeOut);
-                    }
-                }
-                //end the animation & reset it if loop through is activated the animation loop through play
-                if (!self.isNextStepCalculated && self.status == 'accepted') {
-                    if (self.loopSimulation) {
-                        setTimeout(self.play, self.loopTimeOut);
-                        //finish the Animation
-                    } else {
-                        self.isInPlay = false;
-                    }
-                    self.simulationStarted = false;
-                    $scope.safeApply();
-                }
+                self.stepForward();
+                if (!_.includes(["accepted", "notAccepted"], self.status))
+                    setTimeout(self.play, self.loopTimeOut);
             }
+        }
+    };
+
+    /**
+     * Starts or Pauses the Simulation
+     */
+    self.playOrPause = function () {
+        //change the icon and the state to Play or Pause
+        self.isInPlay = !self.isInPlay;
+        if (self.isInPlay) {
+            self.simulationPaused = false;
+            self.play();
+        } else {
+            self.pause();
         }
     };
 
@@ -132,201 +98,149 @@ function SimulationDFA($scope) {
      * Prepare the simulation ( set startSettings)
      */
     self.prepareSimulation = function () {
-        //The simulation always resets the parameters at the start -> it also sets the inputWord
         self.reset();
-        self.simulationStarted = true;
-        self.animated.currentState = _.last(self.statusSequence);
-
-        $scope.safeApply();
-        setTimeout(self.play, self.loopTimeOut);
+        self.isInAnimation = true;
+        self.sequences = self.getSequences($scope.config.inputWord);
     };
 
     /**
-     * animate the next Move (a step has more than three moves)
-     */
-    self.animateNextMove = function () {
-        if (!self.isNextStepCalculated) {
-            self.calcNextStep();
-        }
-
-        //First: Paint the transition & wait
-        if (!self.animatedTransition) {
-            self.animatedTransition = true;
-            self.animated.transition = self.transition;
-            self.goneTransitions.push(self.transition);
-
-            //Second: Paint the nextstate & wait
-        } else if (!self.animatedNextState && self.animatedTransition) {
-            self.animatedNextState = true;
-            self.animated.nextState = self.nextState;
-
-            //Third: clear transition & currentStateColor and set currentState = nextState and wait
-        } else if (self.animatedTransition && self.animatedNextState) {
-            self.animated.transition = null;
-            self.animated.nextState = null;
-            self.animated.currentState = self.nextState;
-
-            self.currentState = self.nextState;
-            //after the step was animated it adds a step to the madeSteps
-            self.madeSteps++;
-            //if the nextState is the finalState
-            if (self.inputWord.length == self.madeSteps) {
-                if (_.includes($scope.config.finalStates, self.currentState)) {
-                    self.status = 'accepted';
-                } else {
-                    self.status = 'not accepted';
-                }
-            }
-
-            //Reset the step & start the next step
-            self.isNextStepCalculated = false;
-            self.animatedNextState = false;
-            self.animatedTransition = false;
-            self.processedWord += self.nextChar;
-
-            //push the currentState to the statusSequence
-            self.statusSequence.push(self.currentState);
-
-            //check if there is a next transition
-            if (self.status !== "accepted" && self.status !== "not accepted")
-                self.calcNextStep();
-        }
-
-    };
-
-    /**
-     * calculates the next step
-     */
-    self.calcNextStep = function () {
-        self.isNextStepCalculated = true;
-        self.status = 'step';
-        self.nextChar = self.inputWord[self.madeSteps];
-
-        //get the next transition
-        self.transition = _.filter($scope.config.transitions, function (transition) {
-            //if there is no next char then the word is not accepted
-            if (self.nextChar === undefined) {
-                self.status = 'not accepted';
-                return;
-            }
-            //get the nextState
-            return transition.fromState == _.last(self.statusSequence) && transition.name == self.nextChar;
-        });
-        //if there is no next transition, then the word is not accepted
-        if (_.isEmpty(self.transition)) {
-            self.transition = null;
-            self.status = 'not accepted';
-            return;
-        }
-        //save transition and nextState for the animation
-        self.transition = self.transition[0];
-        self.nextState = self.transition.toState;
-    };
-
-    /**
-     * pause the simulation and then stepForward steps to the nextAnimation ( not a whole step)
+     * Make a step forward
      */
     self.stepForward = function () {
-        if (!self.simulationPaused) {
-            self.pause();
-        }
-        if (!self.simulationStarted) {
+        if (!self.isInAnimation) {
             self.prepareSimulation();
-            self.status = 'step';
-            // return if automaton is not running
-        } else if (!(_.includes(['step', 'stopped', 'accepted', 'not accepted'], self.status))) {
-            //TODO:DEBUG
-            console.log(self.status);
-            return false;
-        } else if (!_.includes(['accepted', 'not accepted'], self.status)) {
-            self.animateNextMove();
         }
-    };
-
-    /**
-     * pause the simulation and then steps back to the lastAnimation ( not a whole step)
-     * @return {[type]} [description]
-     */
-    self.stepBackward = function () {
-        if (!self.simulationPaused) {
-            self.pause();
-        }
-        // return if automaton is not running
-        if (!(_.includes(['step', 'accepted', 'not accepted'], self.status))) {
-            //TODO:DEBUG
-            return false;
-        }
-        self.status = 'step';
-
-        // Reset if no more undoing is impossible n-> not right at the moment
-        if (!self.animatedTransition && !self.animatedNextState && self.madeSteps === 0) {
-            self.reset();
-        } else {
-            // Decrease count and remove last element from statusSequence
-            self.animateLastMove();
-        }
-    };
-
-    /**
-     * animates the last move if there is no lastMove, then calcLastStep
-     * @return {[type]} [description]
-     */
-    self.animateLastMove = function () {
-        if (self.animatedTransition && self.animatedNextState) {
-            self.animated.nextState = null;
-            self.animatedNextState = false;
-        } else if (self.animatedTransition) {
-            self.animated.transition = null;
-            self.animatedTransition = false;
-            self.goneTransitions.pop();
-        } else {
-            self.calcLastStep();
-        }
-
-    };
-
-    /**
-     * calc the last step
-     */
-    self.calcLastStep = function () {
-        self.nextChar = self.processedWord.slice(-1);
-        console.log(self.nextChar + " " + self.statusSequence[self.statusSequence.length - 2]);
-
-        //get the gone way back
-        self.transition = _.last(self.goneTransitions);
-        console.log(self.transition);
-        _.pullAt(self.goneTransitions, self.goneTransitions.length);
-        //First: Paint the transition & wait
-        self.animatedTransition = true;
-        self.animated.transition = self.transition;
-        var tmp = self.currentState;
-        self.currentState = self.transition.fromState;
-        self.nextState = tmp;
-        self.animated.nextState = self.nextState;
-        //Second: Paint the nextstate & wait
-        self.animatedNextState = true;
-
-        self.animated.currentState = self.currentState;
-        self.madeSteps--;
-        self.statusSequence.splice(-1, 1);
-        self.processedWord = self.processedWord.slice(0, -1);
-    };
-
-    self.getNextTransition = function (fromState, transitionName) {
-        for (var i = 0; i < $scope.config.transitions.length; i++) {
-            var transition = $scope.config.transitions[i];
-            if (transition.fromState == fromState && transition.name == transitionName) {
-                return transition;
+        if (!_.includes(["accepted", "notAccepted"], self.status)) {
+            if (self.isEmptyWordAccepted && $scope.config.inputWord === "") {
+                self.animateEmptyWord();
+            } else {
+                if (self.animated.currentState === null) {
+                    self.animateCurrentState();
+                } else if (self.animated.transition === null) {
+                    self.animateTransition();
+                } else if (self.animated.nextState == null) {
+                    self.animateNextState();
+                } else {
+                    self.changeNextStateToCurrentState();
+                }
             }
         }
-        return undefined;
+        $scope.safeApply();
     };
+
     /**
-     * checks if a word is accepted from the automata
-     * @return {Boolean}
+     *Animation for the empty word
      */
-    self.check = function () {
-        return self.isInputWordAccepted($scope.config.inputWord);
+    self.animateEmptyWord = function () {
+        if (self.animated.currentState === null) {
+            self.animated.currentState = $scope.config.startState;
+        } else {
+            if ($scope.isStateAFinalState(self.animated.currentState)) {
+                self.status = "accepted";
+            } else {
+                self.status = "notAccepted";
+            }
+        }
+    };
+
+    /**
+     *Animate the currentState
+     */
+    self.animateCurrentState = function () {
+        self.animated.currentState = $scope.config.startState;
+    };
+
+    /**
+     *Animate the transition
+     */
+    self.animateTransition = function () {
+        if (self.getLongestSequence(self.sequences.sequences).length > self.currentPosition) {
+            self.animated.transition = self.getLongestSequence(self.sequences.sequences)[self.currentPosition];
+            self.processedWord += $scope.config.inputWord[self.currentPosition];
+            self.animateTransitionOverride();
+        } else {
+            self.status = "notAccepted";
+        }
+    };
+
+    /**
+     * Override Function if someone need to override it
+     */
+    self.animateTransitionOverride = function () {
+    };
+
+    /**
+     *Animate the nextState
+     */
+    self.animateNextState = function () {
+        self.animated.nextState = self.animated.transition.toState;
+    };
+
+    /**
+     *Change the currentState to the nextState
+     */
+    self.changeNextStateToCurrentState = function () {
+        self.currentPosition++;
+        self.animated.currentState = self.animated.nextState;
+        self.animated.nextState = null;
+        self.animated.transition = null;
+        if (self.isAnimationAccepted()) {
+            self.status = "accepted";
+        }
+    };
+
+    /**
+     * Returns if the animation is accepted for overriding
+     * @returns {boolean}
+     */
+    self.isAnimationAccepted = function () {
+        return self.currentPosition == $scope.config.inputWord.length && self.sequences.possible;
+    };
+
+
+    /**
+     * go a step backward (called from the button or other components)
+     */
+    self.stepBackward = function () {
+        if (self.animated.currentState != null && self.animated.transition != null && self.animated.nextState != null) {
+            self.removeNextStateAnimation();
+        } else if (self.animated.currentState != null && self.animated.transition != null) {
+            self.removeTransitionAnimation();
+
+        } else {
+            self.goAnimationBack();
+        }
+    };
+
+    /**
+     * removes the nextState animation
+     */
+    self.removeNextStateAnimation = function () {
+        self.animated.nextState = null;
+
+    };
+
+    /**
+     * remove the transition animation
+     */
+    self.removeTransitionAnimation = function () {
+        self.animated.transition = null;
+        self.processedWord = self.processedWord.substring(0, -1);
+    };
+
+    /**
+     * Goes the animation back ( if we have only a currentState
+     */
+    self.goAnimationBack = function () {
+        self.status = "unknown";
+        if (self.currentPosition !== 0) {
+            self.currentPosition--;
+            self.animated.nextState = self.animated.currentState;
+            self.animated.transition = self.getLongestSequence(self.sequences.sequences)[self.currentPosition];
+            self.animated.currentState = self.animated.transition.fromState;
+        } else {
+            self.reset();
+        }
     };
 
     /**
@@ -334,7 +248,60 @@ function SimulationDFA($scope) {
      * @return {Boolean}
      */
     self.isInputWordAccepted = function (inputWord) {
-        return self.getAllPossibleSequences(inputWord).length !== 0;
+        return self.getSequences(inputWord).possible;
+    };
+
+    /**
+     * Returns the shortest Sequence from the given sequences
+     * @param sequences
+     * @returns {Array}
+     */
+    self.getShortestSequence = function (sequences) {
+        var returnSequence = [];
+        _.forEach(sequences, function (sequence) {
+            if (returnSequence.length === 0 || returnSequence.length > sequence.length)
+                returnSequence = sequence;
+        });
+        return returnSequence;
+    };
+
+    /**
+     * Returns the longestSequence from the given sequences
+     * @param sequences
+     * @returns {Array}
+     */
+    self.getLongestSequence = function (sequences) {
+        var returnSequence = [];
+        _.forEach(sequences, function (sequence) {
+            if (returnSequence.length < sequence.length)
+                returnSequence = sequence;
+        });
+        return returnSequence;
+
+    };
+
+    /**
+     * Return either the possibleSequences, if there is no possibleSequence, then return the farthestPossibleSequences
+     * @param inputWord
+     * @returns {{}}
+     */
+    self.getSequences = function (inputWord) {
+        var tmpObj = {};
+        if (inputWord == "" && $scope.isStateAFinalState($scope.config.startState)) {
+            tmpObj.possible = true;
+            tmpObj.sequences = [];
+            return tmpObj;
+        }
+        var possibleSequences = self.getAllPossibleSequences(inputWord);
+        if (possibleSequences.length !== 0) {
+            tmpObj.possible = true;
+            tmpObj.sequences = possibleSequences;
+            return tmpObj;
+        } else {
+            tmpObj.possible = false;
+            tmpObj.sequences = self.getFarthestPossibleSequences(inputWord);
+            return tmpObj;
+        }
     };
 
     /**
@@ -344,6 +311,7 @@ function SimulationDFA($scope) {
      */
     self.getAllPossibleSequences = function (inputWord) {
         var possibleSequences = [];
+
         //1.Get the all possible transitions
         var stackSequences = self.getNextTransitions($scope.config.startState, inputWord[0]);
         //as long as there are possibleSequences do
@@ -365,6 +333,37 @@ function SimulationDFA($scope) {
     };
 
     /**
+     * Returns the farthest possible sequences
+     * @param inputWord
+     * @returns {Array}
+     */
+    self.getFarthestPossibleSequences = function (inputWord) {
+        var farthestSequences = [];
+        //1.Get the all possible transitions
+        var stackSequences = self.getNextTransitions($scope.config.startState, inputWord[0]);
+        //as long as there are possibleSequences do
+        while (stackSequences.length !== 0) {
+            var tmpSequence = stackSequences.pop();
+            if (tmpSequence.length === inputWord.length && $scope.isStateAFinalState(_.last(tmpSequence).toState)) {
+            } else if (inputWord.length > tmpSequence.length) {
+                var tmpSequences = [];
+                var newTmpSequence = [];
+                _.forEach(self.getNextTransitions(_.last(tmpSequence).toState, inputWord[tmpSequence.length]), function (value) {
+                    newTmpSequence = _.concat(tmpSequence, value);
+                    tmpSequences.push(newTmpSequence);
+                });
+                stackSequences = _.concat(stackSequences, tmpSequences);
+                if (tmpSequences.length === 0) {
+                    farthestSequences.push(tmpSequence);
+                }
+            } else {
+                farthestSequences.push(tmpSequence);
+            }
+        }
+        return farthestSequences;
+    };
+
+    /**
      * returns all possible transition, which go from the fromState with the transitionName to a state
      * @param fromState
      * @param transitionName
@@ -380,39 +379,69 @@ function SimulationDFA($scope) {
         }
         return transitions;
     };
-    //BUTTONS NEED DIRECTIVES
-    /**
-     *  Checks if the automata is playable ( has min. 1 states and 1 transition and automaton has a start and a finalState)
-     * @return {Boolean}
-     */
-    self.isPlayable = function () {
-        return $scope.config.states.length >= 1 && $scope.config.transitions.length >= 1 && $scope.config.startState !== null && $scope.config.finalStates.length >= 1;
-    };
 
     /**
-     * Starts or Pauses the Simulation
+     *update the currentSequences if it didnt break the simulation
      */
-    self.playOrPause = function () {
-        //the automaton needs to be playable
-        if (self.isPlayable()) {
-            //change the icon and the state to Play or Pause
-            self.isInPlay = !self.isInPlay;
-            if (self.isInPlay) {
-                self.simulationPaused = false;
-                self.play();
-            } else {
-                self.pause();
-            }
-
+    self.updateCurrentSequences = function () {
+        var newSequences = self.getSequences($scope.config.inputWord);
+        var newShortestSequence = self.getLongestSequence(newSequences.sequences);
+        var bool = true;
+        if (newShortestSequence.length < self.currentPosition) {
+            bool = false;
+        } else if (self.animated.transition !== null && newShortestSequence.length < self.currentPosition + 1) {
+            bool = false
         } else {
-
+            if (self.status === "notAccepted")
+                self.status = "unknown";
+            if (newShortestSequence.length < self.currentPosition + 1) {
+                self.status = "notAccepted";
+            }
+            self.sequences = newSequences;
         }
-
+        if (!bool) {
+            self.reset();
+            $scope.showModalWithMessage('SIM.MODAL_TITLE', 'SIM.MODAL_DESC');
+        }
     };
+
+    /**
+     * animates the sequence
+     * @param sequence
+     * @param possible
+     */
+    self.animateSequence = function (sequence, possible) {
+        self.reset();
+        self.isInAnimation = true;
+        $scope.statediagram.animateSequence(sequence, possible);
+        //TODO: Save Values and after load them
+        self.animatedSequence = sequence;
+        self.animatedSequencePossible = possible;
+    };
+
+    /**
+     * removes the sequence animation
+     * @param sequence
+     * @param possible
+     */
+    self.removeSequenceAnimation = function (sequence, possible) {
+        $scope.statediagram.removeSequenceAnimation(sequence, possible);
+    };
+
 
     $scope.updateListeners.push(self);
-    self.updateFunction = function () {
-        self.isInputAccepted = self.check();
-    };
 
+    /**
+     * updateFunction for the dfa listener
+     */
+    self.updateFunction = function () {
+        if (!isObjectEmpty(self.sequences))
+            self.updateCurrentSequences();
+        if (self.animatedSequence !== null) {
+            var seq = self.animatedSequence;
+            var seqPos = self.animatedSequencePossible;
+            self.removeSequenceAnimation(seq, seqPos);
+            self.animateSequence(seq, seqPos);
+        }
+    };
 }

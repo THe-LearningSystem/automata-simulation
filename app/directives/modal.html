@@ -21,7 +21,7 @@
                     <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="executeModalAction()">
                         {{button | translate}}
                     </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-show="!noAction">
                         {{"MODAL_BUTTON.DECLINE" | translate}}
                     </button>
                 </div>
