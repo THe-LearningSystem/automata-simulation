@@ -3,6 +3,7 @@ angular.module('automata-simulation').controller('DTACtrl', DTACtrl);
 
 function DTACtrl($scope, hotkeys) {
     console.log("created DTA");
+    $scope.safeApply = scopeSaveApply;
     var dta = new DTA($scope);
 
 

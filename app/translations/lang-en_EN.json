@@ -64,6 +64,8 @@
     "TITLE": "Transitionmenu",
     "NEXTSTATE": "Next State",
     "NAME": "Char",
+    "DTA_WRITE_SYMBOL": "Symbol to write",
+    "DTA_MOVE_DIRECTION": "MovingDirection",
     "NAME_TOO_SHORT": "Char too short!",
     "NAME_ALREADY_EXIST": "Transition char already exists!"
   },

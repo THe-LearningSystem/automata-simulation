@@ -88,14 +88,14 @@ function TransitionDFA(id, fromState, toState, transitionChar) {
     self.toState = toState;
 }
 
-function TransitionDTA(id, fromState, readSymbol, toState, writeSymbol, directionToMove) {
+function TransitionDTA(id, fromState, toState, readSymbol, writeSymbol, moveDirection) {
     var self = this;
     self.id = id;
     self.fromState = fromState;
-    self.readSymbol = readSymbol;
+    self.name = readSymbol;
     self.toState = toState;
     self.writeSymbol = writeSymbol;
-    self.directionToMove = directionToMove;
+    self.moveDirection = moveDirection;
 }
 
 function DTATape(){
