@@ -11,14 +11,15 @@ function BulkTesterDFA($scope) {
      * executes the bulkTest
      */
     self.bulkTest = function () {
-        self.testAcceptedInput();
-        self.testRejectedInput();
+        self.testAcceptedInputs();
+        self.testRejectedInputs();
+        self.testRegularExpressions();
 
     };
     /**
      * prepares the acceptedInput
      */
-    self.testAcceptedInput = function () {
+    self.testAcceptedInputs = function () {
         self.acceptedInput = [];
         var acceptedInputString = document.getElementById("acceptedInput").value;
         var acceptedInputArray = acceptedInputString.split("\n");
@@ -27,8 +28,8 @@ function BulkTesterDFA($scope) {
             if (acceptedWord !== "") {
                 var tmpObj = {};
                 tmpObj.word = acceptedWord;
-                tmpObj.accepted = $scope.simulator.isInputWordAccepted(acceptedWord);
-                console.log(tmpObj);
+                tmpObj.possibleSequences = $scope.simulator.getAllPossibleSequences(acceptedWord);
+                tmpObj.accepted = tmpObj.possibleSequences.length !== 0;
                 self.acceptedInput.push(tmpObj);
             }
         })
@@ -36,7 +37,7 @@ function BulkTesterDFA($scope) {
     /**
      * prepares the rejectedInput
      */
-    self.testRejectedInput = function () {
+    self.testRejectedInputs = function () {
         self.rejectedInput = [];
         var rejectedInputString = document.getElementById("rejectedInput").value;
         var rejectedInputArray = rejectedInputString.split("\n");
@@ -45,12 +46,53 @@ function BulkTesterDFA($scope) {
             if (rejectedWord !== "") {
                 var tmpObj = {};
                 tmpObj.word = rejectedWord;
-                tmpObj.rejected = !$scope.simulator.isInputWordAccepted(rejectedWord);
-                console.log();
+                tmpObj.possibleSequences = $scope.simulator.getAllPossibleSequences(rejectedWord);
+                tmpObj.rejected = tmpObj.possibleSequences.length === 0;
                 self.rejectedInput.push(tmpObj);
             }
         })
     };
+    /**
+     * tests the regular Expression
+     */
+    self.testRegularExpressions = function () {
+        self.regularExpression = [];
+        var regularExpressionString = document.getElementById("regularExpression").value;
+        var regularExpressionArray = regularExpressionString.split("\n");
+
+        _.forEach(regularExpressionArray, function (regularExpression) {
+            if (regularExpression !== "") {
+                var tmpObj = {};
+                tmpObj.word = regularExpression;
+                var bool = true;
+                for (var i = 1; i < 100; i++) {
+                    bool = $scope.simulator.isInputWordAccepted(self.fillRegularExpressionPower(regularExpression, i));
+                    if (bool == false) {
+                        break;
+                    }
+                }
+                tmpObj.accepted = bool;
+                self.regularExpression.push(tmpObj);
+            }
+
+
+        });
+    };
+
+    self.fillRegularExpressionPower = function (string, value) {
+
+        while (string.indexOf('^n') !== -1) {
+            var position = string.indexOf('^n') - 1;
+            var tmpChar = string[position];
+            for (var i = 0; i < value; i++) {
+                string = [string.slice(0, position), tmpChar, string.slice(position)].join('');
+            }
+            string = string.replace(tmpChar, "");
+            string = string.replace('^n', "");
+        }
+        return string;
+    }
+
     /**
      * updateFunction for the Listener
      */

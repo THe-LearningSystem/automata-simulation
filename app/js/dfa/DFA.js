@@ -10,6 +10,7 @@ function DFA($scope) {
     //Default Config for the automaton
     $scope.defaultConfig = {};
     $scope.defaultConfig.type = "DFA";
+    $scope.defaultConfig.font = "'Roboto', sans-serif";
     //the default prefix for auto naming for example S0,S1,... after the prefix it saves the id
     $scope.defaultConfig.statePrefix = 'S';
     //Suffix after a transition name on the statediagram
@@ -69,7 +70,9 @@ function DFA($scope) {
     //for the showing/hiding of the Input Field of the automaton name
     $scope.inNameEdit = false;
 
-    
+    $scope.test = function () {
+        console.log("test");
+    };
     /**
      * Check if transition already drawn
      * @param   {number}  fromState

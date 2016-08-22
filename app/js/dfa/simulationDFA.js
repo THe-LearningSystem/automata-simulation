@@ -171,7 +171,7 @@ function SimulationDFA($scope) {
             self.madeSteps++;
             //if the nextState is the finalState
             if (self.inputWord.length == self.madeSteps) {
-                if (_.include($scope.config.finalStates, self.currentState)) {
+                if (_.includes($scope.config.finalStates, self.currentState)) {
                     self.status = 'accepted';
                 } else {
                     self.status = 'not accepted';
@@ -234,11 +234,11 @@ function SimulationDFA($scope) {
             self.prepareSimulation();
             self.status = 'step';
             // return if automaton is not running
-        } else if (!(_.include(['step', 'stopped', 'accepted', 'not accepted'], self.status))) {
+        } else if (!(_.includes(['step', 'stopped', 'accepted', 'not accepted'], self.status))) {
             //TODO:DEBUG
             console.log(self.status);
             return false;
-        } else if (!_.include(['accepted', 'not accepted'], self.status)) {
+        } else if (!_.includes(['accepted', 'not accepted'], self.status)) {
             self.animateNextMove();
         }
     };
@@ -252,7 +252,7 @@ function SimulationDFA($scope) {
             self.pause();
         }
         // return if automaton is not running
-        if (!(_.include(['step', 'accepted', 'not accepted'], self.status))) {
+        if (!(_.includes(['step', 'accepted', 'not accepted'], self.status))) {
             //TODO:DEBUG
             return false;
         }
@@ -334,39 +334,52 @@ function SimulationDFA($scope) {
      * @return {Boolean}
      */
     self.isInputWordAccepted = function (inputWord) {
-        //init needed variables
-        var accepted = false;
-        var statusSequence = [];
-        statusSequence.push($scope.config.startState);
-        var nextChar = '';
-        var madeSteps = 0;
-        var transition = null;
-
-        while (madeSteps <= inputWord.length) {
-            nextChar = inputWord[madeSteps];
-            //get the next transition
-            transition = self.getNextTransition(_.last(statusSequence), nextChar);
-            //if there is no next transition, then the word is not accepted
-            if (_.isEmpty(transition)) {
-                break;
-            }
-            //push the new State to the sequence
-            statusSequence.push(transition.toState);
-            madeSteps++;
-            //if our madeSteps is equal to the length of the inputWord
-            //and our currentState is a finalState then the inputWord is accepted, if not its not accepted
-            if (inputWord.length == madeSteps) {
-                if (_.include($scope.config.finalStates, _.last(statusSequence))) {
-                    accepted = true;
-                    break;
-                } else {
-                    break;
-                }
-            }
-        }
-        return accepted;
+        return self.getAllPossibleSequences(inputWord).length !== 0;
     };
 
+    /**
+     * Returns all possible sequences, if an empty array is returned, there is no possibleSequence
+     * @param inputWord
+     * @returns {Array}
+     */
+    self.getAllPossibleSequences = function (inputWord) {
+        var possibleSequences = [];
+        //1.Get the all possible transitions
+        var stackSequences = self.getNextTransitions($scope.config.startState, inputWord[0]);
+        //as long as there are possibleSequences do
+        while (stackSequences.length !== 0) {
+            var tmpSequence = stackSequences.pop();
+            if (tmpSequence.length === inputWord.length && $scope.isStateAFinalState(_.last(tmpSequence).toState)) {
+                possibleSequences.push(tmpSequence);
+            } else if (inputWord.length > tmpSequence.length) {
+                var tmpSequences = [];
+                var newTmpSequence = [];
+                _.forEach(self.getNextTransitions(_.last(tmpSequence).toState, inputWord[tmpSequence.length]), function (value) {
+                    newTmpSequence = _.concat(tmpSequence, value);
+                    tmpSequences.push(newTmpSequence);
+                });
+                stackSequences = _.concat(stackSequences, tmpSequences);
+            }
+        }
+        return possibleSequences;
+    };
+
+    /**
+     * returns all possible transition, which go from the fromState with the transitionName to a state
+     * @param fromState
+     * @param transitionName
+     * @returns {Array}
+     */
+    self.getNextTransitions = function (fromState, transitionName) {
+        var transitions = [];
+        for (var i = 0; i < $scope.config.transitions.length; i++) {
+            var transition = $scope.config.transitions[i];
+            if (transition.fromState == fromState && transition.name == transitionName) {
+                transitions.push([transition]);
+            }
+        }
+        return transitions;
+    };
     //BUTTONS NEED DIRECTIVES
     /**
      *  Checks if the automata is playable ( has min. 1 states and 1 transition and automaton has a start and a finalState)

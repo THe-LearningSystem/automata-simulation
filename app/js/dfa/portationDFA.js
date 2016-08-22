@@ -1,7 +1,9 @@
-function PortationDFA($scope) {
+function PortationDFA($scope, type) {
     var self = this;
-
-    self.type = "DFA";
+    if (type === undefined)
+        self.type = "DFA";
+    else
+        self.type = type;
     /**
      * Imports the jsonObj and saves it as the new automatonConfig
      * @param jsonObj
@@ -23,6 +25,7 @@ function PortationDFA($scope) {
             $scope.statediagram.updateZoomBehaviour();
             //clear input cache
             angular.element('#hidden-file-upload').val('');
+            $scope.config.unSavedChanges = false;
         } else {
             console.log("the automaton has not the same type. AutomatonType:" + self.type + ", uploaded automatonType:" + tmpObject.type);
         }
@@ -68,7 +71,7 @@ function PortationDFA($scope) {
                         //import the data to the automaton
                         self.import(json);
                     } catch (ex) {
-                        alert('ex when trying to parse json = ' + ex);
+                        console.log('ex when trying to parse json = ' + ex);
                     }
                 };
             })(f);
@@ -108,7 +111,7 @@ function PortationDFA($scope) {
         var blob = new Blob([data], {
             type: "application/json"
         });
-        saveAs(blob, $scope.config.name + ".json");
+        saveAs(blob, $scope.config.name + "." + $scope.config.type.toLowerCase() + ".json");
     };
 
 
@@ -116,7 +119,10 @@ function PortationDFA($scope) {
      * Saves the svg as a png
      */
     self.saveAsPng = function () {
-        saveSvgAsPng(document.getElementById("diagram-svg"), $scope.config.name + ".png");
+        saveSvgAsPng(document.getElementById("diagram-svg"), $scope.config.name + "." + $scope.config.type.toLowerCase() + ".png", {
+            scale: 4,
+            encoderOptions: 1
+        });
     };
 
     /**Helper functions**/

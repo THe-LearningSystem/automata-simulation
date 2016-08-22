@@ -1,4 +1,4 @@
-//TESTDATA
+//2TESTDATA
 function TestData($scope) {
     "use strict";
     var self = this;
@@ -27,8 +27,6 @@ function TestData($scope) {
         $scope.addTransition(0, 0, "a", "A", "AA");
         $scope.addTransition(0, 1, "b", "A", "ε");
         $scope.addTransition(1, 1, "b", "A", "ε");
-        $scope.addTransition(1, 1, "b", "⊥", "ε");
-
     };
 
     self.testPDA2 = function () {
@@ -47,6 +45,7 @@ function TestData($scope) {
         $scope.addStateWithPresets(100, 300);
         $scope.addStateWithPresets(300, 300);
         $scope.addStateWithPresets(300, 100);
+        $scope.addFinalState(2);
         $scope.addFinalState(3);
 
         $scope.addTransition(0, 1, "a");

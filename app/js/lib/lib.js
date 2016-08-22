@@ -73,11 +73,14 @@ function TransitionPDA(id, fromState, toState, transitionChar, readFromStack, wr
     self.writeToStack = writeToStack;
 }
 
-}
-function PDAStack() {
+
+function PDAStack(stackArray) {
     var self = this;
-    self.stackFirstSymbol = "\u22a5";
-    self.stackContainer = [self.stackFirstSymbol];
+    self.stackFirstSymbol = "⊥";
+    if (stackArray === undefined)
+        self.stackContainer = [];
+    else
+        self.stackContainer = _.cloneDeep(stackArray);
     self.listener = [];
 
     self.push = function (char) {

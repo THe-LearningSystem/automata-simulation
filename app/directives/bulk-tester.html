@@ -5,7 +5,10 @@
     <label>Reject (one per line):</label>
     <textarea id="rejectedInput" style="margin-bottom:5px;" ng-model="bulkTester.rejectedInputRaw"
               ng-change="bulktester.bulkTest()"></textarea>
-    <div class="bulktest-result" ng-show="bulktester.acceptedInput.length != 0">
+    <label>Regular Expression (one per line):</label>
+    <textarea id="regularExpression" style="margin-bottom:5px;" ng-model="bulkTester.regularExpressionRaw"
+              ng-change="bulktester.bulkTest()"></textarea>
+    <div class="bulktest-result" ng-show="bulktester.acceptedInput.length != 0 ||bulktester.rejectedInput.length != 0">
         <h4>Result</h4>
         <div>
             <label>Accepted:</label>
@@ -21,6 +24,14 @@
             <div ng-repeat="value in bulktester.rejectedInput"
                  ng-class="value.rejected? 'pass-class' : 'fail-class'">
                 {{value.word}}--{{value.rejected === true ? "PASS" : "FAIL"}}
+            </div>
+        </div>
+        <div>
+            <label>Regular Expression:</label>
+
+            <div ng-repeat="value in bulktester.regularExpression"
+                 ng-class="value.accepted? 'pass-class' : 'fail-class'">
+                {{value.word}}--{{value.accepted === true ? "PASS" : "FAIL"}}
             </div>
         </div>
     </div>

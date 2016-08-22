@@ -17,22 +17,98 @@ function StateDiagramDFA($scope, svgSelector) {
         finalStateRadius: 29,
         selected: false
     };
-    //fixes bug with wrong width and height values, when the browser isn't finished loading
-    $(window).bind("load", function () {
-        self.svgOuterWidth = self.svgOuter.style("width").replace("px", "");
-        self.svgOuterHeight = self.svgOuter.style("height").replace("px", "");
-    });
-    //updates values after resizing
-    window.addEventListener('resize', function () {
-        self.svgOuterWidth = self.svgOuter.style("width").replace("px", "");
-        self.svgOuterHeight = self.svgOuter.style("height").replace("px", "");
-    });
 
     //is for the selfReference
     var stretchX = 40;
     var stretchY = 18;
     //for the selfReference transition
     self.stateSelfReferenceNumber = Math.sin(45 * (Math.PI / 180)) * self.settings.stateRadius;
+    //amount the user can zoom out
+    self.zoomMax = 2.5;
+    //amount the user can zoom in
+    self.zoomMin = 0.5;
+    self.zoomValue = 0.1;
+    //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
+    self.gridSpace = 100;
+    //the distance when the state is snapped to the next SnappingPoint (Rectangle form)
+    self.gridSnapDistance = 20;
+    //is Grid drawn
+    self.isGrid = true;
+    self.isInitialized = false;
+
+
+    /**
+     * Initialise the statediagram
+     */
+    self.init = function () {
+        console.log("init stateDiagram");
+
+        //prevents the normal rightClickContextMenu and add zoom
+        self.svgOuter = d3.select(svgSelector).call(svgOuterZoomAndDrag)
+        //prevents doubleClick zoom
+            .on("dblclick.zoom", null)
+            //adds our custom context menu on rightClick
+            .on("contextmenu", function () {
+                d3.event.preventDefault();
+            });
+        /**
+         * Click Listener when clicking on the outer svg =(not clicking on state or transition)
+         */
+        self.addSvgOuterClickListener = function () {
+            self.svgOuter.on("click", function () {
+                if (!self.preventSvgOuterClick) {
+                    self.closeStateMenu();
+                    self.closeTransitionMenu();
+                    $scope.safeApply();
+                } else {
+                    //remove ListenerBoolean
+                    self.preventSvgOuterClick = false;
+                }
+            });
+        };
+        //add at the start
+        self.addSvgOuterClickListener();
+        //the html element where we put the svgGrid into
+        self.svgGrid = self.svgOuter.append("g").attr("id", "grid");
+        //inner svg
+        self.svg = self.svgOuter.append("g").attr("id", "svg-items");
+        //first draw the transitions -> nodes are in front of them if they overlap
+        self.svgTransitions = self.svg.append("g").attr("id", "transitions");
+        self.svgStates = self.svg.append("g").attr("id", "states");
+
+        /**GRID-END**/
+        //DEFS
+        self.defs = self.svg.append('svg:defs');
+        //Marker-Arrow ( for the transitions)
+        self.defs.append('svg:marker').attr('id', 'marker-end-arrow').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+        self.defs.append('svg:marker').attr('id', 'marker-end-arrow-create').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+        self.defs.append('svg:marker').attr('id', 'marker-end-arrow-animated').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+        self.defs.append('svg:marker').attr('id', 'marker-end-arrow-hover').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+        self.defs.append('svg:marker').attr('id', 'marker-end-arrow-selection').attr('refX', 4).attr('refY', 3).attr('markerWidth', 5).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+
+        self.updateWidthAndHeight();
+        self.drawGrid();
+
+
+        //redraw the grid if the browser was resized
+        window.addEventListener('resize', function () {
+            self.updateWidthAndHeight();
+
+        });
+
+        window.addEventListener('resize', function () {
+            self.drawGrid();
+        });
+        self.isInitialized = true;
+    };
+
+    /**
+     * update the width and the Height
+     */
+    self.updateWidthAndHeight = function () {
+        self.svgOuterWidth = self.svgOuter.style("width").replace("px", "");
+        self.svgOuterHeight = self.svgOuter.style("height").replace("px", "");
+    };
 
     /**
      * Clears the svgContent, resets scale and translate and delete drawnTransitionContent
@@ -51,11 +127,6 @@ function StateDiagramDFA($scope, svgSelector) {
         svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagram.x, $scope.defaultConfig.diagram.y]);
     };
     /****ZOOMHANDLER START***/
-    //amount the user can zoom out
-    self.zoomMax = 2.5;
-    //amount the user can zoom in
-    self.zoomMin = 0.5;
-    self.zoomValue = 0.1;
     /**
      * zooms in in the svg
      */
@@ -169,60 +240,15 @@ function StateDiagramDFA($scope, svgSelector) {
         }
         self.updateZoomBehaviour();
     });
-    //prevents the normal rightClickContextMenu and add zoom
-    self.svgOuter = d3.select(svgSelector).call(svgOuterZoomAndDrag)
-    //prevents doubleClick zoom
-        .on("dblclick.zoom", null)
-        //adds our custom context menu on rightClick
-        .on("contextmenu", function () {
-            d3.event.preventDefault();
-        });
-    /**
-     * Click Listener when clicking on the outer svg =(not clicking on state or transition)
-     */
-    self.addSvgOuterClickListener = function () {
-        self.svgOuter.on("click", function () {
-            if (!self.preventSvgOuterClick) {
-                self.closeStateMenu();
-                self.closeTransitionMenu();
-                $scope.safeApply();
-            } else {
-                //remove ListenerBoolean
-                self.preventSvgOuterClick = false;
-            }
-        });
-    };
-    //add at the start
-    self.addSvgOuterClickListener();
-    //the html element where we put the svgGrid into
-    self.svgGrid = self.svgOuter.append("g").attr("id", "grid");
-    //inner svg
-    self.svg = self.svgOuter.append("g").attr("id", "svg-items");
-    //first draw the transitions -> nodes are in front of them if they overlap
-    self.svgTransitions = self.svg.append("g").attr("id", "transitions");
-    self.svgStates = self.svg.append("g").attr("id", "states");
 
-    /**GRID-START**/
-    //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
-    self.gridSpace = 100;
-    //the distance when the state is snapped to the next SnappingPoint (Rectangle form)
-    self.gridSnapDistance = 20;
-    //is Grid drawn
-    self.isGrid = true;
-    //watcher for the grid when changed -> updateGrid
-    $scope.$watch('[statediagram.isGrid , config.diagram]', function () {
-        //don't do this if in debug, causes problems with junit test
-        if (!$scope.debug) {
-            self.drawGrid();
-        }
-    }, true);
+
     /**
      * Draw the Grid
      */
     self.drawGrid = function () {
-        if (self.isGrid) {
+        self.svgGrid.html("");
+        if (self.isGrid && !$scope.debug) {
             //clear grid
-            self.svgGrid.html("");
             var thickness = 1 * $scope.config.diagram.scale * 0.5;
             var xOffset = ($scope.config.diagram.x % (self.gridSpace * $scope.config.diagram.scale));
             var yOffset = ($scope.config.diagram.y % (self.gridSpace * $scope.config.diagram.scale));
@@ -239,19 +265,7 @@ function StateDiagramDFA($scope, svgSelector) {
         }
 
     };
-    //redraw the grid if the browser was resized
-    window.addEventListener('resize', function () {
-        self.drawGrid();
-    });
-    /**GRID-END**/
-    //DEFS
-    self.defs = self.svg.append('svg:defs');
-    //Marker-Arrow ( for the transitions)
-    self.defs.append('svg:marker').attr('id', 'marker-end-arrow').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
-    self.defs.append('svg:marker').attr('id', 'marker-end-arrow-create').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
-    self.defs.append('svg:marker').attr('id', 'marker-end-arrow-animated').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
-    self.defs.append('svg:marker').attr('id', 'marker-end-arrow-hover').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
-    self.defs.append('svg:marker').attr('id', 'marker-end-arrow-selection').attr('refX', 4).attr('refY', 3).attr('markerWidth', 5).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
+
     /**
      * Reset all the AddListeners
      */
@@ -380,6 +394,11 @@ function StateDiagramDFA($scope, svgSelector) {
     };
 
 
+    /**
+     * Creates a transition on the svg
+     * @param fromState
+     * @param toState
+     */
     self.createTransition = function (fromState, toState) {
         var tmpTransition = $scope.addTransition(fromState, toState, $scope.getNextTransitionName(self.selectedState.id));
         self.toggleState(self.selectedState.id, false);
@@ -543,7 +562,7 @@ function StateDiagramDFA($scope, svgSelector) {
         //for outer circle dotted when selected
 
         group.append("circle").attr("class", "state-circle hover-circle").attr("r", self.settings.stateRadius);
-        group.append("text").text(state.name).attr("class", "state-text").attr("dominant-baseline", "central").attr("text-anchor", "middle");
+        group.append("text").text(state.name).attr("class", "state-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("style", "font-family:'" + $scope.defaultConfig.font + "';");
         state.objReference = group;
         group.on('click', self.openStateMenu).call(self.dragState);
         return group;
@@ -762,10 +781,20 @@ function StateDiagramDFA($scope, svgSelector) {
         };
     }
 
+    /**
+     * calc angle out of Rad
+     * @param angle
+     * @returns {number}
+     */
     function toDegrees(angle) {
         return angle * (180 / Math.PI);
     }
 
+    /**
+     * Calc rad out of angle
+     * @param angle
+     * @returns {number}
+     */
     function toRadians(angle) {
         return angle * (Math.PI / 180);
     }
@@ -783,6 +812,11 @@ function StateDiagramDFA($scope, svgSelector) {
         };
     }
 
+    /**
+     * calc the fixed vector length
+     * @param a
+     * @returns {{x: number, y: number}}
+     */
     function fixVectorLength(a) {
         var tmp = 1 / Math.sqrt(a.x * a.x + a.y * a.y);
         return {
@@ -792,6 +826,13 @@ function StateDiagramDFA($scope, svgSelector) {
         };
     }
 
+    /**
+     * get the Angle between two vectors
+     * @param a
+     * @param b
+     * @returns {{val: number, rad: number, degree: number}}
+     * @constructor
+     */
     function AngleBetweenTwoVectors(a, b) {
         var tmp = (a.x * b.x + a.y * b.y) / (Math.sqrt(a.x * a.x + a.y * a.y) * Math.sqrt(b.x * b.x + b.y * b.y));
         var tmp2 = Math.acos(tmp);
@@ -802,6 +843,12 @@ function StateDiagramDFA($scope, svgSelector) {
         };
     }
 
+    /**
+     * get the newAngle
+     * @param a
+     * @param b
+     * @returns {number}
+     */
     function newAngle(a, b) {
         var dot1 = a.x * b.x + a.y * b.y;
         //dot product
@@ -812,6 +859,12 @@ function StateDiagramDFA($scope, svgSelector) {
 
     var degreeConstant = 30;
 
+    /**
+     * calc the different angles
+     * @param a
+     * @param b
+     * @returns {{angle: number, lowerAngle: number, upperAngle: number}}
+     */
     function getAngles(a, b) {
         var angle = toDegrees(newAngle(a, b));
         if (angle < 0) {
@@ -856,7 +909,10 @@ function StateDiagramDFA($scope, svgSelector) {
             //from and to State
         var fromState = $scope.getStateById(transition.fromState);
         var toState = $scope.getStateById(transition.toState);
-        var isToStateAFinalState = $scope.isStateAFinalState(transition.toState);
+        //TODO:BETTER update
+        //var isToStateAFinalState = $scope.isStateAFinalState(transition.toState);
+        var isToStateAFinalState = false;
+
         //the x and y coordinates
         var x1 = fromState.x;
         var y1 = fromState.y;
@@ -985,13 +1041,12 @@ function StateDiagramDFA($scope, svgSelector) {
         for (var i = 0; i < names.length; i++) {
             //fix when creating new transition when in animation
             if ($scope.simulator.animated.transition !== null && names[i].id === $scope.simulator.animated.transition.id) {
-                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name).classed("animated-transition-text", true);
+                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name).classed("animated-transition-text", true).attr("style", "font-family:" + $scope.defaultConfig.font + ";");
             } else {
-                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name);
+                textObj.append('tspan').attr('transition-id', names[i].id).text(names[i].name).attr("style", "font-family:" + $scope.defaultConfig.font + ";");
             }
-
             if (i < names.length - 1)
-                textObj.append('tspan').text(' | ');
+                textObj.append('tspan').text(' | ').attr("style", "font-family:" + $scope.defaultConfig.font + ";");
         }
 
     };
@@ -1037,6 +1092,11 @@ function StateDiagramDFA($scope, svgSelector) {
         }
     };
 
+    /**
+     * create the TransitionGroup
+     * @param transition
+     * @returns {*}
+     */
     self.createTransitionGroup = function (transition) {
         var group = self.svgTransitions.append("g").attr("class", "transition");
         //the line itself with the arrow
@@ -1045,7 +1105,7 @@ function StateDiagramDFA($scope, svgSelector) {
         group.append("path").attr("class", "transition-line-click").attr("stroke-width", 20).attr("stroke", "transparent").attr("fill", "none");
         group.append("path").attr("class", "transition-line-hover").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-hover)");
         //the text
-        group.append("text").attr("class", "transition-text").attr("dominant-baseline", "central");
+        group.append("text").attr("class", "transition-text").attr("dominant-baseline", "central").attr("style", "font-family:" + $scope.defaultConfig.font + ";");
 
         group.attr("object-id", $scope.config.drawnTransitions.push({
                 fromState: transition.fromState,
@@ -1062,6 +1122,10 @@ function StateDiagramDFA($scope, svgSelector) {
     };
 
     self.selfTransitionTextLength = 10;
+    /**
+     * self update the selfReference
+     * @param drawnTransition
+     */
     self.updateSelfReference = function (drawnTransition) {
         var x = $scope.config.states[drawnTransition.fromState].x;
         var y = $scope.config.states[drawnTransition.fromState].y;
@@ -1076,6 +1140,11 @@ function StateDiagramDFA($scope, svgSelector) {
         };
     };
 
+    /**
+     * update the drawnTransition
+     * @param drawnTransition
+     * @param forcedApproach
+     */
     self.updateDrawnTransition = function (drawnTransition, forcedApproach) {
         if (drawnTransition.fromState === drawnTransition.toState) {
             self.writeTransitionText(drawnTransition.objReference.select(".transition-text"), $scope.getDrawnTransition(drawnTransition.fromState, drawnTransition.toState).names);
@@ -1129,7 +1198,7 @@ function StateDiagramDFA($scope, svgSelector) {
         self.input.toState = $scope.getStateById(toState);
         self.input.transitions = [];
         _.forEach(self.selectedTransition.names, function (value, key) {
-            var tmpObject = cloneObject(value);
+            var tmpObject = _.cloneDeep(value);
             if (transitionId !== undefined) {
                 if (value.id == transitionId) {
                     tmpObject.isFocus = true;
@@ -1138,25 +1207,33 @@ function StateDiagramDFA($scope, svgSelector) {
                 tmpObject.isFocus = true;
             }
             //add other variables
-            tmpObject.ttt = "";
-            tmpObject.tttisopen = false;
+            tmpObject.error = false;
             self.input.transitions.push(tmpObject);
         });
         self.transitionMenuListener = [];
         /*jshint -W083 */
         for (var i = 0; i < self.input.transitions.length; i++) {
             self.transitionMenuListener.push($scope.$watchCollection("statediagram.input.transitions['" + i + "']", function (newValue, oldValue) {
+                var nameErrorFound = false;
                 if (newValue.name !== oldValue.name) {
-                    newValue.tttisopen = false;
+                    newValue.error = false;
                     if (newValue.name !== "" && !$scope.existsTransition(fromState, toState, newValue.name)) {
                         $scope.modifyTransition(newValue.id, newValue.name);
                     } else if (newValue.name === "") {
-                        newValue.tttisopen = true;
-                        newValue.ttt = 'TRANS_MENU.NAME_TOO_SHORT';
-                    } else if ($scope.existsTransition(fromState, toState, newValue.name, newValue.id)) {
-                        newValue.tttisopen = true;
-                        newValue.ttt = 'TRANS_MENU.NAME_ALREADY_EXISTS';
+                        newValue.error = true;
+                        nameErrorFound = true;
                     }
+                }
+
+                if ($scope.existsTransition(fromState, toState, newValue.name, newValue.id)) {
+                    newValue.isUnique = false;
+                    newValue.error = true;
+                } else {
+                    if (!newValue.isUnique) {
+                        newValue.error = nameErrorFound ? true : false;
+                    }
+                    newValue.isUnique = true;
+
                 }
             }));
         }
@@ -1242,4 +1319,13 @@ function StateDiagramDFA($scope, svgSelector) {
         }
 
     });
+    /**other Watcher***/
+    //watcher for the grid when changed -> updateGrid
+    $scope.$watch('[statediagram.isGrid , config.diagram]', function () {
+        //don't do this if in debug, causes problems with junit test
+        if (self.isInitialized) {
+            self.drawGrid();
+        }
+    }, true);
+
 }
