@@ -221,9 +221,9 @@ function DFA($scope) {
 
         //get the new config
         $scope.config = _.cloneDeep($scope.defaultConfig);
-
-        $scope.safeApply();
         $scope.updateListener();
+        $scope.config.unSavedChanges = false;
+        $scope.safeApply();
     };
 
     /**
