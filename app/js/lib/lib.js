@@ -48,6 +48,21 @@ function TransitionDFA(id, fromState, toState, transitionChar) {
     self.toState = toState;
 }
 
+function TransitionDTA(id, fromState, readSymbol, toState, writeSymbol, directionToMove) {
+    var self = this;
+    self.id = id;
+    self.fromState = fromState;
+    self.readSymbol = readSymbol;
+    self.toState = toState;
+    self.writeSymbol = writeSymbol;
+    self.directionToMove = directionToMove;
+}
+
+function DTATape(){
+    var self = this;
+    self.blankSymbol = "\u2610";
+}
+
 function TransitionPDA(id, fromState, toState, transitionChar, readFromStack, writeToStack) {
     var self = this;
     self.id = id;
@@ -58,7 +73,7 @@ function TransitionPDA(id, fromState, toState, transitionChar, readFromStack, wr
     self.writeToStack = writeToStack;
 }
 
-
+}
 function PDAStack() {
     var self = this;
     self.stackFirstSymbol = "\u22a5";
