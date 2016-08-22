@@ -26,10 +26,8 @@ function BulkTesterDFA($scope) {
 
         _.forEach(acceptedInputArray, function (acceptedWord) {
             if (acceptedWord !== "") {
-                var tmpObj = {};
+                var tmpObj = $scope.simulator.getSequences(acceptedWord);
                 tmpObj.word = acceptedWord;
-                tmpObj.possibleSequences = $scope.simulator.getAllPossibleSequences(acceptedWord);
-                tmpObj.accepted = tmpObj.possibleSequences.length !== 0;
                 self.acceptedInput.push(tmpObj);
             }
         })
@@ -44,10 +42,8 @@ function BulkTesterDFA($scope) {
 
         _.forEach(rejectedInputArray, function (rejectedWord) {
             if (rejectedWord !== "") {
-                var tmpObj = {};
+                var tmpObj = $scope.simulator.getSequences(rejectedWord);
                 tmpObj.word = rejectedWord;
-                tmpObj.possibleSequences = $scope.simulator.getAllPossibleSequences(rejectedWord);
-                tmpObj.rejected = tmpObj.possibleSequences.length === 0;
                 self.rejectedInput.push(tmpObj);
             }
         })

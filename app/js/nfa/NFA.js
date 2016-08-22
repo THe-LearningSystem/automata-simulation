@@ -8,8 +8,6 @@ function NFA($scope, $translate) {
     $scope.defaultConfig.type = "NFA";
     //Config Object
     $scope.config = _.cloneDeep($scope.defaultConfig);
-
-    $scope.simulator = new SimulationNFA($scope);
     $scope.portation = new PortationDFA($scope, "NFA");
 
 

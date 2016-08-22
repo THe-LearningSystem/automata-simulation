@@ -29,7 +29,9 @@
     "PAUSE": "Pause",
     "STOP": "Stop",
     "STEPBACKWARD": "Schritt zurück",
-    "STEPFORWARD": "Schritt vorwärts"
+    "STEPFORWARD": "Schritt vorwärts",
+    "MODAL_TITLE": "Simulation wurde resettet",
+    "MODAL_DESC": "Simulation wurde resettet, da die Simulation zerstört wurde."
   },
   "SIM_SET": {
     "TITLE": "Simulationseinstellungen",
@@ -88,7 +90,8 @@
     "DELETE": "Löschen",
     "UPDATE": "Aktualisieren",
     "IMPORT": "Importieren",
-    "DECLINE": "Abbrechen"
+    "DECLINE": "Abbrechen",
+    "NOTIFIED": "OK"
   },
   "RESET_BUTTON_MODAL": {
     "TITLE": "Reset Automat",

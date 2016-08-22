@@ -70,9 +70,7 @@ function DFA($scope) {
     //for the showing/hiding of the Input Field of the automaton name
     $scope.inNameEdit = false;
 
-    $scope.test = function () {
-        console.log("test");
-    };
+
     /**
      * Check if transition already drawn
      * @param   {number}  fromState
@@ -123,12 +121,20 @@ function DFA($scope) {
     $scope.showModalWithMessage = function (newTitle, newDescription, action, button) {
         $scope.title = newTitle;
         $scope.description = newDescription;
-        $scope.modalAction = action;
-        if (button === undefined) {
-            $scope.button = "MODAL_BUTTON.PROCEED";
+        if (action !== undefined) {
+            $scope.modalAction = action;
+            $scope.noAction = false;
+            if (button === undefined) {
+                $scope.button = "MODAL_BUTTON.PROCEED";
+            } else {
+                $scope.button = button;
+            }
         } else {
-            $scope.button = button;
+            $scope.modalAction = null;
+            $scope.button = "MODAL_BUTTON.NOTIFIED";
+            $scope.noAction = true;
         }
+
         //change it to angular function
         $("#modal").modal();
     };
@@ -203,19 +209,6 @@ function DFA($scope) {
     $scope.saveAutomaton = function () {
         $scope.config.unSavedChanges = false;
 
-    };
-
-    //from https://coderwall.com/p/ngisma/safe-apply-in-angular-js
-    //fix for $apply already in progress
-    $scope.safeApply = function (fn) {
-        var phase = this.$root.$$phase;
-        if (phase == '$apply' || phase == '$digest') {
-            if (fn && (typeof (fn) === 'function')) {
-                fn();
-            }
-        } else {
-            this.$apply(fn);
-        }
     };
 
     /**

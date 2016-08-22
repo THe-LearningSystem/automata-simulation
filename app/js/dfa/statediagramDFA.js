@@ -589,8 +589,11 @@ function StateDiagramDFA($scope, svgSelector) {
         objReference.classed(className, state);
         if (state && className == 'animated-transition') {
             objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow-animated)");
+            objReference.selectAll("[transition-id='" + transitionId + "'").classed("animated-transition-text", true);
         } else {
             objReference.select(".transition-line").attr("marker-end", "url(#marker-end-arrow)");
+            objReference.selectAll("[transition-id='" + transitionId + "'").classed("animated-transition-text", false);
+
         }
     };
     /**
@@ -1289,13 +1292,9 @@ function StateDiagramDFA($scope, svgSelector) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
                 self.setTransitionClassAs(oldValue.id, false, "animated-transition");
-                d3.selectAll("[transition-id='" + oldValue.id + "'").classed("animated-transition-text", false);
-                //remove transitionName animation
             }
             if (newValue !== null) {
                 self.setTransitionClassAs(newValue.id, true, "animated-transition");
-                d3.selectAll("[transition-id='" + newValue.id + "'").classed("animated-transition-text", true);
-                //animate transitionName
             }
         }
     });
@@ -1313,14 +1312,79 @@ function StateDiagramDFA($scope, svgSelector) {
         if (newValue !== oldValue) {
             if ($scope.simulator.status === "accepted") {
                 self.setStateClassAs($scope.simulator.animated.currentState, true, "animated-accepted-svg");
-            } else if ($scope.simulator.status === "not accepted") {
+            } else if ($scope.simulator.status === "notAccepted") {
                 self.setStateClassAs($scope.simulator.animated.currentState, true, "animated-not-accepted-svg");
+            } else if ($scope.simulator.status === "unknown") {
+                if ($scope.simulator.animated.currentState != null) {
+                    self.setStateClassAs($scope.simulator.animated.currentState, false, "animated-accepted-svg");
+                    self.setStateClassAs($scope.simulator.animated.currentState, false, "animated-not-accepted-svg");
+                    self.setStateClassAs($scope.simulator.animated.currentState, true, "animated-currentState-svg");
+                }
             }
         }
-
     });
+
+
+    self.animateSequence = function (sequence, possible) {
+        //SET all states
+        var states = [];
+        _.forEach(sequence, function (tmpSequence, key) {
+            if (!_.includes(states, tmpSequence.toState) || key == sequence.length - 1) {
+                states.push(tmpSequence.toState);
+                if (key == sequence.length - 1 && possible)
+                    self.setStateClassAs(tmpSequence.toState, true, "animated-accepted-svg");
+                else if (key === sequence.length - 1 && !possible)
+                    self.setStateClassAs(tmpSequence.toState, true, "animated-not-accepted-svg");
+                else
+                    self.setStateClassAs(tmpSequence.toState, true, "animated-currentstate-svg");
+            }
+            if (!_.includes(states, tmpSequence.fromState)) {
+                states.push(tmpSequence.fromState);
+                self.setStateClassAs(tmpSequence.fromState, true, "animated-currentstate-svg");
+            }
+        });
+        var transitions = [];
+        _.forEach(sequence, function (transition) {
+            if (!_.includes(transitions, transition)) {
+                transitions.push(transition);
+                self.setTransitionClassAs(transition.id, true, "animated-transition");
+            }
+        })
+        if (sequence.length == 0) {
+            self.setStateClassAs($scope.config.startState, true, "animated-not-accepted-svg");
+        }
+    };
+
+    self.removeSequenceAnimation = function (sequence, possible) {
+        var states = [];
+        _.forEach(sequence, function (tmpSequence, key) {
+            if (!_.includes(states, tmpSequence.toState)) {
+                states.push(tmpSequence.toState);
+                if (key == sequence.length - 1 && possible)
+                    self.setStateClassAs(tmpSequence.toState, false, "animated-accepted-svg");
+                else if (key === sequence.length - 1 && !possible)
+                    self.setStateClassAs(tmpSequence.toState, false, "animated-not-accepted-svg");
+                else
+                    self.setStateClassAs(tmpSequence.toState, false, "animated-currentstate-svg");
+            }
+            if (!_.includes(states, tmpSequence.fromState)) {
+                states.push(tmpSequence.fromState);
+                self.setStateClassAs(tmpSequence.fromState, false, "animated-currentstate-svg");
+            }
+        });
+        var transitions = [];
+        _.forEach(sequence, function (transition) {
+            if (!_.includes(transitions, transition)) {
+                transitions.push(transition);
+                self.setTransitionClassAs(transition.id, false, "animated-transition");
+            }
+        })
+        if (sequence.length == 0) {
+            self.setStateClassAs($scope.config.startState, false, "animated-not-accepted-svg");
+        }
+    };
     /**other Watcher***/
-    //watcher for the grid when changed -> updateGrid
+//watcher for the grid when changed -> updateGrid
     $scope.$watch('[statediagram.isGrid , config.diagram]', function () {
         //don't do this if in debug, causes problems with junit test
         if (self.isInitialized) {
