@@ -107,11 +107,4 @@ function SimulationPDA($scope) {
         }
         return transitions;
     };
-    /**
-     *  Checks if the automata is playable ( has min. 1 states and 1 transition and automat has a start and a finalstate)
-     * @return {Boolean} [description]
-     */
-    self.isPlayable = function () {
-        return $scope.config.states.length >= 1 && $scope.config.transitions.length >= 1 && $scope.config.startState !== null;
-    };
 }
