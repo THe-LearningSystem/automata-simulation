@@ -62,10 +62,8 @@ function SimulationPDA($scope) {
                 tmpSequence.stack.pop();
                 tmpSequence.stack.push(tmpSequences[i].writeToStack);
                 tmpSequence.value = [tmpSequences[i]];
-
                 stackSequences.push(tmpSequence);
             }
-
         }
 
         while (stackSequences.length !== 0) {
@@ -83,11 +81,9 @@ function SimulationPDA($scope) {
                     tmpSequences.push(newTmpSequence);
                 });
                 stackSequences = _.concat(stackSequences, tmpSequences);
-
             }
         }
         return possibleSequences;
-
     };
 
 
