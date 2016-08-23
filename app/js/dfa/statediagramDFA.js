@@ -50,7 +50,41 @@ function StateDiagramDFA($scope, svgSelector) {
             //adds our custom context menu on rightClick
             .on("contextmenu", function () {
                 d3.event.preventDefault();
+                console.log("rightclick");
+                //remove the Tmp Transition if exists
+                self.removeTmpTransition();
+                self.contextMenu(d3.event);
             });
+
+
+        self.stateContextMenuOpened = false;
+        self.contextMenu = function (event, wantToClose) {
+            if (!self.stateContextMenuOpened) {
+                console.log(event);
+                if (wantToClose === undefined)
+                    wantToClose = false;
+                var menu = d3.select(".context-menu");
+                var active = "context-menu--active";
+                if (!wantToClose) {
+                    menu.classed(active, true);
+                    menu.attr("style", "top:" + event.layerY + "px;" + "left:" + event.layerX + "px;");
+                    self.contextMenuData = {};
+                    self.contextMenuData.addStateX = (((event.layerX - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale)));
+                    self.contextMenuData.addStateY = (((event.layerY - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale)));
+                } else {
+                    menu.classed(active, false);
+                }
+
+            } else {
+                self.stateContextMenuOpened = false;
+            }
+        };
+
+        self.stateContextMenu = function () {
+            self.stateContextMenuOpened = true;
+        }
+
+
         /**
          * Click Listener when clicking on the outer svg =(not clicking on state or transition)
          */
@@ -59,6 +93,7 @@ function StateDiagramDFA($scope, svgSelector) {
                 if (!self.preventSvgOuterClick) {
                     self.closeStateMenu();
                     self.closeTransitionMenu();
+                    self.contextMenu(null, true);
                     $scope.safeApply();
                 } else {
                     //remove ListenerBoolean
@@ -223,7 +258,7 @@ function StateDiagramDFA($scope, svgSelector) {
         $scope.safeApply();
         self.updateZoomBehaviour();
     };
-    //the svgOuterZoom and drag listener
+//the svgOuterZoom and drag listener
     var svgOuterZoomAndDrag = d3.behavior.zoom().scaleExtent([self.zoomMin, self.zoomMax]).on("zoom", function () {
         var stop = d3.event.button || d3.event.ctrlKey;
         if (stop)
@@ -402,7 +437,16 @@ function StateDiagramDFA($scope, svgSelector) {
     self.createTransition = function (fromState, toState) {
         var tmpTransition = $scope.addTransition(fromState, toState, $scope.getNextTransitionName(self.selectedState.id));
         self.toggleState(self.selectedState.id, false);
-        self.tmpTransition.remove();
+        self.removeTmpTransition();
+        //openTransitionMenu
+        self.openTransitionMenu(tmpTransition.id);
+    };
+
+
+    self.removeTmpTransition = function () {
+        if (self.tmpTransition !== null && self.tmpTransition !== undefined) {
+            self.tmpTransition.remove();
+        }
         self.tmpTransition = null;
         self.tmpTransitionline = null;
         self.preventStateDragging = false;
@@ -413,8 +457,6 @@ function StateDiagramDFA($scope, svgSelector) {
         d3.selectAll(".state").on("mouseover", null);
         d3.selectAll(".state").on("mouseleave", null);
         d3.selectAll('.state').on('click', self.openStateMenu);
-        //openTransitionMenu
-        self.openTransitionMenu(tmpTransition.id);
     };
     /**
      * Renames the state in the svg after the $scope variable was changed
@@ -565,6 +607,7 @@ function StateDiagramDFA($scope, svgSelector) {
         group.append("text").text(state.name).attr("class", "state-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("style", "font-family:'" + $scope.defaultConfig.font + "';");
         state.objReference = group;
         group.on('click', self.openStateMenu).call(self.dragState);
+        group.on('contextmenu', self.stateContextMenu);
         return group;
     };
     /**
@@ -702,13 +745,12 @@ function StateDiagramDFA($scope, svgSelector) {
         }
 
     };
-    //Node drag and drop behaviour
+//Node drag and drop behaviour
     self.dragState = d3.behavior.drag().on("dragstart", function () {
         //stops drag bugs when wanted to click
         self.dragAmount = 0;
         d3.event.sourceEvent.stopPropagation();
     }).on("drag", function () {
-
         if (d3.event.sourceEvent.which == 1) {
             if (!self.preventStateDragging) {
                 self.dragAmount++;
@@ -888,7 +930,7 @@ function StateDiagramDFA($scope, svgSelector) {
         };
     }
 
-    //Get the Path from an array -> for the transition
+//Get the Path from an array -> for the transition
     self.bezierLine = d3.svg.line().x(function (d) {
         return d[0];
     }).y(function (d) {

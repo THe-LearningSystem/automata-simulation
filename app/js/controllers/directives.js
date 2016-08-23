@@ -123,6 +123,11 @@ autoSim.directive("ownSvg", function () {
         templateUrl: 'directives/own-svg.html'
     };
 });
+autoSim.directive("contextMenu", function () {
+    return {
+        templateUrl: 'directives/context-menu.html'
+    };
+});
 
 // to deFocus an field, when clicked on someOther place than the focused field
 /* jshint -W030 */

@@ -71,7 +71,7 @@ function StateDiagramPDA($scope, svgSelector) {
         var stackItemHeight = 20;
         var group = self.svgStack.append("g");
         group.append("rect").attr("class", "stack-item").attr("x", -self.stackWidth - self.stackPaddingToBorder + 1).attr("y", -self.stackPaddingToBorder - (stackItemHeight * (self.drawnStack.length + 1)) - 1).attr("width", 75 - 2).attr("height", stackItemHeight);
-        var stackElement = group.append("text").text(character).attr("class", "stack-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("x", -55).attr("y", -28 - 20 * self.drawnStack.length);
+        group.append("text").text(character).attr("class", "stack-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("x", -55).attr("y", -28 - 20 * self.drawnStack.length);
         self.drawnStack.push(group);
     };
 

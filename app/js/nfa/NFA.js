@@ -1,7 +1,6 @@
 //NFA
 function NFA($scope, $translate) {
     "use strict";
-    var self = this;
     DFA.apply(this, arguments);
 
     /**Overwriting**/

@@ -51,7 +51,7 @@ function SimulationPDA($scope) {
         //init needed variables
         var possibleSequences = [];
         var stackSequences = [];
-        var tmpSequences = {};
+        var tmpSequences = [];
 
 
         if (inputWord.length !== 0) {
@@ -68,11 +68,10 @@ function SimulationPDA($scope) {
 
         while (stackSequences.length !== 0) {
             tmpSequence = stackSequences.pop();
-
             if (tmpSequence.value.length === inputWord.length && tmpSequence.stack.stackContainer.length === 0) {
                 possibleSequences.push(tmpSequence.value);
             } else if (inputWord.length > tmpSequence.value.length && tmpSequence.stack.stackContainer.length !== 0) {
-                var tmpSequences = [];
+                tmpSequences = [];
                 _.forEach(self.getNextTransitions(_.last(tmpSequence.value).toState, inputWord[tmpSequence.value.length], tmpSequence.stack.pop()), function (sequence) {
                     var newTmpSequence = {};
                     newTmpSequence.stack = new PDAStack(tmpSequence.stack.stackContainer);
@@ -96,7 +95,7 @@ function SimulationPDA($scope) {
         //init needed variables
         var farthestSequences = [];
         var stackSequences = [];
-        var tmpSequences = {};
+        var tmpSequences = [];
 
 
         if (inputWord.length !== 0) {
@@ -113,10 +112,9 @@ function SimulationPDA($scope) {
 
         while (stackSequences.length !== 0) {
             tmpSequence = stackSequences.pop();
-
             if (tmpSequence.value.length === inputWord.length && tmpSequence.stack.stackContainer.length === 0) {
             } else if (inputWord.length > tmpSequence.value.length && tmpSequence.stack.stackContainer.length !== 0) {
-                var tmpSequences = [];
+                tmpSequences = [];
                 _.forEach(self.getNextTransitions(_.last(tmpSequence.value).toState, inputWord[tmpSequence.value.length], tmpSequence.stack.pop()), function (sequence) {
                     var newTmpSequence = {};
                     newTmpSequence.stack = new PDAStack(tmpSequence.stack.stackContainer);
@@ -140,6 +138,7 @@ function SimulationPDA($scope) {
      * returns all possible transition, which go from the fromState with the transitionName to a state
      * @param fromState
      * @param transitionName
+     * @param readFromStack
      * @returns {Array}
      */
     self.getNextTransitions = function (fromState, transitionName, readFromStack) {

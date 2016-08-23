@@ -87,7 +87,7 @@ function BulkTesterDFA($scope) {
             string = string.replace('^n', "");
         }
         return string;
-    }
+    };
 
     /**
      * updateFunction for the Listener

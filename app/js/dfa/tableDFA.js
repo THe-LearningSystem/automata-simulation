@@ -57,6 +57,7 @@ function TableDFA($scope) {
     /**
      * Prepares the firstState (the fromState)
      * @param tmpObject
+     * @param state
      */
     self.prepareFromState = function (tmpObject, state) {
         tmpObject.name = state.name;

@@ -78,7 +78,7 @@ function PortationDFA($scope, type) {
             reader.readAsText(f);
 
         }
-    }
+    };
 
     /**
      * add the listener to the hidden input field
@@ -184,7 +184,7 @@ function PortationDFA($scope, type) {
             allTransitions.push(tmpTransition);
         });
         return allTransitions;
-    }
+    };
 
     /**
      * Returns all transition without the objReference
@@ -198,5 +198,5 @@ function PortationDFA($scope, type) {
             allStates.push(tmpState);
         });
         return allStates;
-    }
+    };
 }
