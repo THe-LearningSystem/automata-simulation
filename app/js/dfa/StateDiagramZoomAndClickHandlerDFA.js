@@ -36,6 +36,7 @@ function StateDiagramZoomAndClickHandlerDFA($scope, self) {
                 self.closeStateMenu();
                 self.closeTransitionMenu();
                 self.contextMenu(null, true);
+                self.stateContextMenu(null, true);
                 $scope.safeApply();
             } else {
                 //remove ListenerBoolean

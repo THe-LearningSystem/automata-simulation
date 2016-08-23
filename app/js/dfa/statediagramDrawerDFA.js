@@ -111,28 +111,43 @@ function StateDiagramDrawerDFA($scope, self) {
     /**
      * addTransition function for the icon
      */
-    self.addTransition = function () {
+    self.addTransition = function (fromState) {
+        console.log(fromState);
         self.resetAddActions();
         //prevent dragging during addTransition
         self.preventStateDragging = true;
         //1. FirstClick: select a state and create a tmpLine for visual feedback
         //SecondClick: Create a transition from selectState to the clickedState
-        d3.selectAll(".state").on("click", function () {
-            self.mouseInState = true;
-            //if there is no selected state then select a state
-            if (self.selectedState === null) {
-                self.selectedState = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
-                self.toggleState(self.selectedState.id, true);
-                //create tmpLine
-                self.tmpTransition = self.svgTransitions.append("g").attr("class", "transition");
-                //the line itself with the arrow without the path itself
-                self.tmpTransitionline = self.tmpTransition.append("path").attr("class", "transition-line curvedLine in-creation").attr("marker-end", "url(#marker-end-arrow-create)").attr("fill", "none");
-                //if already selected a state then create transition to the clickedState
-            } else {
-                self.createTransition(self.selectedState.id, parseInt(d3.select(this).attr("object-id")));
-            }
+        if (fromState === undefined) {
+            d3.selectAll(".state").on("click", function () {
+                self.mouseInState = true;
+                //if there is no selected state then select a state
+                if (self.selectedState === null) {
+                    self.selectedState = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
+                    console.log("im here");
+                    self.toggleState(self.selectedState.id, true);
+                    //create tmpLine
+                    self.tmpTransition = self.svgTransitions.append("g").attr("class", "transition");
+                    //the line itself with the arrow without the path itself
+                    self.tmpTransitionline = self.tmpTransition.append("path").attr("class", "transition-line curvedLine in-creation").attr("marker-end", "url(#marker-end-arrow-create)").attr("fill", "none");
+                    //if already selected a state then create transition to the clickedState
+                } else {
+                    self.createTransition(self.selectedState.id, parseInt(d3.select(this).attr("object-id")));
+                }
 
-        });
+            });
+        } else {
+            self.mouseInState = false;
+            self.selectedState = $scope.getStateById(fromState);
+            self.toggleState(self.selectedState.id, true);
+            //create tmpLine
+            self.tmpTransition = self.svgTransitions.append("g").attr("class", "transition");
+            //the line itself with the arrow without the path itself
+            self.tmpTransitionline = self.tmpTransition.append("path").attr("class", "transition-line curvedLine in-creation").attr("marker-end", "url(#marker-end-arrow-create)").attr("fill", "none");
+            d3.selectAll(".state").on("click", function () {
+                self.createTransition(self.selectedState.id, parseInt(d3.select(this).attr("object-id")));
+            });
+        }
         //2. if the mouse moves on the svgOuter and not on a state, then update the tmpLine
         self.svgOuter.on("mousemove", function () {
             if (!self.mouseInState && self.selectedState !== null) {
@@ -390,7 +405,9 @@ function StateDiagramDrawerDFA($scope, self) {
         group.append("text").text(state.name).attr("class", "state-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("style", "font-family:'" + $scope.defaultConfig.font + "';");
         state.objReference = group;
         group.on('click', self.openStateMenu).call(self.dragState);
-        group.on('contextmenu', self.stateContextMenu);
+        group.on('contextmenu', function () {
+            self.stateContextMenu(id)
+        });
         return group;
     };
     /**

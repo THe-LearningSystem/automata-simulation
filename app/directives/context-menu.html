@@ -1,4 +1,4 @@
-<nav class="context-menu">
+<nav class="context-menu context-menu-normal">
     <ul class="context-menu__items">
         <li class="context-add-state"
             ng-click="addStateWithPresets(statediagram.contextMenuData.addStateX,statediagram.contextMenuData.addStateY) ; statediagram.contextMenu(null,true)">
@@ -8,17 +8,16 @@
                 <span class="context-menu-shortcut"></span>
             </span>
         </li>
-        <li class=" context-menu__item">
-             <span class="context-menu__link">
-                <span class="context-menu-icon"></span>
+    </ul>
+</nav>
+
+<nav class="context-menu context-menu-state">
+    <ul class="context-menu__items">
+        <li class="context-add-state"
+            ng-click="statediagram.addTransition(statediagram.contextMenuData.stateId) ; statediagram.stateContextMenu(null,true)">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-plus-circle"></span>
                 <span class="context-menu-text">Add Transition</span>
-                <span class="context-menu-shortcut"></span>
-            </span>
-        </li>
-        <li class="context-menu__item">
-             <span class="context-menu__link">
-                <span class="context-menu-icon"></span>
-                <span class="context-menu-text">Test</span>
                 <span class="context-menu-shortcut"></span>
             </span>
         </li>

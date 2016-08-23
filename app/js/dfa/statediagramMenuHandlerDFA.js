@@ -198,15 +198,26 @@ function StateDiagramMenuHandlerDFA($scope, self) {
                 menu.classed(active, false);
             }
 
-        } else {
-            self.stateContextMenuOpened = false;
         }
     };
 
     /**
      * opens or close the stateContextMenu
      */
-    self.stateContextMenu = function () {
+    self.stateContextMenu = function (stateId, wantToClose) {
         self.stateContextMenuOpened = true;
+        if (wantToClose === undefined)
+            wantToClose = false;
+        var menu = d3.select(".context-menu-state");
+        var active = "context-menu--active";
+        if (!wantToClose) {
+            menu.classed(active, true);
+            menu.attr("style", "top:" + event.layerY + "px;" + "left:" + event.layerX + "px;");
+            self.contextMenuData = {};
+            self.contextMenuData.stateId = stateId;
+        } else {
+            menu.classed(active, false);
+            self.stateContextMenuOpened = false;
+        }
     }
 }
