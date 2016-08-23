@@ -2,7 +2,7 @@
 function StateDiagramDFA($scope, svgSelector) {
     "use strict";
     var self = this;
-
+    self.svgSelector = svgSelector;
     self.selectedState = null;
 
     self.selectedTransition = null;
@@ -11,8 +11,8 @@ function StateDiagramDFA($scope, svgSelector) {
     self.isInitialized = false;
 
     //Create inner components
+    new StateDiagramZoomAndClickHandlerDFA($scope, self);
     new StateDiagramDrawerDFA($scope, self);
-    new StateDiagramZoomHandlerDFA($scope, self);
     new StateDiagramMenuHandlerDFA($scope, self);
 
 
@@ -22,31 +22,30 @@ function StateDiagramDFA($scope, svgSelector) {
     self.init = function () {
         console.log("init stateDiagram");
 
-        //prevents the normal rightClickContextMenu and add zoom
-        self.svgOuter = d3.select(svgSelector).call(self.svgOuterZoomAndDrag)
-        //prevents doubleClick zoom
-            .on("dblclick.zoom", null)
-            //adds our custom context menu on rightClick
-            .on("contextmenu", function () {
-                d3.event.preventDefault();
-                console.log("rightclick");
-                //remove the Tmp Transition if exists
-                self.removeTmpTransition();
-                self.contextMenu(d3.event);
-            });
-
-
+        self.svgOuter = self.createSvgOuterClickListeners();
         //add at the start
         self.addSvgOuterClickListener();
-        //the html element where we put the svgGrid into
+        //create svgGrid container
         self.svgGrid = self.svgOuter.append("g").attr("id", "grid");
-        //inner svg
+        //create svgContainer this is gonna be moved and scaled
         self.svg = self.svgOuter.append("g").attr("id", "svg-items");
-        //first draw the transitions -> nodes are in front of them if they overlap
+        //create svgTransitionContainer, the transitions are always above the states
         self.svgTransitions = self.svg.append("g").attr("id", "transitions");
+        //create svgStateContainer
         self.svgStates = self.svg.append("g").attr("id", "states");
 
-        /**GRID-END**/
+
+        self.createDefs();
+        self.updateWidthAndHeight();
+        self.drawGrid();
+
+        self.isInitialized = true;
+    };
+
+    /**
+     * create the defs
+     */
+    self.createDefs = function () {
         //DEFS
         self.defs = self.svg.append('svg:defs');
         //Marker-Arrow ( for the transitions)
@@ -56,26 +55,7 @@ function StateDiagramDFA($scope, svgSelector) {
         self.defs.append('svg:marker').attr('id', 'marker-end-arrow-hover').attr('refX', 7.5).attr('refY', 3).attr('markerWidth', 10).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
         self.defs.append('svg:marker').attr('id', 'marker-end-arrow-selection').attr('refX', 4).attr('refY', 3).attr('markerWidth', 5).attr('markerHeight', 10).attr('orient', 'auto').append('svg:path').attr('d', 'M0,0 L0,6 L9,3 z');
 
-
-        //redraw the grid if the browser was resized
-        window.addEventListener('resize', function () {
-            self.updateWidthAndHeight();
-        });
-
-        self.drawGrid();
-
-
-        self.isInitialized = true;
     };
-
-    /**
-     * update the width and the Height
-     */
-    self.updateWidthAndHeight = function () {
-        self.svgOuterWidth = self.svgOuter.style("width").replace("px", "");
-        self.svgOuterHeight = self.svgOuter.style("height").replace("px", "");
-    };
-
 
     /**
      * Reset all the AddListeners
@@ -108,12 +88,15 @@ function StateDiagramDFA($scope, svgSelector) {
             }
         }
     });
+
     $scope.$watch('simulator.animated.transition', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             if (oldValue !== null) {
+                //noinspection JSUnresolvedVariable
                 self.setTransitionClassAs(oldValue.id, false, "animated-transition");
             }
             if (newValue !== null) {
+                //noinspection JSUnresolvedVariable
                 self.setTransitionClassAs(newValue.id, true, "animated-transition");
             }
         }

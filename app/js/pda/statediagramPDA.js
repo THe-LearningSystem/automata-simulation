@@ -16,11 +16,11 @@ function StateDiagramPDA($scope, svgSelector) {
      */
     self.init = function () {
         parentInit();
-
         //stack
         self.svgStack = self.svgOuter.append("g");
-        self.drawStack();
         self.updateStackPosition();
+        self.drawStack();
+
 
     };
 
@@ -261,9 +261,9 @@ function StateDiagramPDA($scope, svgSelector) {
                     newValue.writeToStack.error = true;
                 } else {
                     if (!newValue.isUnique) {
-                        newValue.error = nameErrorFound ? true : false;
-                        newValue.readFromStack.error = readFromStackErrorFound ? true : false;
-                        newValue.writeToStack.error = writeToStackErrorFound ? true : false;
+                        newValue.error = nameErrorFound;
+                        newValue.readFromStack.error = readFromStackErrorFound;
+                        newValue.writeToStack.error = writeToStackErrorFound;
                     }
                     newValue.isUnique = true;
 

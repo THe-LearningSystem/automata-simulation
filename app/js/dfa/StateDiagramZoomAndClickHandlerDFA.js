@@ -1,13 +1,32 @@
-function StateDiagramZoomHandlerDFA($scope, self) {
+function StateDiagramZoomAndClickHandlerDFA($scope, self) {
+
+
+    /**
+     * Creates the svgOuterClickListeners like contextMenu and disables doubleClick zoom
+     * @returns {*}
+     */
+    self.createSvgOuterClickListeners = function () {
+        return d3.select(self.svgSelector).call(self.svgOuterZoomAndDrag)
+            .on("dblclick.zoom", null)
+            //adds our custom context menu on rightClick
+            .on("contextmenu", self.contextMenuClickListener);
+    };
+
+
+    /**
+     * update the width and the Height
+     */
+    self.updateWidthAndHeight = function () {
+        self.svgOuterWidth = self.svgOuter.style("width").replace("px", "");
+        self.svgOuterHeight = self.svgOuter.style("height").replace("px", "");
+        if (!self.isInitialized)
+            window.addEventListener('resize', function () {
+                self.updateWidthAndHeight();
+            });
+    };
+
     //prevents call from the svgOuterClickListener
     self.preventSvgOuterClick = false;
-    //amount the user can zoom out
-    self.zoomMax = 2.5;
-    //amount the user can zoom in
-    self.zoomMin = 0.5;
-    self.zoomValue = 0.1;
-
-
     /**
      * Click Listener when clicking on the outer svg =(not clicking on state or transition)
      */
@@ -24,7 +43,22 @@ function StateDiagramZoomHandlerDFA($scope, self) {
             }
         });
     };
+
+    /**
+     * Executed when right clicking in the svg
+     */
+    self.contextMenuClickListener = function () {
+        d3.event.preventDefault();
+        //remove the Tmp Transition if exists
+        self.removeTmpTransition();
+        self.contextMenu(d3.event);
+    };
     /****ZOOMHANDLER START***/
+    //amount the user can zoom out
+    self.zoomMax = 2.5;
+    //amount the user can zoom in
+    self.zoomMin = 0.5;
+    self.zoomValue = 0.1;
     /**
      * zooms in in the svg
      */
@@ -121,7 +155,8 @@ function StateDiagramZoomHandlerDFA($scope, self) {
         $scope.safeApply();
         self.updateZoomBehaviour();
     };
-//the svgOuterZoom and drag listener
+
+    //the svgOuterZoom and drag listener
     self.svgOuterZoomAndDrag = d3.behavior.zoom().scaleExtent([self.zoomMin, self.zoomMax]).on("zoom", function () {
         var stop = d3.event.button || d3.event.ctrlKey;
         if (stop)

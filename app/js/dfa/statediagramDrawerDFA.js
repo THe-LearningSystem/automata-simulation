@@ -46,13 +46,13 @@ function StateDiagramDrawerDFA($scope, self) {
 
     };
     window.addEventListener('resize', function () {
-        self.drawGrid();
+        if (self.svgGrid !== undefined)
+            self.drawGrid();
     });
     /**other Watcher***/
-//watcher for the grid when changed -> updateGrid
+    //watcher for the grid when changed -> updateGrid
     $scope.$watch('[statediagram.isGrid , config.diagram]', function () {
         //don't do this if in debug, causes problems with junit test
-        console.log(self.isInitialized);
         if (self.isInitialized) {
             self.drawGrid();
         }
@@ -72,8 +72,8 @@ function StateDiagramDrawerDFA($scope, self) {
         $scope.config.drawnTransitions = [];
         //change the scale and the translate to the defaultConfig
         self.svg.attr("transform", "translate(" + $scope.defaultConfig.diagram.x + "," + $scope.defaultConfig.diagram.y + ")" + " scale(" + $scope.defaultConfig.diagram.scale + ")");
-        svgOuterZoomAndDrag.scale($scope.defaultConfig.diagram.scale);
-        svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagram.x, $scope.defaultConfig.diagram.y]);
+        self.svgOuterZoomAndDrag.scale($scope.defaultConfig.diagram.scale);
+        self.svgOuterZoomAndDrag.translate([$scope.defaultConfig.diagram.x, $scope.defaultConfig.diagram.y]);
     };
 
 
@@ -595,7 +595,7 @@ function StateDiagramDrawerDFA($scope, self) {
                 transitions.push(transition);
                 self.setTransitionClassAs(transition.id, true, "animated-transition");
             }
-        })
+        });
         if (sequence.length == 0) {
             self.setStateClassAs($scope.config.startState, true, "animated-not-accepted-svg");
         }
@@ -624,7 +624,7 @@ function StateDiagramDrawerDFA($scope, self) {
                 transitions.push(transition);
                 self.setTransitionClassAs(transition.id, false, "animated-transition");
             }
-        })
+        });
         if (sequence.length == 0) {
             self.setStateClassAs($scope.config.startState, false, "animated-not-accepted-svg");
         }

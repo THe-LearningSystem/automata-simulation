@@ -8,9 +8,6 @@ function PortationPDA($scope, type) {
         self.type = "PDA";
     else
         self.type = type;
-    console.log(type);
-    console.log(self.type);
-
 
     /**
      * Creates the imported transitions

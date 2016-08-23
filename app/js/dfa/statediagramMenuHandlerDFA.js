@@ -1,7 +1,6 @@
 function StateDiagramMenuHandlerDFA($scope, self) {
 
     self.showStateMenu = false;
-
     /**
      * Opens the StateMenu
      */
@@ -83,9 +82,8 @@ function StateDiagramMenuHandlerDFA($scope, self) {
         //delete input
         self.input = null;
     };
-    
-    self.showTransitionMenu = false;
 
+    self.showTransitionMenu = false;
     /**
      * opens the transitionMenu
      * @param {number} transitionId when there is a transitionId we open the transitionMenu with the given id
@@ -131,22 +129,28 @@ function StateDiagramMenuHandlerDFA($scope, self) {
         for (var i = 0; i < self.input.transitions.length; i++) {
             self.transitionMenuListener.push($scope.$watchCollection("statediagram.input.transitions['" + i + "']", function (newValue, oldValue) {
                 var nameErrorFound = false;
+                //noinspection JSUnresolvedVariable
                 if (newValue.name !== oldValue.name) {
                     newValue.error = false;
+                    //noinspection JSUnresolvedVariable
                     if (newValue.name !== "" && !$scope.existsTransition(fromState, toState, newValue.name)) {
+                        //noinspection JSUnresolvedVariable
                         $scope.modifyTransition(newValue.id, newValue.name);
-                    } else if (newValue.name === "") {
-                        newValue.error = true;
-                        nameErrorFound = true;
+                    } else { //noinspection JSUnresolvedVariable
+                        if (newValue.name === "") {
+                            newValue.error = true;
+                            nameErrorFound = true;
+                        }
                     }
                 }
-
+                //noinspection JSUnresolvedVariable
                 if ($scope.existsTransition(fromState, toState, newValue.name, newValue.id)) {
                     newValue.isUnique = false;
                     newValue.error = true;
                 } else {
+                    //noinspection JSUnresolvedVariable
                     if (!newValue.isUnique) {
-                        newValue.error = nameErrorFound ? true : false;
+                        newValue.error = nameErrorFound;
                     }
                     newValue.isUnique = true;
 
@@ -156,6 +160,7 @@ function StateDiagramMenuHandlerDFA($scope, self) {
 
         $scope.safeApply();
     };
+
     /**
      * closes the transitionMenu
      */
@@ -170,11 +175,15 @@ function StateDiagramMenuHandlerDFA($scope, self) {
         }
     };
 
-
     self.stateContextMenuOpened = false;
+    /**
+     * opens or close the ContextMenu if the user clicked on a state the stateContextMenu will open not this one
+     * @param event
+     * @param wantToClose
+     */
     self.contextMenu = function (event, wantToClose) {
+
         if (!self.stateContextMenuOpened) {
-            console.log(event);
             if (wantToClose === undefined)
                 wantToClose = false;
             var menu = d3.select(".context-menu");
@@ -194,6 +203,9 @@ function StateDiagramMenuHandlerDFA($scope, self) {
         }
     };
 
+    /**
+     * opens or close the stateContextMenu
+     */
     self.stateContextMenu = function () {
         self.stateContextMenuOpened = true;
     }

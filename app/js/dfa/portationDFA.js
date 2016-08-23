@@ -84,6 +84,7 @@ function PortationDFA($scope, type) {
      * add the listener to the hidden input field
      */
     self.addInputListener = function () {
+        document.getElementById('hidden-file-upload').removeEventListener('change', self.handleFileSelect, false);
         document.getElementById('hidden-file-upload').addEventListener('change', self.handleFileSelect, false);
     };
 
@@ -92,7 +93,6 @@ function PortationDFA($scope, type) {
      * Exports the automatonConfig into an json object
      */
     self.export = function () {
-        console.log($scope.config.type);
         $scope.config.unSavedChanges = false;
         //workaround: couldn't add new states after export
         $scope.statediagram.resetAddActions();
