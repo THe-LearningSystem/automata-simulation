@@ -5,9 +5,9 @@
     <label>Reject (one per line):</label>
     <textarea id="rejectedInput" style="margin-bottom:5px;" ng-model="bulkTester.rejectedInputRaw"
               ng-change="bulktester.bulkTest()"></textarea>
-    <label>Regular Expression (one per line):</label>
-    <textarea id="regularExpression" style="margin-bottom:5px;" ng-model="bulkTester.regularExpressionRaw"
-              ng-change="bulktester.bulkTest()"></textarea>
+    <!-- <label>Regular Expression (one per line):</label>
+     <textarea id="regularExpression" style="margin-bottom:5px;" ng-model="bulkTester.regularExpressionRaw"
+               ng-change="bulktester.bulkTest()"></textarea>-->
     <div class="bulktest-result" ng-show="bulktester.acceptedInput.length != 0 ||bulktester.rejectedInput.length != 0">
         <h4>Result</h4>
         <div>
@@ -17,8 +17,8 @@
                  ng-class="value.possible ? 'pass-class' : 'fail-class'">
                 {{value.word}}--{{value.possible === true ? "PASS" : "FAIL"}}
                 <span ng-repeat="sequence in value.sequences">
-                <button ng-click="simulator.animateSequence(sequence,value.possible)">Animate Path</button>
-                </span>
+                 <button ng-click="simulator.animateSequence(sequence,value.possible)">Animate Path</button>
+                 </span>
                 <button ng-click="simulator.animateSequence([],false)" ng-show="!value.sequences.length">Animate Path
                 </button>
 
@@ -31,13 +31,13 @@
                  ng-class="!value.possible? 'pass-class' : 'fail-class'">
                 {{value.word}}--{{value.possible === false ? "PASS" : "FAIL"}}
                 <span ng-repeat="sequence in value.sequences">
-                <button ng-click="simulator.animateSequence(sequence,value.possible)">Animate Path</button>
-                </span>
+                 <button ng-click="simulator.animateSequence(sequence,value.possible)">Animate Path</button>
+                 </span>
                 <button ng-click="simulator.animateSequence([],false)" ng-show="!value.sequences.length">Animate Path
                 </button>
             </div>
         </div>
-        <div>
+        <!--<div>
             <label>Regular Expression:</label>
 
             <div ng-repeat="value in bulktester.regularExpression"
@@ -45,5 +45,5 @@
                 {{value.word}}--{{value.accepted === true ? "PASS" : "FAIL"}}
             </div>
         </div>
-    </div>
+    </div>-->
 </menuitemextendable>
