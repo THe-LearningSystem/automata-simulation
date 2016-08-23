@@ -88,6 +88,55 @@ function SimulationPDA($scope) {
 
 
     /**
+     * Returns the farthest possible sequences
+     * @param inputWord
+     * @returns {Array}
+     */
+    self.getFarthestPossibleSequences = function (inputWord) {
+        //init needed variables
+        var farthestSequences = [];
+        var stackSequences = [];
+        var tmpSequences = {};
+
+
+        if (inputWord.length !== 0) {
+            tmpSequences = self.getNextTransitions($scope.config.startState, inputWord[0], new PDAStack().stackFirstSymbol);
+            for (var i = 0; i < tmpSequences.length; i++) {
+                var tmpSequence = {};
+                tmpSequence.stack = new PDAStack();
+                tmpSequence.stack.pop();
+                tmpSequence.stack.push(tmpSequences[i].writeToStack);
+                tmpSequence.value = [tmpSequences[i]];
+                stackSequences.push(tmpSequence);
+            }
+        }
+
+        while (stackSequences.length !== 0) {
+            tmpSequence = stackSequences.pop();
+
+            if (tmpSequence.value.length === inputWord.length && tmpSequence.stack.stackContainer.length === 0) {
+            } else if (inputWord.length > tmpSequence.value.length && tmpSequence.stack.stackContainer.length !== 0) {
+                var tmpSequences = [];
+                _.forEach(self.getNextTransitions(_.last(tmpSequence.value).toState, inputWord[tmpSequence.value.length], tmpSequence.stack.pop()), function (sequence) {
+                    var newTmpSequence = {};
+                    newTmpSequence.stack = new PDAStack(tmpSequence.stack.stackContainer);
+                    newTmpSequence.stack.push(sequence.writeToStack);
+                    newTmpSequence.value = _.concat(tmpSequence.value, sequence);
+                    tmpSequences.push(newTmpSequence);
+                });
+                stackSequences = _.concat(stackSequences, tmpSequences);
+                if (tmpSequences.length === 0) {
+                    farthestSequences.push(tmpSequence.value);
+                }
+            } else {
+                farthestSequences.push(tmpSequence.value);
+            }
+        }
+        return farthestSequences;
+    };
+
+
+    /**
      * returns all possible transition, which go from the fromState with the transitionName to a state
      * @param fromState
      * @param transitionName
