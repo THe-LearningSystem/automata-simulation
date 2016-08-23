@@ -13,7 +13,7 @@ function BulkTesterDFA($scope) {
     self.bulkTest = function () {
         self.testAcceptedInputs();
         self.testRejectedInputs();
-        self.testRegularExpressions();
+        //self.testRegularExpressions();
 
     };
     /**
