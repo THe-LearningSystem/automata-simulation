@@ -99,7 +99,7 @@ function PDA($scope, $translate) {
     $scope.existsTransition = function (fromState, toState, name, readFromStack, writeToStack, transitionId) {
         var tmp = false;
         _.forEach($scope.config.transitions, function (transition) {
-            if (transition.fromState == fromState && transition.toState == toState && transition.name == name && transition.readFromStack == readFromStack && transition.writeToStack == writeToStack && transitionId !== transition.id) {
+            if (transition.fromState == fromState && transition.name == name && transition.readFromStack == readFromStack && transition.writeToStack == writeToStack && transitionId !== transition.id) {
                 tmp = true;
                 return false;
             }
@@ -117,7 +117,7 @@ function PDA($scope, $translate) {
      */
     $scope.addTransition = function (fromState, toState, char, readFromStack, writeToStack) {
         //there must be a fromState and toState, before adding a transition
-        if (!$scope.existsTransition(fromState, toState, char) && $scope.existsStateWithId(fromState) && $scope.existsStateWithId(toState)) {
+        if (!$scope.existsTransition(fromState, toState, char, readFromStack, writeToStack) && $scope.existsStateWithId(fromState) && $scope.existsStateWithId(toState)) {
             $scope.addToAlphabet(char);
             //Add to the stackAlphabet
             $scope.addToStackAlphabet(readFromStack);

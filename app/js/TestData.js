@@ -28,6 +28,19 @@ function TestData($scope) {
         $scope.addTransition(0, 1, "b", "A", "ε");
         $scope.addTransition(1, 1, "b", "A", "ε");
     };
+    self.testNPDA = function () {
+        $scope.config.inputWord = "ab";
+        $scope.addStateWithPresets(200, 200);
+        $scope.addStateWithPresets(500, 200);
+        $scope.addStateWithPresets(200, 500);
+
+        $scope.addTransition(0, 0, "a", "⊥", "A");
+        $scope.addTransition(0, 0, "a", "A", "AA");
+        $scope.addTransition(0, 1, "b", "A", "ε");
+        $scope.addTransition(1, 1, "b", "A", "ε");
+        $scope.addTransition(0, 2, "b", "A", "ε");
+        $scope.addTransition(2, 2, "b", "A", "ε");
+    };
 
     self.testPDA2 = function () {
         $scope.config.inputWord = "ab";

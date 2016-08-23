@@ -5,7 +5,7 @@ function DFA($scope) {
     //for debug purposes better way for accessing in console?
     window.debugScope = $scope;
     //Debug Mode (that the browser doesn't ask if you want to reload, or for the unit testing)
-    $scope.debug = true;
+    $scope.debug = false;
 
     //Default Config for the automaton
     $scope.defaultConfig = {};

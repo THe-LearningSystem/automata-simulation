@@ -36,8 +36,9 @@
     your browser</a> to improve your experience.</p>
 <![endif]-->
 <a href="#/dfa">DFA</a>
-<a href="#/pda">PDA</a>
 <a href="#/nfa">NFA</a>
+<a href="#/pda">PDA</a>
+<a href="#/npda">NPDA</a>
 
 <div class="container-fluid nopadding" ng-view></div>
 <!-- bower:js -->
@@ -68,9 +69,13 @@
 <script src="js/controllers/app.js"></script>
 <script src="js/controllers/directives.js"></script>
 <script src="js/TestData.js"></script>
+<script src="js/controllers/hotkeys.js"></script>
 <!-- DFA:START-->
 <script src="js/controllers/DFACtrl.js"></script>
 <script src="js/dfa/DFA.js"></script>
+<script src="js/dfa/statediagramDrawerDFA.js"></script>
+<script src="js/dfa/statediagramMenuHandlerDFA.js"></script>
+<script src="js/dfa/statediagramZoomHandlerDFA.js"></script>
 <script src="js/dfa/statediagramDFA.js"></script>
 <script src="js/dfa/simulationDFA.js"></script>
 <script src="js/dfa/tableDFA.js"></script>
@@ -78,6 +83,10 @@
 <script src="js/dfa/bulkTesterDFA.js"></script>
 <script src="js/dfa/portationDFA.js"></script>
 <!-- DFA:END-->
+<!-- NFA:START-->
+<script src="js/controllers/NFACtrl.js"></script>
+<script src="js/nfa/NFA.js"></script>
+<!-- NFA:END-->
 <!-- PDA:START-->
 <script src="js/controllers/PDACtrl.js"></script>
 <script src="js/pda/PDA.js"></script>
@@ -86,10 +95,11 @@
 <script src="js/pda/statetransitionfunctionPDA.js"></script>
 <script src="js/pda/portationPDA.js"></script>
 <!-- PDA:END-->
-<!-- NFA:START-->
-<script src="js/controllers/NFACtrl.js"></script>
-<script src="js/nfa/NFA.js"></script>
-<!-- NFA:END-->
+<!--NPDA:START-->
+<script src="js/controllers/NPDACtrl.js"></script>
+<script src="js/npda/NPDA.js"></script>
+<!--NPDA:END-->
+
 </body>
 
 </html>

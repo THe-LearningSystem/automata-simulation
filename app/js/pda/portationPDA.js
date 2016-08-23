@@ -1,10 +1,15 @@
-function PortationPDA($scope) {
+function PortationPDA($scope, type) {
     "use strict";
 
     var self = this;
 
     PortationDFA.apply(self, arguments);
-    self.type = "PDA";
+    if (type === undefined)
+        self.type = "PDA";
+    else
+        self.type = type;
+    console.log(type);
+    console.log(self.type);
 
 
     /**

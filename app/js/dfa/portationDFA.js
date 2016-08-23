@@ -92,6 +92,7 @@ function PortationDFA($scope, type) {
      * Exports the automatonConfig into an json object
      */
     self.export = function () {
+        console.log($scope.config.type);
         $scope.config.unSavedChanges = false;
         //workaround: couldn't add new states after export
         $scope.statediagram.resetAddActions();

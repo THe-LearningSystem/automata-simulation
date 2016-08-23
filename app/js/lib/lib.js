@@ -1,3 +1,122 @@
+/**
+ * Crossproduct helper function
+ * @param   {object}   a vector
+ * @param   {object}   b vector
+ * @returns {object}   crossproduct vector
+ */
+function crossPro(a, b) {
+    return {
+        x: a.y * b.z,
+        y: -a.x * b.z
+
+    };
+}
+
+/**
+ * calc angle out of Rad
+ * @param angle
+ * @returns {number}
+ */
+function toDegrees(angle) {
+    return angle * (180 / Math.PI);
+}
+
+/**
+ * Calc rad out of angle
+ * @param angle
+ * @returns {number}
+ */
+function toRadians(angle) {
+    return angle * (Math.PI / 180);
+}
+
+/**
+ * expands a vector with a given factor
+ * @param   {object} a      vector
+ * @param   {number} factor expand factor
+ * @returns {object} expanded vector
+ */
+function expandVector(a, factor) {
+    return {
+        x: a.x * factor,
+        y: a.y * factor
+    };
+}
+
+/**
+ * calc the fixed vector length
+ * @param a
+ * @returns {{x: number, y: number}}
+ */
+function fixVectorLength(a) {
+    var tmp = 1 / Math.sqrt(a.x * a.x + a.y * a.y);
+    return {
+        x: a.x * tmp,
+        y: a.y * tmp
+
+    };
+}
+
+/**
+ * get the Angle between two vectors
+ * @param a
+ * @param b
+ * @returns {{val: number, rad: number, degree: number}}
+ * @constructor
+ */
+function AngleBetweenTwoVectors(a, b) {
+    var tmp = (a.x * b.x + a.y * b.y) / (Math.sqrt(a.x * a.x + a.y * a.y) * Math.sqrt(b.x * b.x + b.y * b.y));
+    var tmp2 = Math.acos(tmp);
+    return {
+        val: tmp,
+        rad: tmp2,
+        degree: toDegrees(tmp2)
+    };
+}
+
+/**
+ * get the newAngle
+ * @param a
+ * @param b
+ * @returns {number}
+ */
+function newAngle(a, b) {
+    var dot1 = a.x * b.x + a.y * b.y;
+    //dot product
+    var dot2 = a.x * b.y - a.y * b.x;
+    //determinant
+    return Math.atan2(dot2, dot1);
+}
+
+var degreeConstant = 30;
+
+/**
+ * calc the different angles
+ * @param a
+ * @param b
+ * @returns {{angle: number, lowerAngle: number, upperAngle: number}}
+ */
+function getAngles(a, b) {
+    var angle = toDegrees(newAngle(a, b));
+    if (angle < 0) {
+        angle = angle + 360;
+    }
+    var upperAngle = angle + degreeConstant;
+    if (upperAngle > 360) {
+        upperAngle -= 360;
+    }
+    var lowerAngle = angle - degreeConstant;
+    if (lowerAngle < 0) {
+        lowerAngle += 360;
+    }
+    return {
+        angle: angle,
+        lowerAngle: lowerAngle,
+        upperAngle: upperAngle
+    };
+}
+
+
 //FROM http://stackoverflow.com/questions/10151216/javascript-cloned-object-looses-its-prototype-functions
 function cloneObject(obj) {
     obj = obj && obj instanceof Object ? obj : '';

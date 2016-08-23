@@ -5,14 +5,19 @@ var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 
             templateUrl: 'view/dfa.html',
             controller: 'DFACtrl'
         });
-        $routeProvider.when('/pda', {
-            templateUrl: 'view/pda.html',
-            controller: 'PDACtrl'
-        });
         $routeProvider.when('/nfa', {
             templateUrl: 'view/nfa.html',
             controller: 'NFACtrl'
         });
+        $routeProvider.when('/pda', {
+            templateUrl: 'view/pda.html',
+            controller: 'PDACtrl'
+        });
+        $routeProvider.when('/npda', {
+            templateUrl: 'view/npda.html',
+            controller: 'NPDACtrl'
+        });
+
         $routeProvider.otherwise({
             redirectTo: '/dfa'
         });
