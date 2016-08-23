@@ -18,10 +18,18 @@
             <span ng-repeat="x in config.stackAlphabet"> {{x}}{{$last ? ' ' : ', '}} </span> }
         </div>
     </div>
-    <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">
+    <div ng-show="config.type!=='PDA' && config.type!=='NPDA'" class="stf-element"
+         uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">
         &delta; = {
         <span ng-repeat="x in statetransitionfunction.data.statetransitionfunction track by $index"> <span
                 class="{{x.selectedClass}} {{x.animatedClass}}">({{x.fromState}}, {{x.char}}, {{x.toState}})</span> {{$last ? '' : ', '}} </span>
+        }
+    </div>
+    <div ng-show="config.type==='PDA' || config.type==='NPDA'" class="stf-element"
+         uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">
+        &delta; = {
+        <span ng-repeat="x in statetransitionfunction.data.statetransitionfunction track by $index"> <span
+                class="{{x.selected}} {{x.animated}}">({{x.fromState}}, {{x.char}},{{x.readFromStack}}, {{x.toState}}, {{x.writeToStack}} )</span> {{$last ? '' : ', '}} </span>
         }
     </div>
     <div ng-show="config.type!=='PDA'">
