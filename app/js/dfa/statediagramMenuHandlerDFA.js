@@ -220,4 +220,31 @@ function StateDiagramMenuHandlerDFA($scope, self) {
             self.stateContextMenuOpened = false;
         }
     }
+
+    self.changeInputFieldValue = function (value) {
+        $scope.safeApply(function () {
+            event.preventDefault();
+            var active = document.activeElement;
+            var element = document.getElementById(active.id);
+            if (element != null) {
+                element.value = value;
+                if ("createEvent" in document) {
+                    var evt = document.createEvent("HTMLEvents");
+                    evt.initEvent("change", false, true);
+                    element.dispatchEvent(evt);
+                }
+                else
+                    element.fireEvent("onchange");
+            }
+        });
+    };
+
+    self.isInputFieldChangePossible = function () {
+        var active = document.activeElement;
+        var element = document.getElementById(active.id);
+        if (element != null)
+            return true;
+        else
+            return false;
+    }
 }

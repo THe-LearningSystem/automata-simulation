@@ -1,5 +1,4 @@
 <menuitem titlename="TRANS_MENU.TITLE" ng-show="statediagram.showTransitionMenu">
-
     <p>
         {{"STATE_MENU.STARTSTATE" | translate}}: {{statediagram.input.fromState.name}}
     </p>
@@ -7,6 +6,14 @@
         {{"TRANS_MENU.NEXTSTATE" | translate}}: {{statediagram.input.toState.name}}
     </p>
     <ul class="transitions-menu-list">
+        <div ng-show="config.type =='PDA'">
+            <button class="btn btn-default" ng-mousedown="statediagram.changeInputFieldValue('ε')">
+                ε
+            </button>
+            <button class="btn btn-default" ng-mousedown="statediagram.changeInputFieldValue('⊥')">
+                ⊥
+            </button>
+        </div>
         <li ng-repeat="(key, transition) in statediagram.input.transitions">
             <div class="input-group" ng-class="transition.error ===true ? 'has-error':''">
                 <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
@@ -21,12 +28,15 @@
             <div ng-show="config.type=='PDA'">
                 <div class="input-group" ng-class="transition.readFromStack.error ===true ? 'has-error':''">
                     <span class="input-group-addon">{{"TRANS_MENU.PDA_READ_FROM_STACK"| translate}}</span>
-                    <input class="form-control" ng-model="transition.readFromStack.value" maxlength="1"
+                    <input id="transition-read-from-stack-{{transition.id}}" class="form-control"
+                           ng-model="transition.readFromStack.value" maxlength="1"
                            ng-disabled="simulator.isInPlay">
                 </div>
-                <div class="input-group" ng-class="transition.writeToStack.error ===true ? 'has-error':''">
+                <div class="input-group"
+                     ng-class="transition.writeToStack.error ===true ? 'has-error':''">
                     <span class="input-group-addon">{{"TRANS_MENU.PDA_WRITE_TO_STACK"| translate}}</span>
-                    <input class="form-control" type="text" ng-model="transition.writeToStack.value" maxlength="2"
+                    <input id="transition-write-to-stack-{{transition.id}}" class="form-control" type="text"
+                           ng-model="transition.writeToStack.value" maxlength="2"
                            ng-disabled="simulator.isInPlay">
                 </div>
                 <span class="input-group-addon btn btn-danger transbutton"
