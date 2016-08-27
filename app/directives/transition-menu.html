@@ -24,7 +24,6 @@
                       ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(transition.id)"
                       ng-disabled="simulator.isInPlay"><span class="icon-times"></span></span>
             </div>
-
             <div ng-show="config.type=='PDA'">
                 <div class="input-group" ng-class="transition.readFromStack.error ===true ? 'has-error':''">
                     <span class="input-group-addon">{{"TRANS_MENU.PDA_READ_FROM_STACK"| translate}}</span>

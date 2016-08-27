@@ -14,6 +14,14 @@
 <nav class="context-menu context-menu-state">
     <ul class="context-menu__items">
         <li class="context-add-state"
+            ng-click="removeState(statediagram.contextMenuData.stateId); statediagram.stateContextMenu(null,true)">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Remove State</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
             ng-click="statediagram.addTransition(statediagram.contextMenuData.stateId) ; statediagram.stateContextMenu(null,true)">
             <span class="context-menu__link">
                 <span class="context-menu-icon icon icon-plus-circle"></span>
