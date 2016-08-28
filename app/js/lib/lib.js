@@ -1,3 +1,8 @@
+String.prototype.replaceAll = function(target, replacement) {
+    return this.split(target).join(replacement);
+};
+
+
 /**
  * Crossproduct helper function
  * @param   {object}   a vector

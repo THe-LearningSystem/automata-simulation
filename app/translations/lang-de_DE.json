@@ -83,7 +83,8 @@
     "TTSTF": "Zustandsübergangsfunktionen",
     "TTSTART": "Startzustand",
     "TTFINAL": "Endzustände",
-    "F": "E"
+    "F": "E",
+    "MODAL_TITLE": "Zustdandsübergangsfunktion bearbeiten"
   },
   "MODAL_BUTTON": {
     "PROCEED": "Fortfahren",

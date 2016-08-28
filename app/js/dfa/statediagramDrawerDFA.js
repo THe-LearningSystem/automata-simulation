@@ -126,7 +126,6 @@ function StateDiagramDrawerDFA($scope, self) {
                 //if there is no selected state then select a state
                 if (self.selectedState === null) {
                     self.selectedState = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
-                    console.log("im here");
                     self.toggleState(self.selectedState.id, true);
                     //create tmpLine
                     self.tmpTransition = self.svgTransitions.append("g").attr("class", "transition");
@@ -655,7 +654,7 @@ function StateDiagramDrawerDFA($scope, self) {
         self.dragAmount = 0;
         d3.event.sourceEvent.stopPropagation();
     }).on("drag", function () {
-        if (d3.event.sourceEvent.which == 1) {
+        if (d3.event.sourceEvent.which == 1 || d3.event.sourceEvent.touches != undefined) {
             if (!self.preventStateDragging) {
                 self.dragAmount++;
                 var x = d3.event.x;

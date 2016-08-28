@@ -89,6 +89,107 @@ function StatetransitionfunctionDFA($scope) {
         });
     };
 
+    self.updateAutomaton = function () {
+        /*var tmpEditStates = self.editStates.replaceAll(" ", "").split(",");
+         _.forEach(tmpEditStates, function (state) {
+         if ($scope.getStateByName(state) === undefined && state !== "") {
+         $scope.addState(state, 100, 100);
+         }
+         });
+         console.log(tmpEditStates);
+         var tmpEditAlphabet = self.editAlphabet.replaceAll(" ", "").split(",");
+         _.forEach(tmpEditAlphabet, function (char) {
+         if (_.find($scope.config.alphabet, char) === undefined) {
+         if (char !== "")
+         $scope.config.alphabet.push(char);
+         }
+         });
+         console.log(tmpEditAlphabet);
+         */
+        $scope.resetAutomaton();
+        var transitions = self.parseSTF(self.editSTF.replaceAll(" ", ""));
+
+        _.forEach(transitions, function (transition) {
+            if (!$scope.existsStateWithName(transition.fromState))
+                $scope.addState(transition.fromState, 100, 100);
+            if (!$scope.existsStateWithName(transition.toState))
+                $scope.addState(transition.toState, 100, 100);
+            $scope.addTransition($scope.getStateByName(transition.fromState).id, $scope.getStateByName(transition.toState).id, transition.name);
+
+        });
+
+        $scope.changeStartState($scope.getStateByName(self.editStartState).id);
+        var tmpEditFinalSTates = self.editFinalStates.replaceAll(" ", "").split(",");
+        _.forEach(tmpEditFinalSTates, function (state) {
+            if (state !== "")
+                $scope.addFinalState($scope.getStateByName(state).id);
+
+        });
+
+    };
+
+    self.parseSTF = function (input) {
+        var tmpArray = [];
+        for (var i = 0; i < input.length; i++) {
+            if (input[i] == "(") {
+                for (var x = i; x < input.length; x++) {
+                    if (input[x] == ")") {
+                        tmpArray.push(self.parseTransition(input.substring(i + 1, x)));
+
+
+                        i = x + 1;
+                        break;
+                    }
+                }
+
+            }
+        }
+        return tmpArray;
+    };
+
+    self.parseTransition = function (string) {
+        var tmpObj = {};
+        var tmpArray = string.split(",");
+
+        _.forEach(tmpArray, function (value, key) {
+            if (string !== "") {
+                if (key == 0) {
+                    tmpObj.fromState = value;
+                } else if (key == 1) {
+                    tmpObj.name = value;
+                } else {
+                    tmpObj.toState = value;
+                }
+
+            } else
+                return undefined;
+        });
+
+        return tmpObj;
+    };
+
+
+    self.showSTFEditModal = function () {
+        //change it to angular function
+        $("#stf-edit-modal").modal();
+        self.editStartState = $scope.getStateById($scope.config.startState).name;
+        self.editFinalStates = "";
+        _.forEach($scope.config.finalStates, function (state, key) {
+            self.editFinalStates += $scope.getStateById(state).name;
+            if (key + 1 !== $scope.config.finalStates.length) {
+                self.editFinalStates += ", "
+            }
+        });
+        self.editSTF = "";
+        _.forEach(self.data.statetransitionfunction, function (stf, key) {
+            self.editSTF += "(" + stf.fromState + ", " + stf.char + ", " + stf.toState + ")";
+            if (key + 1 !== self.data.statetransitionfunction.length) {
+                self.editSTF += ", "
+            }
+        });
+
+    };
+
     /**************
      **SIMULATION**
      *************/
