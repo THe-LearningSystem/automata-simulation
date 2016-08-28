@@ -32,11 +32,12 @@ function StateDiagramZoomAndClickHandlerDFA($scope, self) {
      */
     self.addSvgOuterClickListener = function () {
         self.svgOuter.on("click", function () {
+            //close contextMenus
+            self.contextMenu(null, true);
+            self.stateContextMenu(null, true);
             if (!self.preventSvgOuterClick) {
                 self.closeStateMenu();
                 self.closeTransitionMenu();
-                self.contextMenu(null, true);
-                self.stateContextMenu(null, true);
                 $scope.safeApply();
             } else {
                 //remove ListenerBoolean
@@ -51,8 +52,10 @@ function StateDiagramZoomAndClickHandlerDFA($scope, self) {
     self.contextMenuClickListener = function () {
         d3.event.preventDefault();
         //remove the Tmp Transition if exists
-        self.removeTmpTransition();
-        self.contextMenu(d3.event);
+        if (self.tmpTransition !== null)
+            self.removeTmpTransition();
+        else
+            self.contextMenu(d3.event);
     };
     /****ZOOMHANDLER START***/
     //amount the user can zoom out

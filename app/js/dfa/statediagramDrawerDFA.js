@@ -108,11 +108,13 @@ function StateDiagramDrawerDFA($scope, self) {
             $scope.safeApply();
         });
     };
+
+    //stores the tmpTransition when adding a new transition
+    self.tmpTransition = null;
     /**
      * addTransition function for the icon
      */
     self.addTransition = function (fromState) {
-        console.log(fromState);
         self.resetAddActions();
         //prevent dragging during addTransition
         self.preventStateDragging = true;

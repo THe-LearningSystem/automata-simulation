@@ -175,42 +175,45 @@ function StateDiagramMenuHandlerDFA($scope, self) {
         }
     };
 
-    self.stateContextMenuOpened = false;
+    self.preventContextMenuOpen = false;
+
+    self.contextMenuOpened = false;
     /**
      * opens or close the ContextMenu if the user clicked on a state the stateContextMenu will open not this one
      * @param event
      * @param wantToClose
      */
     self.contextMenu = function (event, wantToClose) {
-
-        if (!self.stateContextMenuOpened) {
-            if (wantToClose === undefined)
-                wantToClose = false;
-            var menu = d3.select(".context-menu");
-            var active = "context-menu--active";
-            if (!wantToClose) {
-                menu.classed(active, true);
-                menu.attr("style", "top:" + event.layerY + "px;" + "left:" + event.layerX + "px;");
-                self.contextMenuData = {};
-                self.contextMenuData.addStateX = (((event.layerX - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale)));
-                self.contextMenuData.addStateY = (((event.layerY - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale)));
-            } else {
-                menu.classed(active, false);
-            }
-
+        var menu = d3.select(".context-menu");
+        var active = "context-menu--active";
+        if (wantToClose === undefined && !self.preventContextMenuOpen) {
+            if (self.stateContextMenuOpened)
+                self.stateContextMenu(null, true);
+            self.contextMenuOpened = true;
+            menu.classed(active, true);
+            menu.attr("style", "top:" + event.layerY + "px;" + "left:" + event.layerX + "px;");
+            self.contextMenuData = {};
+            self.contextMenuData.addStateX = (((event.layerX - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale)));
+            self.contextMenuData.addStateY = (((event.layerY - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale)));
+        } else {
+            menu.classed(active, false);
+            self.contextMenuOpened = false;
         }
+        self.preventContextMenuOpen = false;
     };
 
+    self.stateContextMenuOpened = false;
     /**
      * opens or close the stateContextMenu
      */
     self.stateContextMenu = function (stateId, wantToClose) {
-        self.stateContextMenuOpened = true;
-        if (wantToClose === undefined)
-            wantToClose = false;
+        if (self.contextMenuOpened)
+            self.contextMenu(null, true);
+        self.preventContextMenuOpen = true;
         var menu = d3.select(".context-menu-state");
         var active = "context-menu--active";
-        if (!wantToClose) {
+        if (wantToClose === undefined && self.tmpTransition == null) {
+            self.stateContextMenuOpened = true;
             menu.classed(active, true);
             menu.attr("style", "top:" + event.layerY + "px;" + "left:" + event.layerX + "px;");
             self.contextMenuData = {};
@@ -218,8 +221,9 @@ function StateDiagramMenuHandlerDFA($scope, self) {
         } else {
             menu.classed(active, false);
             self.stateContextMenuOpened = false;
+            self.preventContextMenuOpen = false;
         }
-    }
+    };
 
     self.changeInputFieldValue = function (value) {
         $scope.safeApply(function () {
@@ -242,9 +246,6 @@ function StateDiagramMenuHandlerDFA($scope, self) {
     self.isInputFieldChangePossible = function () {
         var active = document.activeElement;
         var element = document.getElementById(active.id);
-        if (element != null)
-            return true;
-        else
-            return false;
+        return element != null;
     }
 }
