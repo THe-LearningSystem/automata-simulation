@@ -31,4 +31,55 @@ function StatetransitionfunctionPDA($scope) {
         });
     };
 
+    /**
+     * parse the entered editSTFInput
+     * @param string
+     * @returns {{}}
+     */
+    self.parseTransition = function (string) {
+        var tmpObj = {};
+        var tmpArray = string.split(",");
+
+        _.forEach(tmpArray, function (value, key) {
+            if (string !== "") {
+                if (key == 0) {
+                    tmpObj.fromState = value;
+                } else if (key == 1) {
+                    tmpObj.name = value;
+                } else if (key == 2) {
+                    tmpObj.readFromStack = value;
+                } else if (key == 3) {
+                    tmpObj.toState = value;
+                } else {
+                    tmpObj.writeToStack = value
+                }
+            } else
+                return undefined;
+        });
+        return tmpObj;
+    };
+
+    /**
+     * creates the transition for overriding
+     * @param transition
+     */
+    self.createTransition = function (transition) {
+        $scope.addTransition($scope.getStateByName(transition.fromState).id, $scope.getStateByName(transition.toState).id, transition.name, transition.readFromStack, transition.writeToStack);
+    };
+
+    /**
+     * load the editSTFDAta
+     */
+    self.loadEditSTFData = function () {
+        self.editSTF = "";
+
+        _.forEach(self.data.statetransitionfunction, function (stf, key) {
+            self.editSTF += "(" + stf.fromState + ", " + stf.char + ", " + stf.readFromStack + ", " + stf.toState + ", " + stf.writeToStack + ")";
+            if (key + 1 !== self.data.statetransitionfunction.length) {
+                self.editSTF += ", "
+            }
+        });
+    };
+
+
 }

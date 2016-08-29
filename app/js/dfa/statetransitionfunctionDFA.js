@@ -89,23 +89,11 @@ function StatetransitionfunctionDFA($scope) {
         });
     };
 
+
+    /**
+     * Update the automaton, when the user pressed save
+     */
     self.updateAutomaton = function () {
-        /*var tmpEditStates = self.editStates.replaceAll(" ", "").split(",");
-         _.forEach(tmpEditStates, function (state) {
-         if ($scope.getStateByName(state) === undefined && state !== "") {
-         $scope.addState(state, 100, 100);
-         }
-         });
-         console.log(tmpEditStates);
-         var tmpEditAlphabet = self.editAlphabet.replaceAll(" ", "").split(",");
-         _.forEach(tmpEditAlphabet, function (char) {
-         if (_.find($scope.config.alphabet, char) === undefined) {
-         if (char !== "")
-         $scope.config.alphabet.push(char);
-         }
-         });
-         console.log(tmpEditAlphabet);
-         */
         $scope.resetAutomaton();
         var transitions = self.parseSTF(self.editSTF.replaceAll(" ", ""));
 
@@ -114,7 +102,7 @@ function StatetransitionfunctionDFA($scope) {
                 $scope.addState(transition.fromState, 100, 100);
             if (!$scope.existsStateWithName(transition.toState))
                 $scope.addState(transition.toState, 100, 100);
-            $scope.addTransition($scope.getStateByName(transition.fromState).id, $scope.getStateByName(transition.toState).id, transition.name);
+            self.createTransition(transition);
 
         });
 
@@ -128,6 +116,19 @@ function StatetransitionfunctionDFA($scope) {
 
     };
 
+    /**
+     * creates the transition for overriding
+     * @param transition
+     */
+    self.createTransition = function (transition) {
+        $scope.addTransition($scope.getStateByName(transition.fromState).id, $scope.getStateByName(transition.toState).id, transition.name);
+    };
+
+    /**
+     * parse the entered STF and output an array of transitions
+     * @param input
+     * @returns {Array}
+     */
     self.parseSTF = function (input) {
         var tmpArray = [];
         for (var i = 0; i < input.length; i++) {
@@ -135,18 +136,20 @@ function StatetransitionfunctionDFA($scope) {
                 for (var x = i; x < input.length; x++) {
                     if (input[x] == ")") {
                         tmpArray.push(self.parseTransition(input.substring(i + 1, x)));
-
-
                         i = x + 1;
                         break;
                     }
                 }
-
             }
         }
         return tmpArray;
     };
 
+    /**
+     * parse the entered editSTFInput
+     * @param string
+     * @returns {{}}
+     */
     self.parseTransition = function (string) {
         var tmpObj = {};
         var tmpArray = string.split(",");
@@ -160,15 +163,16 @@ function StatetransitionfunctionDFA($scope) {
                 } else {
                     tmpObj.toState = value;
                 }
-
             } else
                 return undefined;
         });
-
         return tmpObj;
     };
 
 
+    /**
+     * show the STFModal
+     */
     self.showSTFEditModal = function () {
         //change it to angular function
         $("#stf-edit-modal").modal();
@@ -180,14 +184,22 @@ function StatetransitionfunctionDFA($scope) {
                 self.editFinalStates += ", "
             }
         });
+        self.loadEditSTFData();
+
+    };
+
+    /**
+     * load the editSTFDAta
+     */
+    self.loadEditSTFData = function () {
         self.editSTF = "";
+
         _.forEach(self.data.statetransitionfunction, function (stf, key) {
             self.editSTF += "(" + stf.fromState + ", " + stf.char + ", " + stf.toState + ")";
             if (key + 1 !== self.data.statetransitionfunction.length) {
                 self.editSTF += ", "
             }
         });
-
     };
 
     /**************
