@@ -176,7 +176,8 @@ function StatetransitionfunctionDFA($scope) {
     self.showSTFEditModal = function () {
         //change it to angular function
         $("#stf-edit-modal").modal();
-        self.editStartState = $scope.getStateById($scope.config.startState).name;
+        if ($scope.existsStateWithId($scope.config.startState))
+            self.editStartState = $scope.getStateById($scope.config.startState).name;
         self.editFinalStates = "";
         _.forEach($scope.config.finalStates, function (state, key) {
             self.editFinalStates += $scope.getStateById(state).name;

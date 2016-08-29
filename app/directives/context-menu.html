@@ -22,6 +22,42 @@
             </span>
         </li>
         <li class="context-add-state"
+            ng-click="changeStartState(statediagram.contextMenuData.stateId); statediagram.stateContextMenu(null,true)"
+            ng-show="config.startState === statediagram.contextMenuData.stateId">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Make as StartState</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
+            ng-click="removeStartState(); statediagram.stateContextMenu(null,true)"
+            ng-show="config.startState !== statediagram.contextMenuData.stateId">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Remove as StartState</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
+            ng-click="addFinalState(statediagram.contextMenuData.stateId); statediagram.stateContextMenu(null,true)"
+            ng-show="!isStateAFinalState(statediagram.contextMenuData.stateId)">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Add to FinalStates</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
+            ng-click="removeFinalState(statediagram.contextMenuData.stateId); statediagram.stateContextMenu(null,true)"
+            ng-show="isStateAFinalState(statediagram.contextMenuData.stateId)">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Remove From FinalStates</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
             ng-click="statediagram.addTransition(statediagram.contextMenuData.stateId) ; statediagram.stateContextMenu(null,true)">
             <span class="context-menu__link">
                 <span class="context-menu-icon icon icon-plus-circle"></span>
