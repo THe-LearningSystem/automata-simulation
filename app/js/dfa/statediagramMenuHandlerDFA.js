@@ -184,22 +184,26 @@ function StateDiagramMenuHandlerDFA($scope, self) {
      * @param wantToClose
      */
     self.contextMenu = function (event, wantToClose) {
-        var menu = d3.select(".context-menu");
-        var active = "context-menu--active";
-        if (wantToClose === undefined && !self.preventContextMenuOpen) {
-            if (self.stateContextMenuOpened)
-                self.stateContextMenu(null, true);
-            self.contextMenuOpened = true;
-            menu.classed(active, true);
-            menu.attr("style", "top:" + event.layerY + "px;" + "left:" + event.layerX + "px;");
-            self.contextMenuData = {};
-            self.contextMenuData.addStateX = (((event.layerX - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale)));
-            self.contextMenuData.addStateY = (((event.layerY - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale)));
+        if (!self.preventContextMenuOpen) {
+            var menu = d3.select(".context-menu");
+            var active = "context-menu--active";
+            if (wantToClose === undefined) {
+                if (self.stateContextMenuOpened)
+                    self.stateContextMenu(null, true);
+                self.contextMenuOpened = true;
+                menu.classed(active, true);
+                menu.attr("style", "top:" + event.layerY + "px;" + "left:" + event.layerX + "px;");
+                self.contextMenuData = {};
+                self.contextMenuData.addStateX = (((event.layerX - $scope.config.diagram.x) * (1 / $scope.config.diagram.scale)));
+                self.contextMenuData.addStateY = (((event.layerY - $scope.config.diagram.y) * (1 / $scope.config.diagram.scale)));
+                $scope.safeApply();
+            } else {
+                menu.classed(active, false);
+                self.contextMenuOpened = false;
+            }
         } else {
-            menu.classed(active, false);
-            self.contextMenuOpened = false;
+            self.preventContextMenuOpen = false;
         }
-        self.preventContextMenuOpen = false;
     };
 
     self.stateContextMenuOpened = false;
@@ -209,15 +213,17 @@ function StateDiagramMenuHandlerDFA($scope, self) {
     self.stateContextMenu = function (stateId, wantToClose) {
         if (self.contextMenuOpened)
             self.contextMenu(null, true);
-        self.preventContextMenuOpen = true;
         var menu = d3.select(".context-menu-state");
         var active = "context-menu--active";
         if (wantToClose === undefined && self.tmpTransition == null) {
+            self.preventContextMenuOpen = true;
             self.stateContextMenuOpened = true;
             menu.classed(active, true);
             menu.attr("style", "top:" + event.layerY + "px;" + "left:" + event.layerX + "px;");
             self.contextMenuData = {};
             self.contextMenuData.stateId = stateId;
+            $scope.safeApply();
+
         } else {
             menu.classed(active, false);
             self.stateContextMenuOpened = false;
