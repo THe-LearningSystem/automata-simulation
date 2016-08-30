@@ -550,6 +550,14 @@ function DFA($scope) {
         }
     };
 
+    $scope.moveState = function (stateId, newX, newY) {
+        var state = $scope.getStateById((stateId));
+        state.x = newX;
+        state.y = newY;
+        state.objReference.attr("transform", "translate(" + newX + "," + newY + ")");
+        $scope.statediagram.updateTransitionsAfterStateDrag(stateId);
+    };
+
 //TRANSITIONS
 
     /**

@@ -228,7 +228,9 @@ function StateDiagramDrawerDFA($scope, self) {
         self.openTransitionMenu(tmpTransition.id);
     };
 
-
+    /**
+     * removes the tmpTransition -> when finished creating the new transition or when canceling the action
+     */
     self.removeTmpTransition = function () {
         if (self.tmpTransition !== null && self.tmpTransition !== undefined) {
             self.tmpTransition.remove();

@@ -96,12 +96,15 @@ function StatetransitionfunctionDFA($scope) {
     self.updateAutomaton = function () {
         $scope.resetAutomaton();
         var transitions = self.parseSTF(self.editSTF.replaceAll(" ", ""));
-
         _.forEach(transitions, function (transition) {
+            var x = 300 + Math.floor(Math.random() * 100);
+            var y = 300 + Math.floor(Math.random() * 100);
             if (!$scope.existsStateWithName(transition.fromState))
-                $scope.addState(transition.fromState, 100, 100);
+                $scope.addState(transition.fromState, x, y);
+            x = 300 + Math.floor(Math.random() * 100);
+            y = 300 + Math.floor(Math.random() * 100);
             if (!$scope.existsStateWithName(transition.toState))
-                $scope.addState(transition.toState, 100, 100);
+                $scope.addState(transition.toState, x, y);
             self.createTransition(transition);
 
         });
@@ -114,6 +117,58 @@ function StatetransitionfunctionDFA($scope) {
 
         });
 
+        self.simulatePhysic();
+
+    };
+
+    self.simulatePhysic = function () {
+        console.log("simulate physic");
+
+        _.forEach($scope.config.states, function (state, key) {
+            _.forEach($scope.config.states, function (secondState, secondKey) {
+                if (key !== secondKey) {
+                    while (secondState.x < state.x + 100 && secondState.x > state.x - 100 && secondState.y < state.y + 100 && secondState.y > state.y - 100) {
+                        var directionVector = {
+                            y: secondState.y - state.y,
+                            x: secondState.x - state.x
+                        };
+                        var test = fixVectorLength(directionVector);
+                        $scope.moveState(secondState.id, secondState.x + test.x * 10, secondState.y + test.y * 10);
+                    }
+                }
+
+            });
+
+        });
+        //go through all trans connected to this state
+        _.forEach($scope.config.states, function (state, key) {
+            _.forEach($scope.config.transitions, function (transition, secondKey) {
+                if (transition.fromState === state.id || transition.toState === state.id) {
+                    var fromState = $scope.getStateById(transition.fromState);
+                    var toState = $scope.getStateById(transition.toState);
+                    var directionVector = {
+                        y: fromState.y - toState.y,
+                        x: fromState.x - toState.x
+                    };
+                    var fixedVectorLength = fixVectorLength(directionVector);
+                    var directionVectorLength = Math.sqrt(directionVector.x * directionVector.x + directionVector.y * directionVector.y);
+                    //when to near -> push
+                    console.log(fromState, toState, directionVector, directionVectorLength);
+                    if (directionVectorLength < 500) {
+                        console.log("haha");
+                        if (transition.fromState == state.id) {
+                            $scope.moveState(transition.toState, toState.x + fixedVectorLength.x * 50, toState.y + fixedVectorLength.y * 50);
+                        } else {
+                            $scope.moveState(transition.fromState, fromState.x + fixedVectorLength.x * 50, fromState.y + fixedVectorLength.y * 50);
+                        }
+                    }
+                    //when to far -> pull
+
+                }
+
+            });
+
+        });
     };
 
     /**

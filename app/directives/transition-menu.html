@@ -1,10 +1,4 @@
 <menuitem titlename="TRANS_MENU.TITLE" ng-show="statediagram.showTransitionMenu">
-    <p>
-        {{"STATE_MENU.STARTSTATE" | translate}}: {{statediagram.input.fromState.name}}
-    </p>
-    <p>
-        {{"TRANS_MENU.NEXTSTATE" | translate}}: {{statediagram.input.toState.name}}
-    </p>
     <ul class="transitions-menu-list">
         <div ng-show="config.type =='PDA'">
             <button class="btn btn-default" ng-mousedown="statediagram.changeInputFieldValue('ε')">
