@@ -85,7 +85,8 @@
     "TTSTF": "Zustandsübergangsfunktionen",
     "TTSTART": "Startzustand",
     "TTFINAL": "Endzustände",
-    "F": "E"
+    "F": "E",
+    "TTTAPE_ALPHABET": "Bandalphabet"
   },
   "MODAL_BUTTON": {
     "PROCEED": "Fortfahren",

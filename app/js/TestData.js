@@ -18,6 +18,14 @@ function TestData($scope) {
 
     };
 
+    self.testDTA = function () {
+        $scope.addStateWithPresets(200,200);
+        $scope.addStateWithPresets(500,200);
+        $scope.addFinalState(1);
+        
+        $scope.addTransition(0, 1, "a", "b", "→");
+    };
+    
     self.testPDA = function () {
         $scope.config.inputWord = "ab";
         $scope.addStateWithPresets(200, 200);

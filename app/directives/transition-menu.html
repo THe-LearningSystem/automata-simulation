@@ -10,48 +10,36 @@
         <li ng-repeat="(key, transition) in statediagram.input.transitions">
             <div class="input-group" ng-class="transition.error ===true ? 'has-error':''">
                 <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
-                <input class="form-control" type="text" ng-model="transition.name" maxlength="1"
-                       ng-attr-show-focus="{{transition.isFocus || undefined}}" ng-disabled="simulator.isInPlay">
+                <input class="form-control" type="text" ng-model="transition.name" maxlength="1" ng-attr-show-focus="{{transition.isFocus || undefined}}" ng-disabled="simulator.isInPlay">
 
-                <span class="input-group-addon btn btn-danger transbutton" ng-show="config.type!=='PDA'"
-                      ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(transition.id)"
-                      ng-disabled="simulator.isInPlay"><span class="icon-times"></span></span>
+                <span class="input-group-addon btn btn-danger transbutton" ng-show="config.type!=='PDA' && config.type!=='DTA'" ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(transition.id)" ng-disabled="simulator.isInPlay"><span class="icon-times"></span></span>
             </div>
-            
+
             <div ng-show="config.type=='DTA'">
                 <div class="input-group" ng-class="transition.writeSymbol.error ===true ? 'has-error':''">
                     <span class="input-group-addon">{{"TRANS_MENU.DTA_WRITE_SYMBOL"| translate}}</span>
-                    <input class="form-control" ng-model="transition.writeSymbol.value" maxlength="1"
-                           ng-disabled="simulator.isInPlay">
+                    <input class="form-control" ng-model="transition.writeSymbol.value" maxlength="1" ng-disabled="simulator.isInPlay">
                 </div>
                 <div class="input-group" ng-class="transition.moveDirection.error ===true ? 'has-error':''">
                     <span class="input-group-addon">{{"TRANS_MENU.DTA_MOVE_DIRECTION"| translate}}</span>
-                    <input class="form-control" type="text" ng-model="transition.moveDirection.value" maxlength="2"
-                           ng-disabled="simulator.isInPlay">
+                    <input class="form-control" type="text" ng-model="transition.moveDirection.value" maxlength="2" ng-disabled="simulator.isInPlay">
                 </div>
-                <span class="input-group-addon btn btn-danger transbutton"
-                      ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(transition.id)"
-                      ng-disabled="simulator.isInPlay"> <span class="icon-times"></span> </span>
+                <span class="input-group-addon btn btn-danger transbutton" ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(transition.id)" ng-disabled="simulator.isInPlay"> <span class="icon-times"></span> </span>
             </div>
-            
+
             <div ng-show="config.type=='PDA'">
                 <div class="input-group" ng-class="transition.readFromStack.error ===true ? 'has-error':''">
                     <span class="input-group-addon">{{"TRANS_MENU.PDA_READ_FROM_STACK"| translate}}</span>
-                    <input class="form-control" ng-model="transition.readFromStack.value" maxlength="1"
-                           ng-disabled="simulator.isInPlay">
+                    <input class="form-control" ng-model="transition.readFromStack.value" maxlength="1" ng-disabled="simulator.isInPlay">
                 </div>
                 <div class="input-group" ng-class="transition.writeToStack.error ===true ? 'has-error':''">
                     <span class="input-group-addon">{{"TRANS_MENU.PDA_WRITE_TO_STACK"| translate}}</span>
-                    <input class="form-control" type="text" ng-model="transition.writeToStack.value" maxlength="2"
-                           ng-disabled="simulator.isInPlay">
+                    <input class="form-control" type="text" ng-model="transition.writeToStack.value" maxlength="2" ng-disabled="simulator.isInPlay">
                 </div>
-                <span class="input-group-addon btn btn-danger transbutton"
-                      ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(transition.id)"
-                      ng-disabled="simulator.isInPlay"> <span class="icon-times"></span> </span>
+                <span class="input-group-addon btn btn-danger transbutton" ng-click="simulator.isInPlay ? pseudoFunction() : removeTransition(transition.id)" ng-disabled="simulator.isInPlay"> <span class="icon-times"></span> </span>
             </div>
             <p></p>
-            <div class="alert alert-danger alert-transition"
-                 ng-show="(transition.error || transition.readFromStack.error || transition.writeToStack.error)&& transition.isUnique">
+            <div class="alert alert-danger alert-transition" ng-show="(transition.error || transition.readFromStack.error || transition.writeToStack.error)&& transition.isUnique">
                 {{"TRANS_MENU.NAME_TOO_SHORT"| translate}}
             </div>
             <div class="alert alert-danger  alert-transition" ng-show="!transition.isUnique">
@@ -60,7 +48,9 @@
         </li>
     </ul>
     <div ng-show="config.type=='PDA'">
-        Epsilon:ε
-        Kellersymbol:⊥
+        Epsilon:ε Kellersymbol:⊥
+    </div>
+    <div ng-show="config.type == 'DTA'">
+        Blanksymbol: ☐
     </div>
 </menuitem>

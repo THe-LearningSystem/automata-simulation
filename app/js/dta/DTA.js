@@ -6,6 +6,7 @@ function DTA($scope, $translate) {
     $scope.defaultConfig.type = "DTA";
     $scope.defaultConfig.tapeAlphabet = [];
     $scope.defaultConfig.blankSymbol = "☐";
+    $scope.defaultConfig.tapeAlphabet[0] = $scope.defaultConfig.blankSymbol;
     
     //Config Object
     $scope.config = _.cloneDeep($scope.defaultConfig);
@@ -15,8 +16,24 @@ function DTA($scope, $translate) {
     $scope.simulator = new SimulationDTA($scope);
     //the statediagram controlling the svg-diagram
     $scope.statediagram = new StateDiagramDTA($scope, "#diagram-svg");
+    //the statetransitionfunction controlling the statetransitionfunction-table
+    $scope.statetransitionfunction = new StatetransitionfunctionDTA($scope);
     //the table where states and transitions are shown
     $scope.table = new TableDTA($scope);
+    
+    /**
+     * Adds a char to the input alphabet if the char is not available
+     * @param   {value} value the char, which is to be added
+     */
+    $scope.addToTapeAlphabet = function (value) {
+        if (!_.some($scope.config.tapeAlphabet, function (a) {
+                return a === value;
+            })) {
+            $scope.config.tapeAlphabet.push(value);
+        } else {
+
+        }
+    };
     
     /*
      * Checks if a transition with the params already exists
@@ -51,8 +68,8 @@ function DTA($scope, $translate) {
         // can only create the transition if it is unique
         //there must be a fromState and toState, before adding a transtition
         if (!$scope.existsTransition(fromState, toState, readSymbol) && $scope.existsStateWithId(fromState) && $scope.existsStateWithId(toState)) {
-            $scope.addToAlphabet(readSymbol);
-            $scope.addToAlphabet(writeSymbol);
+            $scope.addToTapeAlphabet(readSymbol);
+            $scope.addToTapeAlphabet(writeSymbol);
 
             return $scope.addTransitionWithId($scope.config.countTransitionId++,fromState, toState, readSymbol, writeSymbol, moveDirection);
 

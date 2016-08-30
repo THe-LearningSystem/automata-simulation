@@ -11,6 +11,12 @@
         &Sigma; = {
         <span ng-repeat="x in statetransitionfunction.data.alphabet"> {{x}}{{$last ? ' ' : ', '}} </span> }
     </div>
+    <div ng-show="config.type=='DTA'">
+        <div class="stf-element" uib-tooltip="{{ 'STF.TTTAPE_ALPHABET' | translate}}" tooltip-placement="right">
+            Π = {
+            <span ng-repeat="x in config.tapeAlphabet">{{x}}{{$last ? '' : ', '}}</span> }
+        </div>
+    </div>
     <div ng-show="config.type=='PDA'">
         <div class="stf-element" uib-tooltip="{{ 'STF.TTSTATES' | translate}}" tooltip-placement="right">
 
@@ -18,11 +24,21 @@
             <span ng-repeat="x in config.stackAlphabet"> {{x}}{{$last ? ' ' : ', '}} </span> }
         </div>
     </div>
-    <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">
-        &delta; = {
-        <span ng-repeat="x in statetransitionfunction.data.statetransitionfunction track by $index"> <span
+    <div ng-show="config.type!=='DTA'">
+        <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">
+            &delta; = {
+            <span ng-repeat="x in statetransitionfunction.data.statetransitionfunction track by $index"> <span
                 class="{{x.selectedClass}} {{x.animatedClass}}">({{x.fromState}}, {{x.char}}, {{x.toState}})</span> {{$last ? '' : ', '}} </span>
-        }
+            }
+        </div>
+    </div>
+    <div ng-show="config.type=='DTA'">
+        <div class="stf-element" uib-tooltip="{{ 'STF.TTSTF' | translate}}" tooltip-placement="right">
+            &delta; = {
+            <span ng-repeat="x in statetransitionfunction.data.statetransitionfunction track by $index"> <span
+                class="{{x.selectedClass}} {{x.animatedClass}}">({{x.fromState}}, {{x.name}}, {{x.toState}}, {{x.writeSymbol}}, {{x.moveDirection}})</span> {{$last ? '' : ', '}} </span>
+            }
+        </div>
     </div>
     <div ng-show="config.type!=='PDA'">
         <div class="stf-element" uib-tooltip="{{ 'STF.TTFINAL' | translate}}" tooltip-placement="right">

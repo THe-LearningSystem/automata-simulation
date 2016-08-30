@@ -79,7 +79,8 @@
     "TTSTF": "Statetransitionfunctions",
     "TTSTART": "Startstate",
     "TTFINAL": "Finalstates",
-    "F": "F"
+    "F": "F",
+    "TTTAPE_ALPHABET": "Tapealphabet"
   },
   "MODAL_BUTTON": {
     "PROCEED": "Proceed",
