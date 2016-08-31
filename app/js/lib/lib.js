@@ -1,4 +1,4 @@
-String.prototype.replaceAll = function(target, replacement) {
+String.prototype.replaceAll = function (target, replacement) {
     return this.split(target).join(replacement);
 };
 
@@ -204,12 +204,12 @@ function State(id, name, x, y) {
 
 }
 
-function TransitionDFA(id, fromState, toState, transitionChar) {
+function TransitionDFA(id, fromState, toState, inputSymbol) {
     var self = this;
     self.id = id;
     self.fromState = fromState;
-    self.name = transitionChar;
     self.toState = toState;
+    self.inputSymbol = inputSymbol;
 }
 
 function TransitionPDA(id, fromState, toState, transitionChar, readFromStack, writeToStack) {

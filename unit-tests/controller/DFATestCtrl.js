@@ -4,5 +4,11 @@ angular
 
 
 function DFACtrl($scope) {
-    var dfa = new DFA($scope);
+    $scope.safeApply = scopeSaveApply;
+
+    $scope.automatonData = new AutomatonDataDFA();
+
+    $scope.core = new DFACore($scope);
+    $scope.states = new States($scope);
+    $scope.transitions = new Transitions($scope);
 }
