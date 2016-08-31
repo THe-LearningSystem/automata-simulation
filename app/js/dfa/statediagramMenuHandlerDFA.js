@@ -4,22 +4,22 @@ function StateDiagramMenuHandlerDFA($scope, self) {
     /**
      * Opens the StateMenu
      */
-    self.openStateMenu = function () {
+    self.openStateMenu = function (state) {
         self.closeStateMenu();
         self.closeTransitionMenu();
         //fixes weird errors
         $scope.safeApply();
         self.preventSvgOuterClick = true;
         self.showStateMenu = true;
-        self.selectedState = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
+        self.selectedState = state;
         //add new state as selected
-        self.toggleState(self.selectedState.id, true);
+        self.toggleState(self.selectedState, true);
         //save the state values in the state context as default value
         self.input = {};
         self.input.state = self.selectedState;
         self.input.stateName = self.selectedState.name;
-        self.input.startState = $scope.config.startState == self.selectedState.id;
-        self.input.finalState = $scope.isStateAFinalState(self.selectedState.id);
+        self.input.startState = $scope.config.startState == self.selectedState;
+        self.input.finalState = $scope.isStateAFinalState(self.selectedState);
         self.input.ttt = "";
         self.input.tttisopen = false;
         $scope.safeApply();
@@ -28,9 +28,9 @@ function StateDiagramMenuHandlerDFA($scope, self) {
         self.stateMenuListener.push($scope.$watch('statediagram.input.startState', function (newValue, oldValue) {
             if (newValue !== oldValue) {
                 if (self.input.startState) {
-                    $scope.changeStartState(self.input.state.id);
+                    $scope.changeStartState(self.input.state);
                 } else {
-                    if (self.selectedState.id == $scope.config.startState)
+                    if (self.selectedState == $scope.config.startState)
                         $scope.removeStartState();
                 }
             }
@@ -39,9 +39,9 @@ function StateDiagramMenuHandlerDFA($scope, self) {
         self.stateMenuListener.push($scope.$watch('statediagram.input.finalState', function (newValue, oldValue) {
             if (newValue !== oldValue) {
                 if (self.input.finalState) {
-                    $scope.addFinalState(self.input.state.id);
+                    $scope.addFinalState(self.input.state);
                 } else {
-                    $scope.removeFinalState(self.input.state.id);
+                    $scope.removeFinalState(self.input.state);
                 }
 
             }
@@ -54,12 +54,12 @@ function StateDiagramMenuHandlerDFA($scope, self) {
             if (newValue !== oldValue) {
                 //change if the name doesn't exists and isn't empty
                 if (newValue !== "" && !$scope.existsStateWithName(newValue)) {
-                    !$scope.renameState(self.input.state.id, newValue);
+                    !$scope.renameState(self.input.state, newValue);
                 } else if (newValue === "") {
                     //FEEDBACK
                     self.input.tttisopen = true;
                     self.input.ttt = 'STATE_MENU.NAME_TOO_SHORT';
-                } else if ($scope.existsStateWithName(newValue, self.input.state.id)) {
+                } else if ($scope.existsStateWithName(newValue, self.input.state)) {
                     self.input.tttisopen = true;
                     self.input.ttt = 'STATE_MENU.NAME_ALREADY_EXIST';
                 }
@@ -75,7 +75,7 @@ function StateDiagramMenuHandlerDFA($scope, self) {
             value();
         });
         if (self.selectedState !== null) {
-            self.toggleState(self.selectedState.id, false);
+            self.toggleState(self.selectedState, false);
         }
         self.stateMenuListener = null;
         self.showStateMenu = false;
@@ -210,7 +210,7 @@ function StateDiagramMenuHandlerDFA($scope, self) {
     /**
      * opens or close the stateContextMenu
      */
-    self.stateContextMenu = function (stateId, wantToClose) {
+    self.stateContextMenu = function (state, wantToClose) {
         if (self.contextMenuOpened)
             self.contextMenu(null, true);
         var menu = d3.select(".context-menu-state");
@@ -221,7 +221,7 @@ function StateDiagramMenuHandlerDFA($scope, self) {
             menu.classed(active, true);
             menu.attr("style", "top:" + event.layerY + "px;" + "left:" + event.layerX + "px;");
             self.contextMenuData = {};
-            self.contextMenuData.stateId = stateId;
+            self.contextMenuData.state = state;
             $scope.safeApply();
 
         } else {

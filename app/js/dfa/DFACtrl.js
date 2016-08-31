@@ -14,6 +14,11 @@ function DFACtrl($scope, hotkeys) {
     $scope.core = new DFACore($scope);
     $scope.states = new States($scope);
     $scope.transitions = new Transitions($scope);
+    //$scope.table = new TableDFA($scope);
+    $scope.simulator = new SimulationDFA($scope);
+    // $scope.simulation = new SimulationDFA($scope);
+
+    $scope.testAgent = new TestData($scope);
 
 
     /**CREATE_COMPONENTS_START**/

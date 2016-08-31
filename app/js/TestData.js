@@ -4,17 +4,18 @@ function TestData($scope) {
     var self = this;
 
     self.testDFA = function () {
-        $scope.config.inputWord = "abc";
-        $scope.addStateWithPresets(100, 100);
-        $scope.addStateWithPresets(100, 300);
-        $scope.addStateWithPresets(300, 300);
-        $scope.addStateWithPresets(300, 100);
-        $scope.addFinalState(3);
+        console.log("called");
 
-        $scope.addTransition(0, 1, "a");
-        $scope.addTransition(1, 2, "b");
-        $scope.addTransition(2, 3, "c");
-        $scope.addTransition(3, 0, "l");
+        var state1 = $scope.states.createWithPresets(100, 100);
+        var state2 = $scope.states.createWithPresets(100, 300);
+        var state3 = $scope.states.createWithPresets(300, 300);
+        var state4 = $scope.states.createWithPresets(300, 100);
+        $scope.states.final.create(state1);
+
+        $scope.transitions.create(state1, state2, "a");
+        $scope.transitions.create(state2, state3, "b");
+        $scope.transitions.create(state3, state4, "c");
+        $scope.transitions.create(state4, state1, "l");
 
     };
 

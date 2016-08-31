@@ -11,8 +11,6 @@ function StatetransitionfunctionDFA($scope) {
         self.data.alphabet = $scope.config.alphabet;
         self.updateStates();
         self.updateStateTransitionFunctions();
-        self.updateStartState();
-        self.updateFinalStates();
 
     };
 
@@ -58,9 +56,6 @@ function StatetransitionfunctionDFA($scope) {
 
                     tmpObject.animatedClass = ($scope.simulator.animated.transition && $scope.simulator.animated.transition.id === stateTransition.id) ? 'animated-transition' : '';
 
-                    tmpObject.fromState = $scope.getStateById(stateTransition.fromState).name;
-                    tmpObject.toState = $scope.getStateById(stateTransition.toState).name;
-                    tmpObject.char = stateTransition.name;
 
                     self.data.statetransitionfunction.push(tmpObject);
                 }
@@ -68,27 +63,6 @@ function StatetransitionfunctionDFA($scope) {
         });
 
     };
-
-    /**
-     * Updates the startState
-     */
-    self.updateStartState = function () {
-        //Update of startState
-        var startState = $scope.getStateById($scope.config.startState);
-        self.data.startState = (startState !== undefined) ? startState.name : '';
-    };
-
-    /**
-     * Updates the final state
-     */
-    self.updateFinalStates = function () {
-        self.data.finalStates = [];
-        _.forEach($scope.config.finalStates, function (finalState) {
-            finalState = $scope.getStateById(finalState);
-            self.data.finalStates.push(finalState.name);
-        });
-    };
-
 
     /**
      * Update the automaton, when the user pressed save

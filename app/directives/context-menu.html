@@ -12,9 +12,10 @@
 </nav>
 
 <nav class="context-menu context-menu-state">
+    {{statediagram.contextMenuData.state}}
     <ul class="context-menu__items">
         <li class="context-add-state"
-            ng-click="removeState(statediagram.contextMenuData.stateId); statediagram.stateContextMenu(null,true)">
+            ng-click="removeState(statediagram.contextMenuData.state); statediagram.stateContextMenu(null,true)">
             <span class="context-menu__link">
                 <span class="context-menu-icon icon icon-minus-circle"></span>
                 <span class="context-menu-text">Remove State</span>
@@ -22,8 +23,8 @@
             </span>
         </li>
         <li class="context-add-state"
-            ng-click="changeStartState(statediagram.contextMenuData.stateId); statediagram.stateContextMenu(null,true)"
-            ng-show="config.startState !== statediagram.contextMenuData.stateId">
+            ng-click="changeStartState(statediagram.contextMenuData.state); statediagram.stateContextMenu(null,true)"
+            ng-show="config.startState !== statediagram.contextMenuData.state">
             <span class="context-menu__link">
                 <span class="context-menu-icon icon icon-minus-circle"></span>
                 <span class="context-menu-text">Make as StartState</span>
@@ -32,7 +33,7 @@
         </li>
         <li class="context-add-state"
             ng-click="removeStartState(); statediagram.stateContextMenu(null,true)"
-            ng-show="config.startState === statediagram.contextMenuData.stateId">
+            ng-show="config.startState === statediagram.contextMenuData.state">
             <span class="context-menu__link">
                 <span class="context-menu-icon icon icon-minus-circle"></span>
                 <span class="context-menu-text">Remove as StartState</span>
@@ -40,8 +41,8 @@
             </span>
         </li>
         <li class="context-add-state"
-            ng-click="addFinalState(statediagram.contextMenuData.stateId); statediagram.stateContextMenu(null,true)"
-            ng-show="!isStateAFinalState(statediagram.contextMenuData.stateId)">
+            ng-click="addFinalState(statediagram.contextMenuData.state); statediagram.stateContextMenu(null,true)"
+            ng-show="!isStateAFinalState(statediagram.contextMenuData.state)">
             <span class="context-menu__link">
                 <span class="context-menu-icon icon icon-minus-circle"></span>
                 <span class="context-menu-text">Add to FinalStates</span>
@@ -49,8 +50,8 @@
             </span>
         </li>
         <li class="context-add-state"
-            ng-click="removeFinalState(statediagram.contextMenuData.stateId); statediagram.stateContextMenu(null,true)"
-            ng-show="isStateAFinalState(statediagram.contextMenuData.stateId)">
+            ng-click="removeFinalState(statediagram.contextMenuData.state); statediagram.stateContextMenu(null,true)"
+            ng-show="isStateAFinalState(statediagram.contextMenuData.state)">
             <span class="context-menu__link">
                 <span class="context-menu-icon icon icon-minus-circle"></span>
                 <span class="context-menu-text">Remove From FinalStates</span>
@@ -58,7 +59,7 @@
             </span>
         </li>
         <li class="context-add-state"
-            ng-click="statediagram.addTransition(statediagram.contextMenuData.stateId) ; statediagram.stateContextMenu(null,true)">
+            ng-click="statediagram.addTransition(statediagram.contextMenuData.state) ; statediagram.stateContextMenu(null,true)">
             <span class="context-menu__link">
                 <span class="context-menu-icon icon icon-plus-circle"></span>
                 <span class="context-menu-text">Add Transition</span>

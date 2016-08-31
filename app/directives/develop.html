@@ -1,7 +1,7 @@
 <menuitemextendable titlename="DEV.TITLE">
     <menubutton icon="wrench" action="statetransitionfunction.simulatePhysic()"></menubutton>
 
-    <menubutton icon="wrench" action="testData.testDFA()" ng-show="config.type== 'DFA'">
+    <menubutton icon="wrench" action="testAgent.testDFA()" ng-show="automatonData.type== 'DFA'">
     </menubutton>
     <menubutton icon="wrench" action="testData.testNFA()" ng-show="config.type== 'NFA'">
     </menubutton>
@@ -9,12 +9,19 @@
     </menubutton>
     <menubutton icon="wrench" action="testData.testNPDA()" ng-show="config.type== 'NPDA'">
     </menubutton>
-
+    <p>
+        <json-formatter json="automatonData" open="1"></json-formatter>
+    </p>
+    <p>
+        <json-formatter json="states" open="1"></json-formatter>
+    </p>
+    <p>
+        <json-formatter json="transitions" open="1"></json-formatter>
+    </p>
     <json-formatter json="table" open="1"></json-formatter>
     <json-formatter json="simulator" open="1"></json-formatter>
-    <p>
-        DiagramValues:
-        <json-formatter json="config" open="1"></json-formatter>
+
+
     </p>
     <p>
         DrawnTransitions:

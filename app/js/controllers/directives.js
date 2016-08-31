@@ -58,7 +58,37 @@ autoSim.directive("simulation", function () {
 });
 autoSim.directive("simulationSettings", function () {
     return {
+        link: function (scope, elm, attrs) {
+            /**
+             * Options for the stepTimeOut-Slider
+             */
+            scope.stepTimeOutSlider = {
+                options: {
+                    floor: 0,
+                    step: 100,
+                    ceil: 3000,
+                    hideLimitLabels: true,
+                    translate: function (value) {
+                        return value + ' ms';
+                    }
+                }
+            };
 
+            /**
+             * Options for the loopTimeOut-Slider
+             */
+            scope.loopTimeOutSlider = {
+                options: {
+                    floor: 0,
+                    step: 100,
+                    ceil: 4000,
+                    hideLimitLabels: true,
+                    translate: function (value) {
+                        return value + ' ms';
+                    }
+                }
+            };
+        },
         templateUrl: 'directives/simulation-settings.html'
     };
 });
@@ -77,11 +107,58 @@ autoSim.directive("develop", function () {
 });
 autoSim.directive("automatonName", function () {
     return {
+        link: function (scope, elm, attrs) {
+            /**
+             * Executes the modal action-> when clicking on the action button
+             */
+            scope.executeModalAction = function () {
+                scope.$eval(scope.modalAction);
+            };
+            /**
+             * Leave the input field after clicking the enter button
+             */
+            scope.keypressCallback = function ($event) {
+                if ($event.charCode == 13) {
+                    document.getElementById("automatonNameEdit").blur();
+                }
+            };
+
+
+        },
         templateUrl: 'directives/automaton-name.html'
     };
 });
 autoSim.directive("modal", function () {
     return {
+        link: function (scope, elm, attrs) {
+            /**
+             * Add the options to the modal.
+             * @param newTitle
+             * @param newDescription
+             * @param action
+             * @param button
+             */
+            scope.showModalWithMessage = function (newTitle, newDescription, action, button) {
+                scope.title = newTitle;
+                scope.description = newDescription;
+                if (action !== undefined) {
+                    scope.modalAction = action;
+                    scope.noAction = false;
+                    if (button === undefined) {
+                        scope.button = "MODAL_BUTTON.PROCEED";
+                    } else {
+                        scope.button = button;
+                    }
+                } else {
+                    scope.modalAction = null;
+                    scope.button = "MODAL_BUTTON.NOTIFIED";
+                    scope.noAction = true;
+                }
+
+                //change it to angular function
+                $("#modal").modal();
+            };
+        },
         templateUrl: 'directives/modal.html'
     };
 });
@@ -126,6 +203,30 @@ autoSim.directive("ownSvg", function () {
 autoSim.directive("contextMenu", function () {
     return {
         templateUrl: 'directives/context-menu.html'
+    };
+});
+autoSim.directive("windowBeforeUnload", function () {
+    return {
+        link: function (scope, elm, attrs) {
+
+            /**
+             * Prevent leaving site
+             */
+            window.onbeforeunload = function (event) {
+                //turn true when you want the leaving protection
+                if (!scope.debug && scope.config.unSavedChanges) {
+                    var closeMessage = "All Changes will be Lost. Save before continue!";
+                    if (typeof event == 'undefined') {
+                        event = window.event;
+                    }
+                    if (event) {
+                        event.returnValue = closeMessage;
+                    }
+                    return closeMessage;
+                }
+            };
+        },
+        template: "<div id='unload'></div>"
     };
 });
 

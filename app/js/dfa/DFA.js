@@ -21,7 +21,7 @@ function DFACore($scope) {
         $scope.simulator.reset();
         $scope.automatonData = new AutomatonDataDFA();
         self.updateListener();
-        self.config.unSavedChanges = false;
+        self.automatonData.unSavedChanges = false;
         $scope.safeApply();
     };
 
@@ -40,7 +40,6 @@ function DFACore($scope) {
 function States($scope) {
     var self = this;
 
-    self.config = {};
     self.statePrefix = 'S';
     self.startState = null;
     self.final = new FinalStates($scope);

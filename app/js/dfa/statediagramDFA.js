@@ -36,8 +36,10 @@ function StateDiagramDFA($scope, svgSelector) {
 
 
         self.createDefs();
-        self.updateWidthAndHeight();
-        self.drawGrid();
+        if (!$scope.debug) {
+            self.updateWidthAndHeight();
+            self.drawGrid();
+        }
 
         self.isInitialized = true;
     };

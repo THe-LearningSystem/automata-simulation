@@ -3,6 +3,9 @@ function SimulationDFA($scope) {
     "use strict";
     var self = this;
 
+    //add to the automatonData
+    $scope.automatonData.inputWord = "";
+
     //if the simulation loops (start at the end again)
     self.loopSimulation = true;
     //time between the steps
@@ -100,7 +103,7 @@ function SimulationDFA($scope) {
     self.prepareSimulation = function () {
         self.reset();
         self.isInAnimation = true;
-        self.sequences = self.getSequences($scope.config.inputWord);
+        self.sequences = self.getSequences($scope.automatonData.inputWord);
     };
 
     /**
@@ -111,7 +114,7 @@ function SimulationDFA($scope) {
             self.prepareSimulation();
         }
         if (!_.includes(["accepted", "notAccepted"], self.status)) {
-            if (self.isEmptyWordAccepted && $scope.config.inputWord === "") {
+            if (self.isEmptyWordAccepted && $scope.automatonData.inputWord === "") {
                 self.animateEmptyWord();
             } else {
                 if (self.animated.currentState === null) {
@@ -133,7 +136,7 @@ function SimulationDFA($scope) {
      */
     self.animateEmptyWord = function () {
         if (self.animated.currentState === null) {
-            self.animated.currentState = $scope.config.startState;
+            self.animated.currentState = $scope.states.startState;
         } else {
             if ($scope.isStateAFinalState(self.animated.currentState)) {
                 self.status = "accepted";
@@ -147,7 +150,7 @@ function SimulationDFA($scope) {
      *Animate the currentState
      */
     self.animateCurrentState = function () {
-        self.animated.currentState = $scope.config.startState;
+        self.animated.currentState = $scope.states.startState;
     };
 
     /**
@@ -156,7 +159,7 @@ function SimulationDFA($scope) {
     self.animateTransition = function () {
         if (self.getLongestSequence(self.sequences.sequences).length > self.currentPosition) {
             self.animated.transition = self.getLongestSequence(self.sequences.sequences)[self.currentPosition];
-            self.processedWord += $scope.config.inputWord[self.currentPosition];
+            self.processedWord += $scope.automatonData.inputWord[self.currentPosition];
             self.animateTransitionOverride();
         } else {
             self.status = "notAccepted";
@@ -194,7 +197,7 @@ function SimulationDFA($scope) {
      * @returns {boolean}
      */
     self.isAnimationAccepted = function () {
-        return self.currentPosition == $scope.config.inputWord.length && self.sequences.possible;
+        return self.currentPosition == $scope.automatonData.inputWord.length && self.sequences.possible;
     };
 
 
@@ -287,7 +290,7 @@ function SimulationDFA($scope) {
      */
     self.getSequences = function (inputWord) {
         var tmpObj = {};
-        if (inputWord == "" && $scope.isStateAFinalState($scope.config.startState)) {
+        if (inputWord == "" && $scope.states.final.isFinalState($scope.states.startState)) {
             tmpObj.possible = true;
             tmpObj.sequences = [];
             return tmpObj;
@@ -313,11 +316,11 @@ function SimulationDFA($scope) {
         var possibleSequences = [];
 
         //1.Get the all possible transitions
-        var stackSequences = self.getNextTransitions($scope.config.startState, inputWord[0]);
+        var stackSequences = self.getNextTransitions($scope.states.startState, inputWord[0]);
         //as long as there are possibleSequences do
         while (stackSequences.length !== 0) {
             var tmpSequence = stackSequences.pop();
-            if (tmpSequence.length === inputWord.length && $scope.isStateAFinalState(_.last(tmpSequence).toState)) {
+            if (tmpSequence.length === inputWord.length && $scope.states.final.isFinalState(_.last(tmpSequence).toState)) {
                 possibleSequences.push(tmpSequence);
             } else if (inputWord.length > tmpSequence.length) {
                 var tmpSequences = [];
@@ -340,11 +343,11 @@ function SimulationDFA($scope) {
     self.getFarthestPossibleSequences = function (inputWord) {
         var farthestSequences = [];
         //1.Get the all possible transitions
-        var stackSequences = self.getNextTransitions($scope.config.startState, inputWord[0]);
+        var stackSequences = self.getNextTransitions($scope.states.startState, inputWord[0]);
         //as long as there are possibleSequences do
         while (stackSequences.length !== 0) {
             var tmpSequence = stackSequences.pop();
-            if (tmpSequence.length === inputWord.length && $scope.isStateAFinalState(_.last(tmpSequence).toState)) {
+            if (tmpSequence.length === inputWord.length && $scope.states.final.isFinalState(_.last(tmpSequence).toState)) {
             } else if (inputWord.length > tmpSequence.length) {
                 var tmpSequences = [];
                 var newTmpSequence = [];
@@ -364,16 +367,16 @@ function SimulationDFA($scope) {
     };
 
     /**
-     * returns all possible transition, which go from the fromState with the transitionName to a state
+     * returns all possible transition, which go from the fromState with the inputSymbol to a state
      * @param fromState
-     * @param transitionName
+     * @param inputSymbol
      * @returns {Array}
      */
-    self.getNextTransitions = function (fromState, transitionName) {
+    self.getNextTransitions = function (fromState, inputSymbol) {
         var transitions = [];
-        for (var i = 0; i < $scope.config.transitions.length; i++) {
-            var transition = $scope.config.transitions[i];
-            if (transition.fromState == fromState && transition.name == transitionName) {
+        for (var i = 0; i < $scope.transitions.length; i++) {
+            var transition = $scope.transitions[i];
+            if (transition.fromState == fromState && transition.inputSymbol == inputSymbol) {
                 transitions.push([transition]);
             }
         }
@@ -384,7 +387,7 @@ function SimulationDFA($scope) {
      *update the currentSequences if it didnt break the simulation
      */
     self.updateCurrentSequences = function () {
-        var newSequences = self.getSequences($scope.config.inputWord);
+        var newSequences = self.getSequences($scope.automatonData.inputWord);
         var newShortestSequence = self.getLongestSequence(newSequences.sequences);
         var bool = true;
         if (newShortestSequence.length < self.currentPosition) {
@@ -429,7 +432,7 @@ function SimulationDFA($scope) {
     };
 
 
-    $scope.updateListeners.push(self);
+    $scope.core.updateListeners.push(self);
 
     /**
      * updateFunction for the dfa listener

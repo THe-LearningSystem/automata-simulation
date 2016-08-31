@@ -14,7 +14,6 @@ function StateDiagramDrawerDFA($scope, self) {
     //is for the selfReference
     var stretchX = 40;
     var stretchY = 18;
-    ///////
 
     //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
     self.gridSpace = 100;
@@ -126,27 +125,27 @@ function StateDiagramDrawerDFA($scope, self) {
                 //if there is no selected state then select a state
                 if (self.selectedState === null) {
                     self.selectedState = $scope.getStateById(parseInt(d3.select(this).attr("object-id")));
-                    self.toggleState(self.selectedState.id, true);
+                    self.toggleState(self.selectedState, true);
                     //create tmpLine
                     self.tmpTransition = self.svgTransitions.append("g").attr("class", "transition");
                     //the line itself with the arrow without the path itself
                     self.tmpTransitionline = self.tmpTransition.append("path").attr("class", "transition-line curvedLine in-creation").attr("marker-end", "url(#marker-end-arrow-create)").attr("fill", "none");
                     //if already selected a state then create transition to the clickedState
                 } else {
-                    self.createTransition(self.selectedState.id, parseInt(d3.select(this).attr("object-id")));
+                    self.createTransition(self.selectedState, $scope.getStateById(parseInt(d3.select(this).attr("object-id"))));
                 }
 
             });
         } else {
             self.mouseInState = false;
-            self.selectedState = $scope.getStateById(fromState);
-            self.toggleState(self.selectedState.id, true);
+            self.selectedState = fromState;
+            self.toggleState(self.selectedState, true);
             //create tmpLine
             self.tmpTransition = self.svgTransitions.append("g").attr("class", "transition");
             //the line itself with the arrow without the path itself
             self.tmpTransitionline = self.tmpTransition.append("path").attr("class", "transition-line curvedLine in-creation").attr("marker-end", "url(#marker-end-arrow-create)").attr("fill", "none");
             d3.selectAll(".state").on("click", function () {
-                self.createTransition(self.selectedState.id, parseInt(d3.select(this).attr("object-id")));
+                self.createTransition(self.selectedState, $scope.getStateById(parseInt(d3.select(this).attr("object-id"))));
             });
         }
         //2. if the mouse moves on the svgOuter and not on a state, then update the tmpLine
@@ -166,8 +165,9 @@ function StateDiagramDrawerDFA($scope, self) {
             if (self.selectedState !== null) {
                 var otherState = $scope.getStateById(d3.select(this).attr("object-id"));
                 var transition = {};
-                transition.fromState = self.selectedState.id;
-                transition.toState = otherState.id;
+                transition.fromState = self.selectedState;
+                console.log(d3.select(this).attr("object-id"), otherState, $scope.getStateById);
+                transition.toState = otherState;
                 var line = self.tmpTransitionline;
                 if (!$scope.existsDrawnTransition(self.selectedState.fromState, self.selectedState.toState)) {
                     //the group element
@@ -222,7 +222,7 @@ function StateDiagramDrawerDFA($scope, self) {
      */
     self.createTransition = function (fromState, toState) {
         var tmpTransition = $scope.addTransition(fromState, toState, $scope.getNextTransitionName(self.selectedState.id));
-        self.toggleState(self.selectedState.id, false);
+        self.toggleState(self.selectedState, false);
         self.removeTmpTransition();
         //openTransitionMenu
         self.openTransitionMenu(tmpTransition.id);
@@ -248,13 +248,11 @@ function StateDiagramDrawerDFA($scope, self) {
     };
     /**
      * Renames the state in the svg after the $scope variable was changed
-     * @param  {number} stateId
+     * @param  {object} state
      * @param  {String} newStateName
      */
-    self.renameState = function (stateId, newStateName) {
-        var state = $scope.config.states[$scope.getArrayStateIdByStateId(stateId)];
-        var objReference = state.objReference;
-        objReference.select("text").text(newStateName);
+    self.renameState = function (state, newStateName) {
+        state.objReference.select("text").text(newStateName);
     };
     /**
      * Removes the state with the given id
@@ -340,8 +338,8 @@ function StateDiagramDrawerDFA($scope, self) {
      * @param {number} stateId
      * @param {bool}   bool
      */
-    self.toggleState = function (stateId, bool) {
-        self.setStateClassAs(stateId, bool, "active");
+    self.toggleState = function (state, bool) {
+        self.setStateClassAs(state, bool, "active");
         if (bool === false) {
             self.selectedState = null;
         }
@@ -349,55 +347,47 @@ function StateDiagramDrawerDFA($scope, self) {
     };
     /**
      * Adds a stateId to the final states on the svg (visual feedback)
-     * @param {number} stateId
+     * @param {object} state
      */
-    self.addFinalState = function (stateId) {
-        var state = $scope.getStateById(stateId);
+    self.addFinalState = function (state) {
         state.objReference.insert("circle", ".state-circle").attr("class", "final-state").attr("r", self.settings.finalStateRadius);
         //TODO: update the transitions to the state
 
     };
     /**
      * Removes a final state on the svg
-     * @param {number} stateId
+     * @param {object} state
      */
-    self.removeFinalState = function (stateId) {
-        var state = $scope.getStateById(stateId);
+    self.removeFinalState = function (state) {
         state.objReference.select(".final-state").remove();
         //TODO update the transitions to the state
     };
     /**
      * Changes the StartState to the stateId
-     * @param {number} stateId
+     * @param {object} state
      */
-    self.changeStartState = function (stateId) {
-        //TODO:
+    self.changeStartState = function (state) {
         //remove old startState
         if ($scope.config.startState !== null) {
-            var state = $scope.getStateById($scope.config.startState);
-            state.objReference.select(".start-line").remove();
+            $scope.config.startState.objReference.select(".start-line").remove();
         }
-
-        var otherState = $scope.getStateById(stateId);
-        otherState.objReference.append("line").attr("class", "transition-line start-line").attr("x1", 0).attr("y1", 0 - 75).attr("x2", 0).attr("y2", 0 - self.settings.stateRadius - 4).attr("marker-end", "url(#marker-end-arrow)");
+        state.objReference.append("line").attr("class", "transition-line start-line").attr("x1", 0).attr("y1", 0 - 75).attr("x2", 0).attr("y2", 0 - self.settings.stateRadius - 4).attr("marker-end", "url(#marker-end-arrow)");
     };
 
     /**
      * Removes the startState
      */
     self.removeStartState = function () {
-        var state = $scope.getStateById($scope.config.startState);
-        state.objReference.select(".start-line").remove();
+        $scope.config.startState.objReference.select(".start-line").remove();
         $scope.config.startState = null;
         $scope.updateListener();
     };
     /**
      * Draws a State
-     * @param  {number} id the stateId
+     * @param  {object} state
      * @return {group}    Returns the reference of the group object
      */
-    self.drawState = function (id) {
-        var state = $scope.getStateById(id);
+    self.drawState = function (state) {
         var group = self.svgStates.append("g").attr("transform", "translate(" + state.x + " " + state.y + ")").attr("class", "state " + "state-" + state.id).attr("object-id", state.id);
         //save the state-id
 
@@ -405,32 +395,32 @@ function StateDiagramDrawerDFA($scope, self) {
         //for outer circle dotted when selected
 
         group.append("circle").attr("class", "state-circle hover-circle").attr("r", self.settings.stateRadius);
-        group.append("text").text(state.name).attr("class", "state-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("style", "font-family:'" + $scope.defaultConfig.font + "';");
+        group.append("text").text(state.name).attr("class", "state-text").attr("dominant-baseline", "central").attr("text-anchor", "middle").attr("style", "font-family:'" + $scope.config.font + "';");
         state.objReference = group;
-        group.on('click', self.openStateMenu).call(self.dragState);
+        group.on('click', function () {
+            self.openStateMenu(state);
+        }).call(self.dragState);
         group.on('contextmenu', function () {
-            self.stateContextMenu(id)
+            self.stateContextMenu(state);
         });
         return group;
     };
     /**
      * Adds or remove a class to a state ( only the svg state)
-     * @param {number} stateId
-     * @param {Boolean} state
+     * @param {object} state
+     * @param {Boolean} boolState
      * @param {String} className
      */
-    self.setStateClassAs = function (stateId, state, className) {
-        var objReference = $scope.getStateById(stateId).objReference;
-        objReference.classed(className, state);
+    self.setStateClassAs = function (state, boolState, className) {
+        state.objReference.classed(className, boolState);
     };
     /**
      * Sets a transition class to a specific class or removes the specific class
-     * @param {number}   transitionId
+     * @param {object}   trans
      * @param {boolean} state        if the class should be added or removed
      * @param {string}  className    the className
      */
-    self.setTransitionClassAs = function (transitionId, state, className) {
-        var trans = $scope.getTransitionById(transitionId);
+    self.setTransitionClassAs = function (trans, state, className) {
         var objReference = $scope.getDrawnTransition(trans.fromState, trans.toState).objReference;
         objReference.classed(className, state);
         if (state && className == 'animated-transition') {
@@ -461,8 +451,7 @@ function StateDiagramDrawerDFA($scope, self) {
      * @param  {number} transitionId
      * @return {object}  Returns the reference of the group object
      */
-    self.drawTransition = function (transitionId) {
-        var transition = $scope.getTransitionById(transitionId);
+    self.drawTransition = function (transition) {
         //if there is not a drawn transition with the same from and toState
         var drawnTransition;
         if (!$scope.existsDrawnTransition(transition.fromState, transition.toState)) {
@@ -511,7 +500,7 @@ function StateDiagramDrawerDFA($scope, self) {
         group.append("path").attr("class", "transition-line-click").attr("stroke-width", 20).attr("stroke", "transparent").attr("fill", "none");
         group.append("path").attr("class", "transition-line-hover").attr("fill", "none").attr("marker-end", "url(#marker-end-arrow-hover)");
         //the text
-        group.append("text").attr("class", "transition-text").attr("dominant-baseline", "central").attr("style", "font-family:" + $scope.defaultConfig.font + ";");
+        group.append("text").attr("class", "transition-text").attr("dominant-baseline", "central").attr("style", "font-family:" + $scope.config.font + ";");
 
         group.attr("object-id", $scope.config.drawnTransitions.push({
                 fromState: transition.fromState,
@@ -741,12 +730,12 @@ function StateDiagramDrawerDFA($scope, self) {
         obj.approachTransition = forceApproach || $scope.existsDrawnTransition(transition.toState, transition.fromState);
         /****2. Get the xStart,yStart and xEnd,yEnd  and xMid,yMid***/
             //from and to State
-        var fromState = $scope.getStateById(transition.fromState);
-        var toState = $scope.getStateById(transition.toState);
+        var fromState = transition.fromState;
+        var toState = transition.toState;
         //TODO:BETTER update
         //var isToStateAFinalState = $scope.isStateAFinalState(transition.toState);
         var isToStateAFinalState = false;
-
+        console.log(toState);
         //the x and y coordinates
         var x1 = fromState.x;
         var y1 = fromState.y;

@@ -35,11 +35,11 @@
     <div ng-show="config.type!=='PDA'">
         <div class="stf-element" uib-tooltip="{{ 'STF.TTFINAL' | translate}}" tooltip-placement="right">
             {{"STF.F" | translate}} = {
-            <span ng-repeat="x in statetransitionfunction.data.finalStates">{{x}}{{$last ? '' : ', '}}</span> }
+            <span ng-repeat="x in config.finalStates">{{x.name}}{{$last ? '' : ', '}}</span> }
         </div>
     </div>
     <div class="stf-element" uib-tooltip="{{ 'STF.TTSTART' | translate}}" tooltip-placement="right">
-        S<sub>0</sub>= {{statetransitionfunction.data.startState}}
+        S<sub>0</sub>= {{config.startState.name}}
     </div>
     <button class="btn btn-default" ng-click="statetransitionfunction.showSTFEditModal()">Edit</button>
 </div>

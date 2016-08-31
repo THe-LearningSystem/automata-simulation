@@ -2,24 +2,24 @@
 function TableDFA($scope) {
     var self = this;
     self.states = [];
-    $scope.updateListeners.push(self);
+    $scope.core.updateListeners.push(self);
 
     /**
      * Creates the state array for the views
      */
     self.getStatesWithTransition = function () {
         var tmpObject;
-        _.forEach($scope.config.states, function (state) {
+        _.forEach($scope.states, function (state) {
             tmpObject = {};
             self.prepareFromState(tmpObject, state);
             tmpObject.trans = [];
 
             // iterates over all alphabet
-            _.forEach($scope.config.alphabet, function (character) {
+            _.forEach($scope.transitions.inputSymbolAlphabet, function (character) {
                 var foundTransition = [];
 
                 // iterates over the available transitions and saves found transitions
-                _.forEach($scope.config.transitions, function (transition) {
+                _.forEach($scope.transitions, function (transition) {
                     if (transition.fromState === state.id && transition.name === character) {
                         foundTransition.push(transition);
                     }
@@ -76,9 +76,8 @@ function TableDFA($scope) {
             }
         }
 
-        tmpObject.finalState = $scope.isStateAFinalState(state.id);
-
-        tmpObject.startState = ($scope.config.startState === state.id);
+        tmpObject.finalState = $scope.isStateAFinalState(state);
+        tmpObject.startState = ($scope.config.startState === state);
     };
 
     /**
@@ -86,7 +85,7 @@ function TableDFA($scope) {
      */
     self.getAlphabet = function () {
         var tmpObject;
-        _.forEach($scope.config.alphabet, function (character) {
+        _.forEach($scope.transitions.inputSymbolAlphabet, function (character) {
             tmpObject = {};
             tmpObject.character = character;
 
@@ -107,6 +106,7 @@ function TableDFA($scope) {
      * called by the listener
      */
     self.updateFunction = function () {
+        console.log("test");
         self.states = [];
         self.alphabet = [];
 

@@ -6,6 +6,7 @@ function BulkTesterDFA($scope) {
     $scope.updateListeners.push(self);
     self.acceptedInput = [];
     self.rejectedInput = [];
+    self.acceptedInputRaw = "";
 
     /**
      * executes the bulkTest
@@ -20,6 +21,7 @@ function BulkTesterDFA($scope) {
      * prepares the acceptedInput
      */
     self.testAcceptedInputs = function () {
+        console.log($scope.bulktester);
         self.acceptedInput = [];
         var acceptedInputString = document.getElementById("acceptedInput").value;
         var acceptedInputArray = acceptedInputString.split("\n");
