@@ -18,6 +18,14 @@ describe('Simulation Automata', function () {
                 scope.states.create("S0", 10, 10);
                 expect(scope.states.length).toBe(1);
             });
+            it('StateWithPresets should be created', function () {
+                scope.states.createWithPresets(10, 10);
+                scope.states.createWithPresets(10, 10);
+                scope.states.createWithPresets(10, 10);
+                expect(scope.states.length).toBe(3);
+                expect(scope.states[0].inputSymbol).toBe("S0");
+                expect(scope.states[1].inputSymbol).toBe("S1");
+            });
 
             it('Should find a state with a name', function () {
                 scope.states.create("S0", 10, 10);
@@ -161,6 +169,7 @@ describe('Simulation Automata', function () {
                 var state1 = scope.states.create("S0", 10, 10);
                 var state2 = scope.states.create("S1", 10, 10);
                 scope.transitions.create(state1, state1, "a");
+                console.log(scope.transitions);
                 expect(scope.transitions.getById(0)).toBeDefined();
                 expect(scope.transitions.getById(1)).not.toBeDefined();
             });

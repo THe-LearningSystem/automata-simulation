@@ -41,7 +41,7 @@ function States($scope) {
     var self = this;
 
     self.config = {};
-    self.config.statePrefix = 'S';
+    self.statePrefix = 'S';
     self.startState = null;
     self.final = new FinalStates($scope);
 
@@ -136,7 +136,11 @@ function States($scope) {
      * @returns {object} the created object
      */
     self.createWithPresets = function (x, y) {
-        var obj = self.create((self.statePrefix + self.length), x, y);
+        var stateNameNumber = self.length;
+        while (self.existsWithName((self.statePrefix + stateNameNumber))) {
+            stateNameNumber++;
+        }
+        var obj = self.create((self.statePrefix + stateNameNumber), x, y);
         if (self.startState == null) {
             self.changeStartState(obj);
         }
@@ -303,7 +307,7 @@ function FinalStates($scope) {
     };
 
     /**
-     * Create a state as final State if it isn't already createed and if their is a state with such a id
+     * Create a state as final State if it isn't already created and if their is a state with such a id
      * @returns {Boolean}
      */
     self.create = function (state) {
@@ -395,7 +399,7 @@ function Transitions($scope) {
     self.create = function (fromState, toState, inputSymbol) {
         if (!self.exists(fromState, toState, inputSymbol)) {
             self.inputSymbolAlphabet.addIfNotExists(inputSymbol);
-            return self.createWithId($scope.automatonData.countTransitionId++, fromState, toState, inputSymbol);
+            return self.createWithId(self.length, fromState, toState, inputSymbol);
         } else {
             console.error("Cant create transition,exists", self.exists(fromState, toState, inputSymbol));
         }
