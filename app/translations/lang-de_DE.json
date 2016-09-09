@@ -57,7 +57,7 @@
     "STARTSTATE": "Startzustand",
     "FINALSTATE": "Endzustand",
     "SAVE": "Speichern",
-    "NAME_ALREADY_EXIST": "Zustandsname bereits verwendet!",
+    "NAME_ALREADY_EXISTS": "Zustandsname bereits verwendet!",
     "NAME_TOO_SHORT": "Zustandsname zu kurz!",
     "DELETE_MODAL_TITLE": "Zustand löschen",
     "DELETE_MODAL_DESC": "Wollen sie den Zustand und alle zugehörigen Zustandsübergänge löschen?"
@@ -65,13 +65,13 @@
   "TRANS_MENU": {
     "TITLE": "Zustandsübergangsmenü",
     "NEXTSTATE": "Nächster Zustand",
-    "NAME": "Zeichen",
-    "PDA_READ_FROM_STACK": "Stack davor",
-    "PDA_WRITE_TO_STACK": "Stack danach",
+    "NAME": "eingelesenes Zeichen",
     "NAME_TOO_SHORT": "Zeichen zu kurz",
-    "NAME_ALREADY_EXISTS": "Zeichen existiert bereits",
+    "NAME_ALREADY_EXISTS": "Nicht determinismus!",
     "DELETE_MODAL_TITLE": "Zustandsübergänge löschen",
-    "DELETE_MODAL_DESC": "Wollen sie alle markierten Zustandsübergänge löschen?"
+    "DELETE_MODAL_DESC": "Wollen sie alle markierten Zustandsübergänge löschen?",
+    "PDA_READ_FROM_STACK": "Gelesenes Stack Zeichen",
+    "PDA_WRITE_TO_STACK": "Geschriebenes Stack Zeichen"
   },
   "TABLE": {
     "TITLE": "Zustandübergangsstabelle"

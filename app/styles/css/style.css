@@ -6106,7 +6106,7 @@ button:disabled .icon {
   top: 90px;
   right: 0;
   bottom: 0;
-  width: 200px;
+  width: 300px;
   background-color: whitesmoke;
   border-left: 1px solid #e0e0e0; }
 
@@ -6364,7 +6364,6 @@ rzslider .rz-pointer:after {
 
 /* context menu */
 .context-menu {
-  display: none;
   position: absolute;
   z-index: 10;
   padding: 12px 0;
@@ -6415,3 +6414,18 @@ rzslider .rz-pointer:after {
   display: inline-block;
   text-align: left;
   vertical-align: middle; }
+
+.noselect {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Chrome/Safari/Opera */
+  -khtml-user-select: none;
+  /* Konqueror */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                         not supported by any browser */ }

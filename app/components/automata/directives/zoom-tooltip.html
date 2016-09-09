@@ -1,0 +1,37 @@
+      <!-- Simple dropdown -->
+        <div uib-dropdown on-toggle="toggled(open)">
+            <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
+                {{automatonData.diagram.scale*100 | number:0}}%
+                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </button>
+
+            <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+                <li>
+                    <a ng-click="statediagram.zoom.zoomTo(25)">25%</a>
+                </li>
+                <li>
+                    <a ng-click="statediagram.zoom.zoomTo(50)">50%</a>
+                </li>
+                <li>
+                    <a ng-click="statediagram.zoom.zoomTo(75)">75%</a>
+                </li>
+                <li>
+                    <a ng-click="statediagram.zoom.zoomTo(100)">100%</a>
+                </li>
+                <li>
+                    <a ng-click="statediagram.zoom.zoomTo(125)">125%</a>
+                </li>
+                <li>
+                    <a ng-click="statediagram.zoom.zoomTo(150)">150%</a>
+                </li>
+                <li>
+                    <a ng-click="statediagram.zoom.zoomTo(200)">200%</a>
+                </li>
+                <li>
+                    <a ng-click="statediagram.zoom.zoomTo(250)">250%</a>
+                </li>
+                <li class="border-top">
+                    <a ng-click="statediagram.zoom.zoomFitWindow()">{{"NAVBAR.FIT_WINDOW" | translate}}</a>
+                </li>
+            </ul>
+        </div>

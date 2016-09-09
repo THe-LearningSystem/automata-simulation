@@ -1,0 +1,73 @@
+<nav id="svg-context-menu" class="context-menu" ng-show="statediagram.menu.context.isOpen"
+     ng-attr-style="top:{{statediagram.menu.context.position.y}}px;left:{{statediagram.menu.context.position.x}}px">
+    <ul class="context-menu__items">
+        <li class="context-add-state"
+            ng-click="states.menu.edit.open(states.createWithPresets(statediagram.menu.context.addStateX,statediagram.menu.context.addStateY )); statediagram.menu.context.close()">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-plus-circle"></span>
+                <span class="context-menu-text">Add State</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+    </ul>
+</nav>
+
+<nav id="state-context-menu" class="context-menu" ng-show="states.menu.context.isOpen"
+     ng-attr-style="top:{{states.menu.context.position.y}}px;left:{{states.menu.context.position.x}}px">
+
+    <ul class="context-menu__items">
+        {{states.selected}}
+        <li class="context-add-state"
+            ng-click="states.remove(states.selected); states.menu.context.close()">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Remove State</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
+            ng-click="states.changeStartState(states.selected); states.menu.context.close()"
+            ng-show="states.startState !== states.selected">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Make as StartState</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
+            ng-click="states.removeStartState(); states.menu.context.close()"
+            ng-show="states.startState === states.selected">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Remove as StartState</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
+            ng-click="states.final.create(states.selected); states.menu.context.close()"
+            ng-show="!states.final.isFinalState(states.selected)">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Add to FinalStates</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
+            ng-click="states.final.remove(states.selected); states.menu.context.close()"
+            ng-show="states.final.isFinalState(states.selected)">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-minus-circle"></span>
+                <span class="context-menu-text">Remove From FinalStates</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+        <li class="context-add-state"
+            ng-click="statediagram.createTransition(states.selected) ; states.menu.context.close(true)">
+            <span class="context-menu__link">
+                <span class="context-menu-icon icon icon-plus-circle"></span>
+                <span class="context-menu-text">Add Transition</span>
+                <span class="context-menu-shortcut"></span>
+            </span>
+        </li>
+    </ul>
+</nav>

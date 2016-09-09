@@ -23,8 +23,8 @@ describe('Simulation Automata', function () {
                 scope.states.createWithPresets(10, 10);
                 scope.states.createWithPresets(10, 10);
                 expect(scope.states.length).toBe(3);
-                expect(scope.states[0].inputSymbol).toBe("S0");
-                expect(scope.states[1].inputSymbol).toBe("S1");
+                expect(scope.states[0].name).toBe("S0");
+                expect(scope.states[1].name).toBe("S1");
             });
 
             it('Should find a state with a name', function () {
@@ -72,9 +72,23 @@ describe('Simulation Automata', function () {
             it('State should be removed', function () {
                 var tmp = scope.states.create("S0", 10, 10);
                 scope.states.create("S1", 10, 10);
-                scope.states.remove(tmp.id);
+                scope.states.remove(tmp);
                 expect(scope.states.existsWithName("S1")).toBe(true);
                 expect(scope.states.length).toBe(1);
+            });
+            it('State Ids working, when adding state and adding new State', function () {
+                var state1 = scope.states.create("S0", 10, 10);
+                var state2 = scope.states.create("S1", 10, 10);
+                var state3 = scope.states.create("S2", 10, 10);
+                var state4 = scope.states.create("S3", 10, 10);
+                scope.states.remove(state3);
+                expect(scope.states.existsWithName("S1")).toBe(true);
+                expect(scope.states.existsWithName("S2")).toBe(false);
+                expect(scope.states.length).toBe(3);
+                var state3 = scope.states.create("S2", 10, 10);
+                expect(scope.states.length).toBe(4);
+
+
             });
 
             it('State should be modified, if name isnt in use', function () {
@@ -169,7 +183,6 @@ describe('Simulation Automata', function () {
                 var state1 = scope.states.create("S0", 10, 10);
                 var state2 = scope.states.create("S1", 10, 10);
                 scope.transitions.create(state1, state1, "a");
-                console.log(scope.transitions);
                 expect(scope.transitions.getById(0)).toBeDefined();
                 expect(scope.transitions.getById(1)).not.toBeDefined();
             });
@@ -189,7 +202,6 @@ describe('Simulation Automata', function () {
                 var trans1 = scope.transitions.create(state1, state1, "a");
                 var trans2 = scope.transitions.create(state1, state1, "b");
                 var trans3 = scope.transitions.create(state1, state1, "c");
-                console.log(scope.transitions);
                 scope.transitions.modify(trans1, "b");
                 scope.transitions.modify(trans3, "d");
                 expect(trans1.inputSymbol).toBe("a");

@@ -13,7 +13,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename');
 
 var paths = {
-    js: 'app/js/**/*.js',
+    js: 'app/components/**/*.js',
     views: 'app/view*/*.html',
     directives: 'app/directives/*.html',
     sass: 'app/styles/**/*scss',
@@ -33,25 +33,25 @@ pipes.uglifyAndConcat = function () {
 // JAVASCRIPT
 ////////////////////////////
 gulp.task('pda', function () {
-    return gulp.src(['app/js/pda/*.js', '!app/js/pda/PDAall.js', '!app/js/pda/PDAall.min.js'])
+    return gulp.src(['app/components/pda/*.js', '!app/components/pda/PDAall.js', '!app/components/pda/PDAall.min.js'])
         .pipe(concat('PDAall.js'))
-        .pipe(gulp.dest('app/js/pda/'))
+        .pipe(gulp.dest('app/components/pda/'))
         .pipe(uglify())
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('app/js/pda/'));
+        .pipe(gulp.dest('app/components/pda/'));
 });
 
 gulp.task('dfa', function () {
-    return gulp.src(['app/js/dfa/*.js', '!app/js/dfa/DFAall.js', '!app/js/dfa/DFAall.min.js'])
+    return gulp.src(['app/components/dfa/*.js', '!app/components/dfa/DFAall.js', '!app/components/dfa/DFAall.min.js'])
         .pipe(concat('DFAall.js'))
-        .pipe(gulp.dest('app/js/dfa/'))
+        .pipe(gulp.dest('app/components/dfa/'))
         .pipe(uglify())
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('app/js/dfa/'));
+        .pipe(gulp.dest('app/components/dfa/'));
 });
 
 ///////////////////////////
@@ -73,7 +73,7 @@ gulp.task('styles', function () {
 });
 
 ///////////////////////////
-// Get, uglify and copy application js
+// Get, uglify and copy application components
 ////////////////////////////
 
 gulp.task('assets', function () {
@@ -92,7 +92,7 @@ gulp.task('assets', function () {
 // Copy dependencys of index.html
 /////////////////////////////////////////////////
 
-gulp.task('wiredep-js', function () {
+gulp.task('wiredep-components', function () {
     console.log(wiredep().js);
     gulp.src(wiredep().js)
         .pipe(fileSort())
@@ -160,6 +160,7 @@ gulp.task('index', function () {
 //////////////////////////////////
 // Dev liveload
 //////////////////////////////////
+
 gulp.task('live', function () {
     connect.server({
         port: 9010,

@@ -1,0 +1,37 @@
+<h3 class=" bot-title">{{"TABLE.TITLE" | translate}}</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>/</th>
+        <th ng-repeat="inputSymbol in transitions.inputSymbolAlphabet">
+            <span>{{inputSymbol}}</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr ng-repeat="(key, state) in states" ng-class="x.class">
+        <th>
+            <span ng-class="{selected:state === states.selected ,
+            selected:transitionGroup.fromState == state,
+            'animated-currentstate':state === simulator.animated.currentState,
+            'animated-accepted':state === simulator.animated.currentState&& simulator.status == 'accepted',
+            'animated-not-accepted':state === simulator.animated.currentState&& simulator.status == 'notAccepted'}"
+                  ng-show="transitionGroup.fromState == state">{{state.name}}</span>
+            <sub ng-show="states.startState === state">S<sub>0</sub></sub>
+            <sub ng-show="states.startState === state && states.final.isFinalState(state)">, </sub>
+            <sub ng-show="states.final.isFinalState(state)">{{"STF.F" | translate}}</sub>
+        </th>
+        <td ng-repeat="inputSymbol in transitions.inputSymbolAlphabet">
+            <span ng-repeat="transitionGroup in transitions">
+                <span ng-repeat="transition in transitionGroup">
+                    <span ng-show="transition.fromState === state && transition.inputSymbol === inputSymbol">
+                        {{transition.toState.name}}
+                    </span>
+                </span>
+            </span>
+        </td>
+    </tr>
+
+    </tbody>
+</table>

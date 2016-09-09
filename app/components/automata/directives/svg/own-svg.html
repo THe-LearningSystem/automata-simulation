@@ -1,0 +1,25 @@
+<div>
+    <h3 class="diagram-title">{{"DIA.TITLE" | translate}}</h3>
+    <div class="diagram">
+        <svg id="diagram-svg" class="noselect" xmlns="http://www.w3.org/2000/svg"
+             style="font-family:'Roboto', sans-serif; font-weight:100">
+            <svg-definitions></svg-definitions>
+            <svg-grid></svg-grid>
+            <svg-outer>
+                <g id="transitions">
+                    <svg-transition ng-repeat="data in transitions"
+                                    transition-group="data"></svg-transition>
+                </g>
+                <svg-tmp-transition></svg-tmp-transition>
+
+                <g id="states">
+                    <svg-state ng-repeat="state in states" state="state"></svg-state>
+                </g>
+
+            </svg-outer>
+
+        </svg>
+        <context-menu></context-menu>
+
+    </div>
+</div>

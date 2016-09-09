@@ -2,13 +2,12 @@ angular
     .module('automata-simulation')
     .controller('DFACtrl', DFACtrl);
 
-
 function DFACtrl($scope) {
-    $scope.safeApply = scopeSaveApply;
+    $scope.saveApply = scopeSaveApply;
 
-    $scope.automatonData = new AutomatonDataDFA();
+    $scope.automatonData = new autoSim.AutomatonData();
 
-    $scope.core = new DFACore($scope);
-    $scope.states = new States($scope);
-    $scope.transitions = new Transitions($scope);
+    $scope.core = new autoSim.DFACore($scope);
+    $scope.states = new autoSim.States($scope);
+    $scope.transitions = new autoSim.Transitions($scope);
 }
