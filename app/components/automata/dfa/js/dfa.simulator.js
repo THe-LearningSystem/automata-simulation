@@ -164,6 +164,7 @@ autoSim.Simulator = function ($scope) {
             self.animateTransitionOverride();
         } else {
             self.status = "notAccepted";
+            self.isInPlay = false;
         }
     };
 
@@ -190,6 +191,7 @@ autoSim.Simulator = function ($scope) {
         self.animated.transition = null;
         if (self.isAnimationAccepted()) {
             self.status = "accepted";
+            self.isInPlay = false;
         }
     };
 

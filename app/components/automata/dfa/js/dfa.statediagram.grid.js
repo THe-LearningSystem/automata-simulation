@@ -6,6 +6,7 @@ autoSim.StateDiagramGrid = function ($scope) {
     self.snapDistance = 20;
     //is Grid drawn
     self.isOpen = true;
+    self.snapping = true;
     /**
      * Draw the Grid
      */

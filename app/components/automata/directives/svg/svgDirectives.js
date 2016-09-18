@@ -92,13 +92,12 @@ autoSim.directive("svgState", function () {
             //is Grid drawn
             self.isGrid = true;
             //user can snap the states to the grid -> toggles snapping
-            self.snapping = true;
             scope.stateDragging = function () {
                 dragAmount++;
                 if (dragAmount > 1 && !scope.draggingPrevent) {
                     var x = d3.event.x;
                     var y = d3.event.y;
-                    if (self.snapping) {
+                    if (scope.$parent.statediagram.grid.snapping) {
                         var snapPointX = x - (x % self.gridSpace);
                         var snapPointY = y - (y % self.gridSpace);
                         //check first snapping Point (top left)
