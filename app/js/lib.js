@@ -84,3 +84,10 @@ function isFunction(functionToCheck) {
     var getType = {};
     return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
 }
+
+
+function prepareScope($scope) {
+    window.rootScope = $scope;
+    $scope.saveApply = scopeSaveApply;
+    $scope.debug = true;
+}

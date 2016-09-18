@@ -33,16 +33,16 @@ autoSim.Transitions = function ($scope) {
      * Checks if a transition with the params already exists, excepts the given transition
      * @param fromState
      * @param toState
-     * @param newInputSymbol
+     * @param inputSymbol
      * @param transitionId
      * @returns {boolean}
      */
-    self.exists = function (fromState, toState, newInputSymbol, transitionId) {
+    self.exists = function (fromState, toState, inputSymbol, transitionId) {
         var tmp = false;
         _.forEach(self, function (transitionGroup) {
-            if (fromState === transitionGroup.fromState && toState === transitionGroup.toState) {
+            if (fromState === transitionGroup.fromState) {
                 _.forEach(transitionGroup, function (transition) {
-                    if (fromState === transitionGroup.fromState && toState === transitionGroup.toState && transition.inputSymbol === newInputSymbol && transitionId !== transition.id) {
+                    if (transition.inputSymbol === inputSymbol && transitionId !== transition.id) {
                         tmp = true;
                         return false;
                     }
@@ -190,6 +190,10 @@ autoSim.Transitions = function ($scope) {
             _.remove(self, function (transitionGroup) {
                 return transitionGroup.toState === transition.toState && transitionGroup.fromState === transition.fromState;
             });
+            if (self.getTransitionGroup(transition.toState, transition.fromState) !== undefined) {
+                var approachTransitionGroup = self.getTransitionGroup(transition.toState, transition.fromState);
+                approachTransitionGroup.svgConfig = self.getTransitionSvgConfig(approachTransitionGroup);
+            }
         } else {
             _.remove(transitionGroup, function (tmpTransition) {
                 return transition.id === tmpTransition.id;

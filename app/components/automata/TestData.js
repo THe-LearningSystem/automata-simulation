@@ -8,6 +8,7 @@ function TestData($scope) {
         var state2 = $scope.states.createWithPresets(100, 300);
         var state3 = $scope.states.createWithPresets(300, 300);
         var state4 = $scope.states.createWithPresets(300, 100);
+        $scope.states.final.create(state3);
         $scope.states.final.create(state4);
 
         $scope.transitions.create(state1, state2, "a");
@@ -19,58 +20,69 @@ function TestData($scope) {
         $scope.transitions.create(state1, state3, "l");
 
         $scope.automatonData.inputWord = "abc";
-        $scope.automatonData.acceptedInputRaw = "abc\nab";
+        $scope.automatonData.acceptedInputRaw = "abc\nab\nl\nbb";
 
+    };
+
+
+    self.testNFA = function () {
+        var state1 = $scope.states.createWithPresets(100, 100);
+        var state2 = $scope.states.createWithPresets(100, 300);
+        var state3 = $scope.states.createWithPresets(300, 300);
+        var state4 = $scope.states.createWithPresets(300, 100);
+        $scope.states.final.create(state3);
+        $scope.states.final.create(state4);
+
+        $scope.transitions.create(state1, state2, "a");
+        $scope.transitions.create(state1, state3, "a");
+        $scope.transitions.create(state1, state2, "b");
+        $scope.transitions.create(state1, state2, "c");
+        $scope.transitions.create(state2, state3, "b");
+        $scope.transitions.create(state3, state4, "c");
+        $scope.transitions.create(state4, state1, "l");
+        $scope.transitions.create(state1, state3, "l");
+
+        $scope.automatonData.inputWord = "abc";
+        $scope.automatonData.acceptedInputRaw = "abc\nab";
     };
 
     self.testPDA = function () {
-        $scope.automatonDatainputWord = "ab";
-        $scope.addStateWithPresets(200, 200);
-        $scope.addStateWithPresets(500, 200);
+        $scope.automatonData.inputWord = "ab";
+        var state1 = $scope.states.createWithPresets(200, 200);
+        var state2 = $scope.states.createWithPresets(500, 200);
 
-        $scope.addTransition(0, 0, "a", "⊥", "A");
-        $scope.addTransition(0, 0, "a", "A", "AA");
-        $scope.addTransition(0, 1, "b", "A", "ε");
-        $scope.addTransition(1, 1, "b", "A", "ε");
+        $scope.transitions.create(state1, state1, "a", "⊥", "A");
+        $scope.transitions.create(state1, state1, "a", "A", "AA");
+        $scope.transitions.create(state1, state2, "b", "A", "ε");
+        $scope.transitions.create(state2, state2, "b", "A", "ε");
+        $scope.automatonData.acceptedInputRaw = "ab\naabb";
+        $scope.automatonData.rejectedInputRaw = "abx\na";
+
     };
     self.testNPDA = function () {
-        $scope.automatonDatainputWord = "ab";
-        $scope.addStateWithPresets(200, 200);
-        $scope.addStateWithPresets(500, 200);
-        $scope.addStateWithPresets(200, 500);
+        $scope.automatonData.inputWord = "ab";
+        var state1 = $scope.states.createWithPresets(200, 200);
+        var state2 = $scope.states.createWithPresets(500, 200);
+        var state3 = $scope.states.createWithPresets(200, 500);
 
-        $scope.addTransition(0, 0, "a", "⊥", "A");
-        $scope.addTransition(0, 0, "a", "A", "AA");
-        $scope.addTransition(0, 1, "b", "A", "ε");
-        $scope.addTransition(1, 1, "b", "A", "ε");
-        $scope.addTransition(0, 2, "b", "A", "ε");
-        $scope.addTransition(2, 2, "b", "A", "ε");
+        $scope.transitions.create(state1, state1, "a", "⊥", "A");
+        $scope.transitions.create(state1, state1, "a", "A", "AA");
+        $scope.transitions.create(state1, state2, "b", "A", "ε");
+        $scope.transitions.create(state2, state2, "b", "A", "ε");
+        $scope.transitions.create(state1, state3, "b", "A", "ε");
+        $scope.transitions.create(state3, state3, "b", "A", "ε");
+        $scope.automatonData.acceptedInputRaw = "ab\naabb";
+        $scope.automatonData.rejectedInputRaw = "abx\na";
+
     };
 
     self.testPDA2 = function () {
-        $scope.automatonDatainputWord = "ab";
-        $scope.addStateWithPresets(200, 200);
-        $scope.addStateWithPresets(500, 200);
-        $scope.addStateWithPresets(500, 500);
+        $scope.automatonData.inputWord = "ab";
+        var state1 = $scope.states.createWithPresets(200, 200);
+        var state2 = $scope.states.createWithPresets(500, 200);
 
-        $scope.addTransition(0, 1, "a", "⊥", "A");
-        $scope.addTransition(1, 2, "b", "A", "ε");
-    };
-
-    self.testNFA = function () {
-        $scope.automatonDatainputWord = "abc";
-        $scope.addStateWithPresets(100, 100);
-        $scope.addStateWithPresets(100, 300);
-        $scope.addStateWithPresets(300, 300);
-        $scope.addStateWithPresets(300, 100);
-        $scope.addFinalState(2);
-        $scope.addFinalState(3);
-
-        $scope.addTransition(0, 1, "a");
-        $scope.addTransition(0, 2, "a");
-        $scope.addTransition(1, 2, "b");
-        $scope.addTransition(2, 3, "c");
-        $scope.addTransition(3, 0, "l");
+        $scope.transitions.create(state1, state1, "a", "⊥", "A");
+        $scope.transitions.create(state1, state2, "b", "A", "ε");
     };
 
 

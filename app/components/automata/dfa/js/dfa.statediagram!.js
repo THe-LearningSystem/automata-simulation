@@ -11,6 +11,20 @@ autoSim.StateDiagram = function ($scope) {
         self.svgHeight = self.svg.style("height").replace("px", "");
     };
 
+    self.getSvgWidth = function () {
+        if (self.svg !== undefined)
+            return self.svg.style("width").replace("px", "");
+        else
+            return 0
+    };
+
+    self.getSvgHeight = function () {
+        if (self.svg !== undefined)
+            return self.svg.style("height").replace("px", "");
+        else
+            return 0
+    };
+
     /**
      * AddState -> creates a new state when clicked on the button with visual feedback
      */
@@ -35,17 +49,19 @@ autoSim.StateDiagram = function ($scope) {
     self.tmpTransition = null;
     self.inCreateTransition = false;
     self.createTransition = function (fromState) {
+        self.inCreateTransition = true;
+        var approachTransitionGroup = undefined;
+        self.tmpTransition = {};
+        self.tmpTransition.fromState = fromState;
+        var mouseInState = false;
         if (fromState === undefined) {
             d3.selectAll(".state").on("click", function () {
+                d3.event.stopPropagation();
                 var fromState = $scope.states.getById(parseInt(d3.select(this).attr("object-id")));
                 self.createTransition(fromState);
             });
         } else {
-            var mouseInState = false;
-            var approachTransitionGroup = undefined;
-            self.tmpTransition = {};
-            self.inCreateTransition = true;
-            self.tmpTransition.fromState = fromState;
+            d3.selectAll('.state').on('click', null);
             d3.selectAll(".state").on("click", function () {
                 var toState = $scope.states.getById(parseInt(d3.select(this).attr("object-id")));
                 $scope.transitions.createWithDefaults(self.tmpTransition.fromState, toState);
@@ -96,12 +112,12 @@ autoSim.StateDiagram = function ($scope) {
      * removes the tmpTransition -> when finished creating the new transition or when canceling the action
      */
     self.removeTmpTransition = function () {
+        self.inCreateTransition = false;
         self.tmpTransition = null;
         d3.select("#diagram-svg").on("mousemove", null);
         d3.selectAll(".state").on("mouseover", null);
         d3.selectAll(".state").on("mouseleave", null);
         d3.selectAll('.state').on('click', $scope.states.menu.open);
     };
-    self.tmpTransition = null;
 
 };

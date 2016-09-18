@@ -13,11 +13,9 @@ autoSim.StateMenus = function ($scope) {
     };
 
     self.edit.open = function (state) {
-        if ($scope.transitions.menu.isOpen())
-            $scope.transitions.menu.close();
-        self.close();
-
-        $scope.statediagram.menu.preventSvgOuterClick = true;
+        $scope.core.closeMenus();
+        if (d3.event !== null && d3.event.stopPropagation !== undefined)
+            d3.event.stopPropagation();
         $scope.states.selected = state;
         self.edit.state = _.cloneDeep(state);
 
@@ -56,12 +54,9 @@ autoSim.StateMenus = function ($scope) {
     };
 
     self.context.open = function (state) {
-        if ($scope.statediagram.menu.isOpen())
-            $scope.statediagram.menu.close();
-        self.close();
-
-        $scope.statediagram.menu.preventSvgContextClick = true;
-
+        $scope.core.closeMenus();
+        if (d3.event !== null && d3.event.stopPropagation !== undefined)
+            d3.event.stopPropagation();
 
         $scope.states.selected = state;
         self.context.position.x = event.layerX;

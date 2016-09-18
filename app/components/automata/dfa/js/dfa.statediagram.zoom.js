@@ -1,4 +1,4 @@
-autoSim.StateDiagramZoomHandler = function ($scope) {
+autoSim.StateDiagramZoom = function ($scope) {
     var self = this;
 
     //amount the user can zoom out
@@ -6,6 +6,7 @@ autoSim.StateDiagramZoomHandler = function ($scope) {
     //amount the user can zoom in
     self.zoomMin = 0.5;
     self.zoomValue = 0.1;
+    self.prevent = false;
     /**
      * zooms in in the svg
      */
@@ -35,9 +36,10 @@ autoSim.StateDiagramZoomHandler = function ($scope) {
      * This method updates the d3 zoomBehaviour (fixes weird bugs)
      */
     self.updateZoomBehaviour = function () {
-        $scope.saveApply();
+        console.log($scope.automatonData.diagram)
         //self.behaviour.scaleTo($scope.statediagram.svgOuter, $scope.automatonData.diagram.scale);
-        //self.behaviour.transform($scope.statediagram.svgOuter, [$scope.automatonData.diagram.x, $scope.automatonData.diagram.y]);
+        $scope.saveApply();
+
     };
 
     /**
@@ -99,17 +101,26 @@ autoSim.StateDiagramZoomHandler = function ($scope) {
      * Scale and Translate the Svg to the default Value
      */
     self.scaleAndTranslateToDefault = function () {
-        $scope.automatonData.diagram.scale = autoSim.AutomatonData.diagram.scale;
-        $scope.automatonData.diagram.x = autoSim.AutomatonData.diagram.x;
-        $scope.automatonData.diagram.y = autoSim.AutomatonData.diagram.y;
+        var defaultAutomatonData = new autoSim.AutomatonData();
+        console.log(defaultAutomatonData);
+        $scope.automatonData.diagram.scale = defaultAutomatonData.diagram.scale;
+        $scope.automatonData.diagram.x = defaultAutomatonData.diagram.x;
+        $scope.automatonData.diagram.y = defaultAutomatonData.diagram.y;
         self.updateZoomBehaviour();
     };
 
     self.zoom = function () {
-        $scope.automatonData.diagram.scale = Math.floor(d3.event.transform.k * 100) / 100;
-        $scope.automatonData.diagram.x = d3.event.transform.x;
-        $scope.automatonData.diagram.y = d3.event.transform.y;
-        $scope.saveApply();
+        console.log("zoom");
+        if (!self.prevent) {
+            $scope.automatonData.diagram.scale = Math.floor(d3.event.transform.k * 100) / 100;
+            $scope.automatonData.diagram.x = d3.event.transform.x;
+            $scope.automatonData.diagram.y = d3.event.transform.y;
+            $scope.saveApply();
+        } else {
+            self.prevent = false;
+        }
+
+
     };
 
 

@@ -154,6 +154,9 @@ autoSim.States = function ($scope) {
         var state = new autoSim.State(stateId, stateName, x, y);
         self.push(state);
         $scope.core.updateListener();
+        $scope.saveApply();
+
+
         return state;
     };
 

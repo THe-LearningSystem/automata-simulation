@@ -1,7 +1,10 @@
-autoSim.AutomatonData = function () {
+autoSim.AutomatonData = function (automatonType, nonDeterminstic) {
     var self = this;
-
-    self.type = "DFA";
+    self.type = automatonType;
+    if (nonDeterminstic !== undefined)
+        self.nonDeterministic = nonDeterminstic;
+    else
+        self.nonDeterministic = false;
     self.font = "'Roboto', sans-serif";
     self.diagram = {
         x: 0,

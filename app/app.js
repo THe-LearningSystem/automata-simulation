@@ -9,16 +9,16 @@ var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 
             controller: 'DFAController'
         });
         $routeProvider.when('/nfa', {
-            templateUrl: 'view/nfa.html',
-            controller: 'NFACtrl'
+            templateUrl: 'components/automata/nfa/views/nfa.html',
+            controller: 'NFAController'
         });
         $routeProvider.when('/pda', {
-            templateUrl: 'view/pda.html',
-            controller: 'PDACtrl'
+            templateUrl: 'components/automata/pda/views/pda.html',
+            controller: 'PDAController'
         });
         $routeProvider.when('/npda', {
-            templateUrl: 'view/npda.html',
-            controller: 'NPDACtrl'
+            templateUrl: 'components/automata/npda/views/npda.html',
+            controller: 'NPDAController'
         });
 
         $routeProvider.otherwise({

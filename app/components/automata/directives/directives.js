@@ -104,7 +104,6 @@ autoSim.directive("develop", function () {
 autoSim.directive("automatonName", function () {
     return {
         link: function (scope, elm, attrs) {
-            console.log(scope);
             /**
              * Leave the input field after clicking the enter button
              */
@@ -156,4 +155,14 @@ autoSim.directive("zoomTooltip", function () {
     return {
         templateUrl: 'components/automata/directives/zoom-tooltip.html'
     };
+});
+autoSim.directive("unsavedChanges", function () {
+    return {
+        restrict: 'E',
+        replace: true,
+        transclude: true,
+        template: '<div class=" unsaved-changes"><span class="alert alert-info" ng-show="automatonData.unSavedChanges">{{"APP.UNSAVEDCHANGES" | translate}}</span> </div>'
+
+    };
+
 });

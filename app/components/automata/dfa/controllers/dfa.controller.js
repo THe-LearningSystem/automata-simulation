@@ -2,14 +2,10 @@ angular.module('automata-simulation').controller('DFAController', DFAController)
 
 function DFAController($scope, hotkeys) {
     console.log("created DFA");
-    $scope.saveApply = scopeSaveApply;
-    //for debug purposes better way for accessing in console?
-    window.debugScope = $scope;
-    //Debug Mode (that the browser doesn't ask if you want to reload, or for the unit testing)
-    $scope.debug = true;
+    prepareScope($scope);
 
     //Config Object
-    $scope.automatonData = new autoSim.AutomatonData();
+    $scope.automatonData = new autoSim.AutomatonData('DFA');
     $scope.core = new autoSim.DFACore($scope);
     $scope.states = new autoSim.States($scope);
     $scope.states.menu = new autoSim.StateMenus($scope);
@@ -17,13 +13,17 @@ function DFAController($scope, hotkeys) {
     $scope.transitions.menu = new autoSim.TransitionMenus($scope);
     $scope.simulator = new autoSim.Simulator($scope);
     $scope.statediagram = new autoSim.StateDiagram($scope);
+    $scope.statediagram.grid = new autoSim.StateDiagramGrid($scope);
     $scope.statediagram.menu = new autoSim.StateDiagramMenu($scope);
-    $scope.statediagram.zoom = new autoSim.StateDiagramZoomHandler($scope);
+    $scope.statediagram.zoom = new autoSim.StateDiagramZoom($scope);
 
     $scope.testAgent = new TestData($scope);
 
 
-    //Hotkeys
+    $scope.testAgent.testDFA();
+
+
+//Hotkeys
     autoSim.hotkeysGenerator($scope, hotkeys);
 
     /**CREATE_COMPONENTS_START**/

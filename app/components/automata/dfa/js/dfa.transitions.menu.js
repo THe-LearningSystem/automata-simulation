@@ -8,19 +8,36 @@ autoSim.TransitionMenus = function ($scope) {
 
 
     self.edit.open = function (transitionGroup) {
-        if ($scope.states.menu.isOpen())
-            $scope.states.menu.close();
-
-        $scope.statediagram.menu.preventSvgOuterClick = true;
-        self.edit.close();
+        $scope.core.closeMenus();
+        if (d3.event != null && d3.event.stopPropagation !== undefined)
+            d3.event.stopPropagation();
+        if (transitionGroup === undefined) {
+            transitionGroup = $scope.transitions.getTransitionGroup(
+                $scope.states.getById(parseInt(d3.select(this).attr("from-state-id"))),
+                $scope.states.getById(parseInt(d3.select(this).attr("to-state-id"))));
+        } else {
+            //perhaps we got a wrong reference if the transition was deleted
+            transitionGroup = $scope.transitions.getTransitionGroup(transitionGroup.fromState, transitionGroup.toState);
+        }
         if (transitionGroup !== undefined) {
             $scope.transitions.selected = transitionGroup;
-            self.edit.transitionGroup = _.cloneDeep(transitionGroup);
+            self.prepareTransitionMenuData(transitionGroup);
             self.edit.addWatcher();
             self.edit.isOpen = true;
+            $scope.saveApply();
+
         }
     };
 
+    self.prepareTransitionMenuData = function (transitionGroup) {
+        self.edit.transitionGroup = _.cloneDeep(transitionGroup);
+        _.forEach(self.edit.transitionGroup, function (transition) {
+            var tmpInputSymbol = transition.inputSymbol;
+            transition.inputSymbol = {};
+            transition.inputSymbol.value = tmpInputSymbol;
+            transition.inputSymbol.error = false;
+        })
+    };
 
     self.edit.close = function () {
         _.forEach(self.edit.watcher, function (value) {
@@ -34,30 +51,33 @@ autoSim.TransitionMenus = function ($scope) {
 
     self.edit.addWatcher = function () {
         for (var i = 0; i < self.edit.transitionGroup.length; i++) {
-            self.edit.watcher.push($scope.$watchCollection("transitions.menu.edit.transitionGroup['" + i + "']", function (newValue, oldValue) {
+            self.edit.watcher.push($scope.$watch("transitions.menu.edit.transitionGroup['" + i + "']", function (newValue, oldValue) {
                 var inputSymbolErrorFound = false;
-                if (newValue.inputSymbol !== oldValue.inputSymbol) {
-                    newValue.error = false;
-                    if (newValue.inputSymbol !== "" && !$scope.transitions.exists($scope.states.getById(newValue.fromState.id), $scope.states.getById(newValue.toState.id), newValue.inputSymbol)) {
-                        $scope.transitions.modify($scope.transitions.getById(newValue.id), newValue.inputSymbol);
+                if (newValue.inputSymbol.value !== oldValue.inputSymbol.value) {
+                    newValue.inputSymbol.error = false;
+                    if (newValue.inputSymbol.value !== "" && !$scope.transitions.exists($scope.states.getById(newValue.fromState.id),
+                            $scope.states.getById(newValue.toState.id), newValue.inputSymbol.value)) {
+                        $scope.transitions.modify($scope.transitions.getById(newValue.id), newValue.inputSymbol.value);
                     } else {
-                        if (newValue.inputSymbol === "") {
-                            newValue.error = true;
+                        if (newValue.inputSymbol.value === "") {
+                            newValue.inputSymbol.error = true;
                             inputSymbolErrorFound = true;
                         }
                     }
                 }
-                if ($scope.transitions.exists($scope.states.getById(newValue.fromState.id), $scope.states.getById(newValue.toState.id), newValue.inputSymbol, newValue.id)) {
+                if ($scope.transitions.exists($scope.states.getById(newValue.fromState.id),
+                        $scope.states.getById(newValue.toState.id),
+                        newValue.inputSymbol.value, newValue.id)) {
                     newValue.isUnique = false;
-                    newValue.error = true;
+                    newValue.inputSymbol.error = true;
                 } else {
                     if (!newValue.isUnique) {
-                        newValue.error = inputSymbolErrorFound;
+                        newValue.inputSymbol.error = inputSymbolErrorFound;
                     }
                     newValue.isUnique = true;
                 }
                 $scope.saveApply();
-            }));
+            }, true));
         }
     };
 
@@ -67,7 +87,7 @@ autoSim.TransitionMenus = function ($scope) {
 
     self.isOpen = function () {
         return self.edit.isOpen;
-    }
+    };
 
 
 };

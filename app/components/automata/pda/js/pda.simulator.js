@@ -1,11 +1,10 @@
-//Simulator for the simulation of the PDA
-function SimulationPDA($scope) {
-    "use strict";
-
+//Simulator for the simulation of the automata
+autoSim.SimulatorPDA = function ($scope) {
     var self = this;
-    SimulationDFA.apply(self, arguments);
+    autoSim.Simulator.apply(this, arguments);
 
-    self.stack = new PDAStack();
+
+    self.stack = new autoSim.PDAStack();
 
     //save the reference
     var parentReset = this.reset;
@@ -14,13 +13,11 @@ function SimulationPDA($scope) {
      * Should reset the simulation
      */
     self.reset = function () {
-        self.stack = new PDAStack();
-        self.stack.listener.push($scope.statediagram);
+        self.stack = new autoSim.PDAStack();
         parentReset.apply(this);
-        _.forEach($scope.statediagram.drawnStack, function () {
-            $scope.statediagram.removeFromStack();
-        });
-        $scope.statediagram.addToStack(self.stack.stackContainer);
+
+        //TODO:
+        //$scope.statediagram.addToStack(self.stack.stackContainer);
     };
 
     /**
@@ -53,12 +50,11 @@ function SimulationPDA($scope) {
         var stackSequences = [];
         var tmpSequences = [];
 
-
         if (inputWord.length !== 0) {
-            tmpSequences = self.getNextTransitions($scope.config.startState, inputWord[0], new PDAStack().stackFirstSymbol);
+            tmpSequences = self.getNextTransitions($scope.states.startState, inputWord[0], new autoSim.PDAStack().stackFirstSymbol);
             for (var i = 0; i < tmpSequences.length; i++) {
                 var tmpSequence = {};
-                tmpSequence.stack = new PDAStack();
+                tmpSequence.stack = new autoSim.PDAStack();
                 tmpSequence.stack.pop();
                 tmpSequence.stack.push(tmpSequences[i].writeToStack);
                 tmpSequence.value = [tmpSequences[i]];
@@ -74,7 +70,7 @@ function SimulationPDA($scope) {
                 tmpSequences = [];
                 _.forEach(self.getNextTransitions(_.last(tmpSequence.value).toState, inputWord[tmpSequence.value.length], tmpSequence.stack.pop()), function (sequence) {
                     var newTmpSequence = {};
-                    newTmpSequence.stack = new PDAStack(tmpSequence.stack.stackContainer);
+                    newTmpSequence.stack = new autoSim.PDAStack(tmpSequence.stack.stackContainer);
                     newTmpSequence.stack.push(sequence.writeToStack);
                     newTmpSequence.value = _.concat(tmpSequence.value, sequence);
                     tmpSequences.push(newTmpSequence);
@@ -99,10 +95,10 @@ function SimulationPDA($scope) {
 
 
         if (inputWord.length !== 0) {
-            tmpSequences = self.getNextTransitions($scope.config.startState, inputWord[0], new PDAStack().stackFirstSymbol);
+            tmpSequences = self.getNextTransitions($scope.states.startState, inputWord[0], new autoSim.PDAStack().stackFirstSymbol);
             for (var i = 0; i < tmpSequences.length; i++) {
                 var tmpSequence = {};
-                tmpSequence.stack = new PDAStack();
+                tmpSequence.stack = new autoSim.PDAStack();
                 tmpSequence.stack.pop();
                 tmpSequence.stack.push(tmpSequences[i].writeToStack);
                 tmpSequence.value = [tmpSequences[i]];
@@ -117,7 +113,7 @@ function SimulationPDA($scope) {
                 tmpSequences = [];
                 _.forEach(self.getNextTransitions(_.last(tmpSequence.value).toState, inputWord[tmpSequence.value.length], tmpSequence.stack.pop()), function (sequence) {
                     var newTmpSequence = {};
-                    newTmpSequence.stack = new PDAStack(tmpSequence.stack.stackContainer);
+                    newTmpSequence.stack = new autoSim.PDAStack(tmpSequence.stack.stackContainer);
                     newTmpSequence.stack.push(sequence.writeToStack);
                     newTmpSequence.value = _.concat(tmpSequence.value, sequence);
                     tmpSequences.push(newTmpSequence);
@@ -135,20 +131,20 @@ function SimulationPDA($scope) {
 
 
     /**
-     * returns all possible transition, which go from the fromState with the transitionName to a state
+     * returns all possible transition, which go from the fromState with the inputSymbol to a state
      * @param fromState
-     * @param transitionName
-     * @param readFromStack
+     * @param inputSymbol
      * @returns {Array}
      */
-    self.getNextTransitions = function (fromState, transitionName, readFromStack) {
+    self.getNextTransitions = function (fromState, inputSymbol, readFromStack) {
         var transitions = [];
-        for (var i = 0; i < $scope.config.transitions.length; i++) {
-            var transition = $scope.config.transitions[i];
-            if (transition.fromState == fromState && transition.name == transitionName && transition.readFromStack == readFromStack) {
-                transitions.push(transition);
-            }
-        }
+        _.forEach($scope.transitions, function (transitionGroup) {
+            _.forEach(transitionGroup, function (transition) {
+                if (transition.fromState == fromState && transition.inputSymbol == inputSymbol && transition.readFromStack == readFromStack) {
+                    transitions.push(transition);
+                }
+            });
+        });
         return transitions;
     };
-}
+};

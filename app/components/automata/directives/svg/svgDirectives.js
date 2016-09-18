@@ -12,6 +12,7 @@ autoSim.directive("ownSvg", function () {
                 }
                 scope.statediagram.menu.preventSvgContextClick = false;
             }).on('click', function () {
+                console.log('click');
                 event.preventDefault();
                 if (!scope.statediagram.menu.preventSvgOuterClick && !scope.statediagram.inCreateTransition) {
                     scope.transitions.menu.close();
@@ -62,6 +63,7 @@ autoSim.directive("svgState", function () {
         scope: {
             state: '=state'
         },
+        templateNamespace: 'svg',
         link: function (scope, elm, attrs) {
             var self = this;
             scope.states = scope.$parent.states;
@@ -71,12 +73,17 @@ autoSim.directive("svgState", function () {
             /**DRAGGING**/
             var dragAmount;
 
-            function startStateDragging() {
+            scope.startStateDragging = function () {
+                scope.draggingPrevent = false;
                 dragAmount = 0;
-                scope.states.menu.edit.open(scope.states.getById(parseInt(d3.select(this).attr("object-id"))));
-                scope.states.selected = scope.states.getById(parseInt(d3.select(this).attr("object-id")));
+                if (!scope.$parent.statediagram.inCreateTransition) {
+                    scope.states.menu.edit.open(scope.states.getById(parseInt(d3.select(this).attr("object-id"))));
+                    scope.states.selected = scope.states.getById(parseInt(d3.select(this).attr("object-id")));
+                } else {
+                    scope.draggingPrevent = true;
+                }
 
-            }
+            };
 
             //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
             self.gridSpace = 100;
@@ -86,63 +93,64 @@ autoSim.directive("svgState", function () {
             self.isGrid = true;
             //user can snap the states to the grid -> toggles snapping
             self.snapping = true;
-            function stateDragging() {
+            scope.stateDragging = function () {
                 dragAmount++;
-                var x = d3.event.x;
-                var y = d3.event.y;
-                if (self.snapping) {
-                    var snapPointX = x - (x % self.gridSpace);
-                    var snapPointY = y - (y % self.gridSpace);
-                    //check first snapping Point (top left)
-                    if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance &&
-                        y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
-                        x = snapPointX;
-                        y = snapPointY;
-                        //second snapping point (top right)
-                    } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance &&
-                        x < snapPointX + self.gridSpace + self.gridSnapDistance &&
-                        y > snapPointY - self.gridSnapDistance &&
-                        y < snapPointY + self.gridSnapDistance) {
-                        x = snapPointX + self.gridSpace;
-                        y = snapPointY;
-                        //third snapping point (bot left)
-                    } else if (x > snapPointX - self.gridSnapDistance &&
-                        x < snapPointX + self.gridSnapDistance &&
-                        y > snapPointY + self.gridSpace - self.gridSnapDistance &&
-                        y < snapPointY + self.gridSpace + self.gridSnapDistance) {
-                        x = snapPointX;
-                        y = snapPointY + self.gridSpace;
-                        //fourth snapping point (bot right)
-                    } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance &&
-                        x < snapPointX + self.gridSpace + self.gridSnapDistance &&
-                        y > snapPointY + self.gridSpace - self.gridSnapDistance &&
-                        y < snapPointY + self.gridSpace + self.gridSnapDistance) {
-                        x = snapPointX + self.gridSpace;
-                        y = snapPointY + self.gridSpace;
+                if (dragAmount > 1 && !scope.draggingPrevent) {
+                    var x = d3.event.x;
+                    var y = d3.event.y;
+                    if (self.snapping) {
+                        var snapPointX = x - (x % self.gridSpace);
+                        var snapPointY = y - (y % self.gridSpace);
+                        //check first snapping Point (top left)
+                        if (x > snapPointX - self.gridSnapDistance && x < snapPointX + self.gridSnapDistance &&
+                            y > snapPointY - self.gridSnapDistance && y < snapPointY + self.gridSnapDistance) {
+                            x = snapPointX;
+                            y = snapPointY;
+                            //second snapping point (top right)
+                        } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance &&
+                            x < snapPointX + self.gridSpace + self.gridSnapDistance &&
+                            y > snapPointY - self.gridSnapDistance &&
+                            y < snapPointY + self.gridSnapDistance) {
+                            x = snapPointX + self.gridSpace;
+                            y = snapPointY;
+                            //third snapping point (bot left)
+                        } else if (x > snapPointX - self.gridSnapDistance &&
+                            x < snapPointX + self.gridSnapDistance &&
+                            y > snapPointY + self.gridSpace - self.gridSnapDistance &&
+                            y < snapPointY + self.gridSpace + self.gridSnapDistance) {
+                            x = snapPointX;
+                            y = snapPointY + self.gridSpace;
+                            //fourth snapping point (bot right)
+                        } else if (x > snapPointX + self.gridSpace - self.gridSnapDistance &&
+                            x < snapPointX + self.gridSpace + self.gridSnapDistance &&
+                            y > snapPointY + self.gridSpace - self.gridSnapDistance &&
+                            y < snapPointY + self.gridSpace + self.gridSnapDistance) {
+                            x = snapPointX + self.gridSpace;
+                            y = snapPointY + self.gridSpace;
+                        }
                     }
-                }
-                if (dragAmount > 1) {
                     scope.$apply(function () {
+                        console.log("Dragged");
                         scope.states.moveState(scope.states.selected, x, y);
                     });
+
                 }
-            }
+            };
 
-            function endStateDragging() {
+            scope.endStateDragging = function () {
 
-            }
+            };
 
-            var stateDraggingBehaviour = d3.drag()
-                .on("start", startStateDragging)
-                .on("drag", stateDragging)
-                .on("end", endStateDragging);
+            d3.selectAll('.state').call(d3.drag()
+                .on("start", scope.startStateDragging)
+                .on("drag", scope.stateDragging)
+                .on("end", scope.endStateDragging));
 
+            d3.selectAll('.state').on('contextmenu', scope.$parent.states.menu.context.openHandler).on('click', scope.$parent.states.menu.edit.openHandler);
 
-            elm.on('contextmenu', scope.$parent.states.menu.context.openHandler).on('click', scope.$parent.states.menu.edit.openHandler);
+        }
 
-
-            d3.selectAll(".state").call(stateDraggingBehaviour);
-        },
+        ,
         templateUrl: 'components/automata/directives/svg/svg-state.html'
     };
 });
@@ -156,15 +164,34 @@ autoSim.directive("svgTransition", function () {
         link: function (scope, elm, attrs) {
             scope.transitions = scope.$parent.transitions;
             scope.simulator = scope.$parent.simulator;
+            scope.automatonData = scope.$parent.automatonData;
 
             scope.transitionGroup.svgConfig = scope.$parent.transitions.getTransitionSvgConfig(scope.transitionGroup);
 
-            elm.on('click', function () {
-                scope.$apply(scope.transitions.menu.edit.open(scope.transitionGroup));
-            });
+            scope.startDrag = function () {
+                if (d3.event != null && d3.event.stopPropagation !== undefined)
+                    d3.event.stopPropagation();
+                scope.transitions.menu.edit.open(
+                    scope.transitions.getTransitionGroup(
+                        scope.$parent.states.getById(parseInt(d3.select(this).attr("from-state-id"))),
+                        scope.$parent.states.getById(parseInt(d3.select(this).attr("to-state-id")))));
+
+            };
+
+            scope.drag = function () {
+
+            };
+
+            scope.endDrag = function () {
+
+            };
+            d3.selectAll('.transition').call(d3.drag().on('start', scope.startDrag).on('drag', scope.drag).on('end', scope.endDrag));
+
+            d3.selectAll('.transition').on('click', scope.transitions.menu.edit.open);
         },
         templateUrl: 'components/automata/directives/svg/svg-transition.html'
-    };
+    }
+        ;
 });
 autoSim.directive("svgTmpTransition", function () {
     return {
@@ -182,40 +209,10 @@ autoSim.directive("svgGrid", function () {
         replace: true,
         restrict: 'E',
         templateNamespace: 'svg',
-        scope: {},
         link: function (scope, elm, attrs) {
 
-            self.container = d3.select("#svg-grid");
-            //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
-            self.spaceBetweenSnappingPoint = 100;
-            //the distance when the state is snapped to the next SnappingPoint (Rectangle form)
-            self.snapDistance = 20;
-            //is Grid drawn
-            self.isGrid = true;
-            /**
-             * Draw the Grid
-             */
-            scope.draw = function () {
-                console.log(self.grid.container);
-                self.container.html("");
-                if (self.isGrid) {
-                    //clear grid
-                    var thickness = 1 * $scope.automatonData.diagram.scale * 0.5;
-                    var xOffset = ($scope.automatonData.diagram.x % (self.spaceBetweenSnappingPoint * $scope.automatonData.diagram.scale));
-                    var yOffset = ($scope.automatonData.diagram.y % (self.spaceBetweenSnappingPoint * $scope.automatonData.diagram.scale));
-                    var i;
-                    //xGrid
-                    for (i = xOffset; i < self.svgOuterWidth; i += self.spaceBetweenSnappingPoint * $scope.automatonData.diagram.scale) {
-                        self.grid.container.append("line").attr("stroke-width", thickness).attr("class", "grid-line xgrid-line").attr("x1", i).attr("y1", 0).attr("x2", i).attr("y2", self.svgOuterHeight);
-                    }
-                    //yGrid
-                    for (i = yOffset; i < self.svgOuterHeight; i += self.spaceBetweenSnappingPoint * $scope.automatonData.diagram.scale) {
-                        self.grid.container.append("line").attr("stroke-width", thickness).attr("class", "grid-line ygrid-line").attr("x1", 0).attr("y1", i).attr("x2", self.svgOuterWidth).attr("y2", i);
-                    }
-                } else {
-                }
+            scope.statediagram.grid.draw();
 
-            };
         },
         templateUrl: 'components/automata/directives/svg/svg-grid.html'
     };
@@ -236,5 +233,34 @@ autoSim.directive("svgSaveAsPng", function () {
             };
         },
         template: '<menubutton icon="camera" action="saveAsPng()" tttext="NAVBAR.TTTEXT_SAVEASPNG"></menubutton>'
+    };
+});
+autoSim.directive("changeInputFieldValue", function () {
+    return {
+        restrict: 'E',
+        scope: {
+            char: '@char'
+        },
+        link: function (scope, elm, attrs) {
+            scope.saveApply = scopeSaveApply;
+            scope.changeInputFieldValue = function () {
+                scope.saveApply(function () {
+                    event.preventDefault();
+                    var active = document.activeElement;
+                    var element = document.getElementById(active.id);
+                    if (element != null) {
+                        element.value = scope.char;
+                        if ("createEvent" in document) {
+                            var evt = document.createEvent("HTMLEvents");
+                            evt.initEvent("change", false, true);
+                            element.dispatchEvent(evt);
+                        }
+                        else
+                            element.fireEvent("onchange");
+                    }
+                });
+            };
+        },
+        template: '<button class="btn btn-default" ng-mousedown="changeInputFieldValue()">{{char}}</button>'
     };
 });

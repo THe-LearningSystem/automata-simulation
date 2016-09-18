@@ -16,10 +16,12 @@ autoSim.DFACore = function ($scope) {
      * Removes the current automata and the inputWord
      */
     self.resetAutomaton = function () {
+        self.closeMenus();
         $scope.simulator.reset();
         $scope.states.clear();
         $scope.transitions.clear();
-        $scope.automatonData = new autoSim.AutomatonData();
+        $scope.automatonData = new autoSim.AutomatonData($scope.automatonData.type);
+        $scope.statediagram.zoom.scaleAndTranslateToDefault();
         self.updateListener();
         $scope.automatonData.unSavedChanges = false;
         $scope.saveApply();
@@ -34,6 +36,13 @@ autoSim.DFACore = function ($scope) {
         });
         $scope.automatonData.unSavedChanges = true;
         //instant update, but more digest cycles
+        $scope.saveApply();
+    };
+
+    self.closeMenus = function () {
+        $scope.statediagram.menu.close();
+        $scope.states.menu.close();
+        $scope.transitions.menu.close();
         $scope.saveApply();
     };
 };

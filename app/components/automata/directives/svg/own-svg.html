@@ -3,8 +3,8 @@
     <div class="diagram">
         <svg id="diagram-svg" class="noselect" xmlns="http://www.w3.org/2000/svg"
              style="font-family:'Roboto', sans-serif; font-weight:100">
-            <svg-definitions></svg-definitions>
             <svg-grid></svg-grid>
+            <svg-definitions></svg-definitions>
             <svg-outer>
                 <g id="transitions">
                     <svg-transition ng-repeat="data in transitions"
@@ -17,6 +17,7 @@
                 </g>
 
             </svg-outer>
+            <g id="zoom"></g>
 
         </svg>
         <context-menu></context-menu>

@@ -160,11 +160,20 @@ describe('Simulation Automata', function () {
                 var state2 = scope.states.create("S1", 10, 10);
                 scope.transitions.create(state1, state1, "a");
                 expect(scope.transitions.length).toBe(1);
-                scope.transitions.create(state1, state2, "a");
+                scope.transitions.create(state1, state2, "b");
                 expect(scope.transitions.length).toBe(2);
 
             });
 
+            it('ddeterministic shouldnt create transition', function () {
+                var state1 = scope.states.create("S0", 10, 10);
+                var state2 = scope.states.create("S1", 10, 10);
+                scope.transitions.create(state1, state1, "a");
+                scope.transitions.create(state1, state2, "a");
+
+                console.log(scope.transitions);
+                expect(scope.transitions.exists(state1, state2, "a")).toBe(true);
+            });
             it('exist a transition like me', function () {
                 var state1 = scope.states.create("S0", 10, 10);
                 var state2 = scope.states.create("S1", 10, 10);

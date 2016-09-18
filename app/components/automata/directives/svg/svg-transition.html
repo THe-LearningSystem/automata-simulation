@@ -16,7 +16,7 @@
           simulator.animated.transition.toState === transitionGroup.toState &&
           transitionGroup.toState===simulator.animated.transition.toState">
     </path>
-    <path class="transition-line-click" stroke-width="20" stroke="transparent" fill="none"
+    <path class="transition-line-click" stroke-width="40" stroke="transparent" fill="none"
           ng-attr-d="{{transitionGroup.svgConfig.path}}">
     </path>
     <path class="transition-line-hover" fill="none" marker-end="url(#marker-end-arrow-hover)"
@@ -29,8 +29,13 @@
           ng-attr-y="{{transitionGroup.svgConfig.textPosition.y}}">
         <tspan ng-repeat="transition in transitionGroup" transition-id="{{transition.id}}"
                style="font-family:'Roboto', sans-serif;">
-            <tspan ng-class="{'animated-transition-text':transition === simulator.animated.transition}">
+            <tspan ng-class="{'animated-transition-text':transition === simulator.animated.transition}"
+                   ng-show="automatonData.type !== 'PDA' && automatonData.type !== 'NPDA'">
                 {{transition.inputSymbol}}
+            </tspan>
+            <tspan ng-class="{'animated-transition-text':transition === simulator.animated.transition}"
+                   ng-show="automatonData.type === 'PDA' || automatonData.type === 'NPDA'">
+                {{transition.inputSymbol}},{{transition.readFromStack}};{{transition.writeToStack}}
             </tspan>
             {{$last ? '' : ' | '}}
         </tspan>

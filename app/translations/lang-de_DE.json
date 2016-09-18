@@ -67,7 +67,8 @@
     "NEXTSTATE": "Nächster Zustand",
     "NAME": "eingelesenes Zeichen",
     "NAME_TOO_SHORT": "Zeichen zu kurz",
-    "NAME_ALREADY_EXISTS": "Nicht determinismus!",
+    "NOT_DETERMINISTIC": "Nicht determinismus!",
+    "TRANS_ALREADY_EXISTS": "Transition existiert bereits!",
     "DELETE_MODAL_TITLE": "Zustandsübergänge löschen",
     "DELETE_MODAL_DESC": "Wollen sie alle markierten Zustandsübergänge löschen?",
     "PDA_READ_FROM_STACK": "Gelesenes Stack Zeichen",
@@ -104,5 +105,14 @@
   },
   "BULK": {
     "TITLE": "BulkTester"
+  },
+  "CONTEXT": {
+    "ADD_STATE": "Zustand hinzufügen",
+    "REMOVE_STATE": "Zustand löschen",
+    "REMOVE_FROM_START_STATE": "Startzustand entfernen",
+    "ADD_AS_START_STATE": "Als Startzustand hinzufügen",
+    "REMOVE_FROM_FINAL_STATES": "Endzustand entfernen",
+    "ADD_TO_FINAL_STATES": "Zu Endzuständen kopieren",
+    "ADD_TRANSITION": "Transition hinzufügen"
   }
 }
