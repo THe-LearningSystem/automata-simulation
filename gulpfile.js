@@ -39,6 +39,7 @@ gulp.task('browser-sync', function () {
     });
     gulp.watch("app/**/*.js").on('change', browserSync.reload);
     gulp.watch("app/**/*.html").on('change', browserSync.reload);
+    gulp.watch("app/**/*.json").on('change', browserSync.reload);
 });
 
 // ===================================

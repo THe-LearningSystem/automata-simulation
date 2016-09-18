@@ -112,7 +112,7 @@
     "REMOVE_FROM_START_STATE": "Startzustand entfernen",
     "ADD_AS_START_STATE": "Als Startzustand hinzufügen",
     "REMOVE_FROM_FINAL_STATES": "Endzustand entfernen",
-    "ADD_TO_FINAL_STATES": "Zu Endzuständen kopieren",
+    "ADD_TO_FINAL_STATES": "Zu Endzuständen hinzufügen",
     "ADD_TRANSITION": "Transition hinzufügen"
   }
 }
