@@ -229,7 +229,9 @@ autoSim.directive("svgSaveAsPng", function () {
                     scale: 4,
                     encoderOptions: 1
                 });
+
             };
+
         },
         template: '<menubutton icon="camera" action="saveAsPng()" tttext="NAVBAR.TTTEXT_SAVEASPNG"></menubutton>'
     };
@@ -261,5 +263,28 @@ autoSim.directive("changeInputFieldValue", function () {
             };
         },
         template: '<button class="btn btn-default" ng-mousedown="changeInputFieldValue()">{{char}}</button>'
+    };
+});
+
+autoSim.directive("svgPdaStack", function () {
+    return {
+        replace: true,
+        restrict: 'E',
+        templateNamespace: 'svg',
+        scope: {},
+        link: function (scope, elm, attrs) {
+            scope.statediagram = scope.$parent.statediagram;
+            scope.simulator = scope.$parent.simulator;
+            scope.statediagram.updateWidthAndHeight();
+
+            scope.test = 5;
+            scope.stackWidth = 100;
+            scope.stackHeight = 180;
+            scope.stackItemHeight = 20;
+            scope.stackPaddingToBorder = 20;
+            console.log(scope);
+
+        },
+        templateUrl: 'components/automata/directives/svg/svg-pda-stack.html'
     };
 });

@@ -16,8 +16,9 @@
             selected:transitionGroup.fromState == state,
             'animated-currentstate':state === simulator.animated.currentState,
             'animated-accepted':state === simulator.animated.currentState&& simulator.status == 'accepted',
-            'animated-not-accepted':state === simulator.animated.currentState&& simulator.status == 'notAccepted'}"
-                  ng-show="transitionGroup.fromState == state">{{state.name}}</span>
+            'animated-not-accepted':state === simulator.animated.currentState&& simulator.status == 'notAccepted'}">
+                {{state.name}}
+            </span>
             <sub ng-show="states.startState === state">S<sub>0</sub></sub>
             <sub ng-show="states.startState === state && states.final.isFinalState(state)">, </sub>
             <sub ng-show="states.final.isFinalState(state)">{{"STF.F" | translate}}</sub>
@@ -28,6 +29,7 @@
                     <span ng-show="transition.fromState === state && transition.inputSymbol === inputSymbol">
                         {{transition.toState.name}}
                     </span>
+
                 </span>
             </span>
         </td>

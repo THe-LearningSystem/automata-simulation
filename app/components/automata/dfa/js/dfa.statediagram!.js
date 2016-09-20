@@ -7,9 +7,12 @@ autoSim.StateDiagram = function ($scope) {
      * update the width and the Height
      */
     self.updateWidthAndHeight = function () {
-        self.svgWidth = self.svg.style("width").replace("px", "");
-        self.svgHeight = self.svg.style("height").replace("px", "");
+        $scope.saveApply(function () {
+            self.svgWidth = self.svg.style("width").replace("px", "");
+            self.svgHeight = self.svg.style("height").replace("px", "");
+        });
     };
+
 
     self.getSvgWidth = function () {
         if (self.svg !== undefined)
