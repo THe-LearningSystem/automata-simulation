@@ -133,6 +133,15 @@ autoSim.Simulator = function ($scope) {
     };
 
     /**
+     * This wrapper function is for the button
+     */
+    self.stepForwardWrapper = function () {
+        if (self.isInPlay)
+            self.pause();
+        self.stepForward();
+    }
+
+    /**
      *Animation for the empty word
      */
     self.animateEmptyWord = function () {
@@ -216,6 +225,16 @@ autoSim.Simulator = function ($scope) {
         } else {
             self.goAnimationBack();
         }
+    };
+
+
+    /**
+     * This wrapper function is for the button
+     */
+    self.stepBackwardWrapper = function () {
+        if (self.isInPlay)
+            self.pause();
+        self.stepBackward();
     };
 
     /**

@@ -44,7 +44,7 @@ autoSim.hotkeysGenerator = function ($scope, hotkeys) {
         allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
         callback: function (event) {
             event.preventDefault();
-            $scope.simulator.stepBackward();
+            $scope.simulator.stepBackwardWrapper();
         }
     });
     hotkeys.add({
@@ -53,7 +53,7 @@ autoSim.hotkeysGenerator = function ($scope, hotkeys) {
         allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
         callback: function (event) {
             event.preventDefault();
-            $scope.simulator.stepForward();
+            $scope.simulator.stepForwardWrapper();
         }
     });
 

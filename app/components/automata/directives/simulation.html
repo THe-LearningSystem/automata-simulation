@@ -7,10 +7,10 @@
                     ng-hide="!simulator.isInPlay"></menubutton>
         <menubutton icon="stop" action="simulator.stop()" ng-disabled="!simulator.isInAnimation"
                     tttext="SIM.STOP"></menubutton>
-        <menubutton icon="fast-backward" action="simulator.stepBackward()"
+        <menubutton icon="fast-backward" action="simulator.stepBackwardWrapper()"
                     ng-disabled="!simulator.isInAnimation || simulator.animatedSequence !== null"
                     tttext="SIM.STEPBACKWARD"></menubutton>
-        <menubutton icon="fast-forward" action="simulator.stepForward()"
+        <menubutton icon="fast-forward" action="simulator.stepForwardWrapper()"
                     ng-disabled="simulator.status =='notAccepted' || simulator.status=='accepted' || simulator.animatedSequence !== null"
                     tttext="SIM.STEPFORWARD"></menubutton>
     </div>
