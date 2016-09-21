@@ -5,11 +5,17 @@
  */
 autoSim.Transitions = function ($scope) {
     var self = this;
+    self.selected = null;
     self.inputSymbolAlphabet = new autoSim.TransitionInputAlphabet($scope);
     self.transitionsId = 0;
     self.textLength = 8;
     self.selfTransitionTextLength = 10;
 
+
+    self.selectTransitionGroup = function(transitionGroup){
+        self.selected = transitionGroup;
+        $scope.core.updateListener();
+    };
 
     /**
      * Returns a transitionGroup

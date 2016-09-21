@@ -5,7 +5,7 @@ function NFAController($scope, hotkeys) {
     prepareScope($scope);
 
     //Config Object
-    $scope.automatonData = new autoSim.AutomatonData('NFA',true);
+    $scope.automatonData = new autoSim.AutomatonData('NFA', true);
     $scope.core = new autoSim.DFACore($scope);
     $scope.states = new autoSim.States($scope);
     $scope.states.menu = new autoSim.StateMenus($scope);
@@ -16,6 +16,8 @@ function NFAController($scope, hotkeys) {
     $scope.statediagram.grid = new autoSim.StateDiagramGrid($scope);
     $scope.statediagram.menu = new autoSim.StateDiagramMenu($scope);
     $scope.statediagram.zoom = new autoSim.StateDiagramZoom($scope);
+    $scope.table = new autoSim.Table($scope);
+
 
     $scope.testAgent = new TestData($scope);
 

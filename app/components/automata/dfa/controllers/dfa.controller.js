@@ -16,6 +16,7 @@ function DFAController($scope, hotkeys) {
     $scope.statediagram.grid = new autoSim.StateDiagramGrid($scope);
     $scope.statediagram.menu = new autoSim.StateDiagramMenu($scope);
     $scope.statediagram.zoom = new autoSim.StateDiagramZoom($scope);
+    $scope.table = new autoSim.Table($scope);
 
     $scope.testAgent = new TestData($scope);
 

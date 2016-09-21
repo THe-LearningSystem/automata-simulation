@@ -20,7 +20,7 @@ autoSim.TransitionMenus = function ($scope) {
             transitionGroup = $scope.transitions.getTransitionGroup(transitionGroup.fromState, transitionGroup.toState);
         }
         if (transitionGroup !== undefined) {
-            $scope.transitions.selected = transitionGroup;
+            $scope.transitions.selectTransitionGroup(transitionGroup);
             self.prepareTransitionMenuData(transitionGroup);
             self.edit.addWatcher();
             self.edit.isOpen = true;
@@ -45,7 +45,7 @@ autoSim.TransitionMenus = function ($scope) {
         });
         self.edit.watcher = [];
         self.edit.transitionGroup = null;
-        $scope.transitions.selected = null;
+        $scope.transitions.selectTransitionGroup(null);
         self.edit.isOpen = false;
     };
 

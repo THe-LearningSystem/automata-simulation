@@ -282,8 +282,6 @@ autoSim.directive("svgPdaStack", function () {
             scope.stackHeight = 180;
             scope.stackItemHeight = 20;
             scope.stackPaddingToBorder = 20;
-            console.log(scope);
-
         },
         templateUrl: 'components/automata/directives/svg/svg-pda-stack.html'
     };
