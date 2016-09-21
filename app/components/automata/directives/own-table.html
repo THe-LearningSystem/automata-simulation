@@ -14,7 +14,7 @@
 
     <tr ng-repeat="value in table.statesTransitions">
         <th>
-            <span ng-class="{'selected':value.state.id== states.selected.id ||value.state.id == transitions.selected.fromState.id,
+            <span ng-class="{'selected':value.state=== states.selected ||value.state === transitions.selected.fromState,
             'animated-currentstate':value.state === simulator.animated.currentState,
             'animated-accepted':value.state === simulator.animated.currentState&& simulator.status == 'accepted',
             'animated-not-accepted':value.state === simulator.animated.currentState&& simulator.status == 'notAccepted'}">
