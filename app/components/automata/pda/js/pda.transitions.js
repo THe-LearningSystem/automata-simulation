@@ -7,6 +7,9 @@ autoSim.TransitionsPDA = function ($scope) {
     var self = this;
     autoSim.Transitions.apply(this, arguments);
     self.stackAlphabet = new autoSim.TransitionStackAlphabet($scope);
+    self.textLength = 40;
+    self.selfTransitionTextLength = 24;
+
 
     /**
      * Checks if a transition with the params already exists, excepts the given transition
