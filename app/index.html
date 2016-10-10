@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <!--[if lt IE 7]>
-<html lang="en" ng-app="AutoSim" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<html lang="en" ng-app="AutoSim" class="no-components lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>
-<html lang="en" ng-app="AutoSim" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<html lang="en" ng-app="AutoSim" class="no-components lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>
-<html lang="en" ng-app="AutoSim" class="no-js lt-ie9"> <![endif]-->
+<html lang="en" ng-app="AutoSim" class="no-components lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html lang="en" ng-app="automata-simulation" class="no-js">
 <!--<![endif]-->
@@ -36,61 +36,80 @@
     your browser</a> to improve your experience.</p>
 <![endif]-->
 <a href="#/dfa">DFA</a>
-<a href="#/pda">PDA</a>
 <a href="#/nfa">NFA</a>
+<<<<<<< HEAD
 <a href="#/dta">DTA</a>
+=======
+<a href="#/pda">PDA</a>
+<a href="#/npda">NPDA</a>
+>>>>>>> feature/dfa-and-pda
 
 <div class="container-fluid nopadding" ng-view></div>
-<!-- bower:js -->
+<!-- bower:components -->
+
 <script src="bower_components/jquery/jquery.js"></script>
-
 <script src="bower_components/angular/angular.js"></script>
-
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-loader/angular-loader.js"></script>
 <script src="bower_components/angular-mocks/angular-mocks.js"></script>
 <script src="bower_components/angular-translate/angular-translate.js"></script>
 <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
 <script src="bower_components/angularjs-slider/dist/rzslider.js"></script>
-
 <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="bower_components/d3/d3.js"></script>
 <script src="bower_components/filesaver/FileSaver.js"></script>
 <script src="bower_components/lodash/lodash.js"></script>
-<script src="bower_components/json-formatter/dist/json-formatter.js"></script>
 <script src="bower_components/angular-hotkeys/build/hotkeys.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/SVG.toDataURL/svg_todataurl.js"></script>
+
+<!--devs-->
+<script src="bower_components/json-formatter/dist/json-formatter.js"></script>
 
 
 <!-- endbower -->
-<script src="js/lib/lib.js"></script>
-<script src="js/lib//saveSvgAsPng/saveSvgAsPngOwn.js"></script>
-<script src="js/controllers/app.js"></script>
-<script src="js/controllers/directives.js"></script>
-<script src="js/TestData.js"></script>
+<script src="js/lib.js"></script>
+<script src="js/mathHelper.js"></script>
+<script src="js/saveSvgAsPng/ownSaveSVgAsPng.js"></script>
+<script src="app.js"></script>
+<script src="components/automata/TestData.js"></script>
+<script src="components/automata/dfa/js/dfa.hotkeysGenerator.js"></script>
+
+
+<!--Directives-->
+<script src="shared/modal.js"></script>
+<script src="shared/globalDirectives.js"></script>
+<script src="components/automata/directives/directives.js"></script>
+<script src="components/automata/directives/bulkTest/bulkTest.js"></script>
+<script src="components/automata/directives/portation/portation.js"></script>
+
 <!-- DFA:START-->
-<script src="js/controllers/DFACtrl.js"></script>
-<script src="js/dfa/DFA.js"></script>
-<script src="js/dfa/statediagramDFA.js"></script>
-<script src="js/dfa/simulationDFA.js"></script>
-<script src="js/dfa/tableDFA.js"></script>
-<script src="js/dfa/statetransitionfunctionDFA.js"></script>
-<script src="js/dfa/bulkTesterDFA.js"></script>
-<script src="js/dfa/portationDFA.js"></script>
+<script src="components/automata/directives/svg/svgDirectives.js"></script>
+<script src="components/automata/dfa/controllers/dfa.controller.js"></script>
+<script src="components/automata/dfa/js/dfa.automatonData.js"></script>
+<script src="components/automata/dfa/js/dfa.core.js"></script>
+<script src="components/automata/dfa/js/dfa.states!.js"></script>
+<script src="components/automata/dfa/js/dfa.states.stateObjects.js"></script>
+<script src="components/automata/dfa/js/dfa.states.finalStates.js"></script>
+<script src="components/automata/dfa/js/dfa.states.menu.js"></script>
+<script src="components/automata/dfa/js/dfa.transitions.js"></script>
+<script src="components/automata/dfa/js/dfa.transitions.transitionObjects.js"></script>
+<script src="components/automata/dfa/js/dfa.transitions.menu.js"></script>
+<script src="components/automata/dfa/js/dfa.statediagram!.js"></script>
+<script src="components/automata/dfa/js/dfa.statediagram.grid.js"></script>
+<script src="components/automata/dfa/js/dfa.statediagram.menu.js"></script>
+<script src="components/automata/dfa/js/dfa.statediagram.zoom.js"></script>
+<script src="components/automata/dfa/js/dfa.simulator.js"></script>
+<script src="components/automata/dfa/js/dfa.statetransitionfunction.js"></script>
+<script src="components/automata/dfa/js/dfa.table.js"></script>
+
 <!-- DFA:END-->
-<!-- PDA:START-->
-<script src="js/controllers/PDACtrl.js"></script>
-<script src="js/pda/PDA.js"></script>
-<script src="js/pda/statediagramPDA.js"></script>
-<script src="js/pda/simulationPDA.js"></script>
-<script src="js/pda/statetransitionfunctionPDA.js"></script>
-<script src="js/pda/portationPDA.js"></script>
-<!-- PDA:END-->
 <!-- NFA:START-->
-<script src="js/controllers/NFACtrl.js"></script>
-<script src="js/nfa/NFA.js"></script>
+<script src="components/automata/nfa/controllers/nfa.controller.js"></script>
+<script src="components/automata/nfa/js/nfa.transitions.js"></script>
 <!-- NFA:END-->
+<<<<<<< HEAD
 <!-- DTA:START-->
 <script src="js/controllers/DTACtrl.js"></script>
 <script src="js/dta/DTA.js"></script>
@@ -99,6 +118,20 @@
 <script src="js/dta/statetransitionfunctionDTA.js"></script>
 <script src="js/dta/tableDTA.js"></script>
 <!-- DTA:END-->
+=======
+<!-- PDA:START-->
+<script src="components/automata/pda/controllers/pda.controller.js"></script>
+<script src="components/automata/pda/js/pda.transitions.js"></script>
+<script src="components/automata/pda/js/pda.transitions.transitionObjects.js"></script>
+<script src="components/automata/pda/js/pda.transitions.menu.js"></script>
+<script src="components/automata/pda/js/pda.simulator.js"></script>
+<!-- PDA:END-->
+<!--NPDA:START-->
+<script src="components/automata/npda/controllers/npda.controller.js"></script>
+<script src="components/automata/npda/js/npda.transitions.js"></script>
+<!--NPDA:END-->
+
+>>>>>>> feature/dfa-and-pda
 </body>
 
 </html>

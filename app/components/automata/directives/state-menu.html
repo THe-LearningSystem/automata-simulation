@@ -1,0 +1,42 @@
+<menuitem titlename="STATE_MENU.TITLE" ng-show="states.menu.edit.isOpen">
+    <form name="editstatemenu">
+        <div class="input-group"
+             ng-class="states.menu.edit.state.name.length === 0 ||
+             states.existsWithName(states.menu.edit.state.name,states.menu.edit.state.id)? 'has-error':''">
+            <span class="input-group-addon">{{"STATE_MENU.NAME" | translate}}</span>
+            <input class="form-control" id="state-input-name" maxlength="5"
+                   show-focus="states.menu.edit.state.name"
+                   ng-model="states.menu.edit.state.name"
+                   ng-disabled="simulator.isInPlay">
+        </div>
+        <div>
+            <input class="checkbox-item" type="checkbox" id="state-input-startstate"
+                   ng-checked="states.selected === states.startState"
+                   ng-click="states.toggleStartState(states.selected)"
+                   ng-disabled="simulator.isInPlay">
+            {{"STATE_MENU.STARTSTATE" | translate}}
+        </div>
+        <div>
+            <div ng-show="automatonData.type!=='PDA'">
+                <input class="checkbox-item" type="checkbox" id="state-input-finalstate"
+                       ng-checked="states.final.isFinalState(states.selected)"
+                       ng-click="states.final.toggle(states.selected)"
+                       ng-disabled="simulator.isInPlay">
+                {{"STATE_MENU.FINALSTATE" | translate}}
+
+            </div>
+        </div>
+        <div class="alert alert-danger alert-transition"
+             ng-show="states.menu.edit.state.name.length === 0">
+            {{"STATE_MENU.NAME_TOO_SHORT"| translate}}
+        </div>
+        <div class="alert alert-danger  alert-transition"
+             ng-show="states.existsWithName(states.menu.edit.state.name,states.menu.edit.state.id)">
+            {{"STATE_MENU.NAME_ALREADY_EXISTS"| translate}}
+        </div>
+        <button class="btn btn-danger" ng-click="removeState(statediagram.input.state.id)"
+                ng-disabled="simulator.isInPlay">
+            {{"MODAL_BUTTON.DELETE" | translate}}
+        </button>
+    </form>
+</menuitem>

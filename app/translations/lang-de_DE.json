@@ -57,7 +57,7 @@
     "STARTSTATE": "Startzustand",
     "FINALSTATE": "Endzustand",
     "SAVE": "Speichern",
-    "NAME_ALREADY_EXIST": "Zustandsname bereits verwendet!",
+    "NAME_ALREADY_EXISTS": "Zustandsname bereits verwendet!",
     "NAME_TOO_SHORT": "Zustandsname zu kurz!",
     "DELETE_MODAL_TITLE": "Zustand löschen",
     "DELETE_MODAL_DESC": "Wollen sie den Zustand und alle zugehörigen Zustandsübergänge löschen?"
@@ -65,15 +65,22 @@
   "TRANS_MENU": {
     "TITLE": "Zustandsübergangsmenü",
     "NEXTSTATE": "Nächster Zustand",
+<<<<<<< HEAD
     "NAME": "Zeichen",
     "DTA_WRITE_SYMBOL": "Schreibsymbol",
     "DTA_MOVE_DIRECTION": "Kopfbewegung",
     "PDA_READ_FROM_STACK": "Stack davor",
     "PDA_WRITE_TO_STACK": "Stack danach",
+=======
+    "NAME": "eingelesenes Zeichen",
+>>>>>>> feature/dfa-and-pda
     "NAME_TOO_SHORT": "Zeichen zu kurz",
-    "NAME_ALREADY_EXISTS": "Zeichen existiert bereits",
+    "NOT_DETERMINISTIC": "Nicht determinismus!",
+    "TRANS_ALREADY_EXISTS": "Transition existiert bereits!",
     "DELETE_MODAL_TITLE": "Zustandsübergänge löschen",
-    "DELETE_MODAL_DESC": "Wollen sie alle markierten Zustandsübergänge löschen?"
+    "DELETE_MODAL_DESC": "Wollen sie alle markierten Zustandsübergänge löschen?",
+    "PDA_READ_FROM_STACK": "Gelesenes Stack Zeichen",
+    "PDA_WRITE_TO_STACK": "Geschriebenes Stack Zeichen"
   },
   "TABLE": {
     "TITLE": "Zustandübergangsstabelle"
@@ -86,7 +93,11 @@
     "TTSTART": "Startzustand",
     "TTFINAL": "Endzustände",
     "F": "E",
+<<<<<<< HEAD
     "TTTAPE_ALPHABET": "Bandalphabet"
+=======
+    "MODAL_TITLE": "Zustdandsübergangsfunktion bearbeiten"
+>>>>>>> feature/dfa-and-pda
   },
   "MODAL_BUTTON": {
     "PROCEED": "Fortfahren",
@@ -106,5 +117,14 @@
   },
   "BULK": {
     "TITLE": "BulkTester"
+  },
+  "CONTEXT": {
+    "ADD_STATE": "Zustand hinzufügen",
+    "REMOVE_STATE": "Zustand löschen",
+    "REMOVE_FROM_START_STATE": "Startzustand entfernen",
+    "ADD_AS_START_STATE": "Als Startzustand hinzufügen",
+    "REMOVE_FROM_FINAL_STATES": "Endzustand entfernen",
+    "ADD_TO_FINAL_STATES": "Zu Endzuständen hinzufügen",
+    "ADD_TRANSITION": "Transition hinzufügen"
   }
 }

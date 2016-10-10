@@ -1,0 +1,56 @@
+<menuitemextendable titlename="BULK.TITLE" id="bulk-tester-tab">
+    <label>Accept (one per line):</label>
+    <textarea id="acceptedInput"
+              ng-model="parent.automatonData.acceptedInputRaw"
+              ng-change="bulkTest()">
+
+    </textarea>
+    <label>Reject (one per line):</label>
+    <textarea id="rejectedInput"
+              ng-model="parent.automatonData.rejectedInputRaw"
+              ng-change="bulkTest()">
+    </textarea>
+    <!-- <label>Regular Expression (one per line):</label>
+     <textarea id="regularExpression" style="margin-bottom:5px;" ng-model="bulkTester.regularExpressionRaw"
+               ng-change="bulktester.bulkTest()"></textarea>-->
+    <div class="bulktest-result"
+         ng-show="acceptedInput.length != 0 ||rejectedInput.length != 0">
+        <h4>Result</h4>
+        <div>
+            <label>Accepted:</label>
+
+            <div ng-repeat="value in acceptedInput"
+                 ng-class="value.possible ? 'pass-class' : 'fail-class'">
+                {{value.word}}--{{value.possible === true ? "PASS" : "FAIL"}}
+                <span ng-repeat="sequence in value.sequences">
+                 <button ng-click="simulator.animateSequence(sequence,value.possible)">Animate Path</button>
+                 </span>
+                <button ng-click="simulator.animateSequence([],false)" ng-show="!value.sequences.length">Animate Path
+                </button>
+
+            </div>
+        </div>
+        <div>
+            <label>Rejected:</label>
+
+            <div ng-repeat="value in rejectedInput"
+                 ng-class="!value.possible? 'pass-class' : 'fail-class'">
+                {{value.word}}--{{value.possible === false ? "PASS" : "FAIL"}}
+                <span ng-repeat="sequence in value.sequences">
+                 <button ng-click="simulator.animateSequence(sequence,value.possible)">Animate Path</button>
+                 </span>
+                <button ng-click="simulator.animateSequence([],false)" ng-show="!value.sequences.length">Animate Path
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--<div>
+        <label>Regular Expression:</label>
+
+        <div ng-repeat="value in bulktester.regularExpression"
+             ng-class="value.accepted? 'pass-class' : 'fail-class'">
+            {{value.word}}--{{value.accepted === true ? "PASS" : "FAIL"}}
+        </div>
+    </div>
+</div>-->
+</menuitemextendable>

@@ -413,7 +413,7 @@ button:disabled .icon {
   top: 90px;
   right: 0;
   bottom: 0;
-  width: 200px;
+  width: 300px;
   background-color: whitesmoke;
   border-left: 1px solid #e0e0e0;
 }
@@ -508,7 +508,7 @@ button:disabled .icon {
 .diagram {
   position: absolute;
   left: 200px;
-  right: 200px;
+  right: 300px;
   top: 120px;
   bottom: 250px;
 }
@@ -727,4 +727,98 @@ body .transbutton {
   font-size: 15px;
   border: 1px solid #000000;
   margin-right: 2px;
+}
+
+/* tasks */
+
+.tasks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.task {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: solid 1px #dfdfdf;
+}
+
+.task:last-child {
+  border-bottom: none;
+}
+
+/* context menu */
+
+.context-menu {
+  position: absolute;
+  z-index: 10;
+  padding: 12px 0;
+  width: 240px;
+  background-color: #fff;
+  border: solid 1px #dfdfdf;
+  box-shadow: 1px 1px 2px #cfcfcf;
+}
+
+.context-menu--active {
+  display: block;
+}
+
+.context-menu__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.context-menu__item {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.context-menu__item:last-child {
+  margin-bottom: 0;
+}
+
+.context-menu__link {
+  display: block;
+  padding: 4px 12px;
+  color: #0066aa;
+  text-decoration: none;
+}
+
+.context-menu__link:hover {
+  color: #fff;
+  background-color: #0066aa;
+  text-decoration: none;
+}
+
+//MODAL Overwrites
+.modal {
+  text-align: center;
+  padding: 0 !important;
+}
+
+.modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px; /* Adjusts for spacing */
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                         not supported by any browser */
 }
