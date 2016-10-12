@@ -1,0 +1,184 @@
+/**LAYOUT**/
+body, .view-container {
+  min-height: 100vh;
+  background: $body-bg;
+}
+
+.full-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.header {
+  height: 50px;
+}
+
+.inner-wrapper {
+  flex: auto;
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+}
+
+.main {
+  margin: $layoutMargin $layoutMargin 0 $layoutMargin;
+  flex: 1 100%;
+}
+
+.main-wrapper {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  flex-flow: column wrap;
+}
+
+.main-item {
+  flex: auto;
+  background-color: white;
+  margin-bottom: 15px;
+}
+
+.main-item-bottom {
+  max-height: 250px;
+}
+
+.main-item:last-child {
+  margin-bottom: 0;
+}
+
+.sidebar-1 {
+  margin: $layoutMargin $layoutMargin 0 $layoutMargin;
+  flex: 1 100%;
+}
+
+.sidebar-2 {
+  margin: $layoutMargin;
+  flex: 1 100%;
+}
+
+.main-bottom {
+  flex: auto;
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+}
+
+.main-bottom-item {
+  flex: 100%;
+  background-color: white;
+  margin-bottom: $layoutMargin;
+}
+
+.main-bottom-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Medium screens */
+@media all and (min-width: 600px) {
+  /* We tell both sidebars to share a row */
+  .sidebar {
+    margin: $layoutMargin;
+    flex: 40%;
+  }
+  .sidebar-2 {
+    margin-left: 0;
+  }
+}
+
+/* Medium screens */
+@media all and (min-width: 900px) {
+  /* We tell both sidebars to share a row */
+  .main {
+    min-height: 500px;
+    margin: $layoutMargin $layoutMargin 0 $layoutMargin;
+  }
+
+  .main-wrapper {
+    flex: 100%;
+  }
+  .main-bottom-item {
+    margin-bottom: 0;
+    margin-right: $layoutMargin;
+    flex: 40%;
+  }
+  .main-bottom-item:last-child {
+    margin-right: 0;
+  }
+
+}
+
+/* Large screens */
+@media all and (min-width: 1200px) {
+  /* We invert order of first sidebar and main
+   * And tell the main element to take twice as much width as the other two sidebars
+   */
+  .main {
+    margin: $layoutMargin 0;
+    flex: 2 0;
+    order: 2;
+    overflow: hidden;
+  }
+
+  .sidebar-1 {
+    margin: $layoutMargin;
+    max-width: 250px;
+    order: 1;
+    overflow: hidden;
+  }
+
+  .sidebar-2 {
+    margin: $layoutMargin;
+    max-width: 250px;
+    order: 3;
+    overflow: hidden;
+  }
+  .main-bottom {
+    max-height: 300px;
+  }
+  .main-bottom-item {
+    margin-bottom: 0;
+    margin-right: $layoutMargin;
+    flex: 40%;
+  }
+  .main-bottom-item:last-child {
+    margin-right: 0;
+  }
+}
+
+.layout-item {
+  background-color: $layout-item-bg;
+  border: 1px solid $layout-item-border-color;
+}
+
+.layout-item div.title {
+  background-color: cornflowerblue;
+  padding: 5px;
+  vertical-align: middle;
+  font-size: 15px;
+}
+
+.container-wrapper {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  flex-flow: column wrap;
+  flex: auto;
+}
+
+.svg-outer-wrapper {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  flex-flow: column wrap;
+}
+
+#diagram-svg {
+  flex: auto;
+}
+
+.diagram-container {
+  margin: 8px;
+  border: 1px solid $layoutBorderColor;
+}

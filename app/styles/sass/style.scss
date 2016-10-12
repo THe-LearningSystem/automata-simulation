@@ -1,7 +1,16 @@
 @import 'bootstrap_variables';
-//fix icon patj
+//fix icon path
 $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 
 @import '../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap';
 
-@import 'ownstyle.scss';
+@import 'own_variables';
+
+@import 'layout';
+@import 'design';
+@import 'context_menu';
+@import 'pda';
+@import 'font';
+@import 'app_nav';
+@import 'svg';
+@import 'simulation';

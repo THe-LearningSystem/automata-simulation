@@ -1,0 +1,55 @@
+<div class="top-menu">
+    <div class="button-group">
+        <zoom-tooltip></zoom-tooltip>
+    </div>
+    <div class="button-group">
+        <menubutton icon="search-plus" action="statediagram.zoom.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
+        <menubutton icon="search-minus" action="statediagram.zoom.zoomOut()"
+                    tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
+    </div>
+    <div class="button-group">
+        <menubutton icon="plus-circle" action="statediagram.createState()" ng-disabled="simulator.isInPlay"
+                    tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+        <menubutton icon=" long-arrow-right" action="statediagram.createTransition()" ng-disabled="simulator.isInPlay"
+                    tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+    </div>
+    <div class="button-group">
+
+    </div>
+    <!--scaleAndTranslateToDefault()-->
+
+    <div class="button-group">
+        <portation></portation>
+        <svg-save-as-png></svg-save-as-png>
+    </div>
+
+    <div class="button-group">
+        <menubutton icon="trash"
+                    action="showModalWithMessage('RESET_BUTTON_MODAL.TITLE', 'RESET_BUTTON_MODAL.DESC', 'core.resetAutomaton()')"
+                    tttext="NAVBAR.TTTEXT_REMALL"></menubutton>
+    </div>
+    <div class="button-group">
+        <div uib-dropdown on-toggle="toggled(open)" ng-controller="LangCtrl">
+            <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
+                <!-- Here is the current language shown -->
+                <span ng-bind-html="activeLanguage | to_trusted"></span><span
+                    class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </button>
+            <!-- here you can see all selectable languages in a simple dropdown -->
+            <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+                <li>
+                    <a ng-click="changeLang( 'en_EN')"><span class="flag-icon flag-icon-gb"></span>
+                        {{"LANG_DROP.ENGLISH" | translate}}</a>
+                </li>
+                <li>
+                    <a ng-click="changeLang( 'de_DE')"><span class="flag-icon flag-icon-de"></span> {{"LANG_DROP.GERMAN"
+                        | translate}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="button-group">
+        <menubutton icon="question" action="openCheatSheet()" tttext="NAVBAR.TTTEXT_CHEATSHEET"></menubutton>
+        <!--<menubutton icon="question" action="intro.Start()" tttext="INTRO.INTROBUTTONTITLE"></menubutton>-->
+    </div>
+</div>

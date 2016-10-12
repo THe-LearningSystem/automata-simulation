@@ -1,0 +1,8 @@
+<menubutton icon="upload" action="importAutomaton()" tttext="NAVBAR.TTTEXT_IMPORT">
+</menubutton>
+<input id="hidden-file-upload" type="file" name="file">
+<menubutton id="exportButton" icon="download" action="downloadAutomaton()"
+            tttext="NAVBAR.TTTEXT_EXPORT"
+            ng-disabled="config.states.length == 0 && config.transitions == 0">
+
+</menubutton>

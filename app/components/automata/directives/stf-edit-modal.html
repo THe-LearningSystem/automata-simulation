@@ -1,0 +1,49 @@
+<!-- STF-EDIT-MODAL:END -->
+<div class="modal fade" id="stf-edit-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">{{"STF.MODAL_TITLE" | translate}}</h4>
+                </div>
+                <div class="modal-body">
+                    <!--  <div class="input-group">
+                         <span class="input-group-addon">S =</span>
+                         <input ng-model="statetransitionfunction.editStates" class="form-control">
+                     </div>
+                     <div class="input-group">
+                         <span class="input-group-addon">&Sigma; =</span>
+                         <input ng-model="statetransitionfunction.editAlphabet" class="form-control">
+                     </div>-->
+                    <div class="input-group">
+                        <span class="input-group-addon">&Sigma; =</span>
+                        <textarea ng-model="statetransitionfunction.editSTF" class="form-control"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">  S<sub>0</sub>=</span>
+                        <input ng-model="statetransitionfunction.editStartState" class="form-control">
+                    </div>
+                    <div class="input-group" ng-show="automatonData.type !== 'PDA' && automatonData.type !== 'NPDA'">
+                        <span class="input-group-addon">  E=</span>
+                        <input ng-model="statetransitionfunction.editFinalStates" class="form-control">
+                    </div>
+                </div>
+                <div id="modal-footer" class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"
+                            ng-click="statetransitionfunction.updateAutomaton()">
+                        {{"MODAL_BUTTON.UPDATE" | translate}}
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-show="!noAction">
+                        {{"MODAL_BUTTON.DECLINE" | translate}}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

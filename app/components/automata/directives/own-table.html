@@ -1,0 +1,45 @@
+<div class="title">{{"TABLE.TITLE" | translate}}</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>/</th>
+        <th ng-repeat="value in table.inputSymbolAlphabet">
+            <span ng-class="{'selected':value.selected,'animated-transition':value.animated}">
+                {{value.inputSymbol}}
+            </span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr ng-repeat="value in table.statesTransitions">
+        <th>
+            <span ng-class="{'selected':value.state=== states.selected ||value.state === transitions.selected.fromState,
+            'animated-currentstate':value.state === simulator.animated.currentState,
+            'animated-accepted':value.state === simulator.animated.currentState&& simulator.status == 'accepted',
+            'animated-not-accepted':value.state === simulator.animated.currentState&& simulator.status == 'notAccepted'}">
+                {{value.state.name}}
+            </span>
+            <sub ng-show="states.startState === value.state">S<sub>0</sub></sub>
+            <sub ng-show="states.startState === value.state && states.final.isFinalState(value.state)">, </sub>
+            <sub ng-show="states.final.isFinalState(value.state)">{{"STF.F" | translate}}</sub>
+        </th>
+        <span>
+        <td ng-repeat="transvalue in value.trans">
+            <span ng-repeat="transition in transvalue">
+                 <span ng-class="{'selected':transition.selected,
+            'selected-transition':value.state === transitions.selected.fromState,
+            'animated-currentstate':value.state === simulator.animated.currentState,
+            'animated-accepted':value.state === simulator.animated.currentState&& simulator.status == 'accepted',
+            'animated-not-accepted':value.state === simulator.animated.currentState&& simulator.status == 'notAccepted'}">
+                     {{transition.toState.name}}
+                 </span>
+                {{$last ? ' ' : ', '}}
+            </span>
+
+        </td>
+            </span>
+    </tr>
+
+    </tbody>
+</table>

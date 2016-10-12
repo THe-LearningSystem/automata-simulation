@@ -1,0 +1,156 @@
+.container-item div.title {
+  background-color: cornflowerblue;
+  padding: 5px;
+  vertical-align: middle;
+  font-size: 15px;
+}
+
+.container-item.extendable div.title {
+  cursor: pointer;
+}
+
+.container-item .content {
+  padding: 10px;
+}
+
+//BulkTester
+.fail-class {
+  background-color: $animatedNotAcceptedColor;
+}
+
+.pass-class {
+  background-color: $animatedAcceptedColor;
+}
+
+.bulk-result {
+  padding-left: 10px;
+  border-bottom: 1px solid white;
+}
+
+.green {
+  color: $animatedAcceptedColor;
+}
+
+.red {
+  color: $animatedNotAcceptedColor;
+}
+
+.unknown-class {
+  background-color: $animatedTransitionColor;
+}
+
+/*RZSLIDE*/
+rzslider .rz-pointer {
+  top: -7px;
+  width: 16px;
+  height: 16px;
+}
+
+rzslider .rz-pointer:after {
+  top: 5px;
+  left: 5px;
+  width: 6px;
+  height: 6px;
+}
+
+/*Buttons*/
+
+.menu-button {
+  background-color: transparent;
+  border: 1px solid whitesmoke;
+  align-content: center;
+}
+
+.menu-button:hover {
+  border: 1px solid #e0e0e0;
+}
+
+.icon {
+  font-size: 16px;
+}
+
+/*STF*/
+.state-transition-function .content {
+  padding: 8px;
+}
+
+.stf-element {
+  display: table;
+  margin: 10px 10px 10px 10px;
+}
+
+/**AUTOMATONNAME**/
+.current-automaton-name-wrapper {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+
+  align-items: center;
+}
+
+.current-automaton-name {
+  margin: 5px;
+  display: inline-block;
+  width: 180px;
+  height: 30px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid $navbar-default-bg;
+  overflow: hidden !important;
+}
+
+.current-automaton-name:hover {
+  border: 1px solid #B7B5B5;
+}
+
+//unsaved changes
+.unsaved-changes {
+  display: flex;
+  align-items: flex-end;
+  padding: 0 !important;
+}
+
+.unsaved-changes .alert {
+  padding: 1px;
+  margin: 5px;
+}
+
+//BUTTONGROUP
+
+.button-group {
+  padding: 0 5px;
+  border-right: 1px solid #d1d1d1;
+}
+
+.button-group:last-child {
+  padding: 0 5px;
+  border-right: none;
+}
+
+.button-group a {
+  color: #000;
+}
+
+.button-group:hover {
+  color: #000;
+  text-decoration: none;
+}
+
+//TRANSITION MENU
+.transitions-menu-list {
+  padding: 0;
+}
+
+.transitions-menu-list li {
+  list-style-type: none;
+}
+
+.alert-transition {
+  padding: 5px;
+}

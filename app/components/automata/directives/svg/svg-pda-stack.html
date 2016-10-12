@@ -1,0 +1,33 @@
+<g ng-attr-transform="translate({{statediagram.svgWidth}},{{statediagram.svgHeight}})">
+
+    <line class="stack"
+          ng-attr-x1="{{-stackWidth - stackPaddingToBorder}}"
+          ng-attr-y1="{{-stackHeight - stackPaddingToBorder}}"
+          ng-attr-x2="{{-stackWidth - stackPaddingToBorder}}"
+          ng-attr-y2="{{-stackPaddingToBorder}}">
+
+    </line>
+    <line class="stack"
+          ng-attr-x1="{{-stackWidth-stackPaddingToBorder}}"
+          ng-attr-y1="{{-stackPaddingToBorder}}"
+          ng-attr-x2="{{-stackPaddingToBorder}}"
+          ng-attr-y2="{{-stackPaddingToBorder}}"></line>
+    <line class="stack"
+          ng-attr-x1="{{-stackPaddingToBorder}}"
+          ng-attr-y1="{{-stackPaddingToBorder}}"
+          ng-attr-x2="{{-stackPaddingToBorder}}"
+          ng-attr-y2="{{-stackHeight-stackPaddingToBorder}}"></line>
+    <g ng-repeat="stackItem in simulator.stack.stackContainer track by $index">
+        <rect class="stack-item"
+              ng-attr-x="{{-stackWidth-stackPaddingToBorder+1}}"
+              ng-attr-y="{{-stackPaddingToBorder-(stackItemHeight*($index+1))-1}}"
+              ng-attr-width="{{stackWidth-2}}"
+              ng-attr-height="{{stackItemHeight}}">
+        </rect>
+        <text class="stack-text" dominant-baseline="central" text-anchor="middle"
+              ng-attr-x="{{-stackWidth/2-stackPaddingToBorder}}"
+              ng-attr-y="{{-30-stackItemHeight*$index}}">
+            {{stackItem}}
+        </text>
+    </g>
+</g>

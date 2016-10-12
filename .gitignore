@@ -5,3 +5,9 @@ bower_components/
 tmp
 .DS_Store
 .idea
+
+/***OWN**/
+*all.js
+*all.min.js
+gitignore/
+styles/css/

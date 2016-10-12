@@ -1,0 +1,53 @@
+<container-item titlename="TRANS_MENU.TITLE" ng-show="transitions.menu.edit.isOpen" extendable-raw="false">
+
+    <ul class="transitions-menu-list">
+        <div ng-show="automatonData.type ==='PDA' || automatonData.type === 'NPDA'">
+            <change-input-field-value char="ε"></change-input-field-value>
+            <change-input-field-value char="⊥"></change-input-field-value>
+        </div>
+        <li ng-repeat="(key, transition) in transitions.menu.edit.transitionGroup">
+            <div class="input-group" ng-class="transition.inputSymbol.error ===true ? 'has-error':''">
+                <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
+                <input class="form-control" type="text" ng-model="transition.inputSymbol.value" maxlength="1"
+                       ng-attr-show-focus="true" ng-disabled="simulator.isInPlay">
+
+                <span class="input-group-addon btn btn-danger transbutton"
+                      ng-show="automatonData.type==='DFA' || automatonData.type==='NFA'"
+                      ng-click="simulator.isInPlay ? pseudoFunction() :
+                      transitions.remove(transitions.getById(transition.id)); transitions.menu.edit.open(transitions.selected)"
+                      ng-disabled="simulator.isInPlay"><span class="icon-times"></span></span>
+            </div>
+            <div ng-show="automatonData.type==='PDA' || automatonData.type ==='NPDA'">
+                <div class="input-group" ng-class="transition.readFromStack.error ===true ? 'has-error':''">
+                    <span class="input-group-addon">{{"TRANS_MENU.PDA_READ_FROM_STACK"| translate}}</span>
+                    <input id="transition-read-from-stack-{{transition.id}}" class="form-control"
+                           ng-model="transition.readFromStack.value" maxlength="1"
+                           ng-disabled="simulator.isInPlay">
+                </div>
+                <div class="input-group"
+                     ng-class="transition.writeToStack.error ===true ? 'has-error':''">
+                    <span class="input-group-addon">{{"TRANS_MENU.PDA_WRITE_TO_STACK"| translate}}</span>
+                    <input id="transition-write-to-stack-{{transition.id}}" class="form-control" type="text"
+                           ng-model="transition.writeToStack.value" maxlength="2"
+                           ng-disabled="simulator.isInPlay">
+                </div>
+                <span class="input-group-addon btn btn-danger transbutton"
+                      ng-click="simulator.isInPlay ? pseudoFunction() : transitions.remove(transitions.getById(transition.id)); transitions.menu.edit.open(transitions.selected)"
+                      ng-disabled="simulator.isInPlay"> <span class="icon-times"></span> </span>
+            </div>
+            <p></p>
+            <div class="alert alert-danger alert-transition"
+                 ng-show="(transition.error || transition.readFromStack.error || transition.writeToStack.error)&& transition.isUnique">
+                {{"TRANS_MENU.NAME_TOO_SHORT"| translate}}
+            </div>
+            <div class="alert alert-danger  alert-transition"
+                 ng-show="!transition.isUnique && !automatonData.nonDeterministic">
+                {{"TRANS_MENU.NOT_DETERMINISTIC"| translate}}
+            </div>
+            <div class="alert alert-danger  alert-transition"
+                 ng-show="!transition.isUnique&& automatonData.nonDeterministic">
+                {{"TRANS_MENU.TRANS_ALREADY_EXISTS"| translate}}
+            </div>
+        </li>
+    </ul>
+</container-item>

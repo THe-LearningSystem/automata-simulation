@@ -1,0 +1,28 @@
+<container-item titlename="DEV.TITLE">
+    <menubutton icon="wrench" action="statetransitionfunction.simulatePhysic()"></menubutton>
+
+    <menubutton icon="wrench" action="testAgent.testDFA()" ng-show="automatonData.type== 'DFA'">
+    </menubutton>
+    <menubutton icon="wrench" action="testAgent.testNFA()" ng-show="automatonData.type== 'DFA'">
+    </menubutton>
+    <menubutton icon="wrench" action="testAgent.testPDA()" ng-show="automatonData.type== 'PDA'">
+    </menubutton>
+    <menubutton icon="wrench" action="testAgent.testNPDA()" ng-show="automatonData.type== 'NPDA'">
+    </menubutton>
+    <p>
+        AutomatonData:
+        <json-formatter json="automatonData" open="0"></json-formatter>
+    </p>
+    <p>
+        <json-formatter json="simulator.animated" open="0"></json-formatter>
+    </p>
+    <p>
+        <json-formatter json="states" open="0"></json-formatter>
+    </p>
+    <p>
+        <json-formatter json="transitions" open="0"></json-formatter>
+    </p>
+
+    <json-formatter json="table" open="0"></json-formatter>
+    <json-formatter json="simulator.stack" open="0"></json-formatter>
+</container-item>
