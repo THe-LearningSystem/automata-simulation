@@ -22,7 +22,6 @@ autoSim.directive("containerItem", function () {
         replace: true,
         transclude: true,
         link: function (scope, elm, attrs) {
-            console.log(scope);
             if (scope.extendableRaw == undefined || scope.extendableRaw != false) {
                 scope.extendable = true;
             } else {
