@@ -1,35 +1,38 @@
-<modal></modal>
-<div class="top-nav">
-    <div class="automata-simulation-logo"><img src="images/logo_automaten.png">
+<div class="full-wrapper">
+    <div class="flex-item header">
+        <app-menu>
+            <automaton-name></automaton-name>
+            <unsaved-changes></unsaved-changes>
+        </app-menu>
     </div>
-    <automaton-name></automaton-name>
-    <unsaved-changes></unsaved-changes>
-    <div class="th-koeln-logo"><img src="images/th-koeln-logo.png">
-    </div>
-</div>
-<top-menu></top-menu>
+    <div class="flex-item  inner-wrapper">
 
-<div class=" left-menu">
-    <simulation></simulation>
-    <bulk-test></bulk-test>
-    <simulation-settings></simulation-settings>
-    <develop></develop>
-</div>
+        <div class="main main-wrapper">
+            <div class="main-item layout-item container-wrapper">
+                <own-svg></own-svg>
+            </div>
+            <div class="main-bottom">
+                <div class="layout-item container-wrapper">
+                    <state-transition-function></state-transition-function>
+                </div>
 
-<div class="mid-wrapper">
-    <own-svg></own-svg>
-    <div class="bot-content-wrapper">
-        <div class="bot-content">
-            <state-transition-function></state-transition-function>
+            </div>
         </div>
+        <aside class="sidebar sidebar-1 container-item layout-item">
+            <simulation></simulation>
+            <bulk-test></bulk-test>
+            <simulation-settings></simulation-settings>
+            <develop></develop>
+        </aside>
+        <aside class="sidebar sidebar-2 container-item layout-item">    <!--Diagram Settings -->
+            <settings></settings>
+            <!--State Menu -->
+            <state-menu></state-menu>
+            <!--Transition Menu -->
+            <transition-menu></transition-menu>
+            <credits></credits>
+        </aside>
+
     </div>
-</div>
-<div class="right-menu">
-    <!--Diagram Settings -->
-    <settings></settings>
-    <!--State Menu -->
-    <state-menu></state-menu>
-    <!--Transition Menu -->
-    <transition-menu></transition-menu>
-    <credits></credits>
+
 </div>

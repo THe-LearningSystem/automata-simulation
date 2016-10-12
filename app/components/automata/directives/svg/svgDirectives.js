@@ -1,5 +1,7 @@
 autoSim.directive("ownSvg", function () {
     return {
+        transclude: true,
+        replace: true,
         link: function (scope, elm, attrs) {
             scope.statediagram.svg = d3.select('#diagram-svg');
             elm.on('contextmenu', function () {

@@ -11,38 +11,35 @@ autoSim.directive("menubutton", function () {
             action: '&',
             tttext: '@'
         },
-        template: '<button class="menu-button" type="button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}" tooltip-placement="bottom"><span class="icon icon-{{icon}} icon-position" aria-hidden="true"></span></button>'
+        template: '<button class="menu-button btn btn-default" type="button" ng-click="action()" aria-label="Left Align"  uib-tooltip="{{tttext | translate}}" tooltip-placement="bottom"><span class="icon icon-{{icon}} icon-position" aria-hidden="true"></span></button>'
     };
 });
 
-autoSim.directive("menuitemextendable", function () {
+autoSim.directive("containerItem", function () {
 
     return {
         restrict: 'E',
         replace: true,
         transclude: true,
-        controller: function ($scope) {
-            $scope.extended = true;
+        link: function (scope, elm, attrs) {
+            console.log(scope);
+            if (scope.extendableRaw == undefined || scope.extendableRaw != false) {
+                scope.extendable = true;
+            } else {
+                scope.extendable = false;
+            }
+            scope.extended = true;
+
+            scope.toggle = function () {
+                if (scope.extendable)
+                    scope.extended = !scope.extended;
+            };
         },
         scope: {
-            titlename: '@'
+            titlename: '@',
+            extendableRaw: '='
         },
-        template: '<div class="menu-item"><p class="left-indextab" ng-click="extended=!extended"><span class="icon-extendable icon-chevron-down icon-extendable-set" aria-hidden="true" ng-show="extended"></span><span class="icon-extendable icon-chevron-right icon-extendable-set" aria-hidden="true" ng-show="!extended"></span><span class="left-indextab-title">{{titlename | translate}}</span></p><div class="content" ng-transclude ng-show="extended"></div></div>'
-
-    };
-
-});
-autoSim.directive("menuitem", function () {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        transclude: true,
-        scope: {
-            titlename: '@'
-        },
-        template: '<div class="menu-item"><p class="right-indextab right-indextab-title">{{titlename | translate}}</p><div class="content" ng-transclude></div></div>'
-
+        templateUrl: 'components/automata/directives/container-item.html'
     };
 
 });
@@ -103,6 +100,7 @@ autoSim.directive("develop", function () {
 });
 autoSim.directive("automatonName", function () {
     return {
+        replace: true,
         link: function (scope, elm, attrs) {
             /**
              * Leave the input field after clicking the enter button
@@ -153,15 +151,18 @@ autoSim.directive("contextMenu", function () {
 });
 autoSim.directive("zoomTooltip", function () {
     return {
+        replace: true,
         templateUrl: 'components/automata/directives/zoom-tooltip.html'
     };
 });
+
+
 autoSim.directive("unsavedChanges", function () {
     return {
         restrict: 'E',
         replace: true,
         transclude: true,
-        template: '<div class=" unsaved-changes"><span class="alert alert-info" ng-show="automatonData.unSavedChanges">{{"APP.UNSAVEDCHANGES" | translate}}</span> </div>'
+        templateUrl: 'components/automata/directives/unsaved-changes.html'
 
     };
 

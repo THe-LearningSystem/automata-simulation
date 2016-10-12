@@ -35,9 +35,11 @@ autoSim.directive('showFocus', function ($timeout) {
     };
 });
 
-
-autoSim.directive("credits", function () {
+autoSim.directive("appMenu", function () {
     return {
-        templateUrl: 'shared/credits.html'
+        transclude: true,
+        templateUrl: 'shared/appMenu.html'
     };
 });
+
+

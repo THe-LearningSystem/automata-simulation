@@ -1,4 +1,4 @@
-<menuitem titlename="STATE_MENU.TITLE" ng-show="states.menu.edit.isOpen">
+<container-item titlename="STATE_MENU.TITLE" ng-show="states.menu.edit.isOpen" extendable-raw="false">
     <form name="editstatemenu">
         <div class="input-group"
              ng-class="states.menu.edit.state.name.length === 0 ||
@@ -39,4 +39,4 @@
             {{"MODAL_BUTTON.DELETE" | translate}}
         </button>
     </form>
-</menuitem>
+</container-item>

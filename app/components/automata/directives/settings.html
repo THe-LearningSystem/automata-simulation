@@ -1,4 +1,5 @@
-<menuitem titlename="DIA_SET.TITLE" ng-show="!states.menu.edit.isOpen && !transitions.menu.edit.isOpen">
+<container-item titlename="DIA_SET.TITLE" ng-show="!states.menu.edit.isOpen && !transitions.menu.edit.isOpen"
+                extendable-raw="false">
     <p class="right-indextab-subtitle">
         {{'DIA_SET.VIEW' | translate}}
     </p>
@@ -10,4 +11,4 @@
         <input class="checkbox-item" type="checkbox" id="statediagram-snapping" ng-model="statediagram.grid.snapping">
         {{"DIA_SET.SNAPPING" | translate}}
     </p>
-</menuitem>
+</container-item>
