@@ -8,6 +8,10 @@ var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 
             templateUrl: 'components/automata/dfa/views/dfa.html',
             controller: 'DFAController'
         });
+        $routeProvider.when('/dta', {
+          templateUrl: 'components/automata/dta/views/dta.html',
+          controller: 'DTAController'
+        });
         $routeProvider.when('/nfa', {
             templateUrl: 'components/automata/nfa/views/nfa.html',
             controller: 'NFAController'
