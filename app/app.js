@@ -1,4 +1,4 @@
-<<<<<<< HEAD:app/js/controllers/app.js
+app/js/controllers/app.js
 // Declare app level module which depends on views, and components
 var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 'pascalprecht.translate', 'jsonFormatter', 'rzModule', 'cfp.hotkeys']).config(['$routeProvider',
     function ($routeProvider) {
@@ -65,7 +65,6 @@ autoSim.filter('to_trusted', ['$sce',
             return $sce.trustAsHtml(text);
         };
     }]);
-=======
 //create nameSpace
 window.autoSim = window.autoSim || {};
 
@@ -75,6 +74,10 @@ var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 
         $routeProvider.when('/dfa', {
             templateUrl: 'components/automata/dfa/views/dfa.html',
             controller: 'DFAController'
+        });
+        $routeProvider.when('/dta', {
+          templateUrl: 'components/automata/dta/views/dta.html',
+          controller: 'DTAController'
         });
         $routeProvider.when('/nfa', {
             templateUrl: 'components/automata/nfa/views/nfa.html',
@@ -162,4 +165,3 @@ autoSim.filter('orderObjectBy', function () {
         return array;
     }
 });
->>>>>>> feature/dfa-and-pda:app/app.js

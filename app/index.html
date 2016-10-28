@@ -37,12 +37,9 @@
 <![endif]-->
 <a href="#/dfa">DFA</a>
 <a href="#/nfa">NFA</a>
-<<<<<<< HEAD
-<a href="#/dta">DTA</a>
-=======
 <a href="#/pda">PDA</a>
 <a href="#/npda">NPDA</a>
->>>>>>> feature/dfa-and-pda
+<a href="#/dta">DTA</a>
 
 <div class="container-fluid nopadding" ng-view></div>
 <!-- bower:components -->
@@ -109,16 +106,6 @@
 <script src="components/automata/nfa/controllers/nfa.controller.js"></script>
 <script src="components/automata/nfa/js/nfa.transitions.js"></script>
 <!-- NFA:END-->
-<<<<<<< HEAD
-<!-- DTA:START-->
-<script src="js/controllers/DTACtrl.js"></script>
-<script src="js/dta/DTA.js"></script>
-<script src="js/dta/simulationDTA.js"></script>
-<script src="js/dta/statediagramDTA.js"></script>
-<script src="js/dta/statetransitionfunctionDTA.js"></script>
-<script src="js/dta/tableDTA.js"></script>
-<!-- DTA:END-->
-=======
 <!-- PDA:START-->
 <script src="components/automata/pda/controllers/pda.controller.js"></script>
 <script src="components/automata/pda/js/pda.transitions.js"></script>
@@ -130,8 +117,13 @@
 <script src="components/automata/npda/controllers/npda.controller.js"></script>
 <script src="components/automata/npda/js/npda.transitions.js"></script>
 <!--NPDA:END-->
-
->>>>>>> feature/dfa-and-pda
+<!-- DTA:START-->
+<script src="components/automata/dta/controllers/dta.controller.js"></script>
+<script src="components/automata/dta/js/dta.transitions.js"></script>
+<script src="components/automata/dta/js/dta.transitions.transitionObjects.js"></script>
+<script src="components/automata/dta/js/dta.transitions.menu.js"></script>
+<script src="components/automata/dta/js/dta.simulator.js"></script>
+<!-- DTA:END-->
 </body>
 
 </html>

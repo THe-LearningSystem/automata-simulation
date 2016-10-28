@@ -24,6 +24,9 @@ function TestData($scope) {
 
     };
 
+    self.testDTA = function() {
+
+    };
 
     self.testNFA = function () {
         var state1 = $scope.states.createWithPresets(100, 100);
