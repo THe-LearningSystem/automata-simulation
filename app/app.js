@@ -19,6 +19,10 @@ var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 
         $routeProvider.when('/npda', {
             templateUrl: 'components/automata/npda/views/npda.html',
             controller: 'NPDAController'
+        });        
+        $routeProvider.when('/language', {
+            templateUrl: 'components/language/views/language.html',
+            controller: 'LANGController'
         });
 
         $routeProvider.otherwise({

@@ -20,10 +20,14 @@
     <link href="bower_components/flag-icon-css/css/flag-icon.css" rel="stylesheet">
     <link rel="stylesheet" href="bower_components/angularjs-slider/dist/rzslider.css"/>
     <link rel="stylesheet" href="bower_components/json-formatter/dist/json-formatter.css">
-    <link rel="stylesheet" href="bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css"
+    <!-- Disabled Warning
+        <link rel="stylesheet" href="bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css"
           type="text/css"/>
+    -->
     <link rel="stylesheet" href="bower_components/angular-hotkeys/build/hotkeys.css" type="text/css"/>
-    <link rel="stylesheet" href="bower_components/ng-joyride/ng-joyride.css" type="text/css"/>
+    <!-- Disabled Warning
+        <link rel="stylesheet" href="bower_components/ng-joyride/ng-joyride.css" type="text/css"/>
+    -->
     <!-- endbower -->
     <!-- Our styles. To override the other styles it is important that this is the last link. -->
     <link rel="stylesheet" href="styles/css/style.css">
@@ -39,8 +43,9 @@
 
 <div class="view-container" ng-view></div>
 <!-- bower:components -->
-
-<script src="bower_components/jquery/jquery.js"></script>
+<!-- Disabled Warning
+    <script src="bower_components/jquery/jquery.js"></script>
+-->
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-loader/angular-loader.js"></script>
@@ -54,8 +59,10 @@
 <script src="bower_components/filesaver/FileSaver.js"></script>
 <script src="bower_components/lodash/lodash.js"></script>
 <script src="bower_components/angular-hotkeys/build/hotkeys.js"></script>
-<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="bower_components/SVG.toDataURL/svg_todataurl.js"></script>
+<!-- Disabled Warning
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/SVG.toDataURL/svg_todataurl.js"></script>
+-->
 
 <!--devs-->
 <script src="bower_components/json-formatter/dist/json-formatter.js"></script>
@@ -67,6 +74,7 @@
 <script src="js/saveSvgAsPng/ownSaveSVgAsPng.js"></script>
 <script src="app.js"></script>
 <script src="components/automata/TestData.js"></script>
+<script src="components/language/TestLangData.js"></script>
 <script src="components/automata/dfa/js/dfa.hotkeysGenerator.js"></script>
 
 
@@ -113,6 +121,13 @@
 <script src="components/automata/npda/controllers/npda.controller.js"></script>
 <script src="components/automata/npda/js/npda.transitions.js"></script>
 <!--NPDA:END-->
+<!--LANGUAGE:START-->
+<script src="components/language/controllers/lang.controller.js"></script>
+<script src="components/language/js/lang.automatonData.js"></script>
+<script src="components/language/js/lang.core.js"></script>
+<script src="components/language/js/lang.production.js"></script>
+<script src="components/language/js/lang.production.productionObject.js"></script>
+<!--LANGUAGE:END-->
 
 </body>
 
