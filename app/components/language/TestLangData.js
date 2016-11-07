@@ -3,14 +3,15 @@ function TestLangData($scope) {
     var self = this;
 
     self.testLANG = function () {
-        console.log("Test");
+        console.log("Test before");
         
-        var left1 = 
+        /*
+        $scope.productions.create("S", "aA", 100, 100);
+        $scope.productions.create("S", "bA", 100, 100);
+        $scope.productions.create("A", "bB", 100, 100);
+        $scope.productions.create("B", "bA", 100, 100);
+        */
         
-        $scope.LangProduction.create("S", "aA", 100, 100);
-        $scope.LangProduction.create("S", "bA", 100, 100);
-        $scope.LangProduction.create("A", "bB", 100, 100);
-        $scope.LangProduction.create("B", "bA", 100, 100);
-        console.log("Tes2t");
+        console.log("Test after");
     };
 }

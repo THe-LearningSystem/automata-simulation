@@ -1,4 +1,4 @@
-autoSim.production = function (id, left, right, x, y) {
+autoSim.Production = function (id, left, right, x, y) {
     var self = this;
     self.id = id;
     self.left = left;

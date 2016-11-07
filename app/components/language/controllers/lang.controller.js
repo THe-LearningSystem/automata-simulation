@@ -5,8 +5,10 @@ function LANGController($scope, hotkeys) {
     prepareScope($scope);
 
     $scope.languageData = new autoSim.LanguageData();
-    $scope.core = new autoSim.LangCore($scope);
-    $scope.productionRule = new autoSim.LangProduction($scope);
+    $scope.core = new autoSim.Core($scope);
+    $scope.derivationTree = new autoSim.DerivationTreeGrid($scope);
+    $scope.grammar = new autoSim.Grammar($scope);
+    $scope.production = new autoSim.Productions($scope);
     
     
     $scope.testLangAgent = new TestLangData($scope);
