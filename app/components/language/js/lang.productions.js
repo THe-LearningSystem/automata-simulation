@@ -17,11 +17,5 @@ autoSim.Productions = function ($scope) {
         //$scope.saveApply();
         return production;
     };
-    
-    self.create("S", "aA", 100, 100);
-    self.create("A", "aB", 100, 100);
-    self.create("A", "bB", 100, 100);
-    self.create("B", "A", 100, 100);
-    
 };
 autoSim.Productions.prototype = Array.prototype;

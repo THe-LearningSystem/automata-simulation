@@ -2,26 +2,28 @@
     <div class="title">Ableitungsbaum / Syntaxbaum</div>
     <div class="svg-controls">
         <div class="button-group">
-            <!-- <zoom-tooltip></zoom-tooltip> -->
+            <lang-zoom-tooltip></lang-zoom-tooltip>
         </div>
         <div class="button-group">
-            <menubutton icon="search-plus" action="statediagram.zoom.zoomIn()"
+            <menubutton icon="search-plus" action="derivationtree.zoom.zoomIn()"
                         tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
-            <menubutton icon="search-minus" action="statediagram.zoom.zoomOut()"
+            <menubutton icon="search-minus" action="derivationtree.zoom.zoomOut()"
                         tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
         </div>
         <div class="button-group">
             <menubutton icon="plus-circle" action="statediagram.createState()" ng-disabled="simulator.isInPlay"
                         tttext="NAVBAR.TTTEXT_ADDSTATE"></menubutton>
+            <!--
             <menubutton icon=" long-arrow-right" action="statediagram.createTransition()"
                         ng-disabled="simulator.isInPlay"
                         tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
+            -->
         </div>
     </div>
     <div class="container-wrapper diagram-container">
         <svg id="diagram-svg" class="noselect" xmlns="http://www.w3.org/2000/svg"
-             style="font-family:'Roboto', sans-serif; font-weight:100">
-            <!-- <svg-grid></svg-grid> -->
+            style="font-family:'Roboto', sans-serif; font-weight:100">
+            <svg-lang-grid></svg-lang-grid>
             <!-- <svg-definitions></svg-definitions> -->
             <!-- <svg-outer>
                 <g id="transitions">

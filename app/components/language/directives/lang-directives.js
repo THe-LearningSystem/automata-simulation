@@ -16,8 +16,9 @@ autoSim.directive("langderivationsequence", function () {
     };
 });
 
-autoSim.directive("langderivationtree", function () {
+autoSim.directive("langZoomTooltip", function () {
     return {
-        templateUrl: 'components/language/directives/lang-derivation-tree.html'
+        replace: true,
+        templateUrl: 'components/language/directives/lang-zoom-tooltip.html'
     };
 });
