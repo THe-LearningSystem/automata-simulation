@@ -6,7 +6,7 @@ function LANGController($scope, hotkeys) {
 
     $scope.languageData = new autoSim.LanguageData();
     $scope.core = new autoSim.Core($scope);
-    $scope.grammar = new autoSim.Grammar($scope);
+    $scope.grammar = new autoSim.Grammars($scope);
     $scope.production = new autoSim.Productions($scope);
     $scope.derivationtree = new autoSim.DerivationTree($scope);
     $scope.derivationtree.grid = new autoSim.DerivationTreeGrid($scope);

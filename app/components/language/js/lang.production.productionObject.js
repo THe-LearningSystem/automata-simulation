@@ -1,8 +1,7 @@
-autoSim.Production = function (id, left, right, x, y) {
+autoSim.Production = function (id, left, right) {
     var self = this;
+    
     self.id = id;
     self.left = left;
     self.right = right;
-    self.x = x;
-    self.y = y;
 };

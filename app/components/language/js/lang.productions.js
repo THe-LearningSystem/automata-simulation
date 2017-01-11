@@ -5,12 +5,12 @@ autoSim.Productions = function ($scope) {
      
     self.productionId = 0;
 
-    self.create = function (prLeft, prRight, x, y) {
-        return self.createWithId(self.productionId++, prLeft, prRight, x, y);
+    self.create = function (prLeft, prRight) {
+        return self.createWithId(self.productionId++, prLeft, prRight);
     };
     
-    self.createWithId = function (pId, prLeft, prRight, x, y) {
-        var production = new autoSim.Production(pId, prLeft, prRight, x, y);
+    self.createWithId = function (pId, prLeft, prRight) {
+        var production = new autoSim.Production(pId, prLeft, prRight);
         self.push(production);
         
         //$scope.core.updateListener();
