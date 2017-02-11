@@ -5,10 +5,6 @@ function TestLangData($scope) {
     console.log("langTest");
 
     self.testLANG = function () {
-        /* var prod1 = $scope.production.create("S", "aA");
-        var prod2 = $scope.production.create("A", "bB");
-        var prod3 = $scope.production.create("B", "bA");
-        var prod4 = $scope.production.create("B", "e"); */ 
     
         var prod1L = "S";
         var prod1R = "aA";
@@ -19,11 +15,12 @@ function TestLangData($scope) {
         var prod4L = "B";
         var prod4R = "e";
         
-        $scope.grammar.create("A, B, S", "a, b, e", [], "S");
 
-        console.log($scope.production.create(prod1L, prod1R));
-        console.log($scope.production.create(prod2L, prod2R));
-        console.log($scope.production.create(prod3L, prod3R));
-        console.log($scope.production.create(prod4L, prod4R));
+        $scope.productions.create(prod1L, prod1R);
+        $scope.productions.create(prod2L, prod2R);
+        $scope.productions.create(prod3L, prod3R);
+        $scope.productions.create(prod4L, prod4R);
+        
+        $scope.grammars.create("A, B, S", "a, b, e", "S");
     };
 }

@@ -12,9 +12,6 @@ autoSim.Productions = function ($scope) {
     self.createWithId = function (pId, prLeft, prRight) {
         var production = new autoSim.Production(pId, prLeft, prRight);
         self.push(production);
-        
-        //$scope.core.updateListener();
-        //$scope.saveApply();
         return production;
     };
 };

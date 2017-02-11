@@ -1,0 +1,17 @@
+<container-item titlename="Produktionsregeln" extendable-raw="false">
+    <form name="editproductionmenu">
+        <div class="input-group"
+             ng-class="states.menu.edit.state.name.length === 0 ||
+             states.existsWithName(states.menu.edit.state.name,states.menu.edit.state.id)? 'has-error':''">
+            <span class="input-group-addon">Regel:</span>
+            <input class="form-control" id="production-input-left" maxlength="1"
+                   show-focus="productions.menu.edit.production.left"
+                   ng-model="productions.menu.edit.production.left"
+                   ng-disabled="simulator.isInPlay">
+            <input class="form-control" id="production-input-right" maxlength="10"
+                   show-focus="productions.menu.edit.production.right"
+                   ng-model="productions.menu.edit.production.right"
+                   ng-disabled="simulator.isInPlay">
+        </div>
+    </form>
+</container-item>

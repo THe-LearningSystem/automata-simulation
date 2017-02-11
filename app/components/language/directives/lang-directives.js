@@ -41,3 +41,10 @@ autoSim.directive("languageName", function () {
         templateUrl: 'components/language/directives/lang-languagename.html'
     };
 });
+
+autoSim.directive("langproductionmenu", function () {
+    return {
+        templateUrl: 'components/language/directives/lang-production-menu.html'
+    };
+});
+

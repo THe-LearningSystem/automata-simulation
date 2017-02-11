@@ -4,7 +4,7 @@
     <div class="content">
         <div class="stf-element" uib-tooltip="Non Terminale (Variablen)" tooltip-placement="right">
             V = {
-            <span ng-repeat="grammar in grammar track by $index">
+            <span ng-repeat="grammar in grammars track by $index">
                 <span>
                     {{grammar.variable}}
                 </span>
@@ -13,7 +13,7 @@
         </div>
         <div class="stf-element" uib-tooltip="Terminale (Alphabet)" tooltip-placement="right">
             &Sigma; = {
-            <span ng-repeat="grammar in grammar track by $index">
+            <span ng-repeat="grammar in grammars track by $index">
                 <span>
                     {{grammar.alphabet}}
                 </span>
@@ -22,7 +22,7 @@
         </div>
         <div class="stf-element" uib-tooltip="Produktionen (Regeln)" tooltip-placement="right">
             P = {
-            <span ng-repeat="production in production track by $index">
+            <span ng-repeat="production in productions track by $index">
                 <span>
                     ( {{production.left}}
                 </span>
@@ -35,7 +35,7 @@
         </div>
         <div class="stf-element" uib-tooltip="Startvariable" tooltip-placement="right">
             S = {
-            <span ng-repeat="grammar in grammar track by $index">
+            <span ng-repeat="grammar in grammars track by $index">
                 <span>
                     {{grammar.startvariable}}
                 </span>            </span>
