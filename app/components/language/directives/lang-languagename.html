@@ -1,8 +1,8 @@
 <div class="current-automaton-name-wrapper">
-    <div class="current-language-name" ng-click="inNameEdit = true"
+    <div class="current-automaton-name" ng-click="inNameEdit = true"
          ng-show="!inNameEdit"> {{languageData.name}}
     </div>
-    <input class="current-language-name" ng-keypress="keypressCallback($event)" id="languageNameEdit" type="text"
+    <input class="current-automaton-name" ng-keypress="keypressCallback($event)" id="languageNameEdit" type="text"
            name="newName" size="8" show-focus="inNameEdit" ng-model="languageData.name" ng-blur="inNameEdit = false"
            ng-show="inNameEdit">
 </div>

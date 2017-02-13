@@ -1,0 +1,9 @@
+<div class="container-item" ng-class="{extendable:'extendable'}">
+    <div class="title" ng-click="toggle()">
+        <span class="icon-extendable icon-chevron-down icon-extendable-set" aria-hidden="true"
+              ng-show="extended && extendable"></span><span
+            class="icon-extendable icon-chevron-right icon-extendable-set" aria-hidden="true"
+            ng-show="!extended && extendable"></span><span class="left-indextab-title">{{titlename | translate}}</span>
+    </div>
+    <div class="content" ng-transclude ng-show="extended"></div>
+</div>

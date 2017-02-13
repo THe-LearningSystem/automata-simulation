@@ -22,7 +22,7 @@ var autoSim = angular.module('automata-simulation', ['ngRoute', 'ui.bootstrap', 
         });        
         $routeProvider.when('/language', {
             templateUrl: 'components/language/views/language.html',
-            controller: 'LANGController'
+            controller: 'langController'
         });
 
         $routeProvider.otherwise({

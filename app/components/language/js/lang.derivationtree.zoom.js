@@ -8,7 +8,7 @@ autoSim.DerivationTreeZoom = function ($scope) {
     self.zoomValue = 0.1;
     self.prevent = false;
     
-    console.log("langZoom");
+    console.log("langderivationtreeZoom");
     
     /**
      * zooms in in the svg
