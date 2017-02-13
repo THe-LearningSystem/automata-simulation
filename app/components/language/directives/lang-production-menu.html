@@ -6,12 +6,15 @@
             <span class="input-group-addon">Regel:</span>
             <input class="form-control" id="production-input-left" maxlength="1"
                    show-focus="productions.menu.edit.production.left"
-                   ng-model="productions.menu.edit.production.left"
+                   ng-model="productions.left"
                    ng-disabled="simulator.isInPlay">
-            <input class="form-control" id="production-input-right" maxlength="10"
+            <input class="form-control" id="production-input-right" maxlength="2"
                    show-focus="productions.menu.edit.production.right"
-                   ng-model="productions.menu.edit.production.right"
+                   ng-model="productions.right"
                    ng-disabled="simulator.isInPlay">
+            <button class="btn" ng-click="productions.create(productions.left, productions.right)">
+                    Hinzufügen
+            </button>
         </div>
     </form>
 </container-item>
