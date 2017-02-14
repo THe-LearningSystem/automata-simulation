@@ -2,19 +2,30 @@
     <form name="editproductionmenu">
         <div class="input-group">
             <span class="input-group-addon">Regel links:</span>
-                <input class="form-control" id="production-input-left" maxlength="1"
-                   ng-model="productions.menu.edit.left"
-                   ng-disabled="simulator.isInPlay">
+            <input class="form-control" id="production-input-left" maxlength="1" ng-model="productions.menu.edit.left" ng-disabled="simulator.isInPlay">
         </div>
+        
         <div class="input-group">
             <span class="input-group-addon">Regel rechts:</span>
-            <input class="form-control" id="production-input-right" maxlength="2"
-                   ng-model="productions.menu.edit.right"
-                   ng-disabled="simulator.isInPlay">  
+            <input class="form-control" id="production-input-right" maxlength="2" ng-model="productions.menu.edit.right" ng-disabled="simulator.isInPlay">
         </div>
-        <button class="btn" ng-click="productions.create(productions.menu.edit.left, productions.menu.edit.right)"
-                ng-disabled="simulator.isInPlay || !productions.menu.edit.right || !productions.menu.edit.left">
+        
+        <button class="btn" ng-click="productions.create(productions.menu.edit.left, productions.menu.edit.right)" ng-disabled="simulator.isInPlay || !productions.menu.edit.right || !productions.menu.edit.left">
             Hinzufügen
         </button>
+        <div class="input-group">
+            <span class="input-group-addon">Startvariable:</span>
+            <div uib-dropdown on-toggle="toggled(open)">
+                <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
+                    {{productions.startVariable}}
+                    <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+                </button>
+                <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+                    <li ng-repeat="nonTerminal in productions.nonTerminal track by $index" >
+                        <a ng-click="productions.changeStartVariable(nonTerminal)">{{nonTerminal}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </form>
 </container-item>

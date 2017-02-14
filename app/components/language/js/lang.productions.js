@@ -7,7 +7,7 @@ autoSim.Productions = function ($scope) {
     self.productionId = 0;
     self.nonTerminal = [];
     self.terminal = [];
-    self.startVariable = "";
+    self.startVariable = "S";
 
     self.create = function (prLeft, prRight) {
         if(prLeft == undefined) {
@@ -22,7 +22,7 @@ autoSim.Productions = function ($scope) {
     
     self.createDefault = function () {
         
-    }
+    };
 
     self.createWithId = function (pId, prLeft, prRight) {
         var production = new autoSim.Production(pId, prLeft, prRight);
@@ -78,6 +78,11 @@ autoSim.Productions = function ($scope) {
             }
         }
         return true;
+    };
+    
+    self.changeStartVariable = function (variable) {
+        self.startVariable = variable;
+        return self.startVariable;
     };
 
 };
