@@ -99,6 +99,6 @@ autoSim.directive("langproductionmenu", function () {
 
 autoSim.directive("langsimulation", function () {
     return {
-        templateUrl: 'components/language/directives/simulation.html'
+        templateUrl: 'components/language/directives/lang-simulation.html'
     };
 });

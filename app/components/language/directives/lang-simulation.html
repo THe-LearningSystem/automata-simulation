@@ -1,0 +1,17 @@
+<container-item titlename="SIM.TITLE" id="simulation-tab">
+    <div class="sim-buttons">
+        <menubutton icon="play" action="simulator.playOrPause()" tttext="SIM.PLAY"
+                    ng-disabled="simulator.animatedSequence !== null"
+                    ng-hide="simulator.isInPlay"></menubutton>
+        <menubutton icon="pause" action="simulator.playOrPause()" tttext="SIM.PAUSE"
+                    ng-hide="!simulator.isInPlay"></menubutton>
+        <menubutton icon="stop" action="simulator.stop()" ng-disabled="!simulator.isInAnimation"
+                    tttext="SIM.STOP"></menubutton>
+        <menubutton icon="fast-backward" action="simulator.stepBackwardWrapper()"
+                    ng-disabled="!simulator.isInAnimation || simulator.animatedSequence !== null"
+                    tttext="SIM.STEPBACKWARD"></menubutton>
+        <menubutton icon="fast-forward" action="simulator.stepForwardWrapper()"
+                    ng-disabled="simulator.status =='notAccepted' || simulator.status=='accepted' || simulator.animatedSequence !== null"
+                    tttext="SIM.STEPFORWARD"></menubutton>
+    </div>
+</container-item>

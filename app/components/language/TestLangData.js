@@ -20,7 +20,5 @@ function TestLangData($scope) {
         $scope.productions.create(prod2L, prod2R);
         $scope.productions.create(prod3L, prod3R);
         $scope.productions.create(prod4L, prod4R);
-        
-        $scope.grammars.create("A, B, S", "a, b, e", "S");
     };
 }

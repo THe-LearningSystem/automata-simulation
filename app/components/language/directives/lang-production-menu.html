@@ -1,22 +1,19 @@
 <container-item titlename="Produktionsregeln" extendable-raw="false">
     <form name="editproductionmenu">
-        <div class="input-group"
-             ng-class="states.menu.edit.state.name.length === 0 ||
-             states.existsWithName(states.menu.edit.state.name,states.menu.edit.state.id)? 'has-error':''">
+        <div class="input-group">
             <span class="input-group-addon">Regel links:</span>
                 <input class="form-control" id="production-input-left" maxlength="1"
-                   show-focus="productions.menu.edit.production.left"
                    ng-model="productions.menu.edit.left"
                    ng-disabled="simulator.isInPlay">
         </div>
         <div class="input-group">
             <span class="input-group-addon">Regel rechts:</span>
             <input class="form-control" id="production-input-right" maxlength="2"
-                   show-focus="productions.menu.edit.production.right"
                    ng-model="productions.menu.edit.right"
-                   ng-disabled="simulator.isInPlay">
+                   ng-disabled="simulator.isInPlay">  
         </div>
-        <button class="btn" ng-click="productions.create(productions.menu.edit.left, productions.menu.edit.right)">
+        <button class="btn" ng-click="productions.create(productions.menu.edit.left, productions.menu.edit.right)"
+                ng-disabled="simulator.isInPlay || !productions.menu.edit.right || !productions.menu.edit.left">
             Hinzufügen
         </button>
     </form>

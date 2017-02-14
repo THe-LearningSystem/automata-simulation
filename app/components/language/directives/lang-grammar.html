@@ -4,18 +4,18 @@
     <div class="content">
         <div class="stf-element" uib-tooltip="Non Terminale (Variablen)" tooltip-placement="right">
             V = {
-            <span ng-repeat="grammar in grammars track by $index">
+            <span ng-repeat="nonTerminal in productions.nonTerminal track by $index">
                 <span>
-                    {{grammar.variable}}
+                    {{nonTerminal}}{{$last ? '' : ', '}}
                 </span>
             </span>
                 }
         </div>
         <div class="stf-element" uib-tooltip="Terminale (Alphabet)" tooltip-placement="right">
             &Sigma; = {
-            <span ng-repeat="grammar in grammars track by $index">
+            <span ng-repeat="terminal in productions.terminal track by $index">
                 <span>
-                    {{grammar.alphabet}}
+                    {{terminal}}{{$last ? '' : ', '}}
                 </span>
             </span>
                 }

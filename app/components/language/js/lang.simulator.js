@@ -3,9 +3,6 @@ autoSim.Simulator = function ($scope) {
     "use strict";
     var self = this;
 
-    //add to the automatonData
-    $scope.automatonData.inputWord = "";
-
     //if the simulation loops (start at the end again)
     self.loopSimulation = true;
     //time between the steps
@@ -453,8 +450,8 @@ autoSim.Simulator = function ($scope) {
         $scope.statediagram.removeSequenceAnimation(sequence, possible);
     };
 
-
-    $scope.core.updateListeners.push(self);
+    // test again later
+    //$scope.core.updateListeners.push(self);
 
     /**
      * updateFunction for the dfa listener
