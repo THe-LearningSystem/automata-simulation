@@ -9,7 +9,7 @@
                     {{nonTerminal}}{{$last ? '' : ', '}}
                 </span>
             </span>
-                }
+            }
         </div>
         <div class="stf-element" uib-tooltip="Terminale (Alphabet)" tooltip-placement="right">
             &Sigma; = {
@@ -18,27 +18,25 @@
                     {{terminal}}{{$last ? '' : ', '}}
                 </span>
             </span>
-                }
+            }
         </div>
         <div class="stf-element" uib-tooltip="Produktionen (Regeln)" tooltip-placement="right">
             P = {
             <span ng-repeat="production in productions track by $index">
                 <span>
                     ( {{production.left}}
-                </span>
-                ->
-                <span>
-                        {{production.right}} )
+                </span> ->
+            <span>
+                    {{production.right}} ){{$last ? '' : ', '}}
                 </span>
             </span>
-                }
+            }
         </div>
         <div class="stf-element" uib-tooltip="Startvariable" tooltip-placement="right">
             S = {
-                <span>
+            <span>
                     {{productions.startVariable}}
-                </span>
-                }
+                </span> }
         </div>
     </div>
 </div>

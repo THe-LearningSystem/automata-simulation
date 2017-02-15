@@ -61,7 +61,7 @@ autoSim.directive("langgrammar", function () {
 
 autoSim.directive("langderivationsequence", function () {
     return {
-        templateUrl: 'components/language/directives/lang-derivation-sequence.html'
+        templateUrl: 'components/language/directives/lang-derivationsequence.html'
     };
 });
 
@@ -75,7 +75,6 @@ autoSim.directive("languagename", function () {
             scope.keypressCallback = function ($event) {
                 if ($event.charCode == 13) {
                     document.getElementById("languageNameEdit").blur();
-                    console.log("Bla");
                 }
             };
 

@@ -12,7 +12,7 @@ function LANGController($scope, hotkeys) {
     $scope.derivationtree = new autoSim.DerivationTree($scope);
     $scope.derivationtree.grid = new autoSim.DerivationTreeGrid($scope);
     $scope.derivationtree.zoom = new autoSim.DerivationTreeZoom($scope);
-    //$scope.derivationsequence = new autoSim.DerivationSequence($scope);
+    $scope.derivationsequence = new autoSim.DerivationSequence($scope);
     $scope.grammar = new autoSim.Grammar($scope);
     
     

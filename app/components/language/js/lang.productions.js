@@ -3,33 +3,29 @@ autoSim.Productions = function ($scope) {
 
     console.log("langProduction");
 
-    self.prefix = "A";
     self.productionId = 0;
     self.nonTerminal = [];
     self.terminal = [];
     self.startVariable = "S";
 
+    self.getNonTerminals = function () {
+        return self.nonTerminal;
+    };
+    
     self.create = function (prLeft, prRight) {
-        if(prLeft == undefined) {
-            prLeft = self.prefix;
-        }
-        
         // Type 3 language
         prLeftUpper = angular.uppercase(prLeft);
 
         return self.createWithId(self.productionId++, prLeftUpper, prRight);
-    };
-    
-    self.createDefault = function () {
-        
     };
 
     self.createWithId = function (pId, prLeft, prRight) {
         var production = new autoSim.Production(pId, prLeft, prRight);
         self.addNonTerminal(prLeft);
         self.addNonTerminal(prRight);
+        self.addTerminal(prLeft);
         self.addTerminal(prRight);
-        self.addTerminal(prRight);
+        
         self.push(production);
         return production;
     };

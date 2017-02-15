@@ -7,20 +7,36 @@ function TestLangData($scope) {
     self.testLANG = function () {
     
         var prod1L = "S";
-        var prod1R = "aA";
-        var prod2L = "A";
-        var prod2R = "bB";
-        var prod3L = "B";
-        var prod3R = "bA";
-        var prod4L = "B";
-        var prod4R = "e";
+        var prod1R = "hA";
+        
+        var prod2L = "B";
+        var prod2R = "lC";
+        
+        var prod3L = "A";
+        var prod3R = "eB";
+        
+        var prod4L = "C";
+        var prod4R = "lD";
+        
+        var prod5L = "D";
+        var prod5R = "oG";
+        
+        var prod6L = "G";
+        var prod6R = "e";
         
 
         $scope.productions.create(prod1L, prod1R);
         $scope.productions.create(prod2L, prod2R);
         $scope.productions.create(prod3L, prod3R);
         $scope.productions.create(prod4L, prod4R);
-
-        //$scope.derivationtree.createState();
+        $scope.productions.create(prod5L, prod5R);
+        $scope.productions.create(prod6L, prod6R);
+        
+        $scope.derivationsequence.calculateCurrentTerminal($scope.productions.startVariable);
+        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
+        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
+        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
+        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
+        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
     };
 }

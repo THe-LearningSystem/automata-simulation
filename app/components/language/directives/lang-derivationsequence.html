@@ -1,0 +1,16 @@
+<div class="lang-derivation-sequence">
+
+    <div class="title">Ableitungssequenz</div>
+    <div class="content">
+        <span>
+            {{productions.startVariable}}
+        </span>
+        =>
+        <span ng-repeat="next in derivationsequence">
+            <span>
+                {{next.right}}
+                {{$last ? '' : ' => '}}
+            </span>
+        </span>
+    </div>
+</div>
