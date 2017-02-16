@@ -22,7 +22,7 @@ function TestLangData($scope) {
         var prod5R = "oG";
         
         var prod6L = "G";
-        var prod6R = "e";
+        var prod6R = "-";
         
 
         $scope.productions.create(prod1L, prod1R);
@@ -32,11 +32,6 @@ function TestLangData($scope) {
         $scope.productions.create(prod5L, prod5R);
         $scope.productions.create(prod6L, prod6R);
         
-        $scope.derivationsequence.calculateCurrentTerminal($scope.productions.startVariable);
-        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
-        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
-        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
-        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
-        $scope.derivationsequence.calculateCurrentTerminal($scope.derivationsequence.nextLeft);
+        $scope.derivationsequence.calculateSequence($scope.productions.startVariable);
     };
 }

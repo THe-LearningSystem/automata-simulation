@@ -78,7 +78,6 @@ autoSim.Productions = function ($scope) {
     
     self.changeStartVariable = function (variable) {
         self.startVariable = variable;
-        return self.startVariable;
     };
 
 };
