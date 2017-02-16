@@ -23,12 +23,10 @@ autoSim.DerivationSequence = function ($scope) {
 
     self.calculateSequence = function (start) {
         while (self.nextLeft !== '-') {
-            console.log(self.nextLeft);
             var current = start;
             self.calculateCurrentTerminal(start);
             start = self.nextLeft;
         }
-        console.log(self.currentRight);
     };
 
     self.setNextLeft = function (string) {
@@ -75,13 +73,19 @@ autoSim.DerivationSequence = function ($scope) {
         }
     };
 
+    self.resetSequence = function () {
+        self.currentRight = "";
+        self.nextLeft = '';
+        
+        while(self.pop() !== undefined) {}
+        self.calculateSequence($scope.productions.startVariable);
+    }
+
     $scope.$watch('productions.startVariable', function (newValue, oldValue) {
         if (newValue !== oldValue) {
-            //reset sequence
-            self.currentRight = "";
-            self.nextLeft = '';
-            self.calculateSequence($scope.productions.startVariable);
+            self.resetSequence();
         }
     });
+
 };
 autoSim.DerivationSequence.prototype = Array.prototype;

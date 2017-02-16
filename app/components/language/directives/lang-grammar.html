@@ -4,7 +4,7 @@
     <div class="content">
         <div class="stf-element" uib-tooltip="Non Terminale (Variablen)" tooltip-placement="right">
             V = {
-            <span ng-repeat="nonTerminal in productions.nonTerminal track by $index">
+            <span ng-repeat="nonTerminal in productions.nonTerminal">
                 <span>
                     {{nonTerminal}}{{$last ? '' : ', '}}
                 </span>
@@ -13,7 +13,7 @@
         </div>
         <div class="stf-element" uib-tooltip="Terminale (Alphabet)" tooltip-placement="right">
             &Sigma; = {
-            <span ng-repeat="terminal in productions.terminal track by $index">
+            <span ng-repeat="terminal in productions.terminal">
                 <span>
                     {{terminal}}{{$last ? '' : ', '}}
                 </span>
@@ -22,7 +22,7 @@
         </div>
         <div class="stf-element" uib-tooltip="Produktionen (Regeln)" tooltip-placement="right">
             P = {
-            <span ng-repeat="production in productions track by $index">
+            <span ng-repeat="production in productions">
                 <span>
                     ( {{production.left}}
                 </span> ->

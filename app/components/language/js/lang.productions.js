@@ -6,76 +6,71 @@ autoSim.Productions = function ($scope) {
     self.productionId = 0;
     self.nonTerminal = [];
     self.terminal = [];
-    self.startVariable = "S";
+    self.startVariable = 'S';
+    self.endVariable = '-';
 
     self.getNonTerminals = function () {
         return self.nonTerminal;
     };
-    
+
     self.create = function (prLeft, prRight) {
         // Type 3 language
-        prLeftUpper = angular.uppercase(prLeft);
+        var prLeftUpper = angular.uppercase(prLeft);
 
         return self.createWithId(self.productionId++, prLeftUpper, prRight);
     };
 
     self.createWithId = function (pId, prLeft, prRight) {
+        self.addVariable(prLeft, self.nonTerminal, true);
+        self.addVariable(prRight, self.nonTerminal, true);
+        self.addVariable(prLeft, self.terminal, false);
+        self.addVariable(prRight, self.terminal, false);
+
         var production = new autoSim.Production(pId, prLeft, prRight);
-        self.addNonTerminal(prLeft);
-        self.addNonTerminal(prRight);
-        self.addTerminal(prLeft);
-        self.addTerminal(prRight);
-        
         self.push(production);
         return production;
     };
 
-    self.addNonTerminal = function (variable) {
-        var i = 0;
-        var character = "";
-        while ((character = variable[i]) !== undefined) {
-            if (character == angular.uppercase(character)) {
-                if(self.checkNonTerminalIfExist(character)) {
-                    self.nonTerminal.push(character);
-                    return character;
-                }
-            }
-            i++;
-        }
+    self.sortByAlphabet = function (array) {
+        return _.sortBy(array, []);
     };
-    
-    self.addTerminal = function (variable) {
+
+    self.addVariable = function (variable, array, upper) {
         var i = 0;
         var character = "";
         while ((character = variable[i]) !== undefined) {
-            if (character == angular.lowercase(character)) {
-                if(self.checkTerminalIfExist(character)) {
-                    self.terminal.push(character);
-                    return character;
+            if (upper == true) {
+                if (character == angular.uppercase(character)) {
+                    if (self.checkVariableIfExist(character, array)) {
+                        if (character !== self.endVariable) {
+                            array.push(character);
+                            array = self.sortByAlphabet(array);
+                        }
+                    }
+                }
+            } else {
+                if (character == angular.lowercase(character)) {
+                    if (self.checkVariableIfExist(character, array)) {
+                        if (character !== self.endVariable) {
+                            array.push(character);
+                            array = self.sortByAlphabet(array);
+                        }
+                    }
                 }
             }
             i++;
         }
     };
 
-    self.checkNonTerminalIfExist = function (char) {        
-        for(var i = 0; self.nonTerminal[i] !== undefined; i++) {
-            if(self.nonTerminal[i] == char) {
+    self.checkVariableIfExist = function (char, variable) {
+        for (var i = 0; variable[i] !== undefined; i++) {
+            if (variable[i] == char) {
                 return false;
             }
         }
         return true;
     };
-    
-    self.checkTerminalIfExist = function (char) {        
-        for(var i = 0; self.terminal[i] !== undefined; i++) {
-            if(self.terminal[i] == char) {
-                return false;
-            }
-        }
-        return true;
-    };
-    
+
     self.changeStartVariable = function (variable) {
         self.startVariable = variable;
     };
