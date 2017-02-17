@@ -5,6 +5,11 @@ autoSim.Grammar = function ($scope) {
     
     self.nonTerminal = [];
     
+    /**
+     * Not in use.
+     * @param   {[[Type]]} variable [[Description]]
+     * @returns {boolean}  [[Description]]
+     */
     self.createNonTerminalIfNotExist = function (variable) {
         var i = 0;
         var character = "";

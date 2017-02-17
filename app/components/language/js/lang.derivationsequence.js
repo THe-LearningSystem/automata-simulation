@@ -8,12 +8,16 @@ autoSim.DerivationSequence = function ($scope) {
 
     console.log("create DerivationSequence");
 
-    self.calculateCurrentTerminal = function (toCheck) {
+    /**
+     * Call's the methods for sequence creation.
+     * @param   {[[Type]]} toCheck [[Description]]
+     * @returns {boolean}  [[Description]]
+     */
+    self.createSequence = function (toCheck) {
         //only type 3 possible
         _.forEach($scope.productions, function (production) {
             //only type 3 possible
             if (production.left == toCheck) {
-                //Why to use????? has no function
                 self.createNextSequeceStep(production);
                 self.setNextLeft(production.right);
                 return true;
@@ -21,14 +25,22 @@ autoSim.DerivationSequence = function ($scope) {
         });
     };
 
+    /**
+     * Calls up "createSequence", until endVariable is reached.
+     * @param {[[Type]]} start [[Description]]
+     */
     self.calculateSequence = function (start) {
         while (self.nextLeft !== '-') {
             var current = start;
-            self.calculateCurrentTerminal(start);
+            self.createSequence(start);
             start = self.nextLeft;
         }
     };
 
+    /**
+     * Set's the "nextLeft" to the current left of the right side of production rule.
+     * @param {[[Type]]} string [[Description]]
+     */
     self.setNextLeft = function (string) {
 
         _.forEach(string, function (value) {
@@ -39,6 +51,11 @@ autoSim.DerivationSequence = function ($scope) {
         });
     };
 
+    /**
+     * Create the next step of the derivation sequence.
+     * @param   {object}  production [[Description]]
+     * @returns {boolean} [[Description]]
+     */
     self.createNextSequeceStep = function (production) {
         if (self.currentRight !== "") {
             var tmp = '';
@@ -73,6 +90,9 @@ autoSim.DerivationSequence = function ($scope) {
         }
     };
 
+    /**
+     * Set the sequence options to default values.
+     */
     self.resetSequence = function () {
         self.currentRight = "";
         self.nextLeft = '';
@@ -80,7 +100,8 @@ autoSim.DerivationSequence = function ($scope) {
         while(self.pop() !== undefined) {}
         self.calculateSequence($scope.productions.startVariable);
     }
-
+    
+    //Listen for changes of the "startVariable"
     $scope.$watch('productions.startVariable', function (newValue, oldValue) {
         if (newValue !== oldValue) {
             self.resetSequence();

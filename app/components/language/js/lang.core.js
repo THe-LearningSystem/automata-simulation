@@ -12,7 +12,7 @@ autoSim.Core = function ($scope) {
     self.inNameEdit = false;
     
     /**
-     * Removes the current automata and the inputWord
+     * Not in use.
      */
     self.resetAutomaton = function () {
         self.closeMenus();
@@ -28,6 +28,7 @@ autoSim.Core = function ($scope) {
 
     /**
      * This function calls the method updateFunction of every element in $scope.core.updateListeners
+     * Not in use;
      */
     self.updateListener = function () {
         _.forEach($scope.core.updateListeners, function (value) {
@@ -38,6 +39,10 @@ autoSim.Core = function ($scope) {
         $scope.saveApply();
     };
 
+    /**
+     * Closes all menus.
+     * Not in use.
+     */
     self.closeMenus = function () {
         $scope.statediagram.menu.close();
         $scope.states.menu.close();

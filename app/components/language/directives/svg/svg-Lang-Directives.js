@@ -1,3 +1,4 @@
+//Directive for derivationtree and its options.
 autoSim.directive("ownlangsvg", function () {
     return {
         transclude: true,
@@ -17,14 +18,6 @@ autoSim.directive("ownlangsvg", function () {
             }).on('click', function () {
                 console.log('click');
                 event.preventDefault();
-                /*
-                if (!scope.derivationtree.menu.preventSvgOuterClick && !scope.derivationtree.inCreateTransition) {
-                    scope.transitions.menu.close();
-                    scope.states.menu.close();
-                    scope.derivationtree.menu.context.close();
-                }
-                */
-                // scope.derivationtree.menu.preventSvgOuterClick = false;
             });
 
 
@@ -37,6 +30,7 @@ autoSim.directive("ownlangsvg", function () {
     };
 });
 
+//Directive for the grid.
 autoSim.directive("svglanggrid", function () {
     return {
         replace: true,

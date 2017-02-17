@@ -13,6 +13,12 @@ autoSim.Productions = function ($scope) {
         return self.nonTerminal;
     };
 
+    /**
+     * Call's the "createWithId" function, to add the current Id.
+     * @param   {[[Type]]} prLeft  [[Description]]
+     * @param   {[[Type]]} prRight [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
     self.create = function (prLeft, prRight) {
         // Type 3 language
         var prLeftUpper = angular.uppercase(prLeft);
@@ -20,6 +26,14 @@ autoSim.Productions = function ($scope) {
         return self.createWithId(self.productionId++, prLeftUpper, prRight);
     };
 
+    /**
+     * Add the new production rule to itself.
+     * Call's the functions to add Values of production rule.
+     * @param   {[[Type]]} pId     [[Description]]
+     * @param   {[[Type]]} prLeft  [[Description]]
+     * @param   {[[Type]]} prRight [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
     self.createWithId = function (pId, prLeft, prRight) {
         self.addVariable(prLeft, self.nonTerminal, true);
         self.addVariable(prRight, self.nonTerminal, true);
@@ -31,10 +45,21 @@ autoSim.Productions = function ($scope) {
         return production;
     };
 
+    /**
+     * Sort array by Id.
+     * @param   {[[Type]]} array [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
     self.sortByAlphabet = function (array) {
         return _.sortBy(array, []);
     };
 
+    /**
+     * Add's char to the specified array.
+     * @param {[[Type]]} variable [[Description]]
+     * @param {Array}    array    [[Description]]
+     * @param {[[Type]]} upper    [[Description]]
+     */
     self.addVariable = function (variable, array, upper) {
         var i = 0;
         var character = "";
@@ -62,6 +87,12 @@ autoSim.Productions = function ($scope) {
         }
     };
 
+    /**
+     * Checks if the permitted variable exist's in the array. 
+     * @param   {[[Type]]} char     [[Description]]
+     * @param   {[[Type]]} variable [[Description]]
+     * @returns {boolean}  [[Description]]
+     */
     self.checkVariableIfExist = function (char, variable) {
         for (var i = 0; variable[i] !== undefined; i++) {
             if (variable[i] == char) {
@@ -71,6 +102,10 @@ autoSim.Productions = function ($scope) {
         return true;
     };
 
+    /**
+     * Changes current startVariable of the grammar.
+     * @param {[[Type]]} variable [[Description]]
+     */
     self.changeStartVariable = function (variable) {
         self.startVariable = variable;
     };

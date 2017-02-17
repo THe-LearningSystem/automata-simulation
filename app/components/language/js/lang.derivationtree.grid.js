@@ -2,6 +2,7 @@ autoSim.DerivationTreeGrid = function ($scope) {
     var self = this;
     
     console.log("langderivationtreeGrid")
+    
     //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
     self.spaceBetweenSnappingPoint = 100;
     //the distance when the state is snapped to the next SnappingPoint (Rectangle form)
@@ -11,7 +12,7 @@ autoSim.DerivationTreeGrid = function ($scope) {
     self.snapping = true;
     
     /**
-     * Draw the Grid
+     * Draw the Grid.
      */
     self.draw = function () {
         self.container = d3.select("#svg-grid");

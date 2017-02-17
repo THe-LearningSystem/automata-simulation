@@ -4,6 +4,7 @@ function LANGController($scope, hotkeys) {
     console.log("create LANGUAGE");
     prepareScope($scope);
 
+    //Adding the different "classes" to the scope.
     $scope.languageData = new autoSim.LanguageData();
     $scope.core = new autoSim.Core($scope);
     $scope.simulator = new autoSim.Simulator($scope);
@@ -15,7 +16,7 @@ function LANGController($scope, hotkeys) {
     $scope.derivationsequence = new autoSim.DerivationSequence($scope);
     $scope.grammar = new autoSim.Grammar($scope);
     
-    
+    //Creating and starting the testData.
     $scope.testLangAgent = new TestLangData($scope);
     $scope.testLangAgent.testLANG();
 }
