@@ -9,6 +9,51 @@ autoSim.Productions = function ($scope) {
     self.startVariable = 'S';
     self.endVariable = '-';
 
+    /**
+     * Set's the follower of each production rule.
+     */
+    self.addFollowingId = function () {
+        _.forEach(self, function (tmp) {
+
+            _.forEach(tmp.right, function (value) {
+
+                if (value == angular.uppercase(value)) {
+
+                    _.forEach(self, function (production) {
+
+                        if (value == production.left) {
+                            if(!self.checkIfFollowerExists(tmp.follower, production.id)) {
+                                tmp.follower.push(production.id);
+                            }
+                        }
+
+                    });
+                }
+            });
+        });
+    };
+    
+    /**
+     * Check the array for an existing value and returns true, if this value exist's.
+     * @param   {[[Type]]} followerArray [[Description]]
+     * @param   {[[Type]]} toAdd         [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.checkIfFollowerExists = function (followerArray, toAdd) {
+        var check = false;
+        
+        _.forEach(followerArray, function(value) {
+            if(value == toAdd) {
+                check = true;
+            }
+        });
+        return check;
+    };
+    
+    /**
+     * Return the nonTerminal array.
+     * @returns {[[Type]]} [[Description]]
+     */
     self.getNonTerminals = function () {
         return self.nonTerminal;
     };
@@ -42,6 +87,7 @@ autoSim.Productions = function ($scope) {
 
         var production = new autoSim.Production(pId, prLeft, prRight);
         self.push(production);
+        self.addFollowingId();
         return production;
     };
 
@@ -64,7 +110,7 @@ autoSim.Productions = function ($scope) {
         var i = 0;
         var character = "";
         while ((character = variable[i]) !== undefined) {
-            if (upper == true) {
+            if (upper === true) {
                 if (character == angular.uppercase(character)) {
                     if (self.checkVariableIfExist(character, array)) {
                         if (character !== self.endVariable) {
