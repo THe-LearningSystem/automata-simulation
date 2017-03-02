@@ -1,6 +1,7 @@
-autoSim.DerivationSequenceObject = function (id, right) {
+autoSim.DerivationSequenceObject = function (id, predecessor, sequence) {
     var self = this;
     
     self.id = id;
-    self.right = right;
+    self.predecessor = predecessor;
+    self.sequence = sequence;
 };

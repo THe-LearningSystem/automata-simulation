@@ -2,91 +2,60 @@ autoSim.DerivationSequence = function ($scope) {
     "use strict";
     var self = this;
 
-    self.sequenceId = 0;
-    self.nextLeft = '';
-    self.currentRight = "";
+    self.currentPosition = 0;
+    self.currentSequenceObjId = 0;
 
     console.log("create DerivationSequence");
 
     /**
-     * Call's the methods for sequence creation.
-     * @param   {[[Type]]} toCheck [[Description]]
-     * @returns {boolean}  [[Description]]
+     * Searches the next right sequence.
      */
-    self.createSequence = function (toCheck) {
-        //only type 3 possible
-        _.forEach($scope.productions, function (production) {
-            //only type 3 possible
-            if (production.left == toCheck) {
-                self.createNextSequeceStep(production);
-                self.setNextLeft(production.right);
-                return true;
-            }
-        });
-    };
+    self.getNextTerminal = function () {
+        var tmp = '';
+        var tmp2 = '';
+        var tmp3 = '';
+        var tmp4 = '';
 
-    /**
-     * Calls up "createSequence", until endVariable is reached.
-     * @param {[[Type]]} start [[Description]]
-     */
-    self.calculateSequence = function (start) {
-        while (self.nextLeft !== '-') {
-            var current = start;
-            self.createSequence(start);
-            start = self.nextLeft;
+
+        if (self.currentPosition === 0) {
+
+            _.forEach($scope.productions, function (production) {
+
+                if ($scope.productions.startVariable == production.left) {
+                    self.currentPosition = production.follower[0];
+                    var sequence = new autoSim.DerivationSequenceObject(self.currentSequenceObjId++, production.id, production.right);
+                    self.push(sequence);
+                }
+            });
+        } else {
+
+            _.forEach($scope.productions, function (production) {
+
+                if (self.currentPosition == production.id) {
+                    tmp = production.right;
+                    //Needs better method.
+                    tmp2 = production.follower[0];
+                    tmp3 = production.left;
+                    tmp4 = production.id;
+                }
+            });
+            var string = _.replace($scope.derivationsequence[self.currentSequenceObjId - 1].sequence, tmp3, tmp);
+            var sequence = new autoSim.DerivationSequenceObject(self.currentSequenceObjId++, tmp4, string);
+            self.push(sequence);
+            self.currentPosition = tmp2;
+            console.log(self);
         }
     };
 
     /**
-     * Set's the "nextLeft" to the current left of the right side of production rule.
-     * @param {[[Type]]} string [[Description]]
+     * Calls the getNextTerminal method, until end is reached.
      */
-    self.setNextLeft = function (string) {
+    self.callGetNextTerminal = function () {
+        var i = 0;
 
-        _.forEach(string, function (value) {
-
-            if (value == angular.uppercase(value)) {
-                self.nextLeft = value;
-            }
-        });
-    };
-
-    /**
-     * Create the next step of the derivation sequence.
-     * @param   {object}  production [[Description]]
-     * @returns {boolean} [[Description]]
-     */
-    self.createNextSequeceStep = function (production) {
-        if (self.currentRight !== "") {
-            var tmp = '';
-            var nonTerminal = '';
-            var string = "";
-
-            _.forEach(self.currentRight, function (char) {
-                tmp = angular.uppercase(char);
-
-                if (tmp == char) {
-
-                    _.forEach(production.left, function (left) {
-
-                        if (char == left) {
-                            string = _.replace(self.currentRight, left, production.right);
-
-                            if (production.right == '-') {
-                                string = _.trim(string, '-');
-                            }
-                            var sequence = new autoSim.DerivationSequenceObject(self.sequenceId++, string);
-                            self.push(sequence);
-                            self.currentRight = string;
-                            return true;
-                        }
-                    });
-                }
-            });
-        } else {
-            self.currentRight = production.right;
-            var sequence = new autoSim.DerivationSequenceObject(self.sequenceId++, production.right);
-            self.push(sequence);
+        while (i < 10) {
+            self.getNextTerminal();
+            i++;
         }
     };
 
@@ -94,13 +63,13 @@ autoSim.DerivationSequence = function ($scope) {
      * Set the sequence options to default values.
      */
     self.resetSequence = function () {
-        self.currentRight = "";
-        self.nextLeft = '';
-        
-        while(self.pop() !== undefined) {}
-        self.calculateSequence($scope.productions.startVariable);
-    }
-    
+        self.currentPosition = 0;
+        self.currentSequenceObjId = 0;
+
+        while (self.pop() !== undefined) {}
+        self.callGetNextTerminal();
+    };
+
     //Listen for changes of the "startVariable"
     $scope.$watch('productions.startVariable', function (newValue, oldValue) {
         if (newValue !== oldValue) {
