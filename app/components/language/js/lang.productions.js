@@ -8,6 +8,22 @@ autoSim.Productions = function ($scope) {
     self.terminal = [];
     self.startVariable = 'S';
     self.endVariable = '-';
+    
+    /**
+     * Searches the Rule with the given parameter.
+     * @param   {[[Type]]} left [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.findStartRuleId = function () {
+        var result = undefined;
+        
+        _.forEach($scope.productions, function (tmp) {
+            if (tmp.left == self.startVariable) {
+                result = tmp.id;
+            }
+        });
+        return result;
+    };
 
     /**
      * Set's the follower of each production rule.
@@ -154,6 +170,7 @@ autoSim.Productions = function ($scope) {
      */
     self.changeStartVariable = function (variable) {
         self.startVariable = variable;
+        self.findStartRuleId();
     };
 
 };

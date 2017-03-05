@@ -8,13 +8,13 @@ function TestLangData($scope) {
 
         $scope.productions.create("S", "hA");
         
-        $scope.productions.create("B", "lC");
-        //$scope.productions.create("B", "CD");
+        //$scope.productions.create("B", "lC");
+        $scope.productions.create("B", "CD");
         
         $scope.productions.create("A", "eB");
         
-        $scope.productions.create("C", "lD");
-        //$scope.productions.create("C", "ll");
+        //$scope.productions.create("C", "lD");
+        $scope.productions.create("C", "ll");
         
         $scope.productions.create("D", "oG");
         
