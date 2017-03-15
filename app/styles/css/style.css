@@ -6326,3 +6326,29 @@ rzslider .rz-pointer:after {
   font-size: 15px;
   border: 1px solid #000000;
   margin-right: 2px; }
+
+/** Begin of language styles ------------------------- **/
+
+#diagram-lang-svg {
+  width: 100%;
+  height: 100%;
+  min-width: auto; }
+
+#diagram-lang-svg {
+  -ms-flex: auto;
+      flex: auto; }
+
+.nonTerminal {
+  cursor: context-menu; }
+
+.nonTerminal:hover {
+  cursor: pointer; }
+
+.nonTerminal:hover .hover-circle {
+  fill: #000;
+  fill-opacity: 0.4; }
+
+.nonTerminal-circle {
+  fill: #CCC;
+  stroke: #666;
+  stroke-width: 2; }

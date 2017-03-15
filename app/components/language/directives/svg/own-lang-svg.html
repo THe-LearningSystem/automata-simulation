@@ -8,20 +8,18 @@
             <menubutton icon="search-plus" action="derivationtree.zoom.zoomIn()" tttext="NAVBAR.TTTEXT_ZOOM_IN"></menubutton>
             <menubutton icon="search-minus" action="derivationtree.zoom.zoomOut()" tttext="NAVBAR.TTTEXT_ZOOM_OUT"></menubutton>
         </div>
-
-        <div class="button-group">
-            <menubutton icon="plus-circle" action="derivationtree.createState()" ng-disabled="simulator.isInPlay" tttext="Hinzufügen"></menubutton>
-        </div>
     </div>
     <div class="container-wrapper diagram-container">
-        <svg id="diagram-svg" class="noselect" xmlns="http://www.w3.org/2000/svg" style="font-family:'Roboto', sans-serif; font-weight:100">
+        <svg id="diagram-lang-svg" class="noselect" xmlns="http://www.w3.org/2000/svg" style="font-family:'Roboto', sans-serif; font-weight:100">
             <svglanggrid></svglanggrid>
-            <svglangdefinitions></svglangdefinitions>
             <svglangouter>
-                
+                <!-- TODO -->
+                <g id="states">
+                    <svgtest ng-repeat="production in productions" production="production"></svgtest>
+                </g>
             </svglangouter>
+            <g id="zoom"></g>
         </svg>
         <context-menu></context-menu>
-
     </div>
 </div>
