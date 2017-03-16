@@ -8,7 +8,9 @@ autoSim.Productions = function ($scope) {
     self.terminal = [];
     self.startVariable = 'S';
     self.endVariable = '-';
-    
+    self.posX = 0;
+    self.posY = 0;
+
     /**
      * Searches the Rule with the given parameter.
      * @param   {[[Type]]} left [[Description]]
@@ -16,7 +18,7 @@ autoSim.Productions = function ($scope) {
      */
     self.findStartRuleId = function () {
         var result = undefined;
-        
+
         _.forEach($scope.productions, function (tmp) {
             if (tmp.left == self.startVariable) {
                 result = tmp.id;
@@ -38,7 +40,7 @@ autoSim.Productions = function ($scope) {
                     _.forEach(self, function (production) {
 
                         if (value == production.left) {
-                            if(!self.checkIfFollowerExists(tmp.follower, production.id)) {
+                            if (!self.checkIfFollowerExists(tmp.follower, production.id)) {
                                 tmp.follower.push(production.id);
                             }
                         }
@@ -48,7 +50,7 @@ autoSim.Productions = function ($scope) {
             });
         });
     };
-    
+
     /**
      * Check the array for an existing value and returns true, if this value exist's.
      * @param   {[[Type]]} followerArray [[Description]]
@@ -57,15 +59,15 @@ autoSim.Productions = function ($scope) {
      */
     self.checkIfFollowerExists = function (followerArray, toAdd) {
         var check = false;
-        
-        _.forEach(followerArray, function(value) {
-            if(value == toAdd) {
+
+        _.forEach(followerArray, function (value) {
+            if (value == toAdd) {
                 check = true;
             }
         });
         return check;
     };
-    
+
     /**
      * Return the nonTerminal array.
      * @returns {[[Type]]} [[Description]]
@@ -81,10 +83,7 @@ autoSim.Productions = function ($scope) {
      * @returns {[[Type]]} [[Description]]
      */
     self.create = function (prLeft, prRight) {
-        // Type 3 language
-        var prLeftUpper = angular.uppercase(prLeft);
-
-        return self.createWithId(self.productionId++, prLeftUpper, prRight);
+        return self.createWithId(self.productionId++, prLeft, prRight);
     };
 
     /**
@@ -96,15 +95,33 @@ autoSim.Productions = function ($scope) {
      * @returns {[[Type]]} [[Description]]
      */
     self.createWithId = function (pId, prLeft, prRight) {
-        self.addVariable(prLeft, self.nonTerminal, true);
-        self.addVariable(prRight, self.nonTerminal, true);
-        self.addVariable(prLeft, self.terminal, false);
-        self.addVariable(prRight, self.terminal, false);
+        // Type 3 language
+        var prLeftUpper = angular.uppercase(prLeft);
 
-        var production = new autoSim.Production(pId, prLeft, prRight);
+        self.addVariable(prLeftUpper, self.nonTerminal, true);
+        self.addVariable(prRight, self.nonTerminal, true);
+        self.addVariable(prLeftUpper, self.terminal, false);
+        self.addVariable(prRight, self.terminal, false);
+        self.calculateStartPosition(prLeftUpper, prRight);
+        var production = new autoSim.Production(pId, prLeftUpper, prRight, self.posX, self.posY);
         self.push(production);
         self.addFollowingId();
         return production;
+    };
+
+    /**
+     * Set's the position of a rule in the diagram.
+     * @param {[[Type]]} left [[Description]]
+     */
+    self.calculateStartPosition = function (left) {
+        self.posX = 200;
+        self.posY = 200;
+        console.log(self.pos);
+
+        if (left == self.startVariable) {
+            self.posX = 100;
+            self.posY = 100;
+        }
     };
 
     /**
