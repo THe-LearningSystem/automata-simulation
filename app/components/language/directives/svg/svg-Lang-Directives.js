@@ -60,20 +60,20 @@ autoSim.directive("svglangouter", function () {
     };
 });
 
-autoSim.directive("svgtest", function () {
+autoSim.directive("svglangnonterminal", function () {
     return {
         replace: true,
         restrict: 'E',
-        scope: {
-            production: '=production'
-        },
         templateNamespace: 'svg',
-        link: function (scope, elm, attrs) {
-            var self = this;
-            scope.productions = scope.$parent.productions;
-            scope.simulator = scope.$parent.simulator;
-        }
-        ,
-        templateUrl: 'components/language/directives/svg/svg-Test.html'
+        templateUrl: 'components/language/directives/svg/svg-lang-nonTerminal.html'
+    };
+});
+
+autoSim.directive("svglangterminal", function () {
+    return {
+        replace: true,
+        restrict: 'E',
+        templateNamespace: 'svg',
+        templateUrl: 'components/language/directives/svg/svg-lang-terminal.html'
     };
 });

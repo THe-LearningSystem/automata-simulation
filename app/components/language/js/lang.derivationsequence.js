@@ -57,8 +57,6 @@ autoSim.DerivationSequence = function ($scope) {
         while (self.currentPosition !== undefined) {
             self.getNextTerminal();
         }
-        
-        console.log(self);
     };
 
     /**

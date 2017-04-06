@@ -95,17 +95,26 @@ autoSim.Productions = function ($scope) {
      * @returns {[[Type]]} [[Description]]
      */
     self.createWithId = function (pId, prLeft, prRight) {
-        // Type 3 language
+        // Only Type 3 language
         var prLeftUpper = angular.uppercase(prLeft);
 
         self.addVariable(prLeftUpper, self.nonTerminal, true);
         self.addVariable(prRight, self.nonTerminal, true);
         self.addVariable(prLeftUpper, self.terminal, false);
         self.addVariable(prRight, self.terminal, false);
-        self.calculateStartPosition(prLeftUpper, prRight);
+        self.calculateLeftPosition(prLeftUpper, prRight);
         var production = new autoSim.Production(pId, prLeftUpper, prRight, self.posX, self.posY);
+        var rightId = 0;
+
+        _.forEach(prRight, function (char) {
+            if (!self.checkVariableIfExist(char, self.terminal)) {
+                var rightProduction = production.create(rightId++, self.posX - 100, self.posY, char);
+            }
+        });
+
         self.push(production);
         self.addFollowingId();
+        console.log(self);
         return production;
     };
 
@@ -113,10 +122,9 @@ autoSim.Productions = function ($scope) {
      * Set's the position of a rule in the diagram.
      * @param {[[Type]]} left [[Description]]
      */
-    self.calculateStartPosition = function (left) {
-        self.posX = 200;
-        self.posY = 200;
-        console.log(self.pos);
+    self.calculateLeftPosition = function (left) {
+        self.posX = self.posX + 100;
+        self.posY = self.posY + 100;
 
         if (left == self.startVariable) {
             self.posX = 100;
@@ -125,11 +133,17 @@ autoSim.Productions = function ($scope) {
     };
 
     /**
+     * Reinspect on functionality.
      * Sort array by Id.
      * @param   {[[Type]]} array [[Description]]
      * @returns {[[Type]]} [[Description]]
      */
     self.sortByAlphabet = function (array) {
+        /*
+        _.sortBy([2, 3, 1], function (num) {
+            return num;
+        });
+        */
         return _.sortBy(array, []);
     };
 
@@ -148,7 +162,7 @@ autoSim.Productions = function ($scope) {
                     if (self.checkVariableIfExist(character, array)) {
                         if (character !== self.endVariable) {
                             array.push(character);
-                            array = self.sortByAlphabet(array);
+                            self.sortByAlphabet(array);
                         }
                     }
                 }
@@ -157,7 +171,7 @@ autoSim.Productions = function ($scope) {
                     if (self.checkVariableIfExist(character, array)) {
                         if (character !== self.endVariable) {
                             array.push(character);
-                            array = self.sortByAlphabet(array);
+                            self.sortByAlphabet(array);
                         }
                     }
                 }
