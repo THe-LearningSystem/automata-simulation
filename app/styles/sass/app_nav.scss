@@ -1,0 +1,72 @@
+/**APP_NAV**/
+#app-nav {
+  background-color: $navbar-default-bg;
+  border-bottom: 1px solid #d1d1d1;
+  height: $appNavHeight;
+}
+
+#app-logo img {
+  float: left;
+  padding: 0;
+  margin: 0;
+  height: $appNavHeight;
+}
+
+#app-menu-button {
+  border: 0;
+  padding: 0;
+}
+
+#app-menu {
+  margin-top: $appNavHeight;
+  border-top: 0;
+  border-left: 0;
+  padding: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+}
+
+.app-menu-container {
+
+  float: left;
+  width: 200px;
+}
+
+.app-menu-container .title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.app-menu-container ul {
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 15px;
+}
+
+.app-menu-container:not(:first-of-type) {
+  padding-left: 15px;
+  border-left: 1px solid #d1d1d1;
+}
+
+#user-control {
+  align-self: flex-end;
+  padding: 15px;
+}
+
+.app-nav-content {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.app-nav-transclude-content {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  flex: auto;
+}
+
+.app-menu-container .credits {
+  border-top: 1px solid #d1d1d1;
+  padding: 8px;
+
+}

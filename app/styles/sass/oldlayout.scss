@@ -1,0 +1,511 @@
+//svg diagram
+.automataWrapper {
+  border: 1px solid #000;
+}
+
+#stateDiagram {
+}
+
+//ECT
+#hidden-file-upload {
+  display: none;
+}
+
+//GRID
+.nopadding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/*******
+*Layout*
+*******/
+
+$disabledColor: #AAA;
+//GENERALMENU
+.menu-item .title,
+.title {
+  padding: 5px;
+  background-color: #cedde9;
+  cursor: pointer;
+  margin: 0 0 0 0 !important;
+  vertical-align: middle;
+  font-size: 15px;
+}
+
+.menu-button {
+  background-color: transparent;
+  border: 1px solid whitesmoke;
+  align-content: center;
+}
+
+.menu-button:hover {
+  border: 1px solid #e0e0e0;
+}
+
+.button-group {
+  padding: 0 5px;
+  float: left;
+  border-right: 1px solid #e0e0e0;
+  height: 40px;
+}
+
+.button-group a {
+  color: #000;
+}
+
+.button-group:hover {
+  color: #000;
+  text-decoration: none;
+}
+
+.menu-item .content {
+  padding: 5px 10px;
+}
+
+button:disabled .icon {
+  color: $disabledColor;
+}
+
+.inputField {
+  z-index: 1;
+}
+
+.ui-slider-handle {
+  cursor: pointer !important;
+}
+
+.dropdown li a {
+  cursor: pointer;
+}
+
+.checkbox-item {
+  margin-right: 6px !important;
+}
+
+//TOPMENU
+.top-nav {
+  height: 50px;
+  background-color: white;
+}
+
+.top-menu {
+  padding: 0 0 0 200px;
+  height: 40px;
+  background-color: whitesmoke;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.th-koeln-logo {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.th-koeln-logo img {
+  height: 50px;
+  padding: 7px;
+}
+
+.automata-simulation-logo {
+  width: 50px;
+  float: left;
+}
+
+.automata-simulation-logo img {
+  height: 50px;
+  width: 50px;
+}
+
+//MENU
+//LEFTMENU
+.left-menu {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  background-color: whitesmoke;
+  border-right: 1px solid #e0e0e0;
+}
+
+.left-indextab {
+  height: 30px;
+  padding: 5px;
+  background-color: #eeeeee;
+  //#cedde9
+  cursor: pointer;
+  vertical-align: middle;
+  border-bottom: 1px solid #e5e5e5;
+  margin: 0 0 0 0 !important;
+}
+
+.left-indextab-title {
+  color: #505050;
+}
+
+.left-indextab:hover {
+  background: rgb(229, 229, 229);
+}
+
+.icon-extendable-set {
+  vertical-align: middle;
+  margin-right: 6px;
+  color: #909090;
+}
+
+.icon-position {
+  vertical-align: center;
+}
+
+//RIGHTMENU
+.right-menu {
+  position: absolute;
+  top: 90px;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  background-color: whitesmoke;
+  border-left: 1px solid #e0e0e0;
+}
+
+.right-menu-bottom {
+  position: absolute;
+  bottom: 0;
+  padding: 5px;
+  right: 0;
+}
+
+.right-menu-bottom .icon {
+  font-size: 25px !important;
+}
+
+.right-menu-bottom a {
+  color: #707070;
+}
+
+.right-menu-bottom a:hover {
+  text-decoration: none;
+}
+
+.right-indextab {
+  height: 30px;
+  padding: 5px;
+  background-color: whitesmoke;
+  //#cedde9
+  cursor: pointer;
+  vertical-align: middle;
+  border-bottom: 1px solid rgb(192, 192, 192);
+  margin: 0 0 0 0 !important;
+}
+
+.menu-button {
+  background-color: transparent;
+  border: 1px solid whitesmoke;
+  margin: 5px 1px;
+}
+
+.menu-button:hover {
+  border: 1px solid #e0e0e0;
+}
+
+.dropbutton {
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 5px;
+  padding: 2px;
+}
+
+.right-indextab-title {
+  text-align: center;
+  font-weight: bold;
+  color: #707070;
+}
+
+.right-indextab-subtitle {
+  padding-top: 7px;
+  font-weight: bold;
+  color: #707070;
+}
+
+//.right-indextab-content {
+//    margin: 12px 0px 12px 18px;
+//}
+.dia-option {
+  margin: 6px 0 0 0;
+  color: rgb(112, 112, 112);
+  font-family: "Helvetica Neue";
+}
+
+//TRANSITION MENU
+.transitions-menu-list {
+  padding: 0;
+}
+
+.transitions-menu-list li {
+  list-style-type: none;
+}
+
+.alert-transition {
+  padding: 5px;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+//diagram
+.diagram {
+  position: absolute;
+  left: 200px;
+  right: 300px;
+  top: 120px;
+  bottom: 250px;
+}
+
+.diagram-title {
+  height: 30px;
+  padding-top: 8px;
+  background-color: #cedde9;
+  cursor: pointer;
+  margin: 0 0 0 0;
+  font-size: 14px;
+  color: #505050;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+
+//BOTTOMMENU
+.bot-content-wrapper {
+  position: absolute;
+  background-color: whitesmoke;
+  right: 200px;
+  left: 200px;
+  bottom: 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+.bot-content {
+  height: 250px;
+}
+
+.bot-title {
+  height: 30px;
+  padding-top: 7px;
+  background-color: #cedde9;
+  cursor: pointer;
+  font-size: 14px;
+  color: #505050;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0 0 0 0;
+}
+
+//STATETABLE
+.bot-left {
+  float: left;
+  width: 50%;
+  border-right: 1px solid #e0e0e0;
+}
+
+//STF
+.bot-right {
+  width: 50%;
+  float: right;
+}
+
+button:disabled .icon {
+  color: $disabledColor;
+}
+
+//TRANSITION MENU
+.transitions-menu-list {
+  padding: 0;
+}
+
+.transitions-menu-list li {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #B1B1B1;
+  list-style-type: none;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+.automataName {
+  overflow: auto;
+  width: 200px;
+  float: left;
+}
+
+.currentAutomatonName {
+  margin: 5px;
+  display: inline-block;
+  width: 180px;
+  height: 30px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid white;
+  overflow: hidden !important;
+}
+
+.currentAutomatonName:hover {
+  border: 1px solid #B7B5B5;
+}
+
+.inputField {
+  z-index: 1;
+}
+
+.ui-slider-handle {
+  cursor: pointer !important;
+}
+
+.dropdown li a {
+  cursor: pointer;
+}
+
+.green {
+  color: limegreen;
+}
+
+.red {
+  color: red;
+}
+
+.stf-element {
+  display: table;
+  margin: 10px 10px 10px 10px;
+}
+
+rzslider .rz-pointer {
+  top: -7px;
+  width: 16px;
+  height: 16px;
+}
+
+rzslider .rz-pointer:after {
+  top: 5px;
+  left: 5px;
+  width: 6px;
+  height: 6px;
+}
+
+//TransitionButton
+body .transbutton {
+  @extend .btn-danger
+}
+
+
+
+.sim-input-not-accepted {
+  border-left: 0;
+}
+
+//OWN Scrollbar
+.mCSB_container_wrapper {
+  margin-right: 0;
+}
+
+.mCSB_container_wrapper > .mCSB_container {
+  padding-right: 20px;
+}
+
+.border-top {
+  border-top: 1px solid #CCC;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #CCC;
+}
+
+.input-group .form-control {
+  height: auto !important;
+}
+
+
+
+//BulkTester
+.fail-class {
+  background-color: $animatedNotAcceptedColor;
+}
+
+.pass-class {
+  background-color: $animatedAcceptedColor;
+}
+
+.unknown-class {
+  background-color: $animatedTransitionColor;
+}
+
+}
+
+//sim
+
+.sim-char-item {
+  width: 25px;
+  float: left;
+  padding: 3px;
+  font-size: 15px;
+  border: 1px solid #000000;
+  margin-right: 2px;
+}
+
+/* tasks */
+
+.tasks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.task {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: solid 1px #dfdfdf;
+}
+
+.task:last-child {
+  border-bottom: none;
+}
+
+
+//MODAL Overwrites
+.modal {
+  text-align: center;
+  padding: 0 !important;
+}
+
+.modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px; /* Adjusts for spacing */
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                         not supported by any browser */
+}

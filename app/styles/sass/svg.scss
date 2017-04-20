@@ -1,0 +1,138 @@
+
+#diagram {
+  border: 1px solid #000;
+  width: 100%;
+  height: 500px;
+  min-width: auto;
+  position: relative;
+}
+
+#diagram-buttons {
+  position: absolute;
+  z-index: 5;
+}
+
+#diagram-svg {
+  width: 100%;
+  height: 100%;
+  min-width: auto;
+}
+
+#state-context {
+  //display:none;
+  padding: 5px;
+  position: absolute;
+  right: 0;
+  width: auto;
+  height: 100%;
+  background-color: #888;
+}
+
+//normal arrow
+#marker-end-arrow {
+  fill: #000;
+}
+
+#marker-end-arrow-hover {
+  fill: $transitionHoverColor;
+}
+
+#marker-end-arrow-selection {
+  fill: $selectedColor;
+}
+
+//animated arrow for the simulation
+#marker-end-arrow-animated {
+  fill: $animatedTransitionColor;
+}
+
+#marker-end-arrow-create {
+  fill: $selectedColor;
+}
+
+//grid
+.grid-line {
+  stroke: $gridLine;
+}
+
+//states
+.state {
+  cursor: context-menu;
+}
+
+.state:hover {
+  cursor: pointer;
+}
+
+.state:hover .hover-circle {
+  fill: $stateHoverColor;
+  fill-opacity: $stateColorHoverOpacity;
+}
+
+.state-circle {
+  fill: $stateColor;
+  stroke: $stateBorderColor;
+  stroke-width: $stateBorderWidth;
+}
+
+.selected-circle {
+  fill: transparent;
+  stroke: $selectedColor;
+  stroke-width: 1;
+  stroke-dasharray: 10, 10;
+  visibility: hidden;
+}
+
+.state.active .state-circle {
+  stroke: $selectedColor;
+}
+
+.selected {
+  border-bottom: 3px solid $selectedColor;
+}
+
+.active .selected-circle {
+  visibility: visible;
+}
+
+.final-state {
+  fill: $finalStateColor;
+  stroke: $finalStateBorderColor;
+  stroke-width: $finalStateBorderWidth;
+}
+
+.state-text {
+  font-size: $stateFontSize;
+}
+
+//animated state for the simulation
+//svg
+.animated-currentstate-svg .state-circle {
+  fill: $animatedCurrentStateColor;
+}
+
+.animated-nextstate-svg .state-circle {
+  fill: $animatedNextStateColor;
+}
+
+.animated-accepted-svg .state-circle {
+  fill: $animatedAcceptedColor;
+}
+
+.animated-not-accepted-svg .state-circle {
+  fill: $animatedNotAcceptedColor;
+}
+
+/**SVG**/
+.svg-controls {
+  padding: 8px;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: row;
+
+}
+
+.menu-button {
+  height: 35px;
+}
+

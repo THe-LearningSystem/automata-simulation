@@ -1,0 +1,8 @@
+<div class="current-automaton-name-wrapper">
+    <div class="current-automaton-name" ng-click="inNameEdit = true"
+         ng-show="!inNameEdit"> {{automatonData.name}}
+    </div>
+    <input class="current-automaton-name" ng-keypress="keypressCallback($event)" id="automatonNameEdit" type="text"
+           name="newName" size="8" show-focus="inNameEdit" ng-model="automatonData.name" ng-blur="inNameEdit = false"
+           ng-show="inNameEdit">
+</div>

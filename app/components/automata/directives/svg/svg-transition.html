@@ -1,0 +1,33 @@
+<g class="transition" from-state-id="{{transitionGroup.fromState.id}}" to-state-id="{{transitionGroup.toState.id}}" ng-class="{active:transitionGroup === transitions.selected,
+   'animated-transition':transitionGroup.fromState === simulator.animated.transition.fromState && transitionGroup.toState ===simulator.animated.transition.toState }">
+    <!--Arrows:Start-->
+    <path class="transition-line-selection" fill="none" marker-end="url(#marker-end-arrow-selection)" ng-attr-d="{{transitionGroup.svgConfig.path}}">
+    </path>
+    <path class="transition-line" fill="none" marker-end="url(#marker-end-arrow)" ng-attr-d="{{transitionGroup.svgConfig.path}}" ng-hide="simulator.animated.transition.fromState === transitionGroup.fromState &&
+           simulator.animated.transition.toState === transitionGroup.toState &&
+           transitionGroup.toState ===simulator.animated.transition.toState">
+    </path>
+    <path class="transition-line" fill="none" marker-end="url(#marker-end-arrow-animated)" ng-attr-d="{{transitionGroup.svgConfig.path}}" ng-show="simulator.animated.transition.fromState === transitionGroup.fromState &&
+          simulator.animated.transition.toState === transitionGroup.toState &&
+          transitionGroup.toState===simulator.animated.transition.toState">
+    </path>
+    <path class="transition-line-click" stroke-width="40" stroke="transparent" fill="none" ng-attr-d="{{transitionGroup.svgConfig.path}}">
+    </path>
+    <path class="transition-line-hover" fill="none" marker-end="url(#marker-end-arrow-hover)" ng-attr-d="{{transitionGroup.svgConfig.path}}" style="">
+    </path>
+    <!--Arrows:End-->
+    <text class="transition-text" dominant-baseline="central" style="font-family:'Roboto', sans-serif;" ng-attr-x="{{transitionGroup.svgConfig.textPosition.x}}" ng-attr-y="{{transitionGroup.svgConfig.textPosition.y}}">
+        <tspan ng-repeat="transition in transitionGroup" transition-id="{{transition.id}}"
+               style="font-family:'Roboto', sans-serif;">
+            <tspan ng-class="{'animated-transition-text':transition === simulator.animated.transition}"
+                   ng-show="automatonData.type !== 'PDA' && automatonData.type !== 'NPDA'">
+                {{transition.inputSymbol}}
+            </tspan>
+            <tspan ng-class="{'animated-transition-text':transition === simulator.animated.transition}"
+                   ng-show="automatonData.type === 'PDA' || automatonData.type === 'NPDA'">
+                {{transition.inputSymbol}},{{transition.readFromStack}};{{transition.writeToStack}}
+            </tspan>
+            {{$last ? '' : ' | '}}
+        </tspan>
+    </text>
+</g>

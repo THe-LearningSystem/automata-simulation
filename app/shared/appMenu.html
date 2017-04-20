@@ -1,0 +1,40 @@
+<div id="app-nav">
+    <div id="app-logo" uib-dropdown on-toggle="toggled(open)">
+        <div id="app-menu-button" uib-dropdown-toggle>
+            <img src="images/logo_automaten.png">
+        </div>
+        <div id="app-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+            <div class="app-menu-container">
+                <span class="title">Automaten</span>
+                <ul>
+                    <li><a href="#/dfa">DFA</a></li>
+                    <li><a href="#/nfa">NFA</a></li>
+                    <li><a href="#/pda">PDA</a></li>
+                    <li><a href="#/npda">NPDA</a></li>
+                </ul>
+            </div>
+            <div class="app-menu-container">
+                <span class="title">Hilfe</span>
+                <ul>
+                    <li><a href="https://github.com/AutoSimDevelopers/automata-simulation">Github</a></li>
+                    <li><a href="https://github.com/AutoSimDevelopers/automata-simulation/issues">Issue Tracker</a></li>
+                </ul>
+
+                <div class="credits">
+                    <p>Version:0.2</p>
+                    <img src="images/th-koeln-logo.png">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="app-nav-content">
+        <div class="app-nav-transclude-content" ng-transclude>
+
+        </div>
+        <div id="user-control">
+            <a href="#/npda">Login</a>
+        </div>
+    </div>
+</div>
