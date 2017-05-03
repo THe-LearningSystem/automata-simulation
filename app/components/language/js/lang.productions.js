@@ -6,10 +6,22 @@ autoSim.Productions = function ($scope) {
     self.productionId = 0;
     self.nonTerminal = [];
     self.terminal = [];
+    self.selected = null;
     self.startVariable = 'S';
     self.endVariable = '-';
     self.posX = 0;
     self.posY = 0;
+
+    /**
+     * Moves a production to the given position.
+     * @param state
+     * @param newX
+     * @param newY
+     */
+    self.moveProduction = function (production, newX, newY) {
+        production.posX = newX;
+        production.posY = newY;
+    };
 
     /**
      * Searches the Rule with the given parameter.
@@ -54,14 +66,14 @@ autoSim.Productions = function ($scope) {
     /**
      * Check the array for an existing value and returns true, if this value exist's.
      * @param   {[[Type]]} followerArray [[Description]]
-     * @param   {[[Type]]} toAdd         [[Description]]
+     * @param   {[[Type]]} toCheck         [[Description]]
      * @returns {[[Type]]} [[Description]]
      */
-    self.checkIfFollowerExists = function (followerArray, toAdd) {
+    self.checkIfFollowerExists = function (followerArray, toCheck) {
         var check = false;
 
         _.forEach(followerArray, function (value) {
-            if (value == toAdd) {
+            if (value == toCheck) {
                 check = true;
             }
         });
@@ -74,6 +86,28 @@ autoSim.Productions = function ($scope) {
      */
     self.getNonTerminals = function () {
         return self.nonTerminal;
+    };
+
+    /**
+     * Returns the production with the given id.
+     * @param productionId
+     * @returns {object} Returns the objectReference of the production undefined if not found
+     */
+    self.getById = function (productionId) {
+        return self[self.getIndexByProductionId(productionId)];
+    };
+
+    /**
+     * Get the array index from the production with the given id.
+     * @param productionId
+     * @returns  {Boolean} Returns the index and -1 when production with productionId not found
+     */
+    self.getIndexByProductionId = function (productionId) {
+        return _.findIndex(self, function (production) {
+            if (production.id === productionId) {
+                return production;
+            }
+        });
     };
 
     /**
@@ -102,34 +136,54 @@ autoSim.Productions = function ($scope) {
         self.addVariable(prRight, self.nonTerminal, true);
         self.addVariable(prLeftUpper, self.terminal, false);
         self.addVariable(prRight, self.terminal, false);
-        self.calculateLeftPosition(prLeftUpper, prRight);
+
         var production = new autoSim.Production(pId, prLeftUpper, prRight, self.posX, self.posY);
+        console.log(production);
+
+        self.addFollowingId();
+
         var rightId = 0;
+        var counter = 0;
+        var x = 0;
+        var y = 100;
+        self.posX = self.posX + 200;
 
         _.forEach(prRight, function (char) {
-            if (!self.checkVariableIfExist(char, self.terminal)) {
-                var rightProduction = production.create(rightId++, self.posX - 100, self.posY, char);
+
+            if (self.checkVariableIfExist(char, self.nonTerminal)) {
+                if (counter > 0) {
+                    x = x - 100;
+                }
+                var rightProduction = production.create(rightId++, x, y, char);
+                counter++;
             }
         });
 
         self.push(production);
-        self.addFollowingId();
-        console.log(self);
         return production;
     };
 
     /**
+     * Not in use.
      * Set's the position of a rule in the diagram.
      * @param {[[Type]]} left [[Description]]
      */
-    self.calculateLeftPosition = function (left) {
-        self.posX = self.posX + 100;
-        self.posY = self.posY + 100;
+    self.updateLeftPositions = function () {
 
-        if (left == self.startVariable) {
-            self.posX = 100;
-            self.posY = 100;
-        }
+        _.forEach(self, function (value) {
+
+            _.forEach(self, function (follow) {
+
+                _.forEach(follow.follower, function (followArray) {
+
+                    if (followArray == value.id) {
+                        value.posX = self.posX;
+                        value.posY = self.posY;
+                    }
+                });
+
+            });
+        });
     };
 
     /**

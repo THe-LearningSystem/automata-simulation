@@ -5,5 +5,5 @@
         {{production.left}}
     </text>
 
-    <svglangterminal ng-repeat="rightProduction in production" rightProduction="rightProduction"></svglangterminal>
+    <svglangterminal ng-repeat="rightProduction in production track by $index" rightProduction="rightProduction"></svglangterminal>
 </g>
