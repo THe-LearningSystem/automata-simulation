@@ -14,7 +14,7 @@ function LANGController($scope, hotkeys) {
     $scope.derivationtree.grid = new autoSim.DerivationTreeGrid($scope);
     $scope.derivationtree.zoom = new autoSim.DerivationTreeZoom($scope);
     $scope.derivationsequence = new autoSim.DerivationSequence($scope);
-    $scope.grammar = new autoSim.Grammar($scope);
+    $scope.langTransitions = new autoSim.LangTransitions($scope);
     
     //Creating and starting the testData.
     $scope.testLangAgent = new TestLangData($scope);

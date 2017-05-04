@@ -14,8 +14,12 @@
             <svglanggrid></svglanggrid>
             <svglangouter>
                 <!-- TODO -->
-                <g id="Variables">
+                <g id="nonTerminals">
                     <svglangnonterminal ng-repeat="production in productions" production="production"></svglangnonterminal>
+                </g>
+                
+                <g id="terminals" ng-repeat="production in productions" production="production">
+                    <svglangterminal ng-repeat="rightProduction in production track by $index" rightProduction="rightProduction"></svglangterminal>
                 </g>
             </svglangouter>
             <g id="zoom"></g>

@@ -6352,3 +6352,18 @@ rzslider .rz-pointer:after {
   fill: #CCC;
   stroke: #666;
   stroke-width: 2; }
+
+.terminal {
+  cursor: context-menu; }
+
+.terminal:hover {
+  cursor: pointer; }
+
+.terminal:hover .hover-circle {
+  fill: #000;
+  fill-opacity: 0.4; }
+
+.terminal-circle {
+  fill: #CCC;
+  stroke: #666;
+  stroke-width: 2; }

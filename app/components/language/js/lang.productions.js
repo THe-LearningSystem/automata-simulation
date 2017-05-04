@@ -138,14 +138,13 @@ autoSim.Productions = function ($scope) {
         self.addVariable(prRight, self.terminal, false);
 
         var production = new autoSim.Production(pId, prLeftUpper, prRight, self.posX, self.posY);
-        console.log(production);
 
         self.addFollowingId();
 
         var rightId = 0;
         var counter = 0;
-        var x = 0;
-        var y = 100;
+        var x = self.posX;
+        var y = self.posY + 100;
         self.posX = self.posX + 200;
 
         _.forEach(prRight, function (char) {
