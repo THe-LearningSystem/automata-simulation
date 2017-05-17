@@ -9,6 +9,8 @@ autoSim.Productions = function ($scope) {
     self.selected = null;
     self.startVariable = 'S';
     self.endVariable = '-';
+    self.radiusNT = 25;
+    self.radiusT = 20;
     self.posX = 0;
     self.posY = 0;
 
@@ -21,6 +23,7 @@ autoSim.Productions = function ($scope) {
     self.moveProduction = function (production, newX, newY) {
         production.posX = newX;
         production.posY = newY;
+        $scope.langTransitions.updateTransitionPosition(production);
     };
 
     /**
@@ -143,7 +146,7 @@ autoSim.Productions = function ($scope) {
 
         var rightId = 0;
         var counter = 0;
-        var x = self.posX;
+        var x = 0;
         var y = self.posY + 100;
         self.posX = self.posX + 200;
 

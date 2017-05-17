@@ -68,9 +68,9 @@ autoSim.directive("svglangnonterminal", function () {
 
             /**DRAGGING**/
             var dragAmount;
-            
+
             scope.startProductionDragging = function () {
-                
+
                 scope.productions.selected = scope.productions.getById(parseInt(d3.select(this).attr("object-id")));
                 scope.draggingPrevent = false;
                 dragAmount = 0;
@@ -145,22 +145,21 @@ autoSim.directive("svglangterminal", function () {
         replace: true,
         restrict: 'E',
         templateNamespace: 'svg',
-/*
-        scope: {
-            production: '=production',
-            rightProduction: '=rightProduction'
-        },
-*/
+        /*
+                scope: {
+                    production: '=production',
+                    rightProduction: '=rightProduction'
+                },
+        */
         link: function (scope, elm, attrs) {
             var self = this;
             scope.productions = scope.$parent.rightProduction;
-            console.log(scope.productions);
-            
+
             // *DRAGGING*
             var dragAmount;
-            
+
             scope.startProductionDragging = function () {
-                
+
                 console.log(scope.productions.getById(parseInt(d3.select(this).attr("object-id"))));
                 scope.productions.selected = scope.productions.getById(parseInt(d3.select(this).attr("object-id")));
                 scope.draggingPrevent = false;
@@ -231,6 +230,17 @@ autoSim.directive("svglangterminal", function () {
     };
 });
 
+autoSim.directive("svglangtransition", function () {
+    return {
+        replace: true,
+        restrict: 'E',
+        templateNamespace: 'svg',
+        link: function (scope, elm, attrs) {
+
+        },
+        templateUrl: 'components/language/directives/svg/svg-lang-transition.html'
+    };
+});
 /*
 autoSim.directive("svglangterminal", function () {
     return {

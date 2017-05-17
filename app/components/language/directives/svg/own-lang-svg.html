@@ -13,13 +13,15 @@
         <svg id="diagram-lang-svg" class="noselect" xmlns="http://www.w3.org/2000/svg" style="font-family:'Roboto', sans-serif; font-weight:100">
             <svglanggrid></svglanggrid>
             <svglangouter>
-                <!-- TODO -->
                 <g id="nonTerminals">
                     <svglangnonterminal ng-repeat="production in productions" production="production"></svglangnonterminal>
                 </g>
-                
+
+                <g id="transitions">
+                    <svglangtransition ng-repeat="transition in langTransitions" transition="transition"></svglangtransition>
+                </g>
+
                 <g id="terminals" ng-repeat="production in productions" production="production">
-                    <svglangterminal ng-repeat="rightProduction in production track by $index" rightProduction="rightProduction"></svglangterminal>
                 </g>
             </svglangouter>
             <g id="zoom"></g>

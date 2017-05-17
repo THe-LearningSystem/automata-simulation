@@ -6,20 +6,26 @@ function TestLangData($scope) {
 
     self.testLANG = function () {
 
-        $scope.productions.create("S", "hA");
+        var rule1 = $scope.productions.create("S", "hA");
         
         //$scope.productions.create("B", "lC");
-        $scope.productions.create("B", "CD");
+        var rule2 = $scope.productions.create("B", "CD");
         
-        $scope.productions.create("A", "eB");
+        var rule3 = $scope.productions.create("A", "eB");
         
         //$scope.productions.create("C", "lD");
-        $scope.productions.create("C", "ll");
+        var rule4 = $scope.productions.create("C", "ll");
         
-        $scope.productions.create("D", "oG");
+        var rule5 = $scope.productions.create("D", "oG");
         
-        $scope.productions.create("G", "-");
+        var rule6 = $scope.productions.create("G", "-");
         
         $scope.derivationsequence.callGetNextTerminal();
+        
+        $scope.langTransitions.createToTerminal(rule1, rule3);
+        $scope.langTransitions.createToTerminal(rule3, rule2);
+        $scope.langTransitions.createToTerminal(rule2, rule4);
+        $scope.langTransitions.createToTerminal(rule2, rule5);
+        $scope.langTransitions.createToTerminal(rule5, rule6);
     };
 }
