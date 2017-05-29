@@ -1,0 +1,46 @@
+<container-item titlename="Bearbeiten" extendable-raw="true">
+    <div class="input-group">
+        <span class="input-group-addon">Startvariable:</span>
+        <div uib-dropdown on-toggle="toggled(open)">
+            <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
+                {{productions.currentStartVariable}}
+                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </button>
+            <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+                <li ng-repeat="nonTerminal in productions.nonTerminal track by $index">
+                    <a ng-click="productions.changeStart(nonTerminal)">{{nonTerminal}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <span class="input-group-addon">Endzeichen:</span>
+        <div uib-dropdown on-toggle="toggled(open)">
+            <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
+                {{productions.endSign}}
+                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </button>
+            <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+                <li ng-repeat="terminal in productions.terminal track by $index">
+                    <a ng-click="productions.changeEndSign(terminal)">{{terminal}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <div class="input-group" ng-repeat="production in productions">
+            <span class="input-group-addon">L:</span>
+            <input ng-model="production.left" class="form-control" id="production-input-left" maxlength="1" ng-disabled="production.isStart">
+
+            <span class="input-group-addon">R:</span>
+            <input ng-model="production.right" class="form-control" id="production-input-right" maxlength="2">
+
+            <span class="input-group-addon btn btn-danger transbutton" ng-click="productions.removeWithId(production.id)">
+                <span class="icon-times">
+                </span>
+            </span>
+        </div>
+    </div>
+</container-item>

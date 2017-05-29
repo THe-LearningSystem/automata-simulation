@@ -6,10 +6,18 @@ autoSim.Production = function (id, left, right, posx, posy) {
     self.right = right;
     self.posX = posx;
     self.posY = posy;
-
     self.follower = [];
     self.selected = null;
-
+    self.isStart = false;
+    
+    /**
+     * Creates the right production points for the drawing in the grid.
+     * @param   {[[Type]]} id   [[Description]]
+     * @param   {[[Type]]} posX [[Description]]
+     * @param   {[[Type]]} posY [[Description]]
+     * @param   {[[Type]]} char [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
     self.create = function (id, posX, posY, char) {
         return self[self.push(new autoSim.rightProduction(id, posX, posY, char)) - 1];
     };

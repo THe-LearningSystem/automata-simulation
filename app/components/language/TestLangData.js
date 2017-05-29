@@ -20,12 +20,7 @@ function TestLangData($scope) {
         
         var rule6 = $scope.productions.create("G", "-");
         
-        $scope.derivationsequence.callGetNextTerminal();
-        
-        $scope.langTransitions.createToTerminal(rule1, rule3);
-        $scope.langTransitions.createToTerminal(rule3, rule2);
-        $scope.langTransitions.createToTerminal(rule2, rule4);
-        $scope.langTransitions.createToTerminal(rule2, rule5);
-        $scope.langTransitions.createToTerminal(rule5, rule6);
+        $scope.productions.changeEndSign('-');
+        $scope.productions.changeStart(rule1.left);
     };
 }

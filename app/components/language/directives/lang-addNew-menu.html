@@ -1,0 +1,17 @@
+<container-item titlename="Hinzufügen" extendable-raw="true">
+    <form name="editAddNewMenu">
+        <div class="input-group">
+            <span class="input-group-addon">Regel links:</span>
+            <input class="form-control" id="production-input-left" maxlength="1" ng-model="productions.menu.edit.left">
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-addon">Regel rechts:</span>
+            <input class="form-control" id="production-input-right" maxlength="2" ng-model="productions.menu.edit.right">
+        </div>
+
+        <button class="btn" ng-click="productions.create(productions.menu.edit.left, productions.menu.edit.right)">
+            Hinzufügen
+        </button>
+    </form>
+</container-item>

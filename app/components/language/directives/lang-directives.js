@@ -90,9 +90,15 @@ autoSim.directive("langtopmenu", function () {
     };
 });
 
-autoSim.directive("langproductionmenu", function () {
+autoSim.directive("langaddnewmenu", function () {
     return {
-        templateUrl: 'components/language/directives/lang-production-menu.html'
+        templateUrl: 'components/language/directives/lang-addNew-menu.html'
+    };
+});
+
+autoSim.directive("langchangesmenu", function () {
+    return {
+        templateUrl: 'components/language/directives/lang-changes-menu.html'
     };
 });
 

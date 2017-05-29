@@ -6,7 +6,7 @@ function LANGController($scope, hotkeys) {
 
     //Adding the different "classes" to the scope.
     $scope.languageData = new autoSim.LanguageData();
-    $scope.core = new autoSim.Core($scope);
+    $scope.langCore = new autoSim.LangCore($scope);
     $scope.simulator = new autoSim.Simulator($scope);
     $scope.productions = new autoSim.Productions($scope);
     $scope.productions.menu = new autoSim.ProductionMenu($scope);

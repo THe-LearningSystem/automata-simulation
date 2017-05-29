@@ -7,12 +7,72 @@ autoSim.Productions = function ($scope) {
     self.nonTerminal = [];
     self.terminal = [];
     self.selected = null;
-    self.startVariable = 'S';
-    self.endVariable = '-';
+    self.currentStartVariable = undefined;
+    self.endSign = undefined;
     self.radiusNT = 25;
     self.radiusT = 20;
     self.posX = 0;
     self.posY = 0;
+
+    $scope.langCore.langUpdateListeners.push(self);
+
+    /**
+     * Changes the endSign to the given one.
+     * @param {[[Type]]} value [[Description]]
+     */
+    self.changeEndSign = function (value) {
+        self.endSign = value;
+        $scope.langCore.langUpdateListener();
+    };
+
+    /**
+     * Searches for the Id, given the endSign.
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.getEndSignId = function () {
+        var check = -1;
+
+        _.forEach($scope.productions, function (value) {
+
+            _.forEach(value.right, function (right) {
+
+                if (right == self.endSign) {
+                    check = value.id;
+                }
+            });
+        });
+        return check;
+    };
+
+    /**
+     * Changes the start values of the productions.
+     * @param {[[Type]]} left [[Description]]
+     */
+    self.changeStart = function (left) {
+
+        _.forEach($scope.productions, function (value) {
+
+            if (value.isStart === true) {
+                value.isStart = false;
+            }
+
+            if (left == value.left) {
+                value.isStart = true;
+                self.currentStartVariable = value.left;
+            }
+        });
+        $scope.langCore.langUpdateListener();
+    };
+
+    /**
+     * Deletes the given Production with its transitions.
+     * @param {[[Type]]} prId [[Description]]
+     */
+    self.removeWithId = function (prId) {
+        $scope.langTransitions.removeWithId(prId);
+        self.splice(self.getIndexByProductionId(prId), 1);
+        $scope.langCore.langUpdateListener();
+    };
 
     /**
      * Moves a production to the given position.
@@ -32,10 +92,10 @@ autoSim.Productions = function ($scope) {
      * @returns {[[Type]]} [[Description]]
      */
     self.findStartRuleId = function () {
-        var result = undefined;
+        var result;
 
         _.forEach($scope.productions, function (tmp) {
-            if (tmp.left == self.startVariable) {
+            if (tmp.left == self.currentStartVariable) {
                 result = tmp.id;
             }
         });
@@ -45,25 +105,25 @@ autoSim.Productions = function ($scope) {
     /**
      * Set's the follower of each production rule.
      */
-    self.addFollowingId = function () {
+    self.updateFollowingIds = function () {
+
         _.forEach(self, function (tmp) {
 
-            _.forEach(tmp.right, function (value) {
+            _.forEach(self, function (production) {
 
-                if (value == angular.uppercase(value)) {
+                _.forEach(production.right, function (right) {
 
-                    _.forEach(self, function (production) {
+                    if (tmp.left == right) {
 
-                        if (value == production.left) {
-                            if (!self.checkIfFollowerExists(tmp.follower, production.id)) {
-                                tmp.follower.push(production.id);
-                            }
+                        if (!self.checkIfFollowerExists(production.follower, tmp.id)) {
+                            production.follower.push(tmp.id);
                         }
+                    }
 
-                    });
-                }
+                });
             });
         });
+
     };
 
     /**
@@ -120,7 +180,9 @@ autoSim.Productions = function ($scope) {
      * @returns {[[Type]]} [[Description]]
      */
     self.create = function (prLeft, prRight) {
-        return self.createWithId(self.productionId++, prLeft, prRight);
+        var newProduction = self.createWithId(self.productionId++, prLeft, prRight);
+        $scope.langTransitions.checkTransitions();
+        return newProduction;
     };
 
     /**
@@ -135,26 +197,19 @@ autoSim.Productions = function ($scope) {
         // Only Type 3 language
         var prLeftUpper = angular.uppercase(prLeft);
 
-        self.addVariable(prLeftUpper, self.nonTerminal, true);
-        self.addVariable(prRight, self.nonTerminal, true);
-        self.addVariable(prLeftUpper, self.terminal, false);
-        self.addVariable(prRight, self.terminal, false);
-
         var production = new autoSim.Production(pId, prLeftUpper, prRight, self.posX, self.posY);
-
-        self.addFollowingId();
 
         var rightId = 0;
         var counter = 0;
         var x = 0;
         var y = self.posY + 100;
-        self.posX = self.posX + 200;
+        self.posX = self.posX + 100;
 
         _.forEach(prRight, function (char) {
 
-            if (self.checkVariableIfExist(char, self.nonTerminal)) {
+            if (char == angular.lowercase(char)) {
                 if (counter > 0) {
-                    x = x - 100;
+                    x = x + 100;
                 }
                 var rightProduction = production.create(rightId++, x, y, char);
                 counter++;
@@ -162,34 +217,14 @@ autoSim.Productions = function ($scope) {
         });
 
         self.push(production);
+        self.updateTerminals();
+        self.updateNonTerminals();
+        self.updateFollowingIds();
         return production;
     };
 
     /**
-     * Not in use.
-     * Set's the position of a rule in the diagram.
-     * @param {[[Type]]} left [[Description]]
-     */
-    self.updateLeftPositions = function () {
-
-        _.forEach(self, function (value) {
-
-            _.forEach(self, function (follow) {
-
-                _.forEach(follow.follower, function (followArray) {
-
-                    if (followArray == value.id) {
-                        value.posX = self.posX;
-                        value.posY = self.posY;
-                    }
-                });
-
-            });
-        });
-    };
-
-    /**
-     * Reinspect on functionality.
+     * Reinspect on functionality. <-----------------------------------------------------------------<
      * Sort array by Id.
      * @param   {[[Type]]} array [[Description]]
      * @returns {[[Type]]} [[Description]]
@@ -204,36 +239,39 @@ autoSim.Productions = function ($scope) {
     };
 
     /**
-     * Add's char to the specified array.
-     * @param {[[Type]]} variable [[Description]]
-     * @param {Array}    array    [[Description]]
-     * @param {[[Type]]} upper    [[Description]]
+     * Set's and updates the non terminals.
      */
-    self.addVariable = function (variable, array, upper) {
-        var i = 0;
-        var character = "";
-        while ((character = variable[i]) !== undefined) {
-            if (upper === true) {
-                if (character == angular.uppercase(character)) {
-                    if (self.checkVariableIfExist(character, array)) {
-                        if (character !== self.endVariable) {
-                            array.push(character);
-                            self.sortByAlphabet(array);
-                        }
-                    }
-                }
-            } else {
-                if (character == angular.lowercase(character)) {
-                    if (self.checkVariableIfExist(character, array)) {
-                        if (character !== self.endVariable) {
-                            array.push(character);
-                            self.sortByAlphabet(array);
-                        }
-                    }
+    self.updateNonTerminals = function () {
+
+        _.forEach($scope.productions, function (value) {
+
+            if (value.left == angular.uppercase(value.left)) {
+
+                if (!self.checkVariableIfExist(value.left, self.nonTerminal)) {
+                    self.nonTerminal.push(value.left);
                 }
             }
-            i++;
-        }
+        });
+    };
+
+    /**
+     * Set's and updates the terminals.
+     */
+    self.updateTerminals = function () {
+
+        _.forEach($scope.productions, function (value) {
+
+            _.forEach(value.right, function (right) {
+
+                if (right == angular.lowercase(right)) {
+
+                    if (!self.checkVariableIfExist(right, self.terminal)) {
+                        self.terminal.push(right);
+                    }
+                }
+            });
+        });
+
     };
 
     /**
@@ -242,22 +280,22 @@ autoSim.Productions = function ($scope) {
      * @param   {[[Type]]} variable [[Description]]
      * @returns {boolean}  [[Description]]
      */
-    self.checkVariableIfExist = function (char, variable) {
-        for (var i = 0; variable[i] !== undefined; i++) {
-            if (variable[i] == char) {
-                return false;
+    self.checkVariableIfExist = function (char, array) {
+        for (var i = 0; array[i] !== undefined; i++) {
+            if (array[i] == char) {
+                return true;
             }
         }
-        return true;
+        return false;
     };
 
-    /**
-     * Changes current startVariable of the grammar.
-     * @param {[[Type]]} variable [[Description]]
-     */
-    self.changeStartVariable = function (variable) {
-        self.startVariable = variable;
-        self.findStartRuleId();
+    // Called by the listener in the core.
+    self.updateFunction = function () {
+        self.nonTerminal = [];
+        self.terminal = [];
+
+        self.updateNonTerminals();
+        self.updateTerminals();
     };
 
 };

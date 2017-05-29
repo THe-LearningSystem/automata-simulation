@@ -1,8 +1,12 @@
 //Simulator for the simulation of the automata
-autoSim.Core = function ($scope) {
+autoSim.LangCore = function ($scope) {
     "use strict";
+    var self = this;
 
     console.log("langCore");
+    
+    //Array of all update Listeners
+    self.langUpdateListeners = [];
     
     //selfReference
     //for debug puposes better way for acessing in console?
@@ -30,12 +34,12 @@ autoSim.Core = function ($scope) {
      * This function calls the method updateFunction of every element in $scope.core.updateListeners
      * Not in use;
      */
-    self.updateListener = function () {
-        _.forEach($scope.core.updateListeners, function (value) {
+    self.langUpdateListener = function () {
+        _.forEach($scope.langCore.langUpdateListeners, function (value) {
             value.updateFunction();
         });
-        $scope.LanguageData.unSavedChanges = true;
-        //instant update, but more digest cycles
+        // $scope.LanguageData.unSavedChanges = true;
+        // instant update, but more digest cycles
         $scope.saveApply();
     };
 
