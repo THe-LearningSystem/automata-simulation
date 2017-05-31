@@ -60,7 +60,7 @@ autoSim.directive("svglangnonterminal", function () {
         restrict: 'E',
         templateNamespace: 'svg',
         scope: {
-            production: '=production'
+            production: '='
         },
         link: function (scope, elm, attrs) {
             var self = this;
@@ -70,8 +70,7 @@ autoSim.directive("svglangnonterminal", function () {
             var dragAmount;
 
             scope.startProductionDragging = function () {
-
-                scope.productions.selected = scope.productions.getById(parseInt(d3.select(this).attr("object-id")));
+                scope.productions.selected = scope.productions.getByNonTerminalId(parseInt(d3.select(this).attr("nonterminal-object-id")));
                 scope.draggingPrevent = false;
                 dragAmount = 0;
             };
@@ -120,7 +119,7 @@ autoSim.directive("svglangnonterminal", function () {
                         }
                     }
                     scope.$apply(function () {
-                        scope.productions.moveProduction(scope.productions.selected, x, y);
+                        scope.productions.moveNonTerminal(scope.productions.selected, x, y);
                     });
 
                 }
@@ -145,23 +144,18 @@ autoSim.directive("svglangterminal", function () {
         replace: true,
         restrict: 'E',
         templateNamespace: 'svg',
-        /*
-                scope: {
-                    production: '=production',
-                    rightProduction: '=rightProduction'
-                },
-        */
+        scope: {
+            production: '='
+        },
         link: function (scope, elm, attrs) {
             var self = this;
-            scope.productions = scope.$parent.rightProduction;
+            scope.productions = scope.$parent.productions;
 
             // *DRAGGING*
             var dragAmount;
-
+                
             scope.startProductionDragging = function () {
-
-                console.log(scope.productions.getById(parseInt(d3.select(this).attr("object-id"))));
-                scope.productions.selected = scope.productions.getById(parseInt(d3.select(this).attr("object-id")));
+                scope.productions.selected = scope.productions.getByTerminalId(parseInt(d3.select(this).attr("terminal-object-id")));
                 scope.draggingPrevent = false;
                 dragAmount = 0;
             };
@@ -210,7 +204,7 @@ autoSim.directive("svglangterminal", function () {
                         }
                     }
                     scope.$apply(function () {
-                        scope.productions.moveRight(scope.productions.selected, x, y);
+                        scope.productions.moveTerminal(scope.productions.selected, x, y);
                     });
 
                 }

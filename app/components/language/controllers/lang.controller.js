@@ -16,7 +16,7 @@ function LANGController($scope, hotkeys) {
     $scope.derivationsequence = new autoSim.DerivationSequence($scope);
     $scope.langTransitions = new autoSim.LangTransitions($scope);
     
-    //Creating and starting the testData.
+    //Creating the testData.
     $scope.testLangAgent = new TestLangData($scope);
-    $scope.testLangAgent.testLANG();
+    //$scope.testLangAgent.testLANG();
 }

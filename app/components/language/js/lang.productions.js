@@ -3,8 +3,11 @@ autoSim.Productions = function ($scope) {
 
     console.log("langProduction");
 
-    self.productionId = 0;
+    self.nonTerminalId = 0;
+    self.terminalId = 0;
+    self.nonTerminalObject = [];
     self.nonTerminal = [];
+    self.terminalObject = [];
     self.terminal = [];
     self.selected = null;
     self.currentStartVariable = undefined;
@@ -15,12 +18,13 @@ autoSim.Productions = function ($scope) {
     self.posY = 0;
 
     $scope.langCore.langUpdateListeners.push(self);
-
+    
     /**
      * Changes the endSign to the given one.
      * @param {[[Type]]} value [[Description]]
      */
     self.changeEndSign = function (value) {
+        console.log(self);
         self.endSign = value;
         $scope.langCore.langUpdateListener();
     };
@@ -32,7 +36,7 @@ autoSim.Productions = function ($scope) {
     self.getEndSignId = function () {
         var check = -1;
 
-        _.forEach($scope.productions, function (value) {
+        _.forEach(self.nonTerminalObject, function (value) {
 
             _.forEach(value.right, function (right) {
 
@@ -50,7 +54,7 @@ autoSim.Productions = function ($scope) {
      */
     self.changeStart = function (left) {
 
-        _.forEach($scope.productions, function (value) {
+        _.forEach(self.nonTerminalObject, function (value) {
 
             if (value.isStart === true) {
                 value.isStart = false;
@@ -70,20 +74,32 @@ autoSim.Productions = function ($scope) {
      */
     self.removeWithId = function (prId) {
         $scope.langTransitions.removeWithId(prId);
-        self.splice(self.getIndexByProductionId(prId), 1);
+        self.nonTerminalObject.splice(self.getIndexBynonTerminalId(prId), 1);
         $scope.langCore.langUpdateListener();
     };
 
     /**
-     * Moves a production to the given position.
+     * Moves a non terminal to the given position.
      * @param state
      * @param newX
      * @param newY
      */
-    self.moveProduction = function (production, newX, newY) {
-        production.posX = newX;
-        production.posY = newY;
-        $scope.langTransitions.updateTransitionPosition(production);
+    self.moveNonTerminal = function (nonTerminal, newX, newY) {
+        nonTerminal.posX = newX;
+        nonTerminal.posY = newY;
+        $scope.langTransitions.updateTransitionPosition(nonTerminal);
+    };
+    
+    /**
+     * Moves a terminal to the given position.
+     * @param state
+     * @param newX
+     * @param newY
+     */
+    self.moveTerminal = function (terminal, newX, newY) {
+        terminal.posX = newX;
+        terminal.posY = newY;
+        $scope.langTransitions.updateTransitionPosition(terminal, true);
     };
 
     /**
@@ -93,8 +109,9 @@ autoSim.Productions = function ($scope) {
      */
     self.findStartRuleId = function () {
         var result;
-
-        _.forEach($scope.productions, function (tmp) {
+        
+        _.forEach(self.nonTerminalObject, function (tmp) {
+            
             if (tmp.left == self.currentStartVariable) {
                 result = tmp.id;
             }
@@ -107,9 +124,9 @@ autoSim.Productions = function ($scope) {
      */
     self.updateFollowingIds = function () {
 
-        _.forEach(self, function (tmp) {
-
-            _.forEach(self, function (production) {
+        _.forEach(self.nonTerminalObject, function (tmp) {
+            
+            _.forEach(self.nonTerminalObject, function (production) {
 
                 _.forEach(production.right, function (right) {
 
@@ -152,22 +169,44 @@ autoSim.Productions = function ($scope) {
     };
 
     /**
-     * Returns the production with the given id.
-     * @param productionId
+     * Returns the non terminal with the given id.
+     * @param nonTerminalId
      * @returns {object} Returns the objectReference of the production undefined if not found
      */
-    self.getById = function (productionId) {
-        return self[self.getIndexByProductionId(productionId)];
+    self.getByNonTerminalId = function (nonTerminalId) {
+        return self.nonTerminalObject[self.getIndexByNonTerminalId(nonTerminalId)];
+    };
+    
+    /**
+     * Returns the terminal with the given id.
+     * @param nonTerminalId
+     * @returns {object} Returns the objectReference of the production undefined if not found
+     */
+    self.getByTerminalId = function (nonTerminalId) {
+        return self.terminalObject[self.getIndexByTerminalId(nonTerminalId)];
     };
 
     /**
      * Get the array index from the production with the given id.
-     * @param productionId
-     * @returns  {Boolean} Returns the index and -1 when production with productionId not found
+     * @param nonTerminalId
+     * @returns  {Boolean} Returns the index and -1 when production with nonTerminalId not found
      */
-    self.getIndexByProductionId = function (productionId) {
-        return _.findIndex(self, function (production) {
-            if (production.id === productionId) {
+    self.getIndexByNonTerminalId = function (nonTerminalId) {
+        return _.findIndex(self.nonTerminalObject, function (production) {
+            if (production.id === nonTerminalId) {
+                return production;
+            }
+        });
+    };
+    
+    /**
+     * Get the array index from the production with the given id.
+     * @param nonTerminalId
+     * @returns  {Boolean} Returns the index and -1 when production with nonTerminalId not found
+     */
+    self.getIndexByTerminalId = function (nonTerminalId) {
+        return _.findIndex(self.terminalObject, function (production) {
+            if (production.id === nonTerminalId) {
                 return production;
             }
         });
@@ -180,8 +219,9 @@ autoSim.Productions = function ($scope) {
      * @returns {[[Type]]} [[Description]]
      */
     self.create = function (prLeft, prRight) {
-        var newProduction = self.createWithId(self.productionId++, prLeft, prRight);
-        $scope.langTransitions.checkTransitions();
+        var newProduction = self.createWithId(self.nonTerminalId++, prLeft, prRight);
+        $scope.langTransitions.checkNonTerminalTransitions();
+        $scope.langTransitions.checkTerminalTranstition();
         return newProduction;
     };
 
@@ -197,9 +237,8 @@ autoSim.Productions = function ($scope) {
         // Only Type 3 language
         var prLeftUpper = angular.uppercase(prLeft);
 
-        var production = new autoSim.Production(pId, prLeftUpper, prRight, self.posX, self.posY);
+        var nonTerminal = new autoSim.nonTerminal(pId, prLeftUpper, prRight, self.posX, self.posY);
 
-        var rightId = 0;
         var counter = 0;
         var x = 0;
         var y = self.posY + 100;
@@ -211,16 +250,17 @@ autoSim.Productions = function ($scope) {
                 if (counter > 0) {
                     x = x + 100;
                 }
-                var rightProduction = production.create(rightId++, x, y, char);
+                var terminal = new autoSim.Terminal(self.terminalId++, x, y, char, pId);
+                self.terminalObject.push(terminal);
                 counter++;
             }
         });
 
-        self.push(production);
+        self.nonTerminalObject.push(nonTerminal);
         self.updateTerminals();
         self.updateNonTerminals();
         self.updateFollowingIds();
-        return production;
+        return nonTerminal;
     };
 
     /**
@@ -243,9 +283,9 @@ autoSim.Productions = function ($scope) {
      */
     self.updateNonTerminals = function () {
 
-        _.forEach($scope.productions, function (value) {
+        _.forEach(self.nonTerminalObject, function (value) {
 
-            if (value.left == angular.uppercase(value.left)) {
+            if (value.left == angular.uppercase(value.left) && value.left !== undefined) {
 
                 if (!self.checkVariableIfExist(value.left, self.nonTerminal)) {
                     self.nonTerminal.push(value.left);
@@ -259,7 +299,7 @@ autoSim.Productions = function ($scope) {
      */
     self.updateTerminals = function () {
 
-        _.forEach($scope.productions, function (value) {
+        _.forEach(self.nonTerminalObject, function (value) {
 
             _.forEach(value.right, function (right) {
 

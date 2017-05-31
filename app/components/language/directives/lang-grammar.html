@@ -22,7 +22,7 @@
         </div>
         <div class="stf-element" uib-tooltip="Produktionen (Regeln)" tooltip-placement="right">
             P = {
-            <span ng-repeat="production in productions | orderBy:'left'">
+            <span ng-repeat="production in productions.nonTerminalObject | orderBy:'left'">
                 <span>
                     ( {{production.left}}
                 </span> ->

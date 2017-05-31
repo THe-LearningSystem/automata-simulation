@@ -12,16 +12,22 @@
     <div class="container-wrapper diagram-container">
         <svg id="diagram-lang-svg" class="noselect" xmlns="http://www.w3.org/2000/svg" style="font-family:'Roboto', sans-serif; font-weight:100">
             <svglanggrid></svglanggrid>
+            
+            <marker id="marker-end-arrow" refX="7.5" refY="3" markerWidth="10" markerHeight="10" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z"></path>
+            </marker>
+            
             <svglangouter>
-                <g id="nonTerminals">
-                    <svglangnonterminal ng-repeat="production in productions" production="production"></svglangnonterminal>
-                </g>
-
                 <g id="transitions">
                     <svglangtransition ng-repeat="transition in langTransitions" transition="transition"></svglangtransition>
                 </g>
 
-                <g id="terminals" ng-repeat="production in productions" production="production">
+                <g id="nonTerminals">
+                    <svglangnonterminal ng-repeat="nonTerminal in productions.nonTerminalObject" production="nonTerminal"></svglangnonterminal>
+                </g>
+
+                <g id="terminals">
+                    <svglangterminal ng-repeat="rightProduction in productions.terminalObject" production='rightProduction'></svglangterminal>
                 </g>
             </svglangouter>
             <g id="zoom"></g>

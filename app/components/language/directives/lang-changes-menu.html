@@ -30,7 +30,7 @@
     </div>
 
     <div class="input-group">
-        <div class="input-group" ng-repeat="production in productions">
+        <div class="input-group" ng-repeat="production in productions.nonTerminalObject">
             <span class="input-group-addon">L:</span>
             <input ng-model="production.left" class="form-control" id="production-input-left" maxlength="1" ng-disabled="production.isStart">
 

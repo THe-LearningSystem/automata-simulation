@@ -37,22 +37,43 @@ autoSim.LangTransitions = function ($scope) {
     };
 
     /**
-     * Checks the transitions for existance and creates them in both directions.
+     * Checks the terminal transitions for existance and creates them in both directions.
      */
-    self.checkTransitions = function () {
+    self.checkTerminalTranstition = function () {
 
-        _.forEach($scope.productions, function (production) {
+        _.forEach($scope.productions.nonTerminalObject, function (nonTerminal) {
 
-            _.forEach($scope.productions, function (production2) {
+            _.forEach($scope.productions.terminalObject, function (terminal) {
+
+                if (nonTerminal.id == terminal.nonTerminalOwner) {
+                    var prod1 = $scope.productions.getByNonTerminalId(nonTerminal.id);
+                    var prod2 = $scope.productions.getByTerminalId(terminal.id);
+
+                    if (!self.checkIfTransitionExists(prod1, prod2)) {
+                        self.create(prod1, prod2, true);
+                    }
+                }
+            });
+        });
+    };
+
+    /**
+     * Checks the non terminal transitions for existance and creates them in both directions.
+     */
+    self.checkNonTerminalTransitions = function () {
+
+        _.forEach($scope.productions.nonTerminalObject, function (production) {
+
+            _.forEach($scope.productions.nonTerminalObject, function (production2) {
 
                 _.forEach(production2.follower, function (follow) {
 
                     if (production.id == follow) {
-                        var prod1 = $scope.productions.getById(production2.id);
-                        var prod2 = $scope.productions.getById(production.id);
+                        var prod1 = $scope.productions.getByNonTerminalId(production2.id);
+                        var prod2 = $scope.productions.getByNonTerminalId(production.id);
 
                         if (!self.checkIfTransitionExists(prod1, prod2)) {
-                            $scope.langTransitions.create(prod1, prod2);
+                            self.create(prod1, prod2);
                         }
                     }
                 });
@@ -86,8 +107,8 @@ autoSim.LangTransitions = function ($scope) {
      * @param {[[Type]]} from [[Description]]
      * @param {[[Type]]} to   [[Description]]
      */
-    self.create = function (from, to) {
-        self.createWithId(self.id++, from, to);
+    self.create = function (from, to, isTerminal) {
+        self.createWithId(self.id++, from, to, isTerminal);
     };
 
     /**
@@ -96,8 +117,8 @@ autoSim.LangTransitions = function ($scope) {
      * @param {[[Type]]} from [[Description]]
      * @param {[[Type]]} to   [[Description]]
      */
-    self.createWithId = function (id, from, to) {
-        var transtition = new autoSim.Transition(id, from, to, self.calculatePath(from, to));
+    self.createWithId = function (id, from, to, isTerminal) {
+        var transtition = new autoSim.Transition(id, from, to, self.calculatePath(from, to, isTerminal));
         self.push(transtition);
     };
 
@@ -107,7 +128,7 @@ autoSim.LangTransitions = function ($scope) {
      * @param   {object}   to   [[Description]]
      * @returns {[[Type]]} [[Description]]
      */
-    self.calculatePath = function (from, to) {
+    self.calculatePath = function (from, to, isTerminal) {
         var obj = {};
 
         var directionVector = {
@@ -116,42 +137,21 @@ autoSim.LangTransitions = function ($scope) {
         };
 
         var directionVectorLength = Math.sqrt(directionVector.x * directionVector.x + directionVector.y * directionVector.y);
-        var nStart = ($scope.productions.radiusNT) / directionVectorLength;
-        var nEnd = ($scope.productions.radiusNT) / directionVectorLength;
+
+        //Non Terminals in grid are bigger, transition is not completly correct, but works for now.
+        var nStart = ($scope.productions.radiusT) / directionVectorLength;
+        var nEnd = ($scope.productions.radiusT) / directionVectorLength;
 
         obj.xStart = from.posX + nStart * directionVector.x;
         obj.yStart = from.posY + nStart * directionVector.y;
         obj.xEnd = to.posX - nEnd * directionVector.x;
         obj.yEnd = to.posY - nEnd * directionVector.y;
 
-        var xStart = MathHelper.getAngles({
-            x: obj.xStart - from.posX,
-            y: obj.yStart - from.posY
-        }, {
-            x: $scope.productions.radiusNT,
-            y: 0
-        });
-        var xEnd = MathHelper.getAngles({
-            x: obj.xEnd - to.posX,
-            y: obj.yEnd - to.posY
-        }, {
-            x: $scope.productions.radiusNT,
-            y: 0
-        });
-
-        obj.xStart = from.posX + ($scope.productions.radiusNT * Math.cos(MathHelper.toRadians(xStart.upperAngle)));
-        obj.yStart = from.posY - ($scope.productions.radiusNT * Math.sin(MathHelper.toRadians(xStart.upperAngle)));
-        obj.xEnd = to.posX + ($scope.productions.radiusNT * Math.cos(MathHelper.toRadians(xEnd.lowerAngle)));
-        obj.yEnd = to.posY - ($scope.productions.radiusNT * Math.sin(MathHelper.toRadians(xEnd.lowerAngle)));
-
-        var x = from.posX;
-        var y = from.posY;
         var path = d3.path();
         path.moveTo(obj.xStart, obj.yStart);
         path.lineTo(obj.xEnd, obj.yEnd);
         obj = path.toString();
         path.closePath();
-
         return obj;
     };
 
@@ -159,12 +159,12 @@ autoSim.LangTransitions = function ($scope) {
      * Updates the current path to a newer one.
      * @param {[[Type]]} production [[Description]]
      */
-    self.updateTransitionPosition = function (production) {
+    self.updateTransitionPosition = function (production, isTerminal) {
 
         _.forEach(self, function (value) {
 
             if (value.from === production || value.to === production) {
-                value.path = self.calculatePath(value.from, value.to);
+                value.path = self.calculatePath(value.from, value.to, isTerminal);
             }
         });
     };

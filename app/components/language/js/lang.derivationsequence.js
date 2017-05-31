@@ -19,7 +19,7 @@ autoSim.DerivationSequence = function ($scope) {
         var check = false;
         var string = "";
 
-        _.forEach($scope.productions, function (production) {
+        _.forEach($scope.productions.nonTerminalObject, function (production) {
 
             if (production.id == self.currentPosition) {
 
@@ -31,7 +31,7 @@ autoSim.DerivationSequence = function ($scope) {
 
                     //Check if endsign is not reachable!!!!
 
-                    _.forEach($scope.productions, function (followProduction) {
+                    _.forEach($scope.productions.nonTerminalObject, function (followProduction) {
 
                         if (follows == followProduction.id) {
 
@@ -76,7 +76,7 @@ autoSim.DerivationSequence = function ($scope) {
 
         while ($scope.productions.getEndSignId() !== self.currentPosition) {
             self.getNextTerminal();
-
+    
             if (self.counter > 10) {
                 return false;
             }

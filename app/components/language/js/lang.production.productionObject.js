@@ -1,3 +1,4 @@
+// NOT LONGER IN USE !!!!!!!!!!!!!!!!!!
 autoSim.Production = function (id, left, right, posx, posy) {
     var self = this;
 
@@ -31,7 +32,8 @@ autoSim.rightProduction = function (id, posX, posY, char) {
     self.posX = posX;
     self.posY = posY;
     self.char = char;
-
+    self.selected = null;
+    
     /**
      * Returns the production with the given id.
      * @param rightId
