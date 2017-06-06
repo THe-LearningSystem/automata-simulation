@@ -1,3 +1,4 @@
+
 <g class="transition" from-state-id="{{transitionGroup.fromState.id}}" to-state-id="{{transitionGroup.toState.id}}" ng-class="{active:transitionGroup === transitions.selected,
    'animated-transition':transitionGroup.fromState === simulator.animated.transition.fromState && transitionGroup.toState ===simulator.animated.transition.toState }">
     <!--Arrows:Start-->
@@ -20,12 +21,16 @@
         <tspan ng-repeat="transition in transitionGroup" transition-id="{{transition.id}}"
                style="font-family:'Roboto', sans-serif;">
             <tspan ng-class="{'animated-transition-text':transition === simulator.animated.transition}"
-                   ng-show="automatonData.type !== 'PDA' && automatonData.type !== 'NPDA'">
+                   ng-show="automatonData.type !== 'PDA' && automatonData.type !== 'NPDA' && automatonData.type !== 'TM'">
                 {{transition.inputSymbol}}
             </tspan>
             <tspan ng-class="{'animated-transition-text':transition === simulator.animated.transition}"
                    ng-show="automatonData.type === 'PDA' || automatonData.type === 'NPDA'">
                 {{transition.inputSymbol}},{{transition.readFromStack}};{{transition.writeToStack}}
+            </tspan>
+            <tspan ng-class="{'animated-transition-text':transition === simulator.animated.transition}"
+                   ng-show="automatonData.type === 'TM'">
+                {{transition.inputSymbol}}; {{transition.outputSymbol}}, {{transition.movingDirection}}
             </tspan>
             {{$last ? '' : ' | '}}
         </tspan>

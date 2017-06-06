@@ -59,7 +59,7 @@ autoSim.directive("bulkTest", function () {
                 scope.bulkTest();
             };
 
-            if (scope.parent.automatonData.acceptedInputRaw !== "" || scope.parent.automatonData.rejectedInputRaw != "")
+            if (scope.parent.automatonData.acceptedInputRaw !== "" || scope.parent.automatonData.rejectedInputRaw !== "")
                 scope.bulkTest();
 
 

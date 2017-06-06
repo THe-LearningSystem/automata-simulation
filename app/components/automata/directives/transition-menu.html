@@ -5,8 +5,14 @@
             <change-input-field-value char="ε"></change-input-field-value>
             <change-input-field-value char="⊥"></change-input-field-value>
         </div>
+        <div ng-show="automatonData.type ==='TM'">
+            <change-input-field-value char="☐"></change-input-field-value>
+            <change-input-field-value char="←"></change-input-field-value>
+            <change-input-field-value char="→"></change-input-field-value>
+            <change-input-field-value char="↺"></change-input-field-value>
+        </div>
         <li ng-repeat="(key, transition) in transitions.menu.edit.transitionGroup">
-            <div class="input-group" ng-class="transition.inputSymbol.error ===true ? 'has-error':''">
+            <div ng-show="automatonData.type!=='TM'" class="input-group" ng-class="transition.inputSymbol.error ===true ? 'has-error':''">
                 <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
                 <input class="form-control" type="text" ng-model="transition.inputSymbol.value" maxlength="1"
                        ng-attr-show-focus="true" ng-disabled="simulator.isInPlay">
@@ -35,16 +41,53 @@
                       ng-click="simulator.isInPlay ? pseudoFunction() : transitions.remove(transitions.getById(transition.id)); transitions.menu.edit.open(transitions.selected)"
                       ng-disabled="simulator.isInPlay"> <span class="icon-times"></span> </span>
             </div>
+
+
+            <div ng-show="automatonData.type ==='TM'">
+              <div class="input-group" ng-class="transition.inputSymbol.error === true ? 'has-error':''">
+                  <span class="input-group-addon">{{"TRANS_MENU.NAME" | translate}}</span>
+                  <input id="transition-read-symbol-{{transition.id}}" class="form-control" type="text" ng-model="transition.inputSymbol.value" maxlength="1"
+                         ng-attr-show-focus="true" ng-disabled="simulator.isInPlay">
+              </div>
+              <div class="alert alert-danger alert-transition"
+                   ng-show="transition.inputSymbol.error && transition.isUnique">
+                   {{"TRANS_MENU.NAME_TOO_SHORT"| translate}}
+              </div>
+              <div class="input-group" ng-class="transition.outputSymbol.error === true ? 'has-error':''">
+                  <span class="input-group-addon">{{"TRANS_MENU.TM_WRITE_SYMBOL"| translate}}</span>
+                  <input id="transition-write-symbol-{{transition.id}}" type="text" class="form-control"
+                           ng-model="transition.outputSymbol.value" maxlength="1"
+                           ng-disabled="simulator.isInPlay">
+              </div>
+              <div class="alert alert-danger alert-transition"
+                   ng-show="transition.outputSymbol.error && transition.isUnique">
+                   {{"TRANS_MENU.NAME_TOO_SHORT"| translate}}
+              </div>
+              <div class="input-group"
+                   ng-class="transition.movingDirection.error ===true ? 'has-error':''">
+                   <span class="input-group-addon">{{"TRANS_MENU.TM_MOVING_DIRECTION"| translate}}</span>
+                   <input id="transition-moving-direction-{{transition.id}}" class="form-control" type="text"
+                          ng-model="transition.movingDirection.value" maxlength="1"
+                          ng-disabled="simulator.isInPlay">
+              </div>
+              <div class="alert alert-danger alert-transition"
+                   ng-show="transition.movingDirection.error && transition.isUnique">
+                   {{"TRANS_MENU.NAME_TOO_SHORT"| translate}}
+              </div>
+              <span class="input-group-addon btn btn-danger transbutton"
+                    ng-click="simulator.isInPlay ? pseudoFunction() : transitions.remove(transitions.getById(transition.id)); transitions.menu.edit.open(transitions.selected)"
+                    ng-disabled="simulator.isInPlay"> <span class="icon-times"></span> </span>
+            </div>
             <p></p>
             <div class="alert alert-danger alert-transition"
                  ng-show="(transition.error || transition.readFromStack.error || transition.writeToStack.error)&& transition.isUnique">
                 {{"TRANS_MENU.NAME_TOO_SHORT"| translate}}
             </div>
-            <div class="alert alert-danger  alert-transition"
+            <div class="alert alert-danger alert-transition"
                  ng-show="!transition.isUnique && !automatonData.nonDeterministic">
                 {{"TRANS_MENU.NOT_DETERMINISTIC"| translate}}
             </div>
-            <div class="alert alert-danger  alert-transition"
+            <div class="alert alert-danger alert-transition"
                  ng-show="!transition.isUnique&& automatonData.nonDeterministic">
                 {{"TRANS_MENU.TRANS_ALREADY_EXISTS"| translate}}
             </div>

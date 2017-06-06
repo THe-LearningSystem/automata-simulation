@@ -9,12 +9,20 @@
     </menubutton>
     <menubutton icon="wrench" action="testAgent.testNPDA()" ng-show="automatonData.type== 'NPDA'">
     </menubutton>
+    <menubutton icon="wrench" action="testAgent.testTM()" ng-show="automatonData.type == 'TM'">
+    </menubutton>
     <p>
         AutomatonData:
         <json-formatter json="automatonData" open="0"></json-formatter>
     </p>
     <p>
         <json-formatter json="simulator.animated" open="0"></json-formatter>
+    </p>
+    <p>
+      <json-formatter json="simulator.tape" open="0"></json-formatter>
+    </p>
+    <p>
+      <json-formatter json="simulator.virtualTape" open="0"></json-formatter>
     </p>
     <p>
         <json-formatter json="states" open="0"></json-formatter>

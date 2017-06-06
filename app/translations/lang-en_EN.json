@@ -29,7 +29,8 @@
     "PAUSE": "Pause",
     "STOP": "Stop",
     "STEPBACKWARD": "Step Backward",
-    "STEPFORWARD": "Step Forward"
+    "STEPFORWARD": "Step Forward",
+    "TAPESTARTLEFT": "Tapestart = left"
   },
   "SIM_SET": {
     "TITLE": "Simulation Settings",
@@ -65,7 +66,9 @@
     "NEXTSTATE": "Next State",
     "NAME": "Char",
     "NAME_TOO_SHORT": "Char too short!",
-    "NAME_ALREADY_EXIST": "Transition char already exists!"
+    "NAME_ALREADY_EXIST": "Transition char already exists!",
+    "TM_WRITE_SYMBOL": "written Symbol",
+    "TM_MOVING_DIRECTION": "Head moving direction"
   },
   "TABLE": {
     "TITLE": "Statetable"
@@ -77,6 +80,7 @@
     "TTSTF": "Statetransitionfunctions",
     "TTSTART": "Startstate",
     "TTFINAL": "Finalstates",
+    "TTALPHABET": "Tapealphabet",
     "F": "F"
   },
   "MODAL_BUTTON": {
@@ -93,5 +97,8 @@
   "IMPORT": {
     "TITLE": "Import",
     "DESC": "Do you want to override the current Automaton with the imported Automaton?"
+  },
+  "TM": {
+    "OUT_OF_BOUNDS": "This automaton is a model, therefore it has only a limited tape!"
   }
 }

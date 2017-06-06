@@ -288,3 +288,28 @@ autoSim.directive("svgPdaStack", function () {
         templateUrl: 'components/automata/directives/svg/svg-pda-stack.html'
     };
 });
+
+autoSim.directive("svgTmTape", function () {
+    return {
+        replace: true,
+        restrict: 'E',
+        templateNamespace: 'svg',
+        scope: {},
+        link: function (scope, elm, attrs) {
+            scope.statediagram = scope.$parent.statediagram;
+            scope.simulator = scope.$parent.simulator;
+            scope.statediagram.updateWidthAndHeight();
+
+            scope.diagramWidth = scope.statediagram.getSvgWidth();
+            scope.diagramHeight = scope.statediagram.getSvgHeight();
+            //tapeWidth = tapeItemWidth * scope.simulator.tape.tapeArray.length
+            scope.tapeWidth = 750;
+            scope.tapeHeight = 30;
+            scope.tapeItemWidth = 30;
+            scope.tapeItemHeight = 26;
+            scope.tapePaddingToTop = 35;
+            scope.pointerLength = 35;
+        },
+        templateUrl: 'components/automata/directives/svg/svg-tm-tape.html'
+    };
+});

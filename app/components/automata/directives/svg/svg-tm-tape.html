@@ -1,0 +1,73 @@
+<g ng-attr-transform="translate({{statediagram.svgWidth}},{{statediagram.svgHeight}})">
+
+  <!--tapeItems-->
+  <g ng-repeat="tapeItem in simulator.tape.tapeArray track by $index" >
+      <rect id="tape-item "class="tape-item"
+            ng-class="{'animated-currenttapeitem-svg': $index === simulator.animated.currentTapeItem,
+              'animated-acceptedtapeitem-svg': $index === simulator.animated.currentTapeItem && simulator.status == 'accepted',
+              'animated-not-acceptedtapeitem-svg': $index === simulator.animated.currentTapeItem && simulator.status == 'notAccepted'}"
+            ng-attr-x="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))+(tapeItemWidth*$index)}}"
+            ng-attr-y="{{-diagramHeight + tapePaddingToTop + 1}}"
+            ng-attr-width="{{tapeItemWidth}}"
+            ng-attr-height="{{tapeItemHeight+2}}">
+      </rect>
+      <text class="tape-text" dominant-baseline="central" text-anchor="middle"
+            ng-attr-x="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))+(tapeItemWidth*$index)+(tapeItemWidth/2)}}"
+            ng-attr-y="{{-diagramHeight + tapePaddingToTop+(tapeItemWidth/2)}}">
+            {{tapeItem}}
+      </text>
+      <!--zuerst oberer Punkt, dann unterer-->
+      <line class="tape"
+            ng-attr-x1="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))+(tapeItemWidth*$index)}}"
+            ng-attr-y1="{{-diagramHeight + tapePaddingToTop}}"
+            ng-attr-x2="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))+(tapeItemWidth*$index)}}"
+            ng-attr-y2="{{-diagramHeight + tapePaddingToTop + tapeHeight}}">
+      </line>
+    </g>
+
+    <!--linke Veritkallinie-->
+    <!--zuerst oberer Punkt, dann unterer-->
+    <line class="tape"
+          ng-attr-x1="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))}}"
+          ng-attr-y1="{{-diagramHeight + tapePaddingToTop}}"
+          ng-attr-x2="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))}}"
+          ng-attr-y2="{{-diagramHeight + tapePaddingToTop + tapeHeight}}">
+    </line>
+
+    <!--obere Horizontallinie-->
+    <!--zuerst linker Punkt, dann rechter-->
+    <line class="tape"
+          ng-attr-x1="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))}}"
+          ng-attr-y1="{{-diagramHeight + tapePaddingToTop}}"
+          ng-attr-x2="{{-((diagramWidth - tapeWidth)/2)}}"
+          ng-attr-y2="{{-diagramHeight + tapePaddingToTop}}">
+    </line>
+
+    <!--untere Horizontalllinie-->
+    <!--zuerst linker Punkt, dann rechter-->
+    <line class="tape"
+          ng-attr-x1="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))}}"
+          ng-attr-y1="{{-diagramHeight + tapePaddingToTop + tapeHeight}}"
+          ng-attr-x2="{{-((diagramWidth - tapeWidth)/2)}}"
+          ng-attr-y2="{{-diagramHeight + tapePaddingToTop + tapeHeight}}">
+    </line>
+
+    <!--rechte Veritkallinie-->
+    <!--zuerst oberer Punkt, dann unterer-->
+    <line class="tape"
+          ng-attr-x1="{{-((diagramWidth - tapeWidth)/2)}}"
+          ng-attr-y1="{{-diagramHeight + tapePaddingToTop}}"
+          ng-attr-x2="{{-((diagramWidth - tapeWidth)/2)}}"
+          ng-attr-y2="{{-diagramHeight + tapePaddingToTop + tapeHeight}}">
+    </line>
+
+    <!--Pointer-->
+    <!--zuerst unterer Punkt, dann oberer-->
+    <line class="transition-line start-line"
+          ng-attr-x1="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))+(tapeItemWidth*(simulator.tape.pointer + 1))-(tapeItemWidth/2)}}"
+          ng-attr-y1="{{-diagramHeight + tapePaddingToTop + tapeHeight + pointerLength}}"
+          ng-attr-x2="{{-(tapeWidth + ((diagramWidth - tapeWidth)/2))+(tapeItemWidth*(simulator.tape.pointer + 1))-(tapeItemWidth/2)}}"
+          ng-attr-y2="{{-diagramHeight + tapePaddingToTop + tapeHeight - 3}}"
+          marker-end="url(#marker-end-arrow)">
+    </line>
+</g>

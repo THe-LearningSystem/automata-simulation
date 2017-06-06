@@ -3,7 +3,12 @@
     <thead>
     <tr>
         <th>/</th>
-        <th ng-repeat="value in table.inputSymbolAlphabet">
+        <th ng-show="automatonData.type!=='TM'" ng-repeat="value in table.inputSymbolAlphabet">
+            <span ng-class="{'selected':value.selected,'animated-transition':value.animated}">
+                {{value.inputSymbol}}
+            </span>
+        </th>
+        <th ng-show="automatonData.type==='TM'" ng-repeat="value in table.transitionAlphabet">
             <span ng-class="{'selected':value.selected,'animated-transition':value.animated}">
                 {{value.inputSymbol}}
             </span>
@@ -25,14 +30,27 @@
             <sub ng-show="states.final.isFinalState(value.state)">{{"STF.F" | translate}}</sub>
         </th>
         <span>
-        <td ng-repeat="transvalue in value.trans">
+        <td ng-show="automatonData.type!=='TM'" ng-repeat="transvalue in value.trans">
             <span ng-repeat="transition in transvalue">
                  <span ng-class="{'selected':transition.selected,
             'selected-transition':value.state === transitions.selected.fromState,
             'animated-currentstate':value.state === simulator.animated.currentState,
-            'animated-accepted':value.state === simulator.animated.currentState&& simulator.status == 'accepted',
-            'animated-not-accepted':value.state === simulator.animated.currentState&& simulator.status == 'notAccepted'}">
+            'animated-accepted':value.state === simulator.animated.currentState && simulator.status == 'accepted',
+            'animated-not-accepted':value.state === simulator.animated.currentState && simulator.status == 'notAccepted'}">
                      {{transition.toState.name}}
+                 </span>
+                {{$last ? ' ' : ', '}}
+            </span>
+
+        </td>
+        <td ng-show="automatonData.type==='TM'" ng-repeat="transvalue in value.trans">
+            <span ng-repeat="transition in transvalue">
+                 <span ng-class="{'selected':transition.selected,
+            'selected-transition':value.state === transitions.selected.fromState,
+            'animated-currentstate':value.state === simulator.animated.currentState,
+            'animated-accepted':value.state === simulator.animated.currentState && simulator.status == 'accepted',
+            'animated-not-accepted':value.state === simulator.animated.currentState && simulator.status == 'notAccepted'}">
+                     {{transition.toState.name}}, {{transition.outputSymbol}}, {{transition.movingDirection}}
                  </span>
                 {{$last ? ' ' : ', '}}
             </span>

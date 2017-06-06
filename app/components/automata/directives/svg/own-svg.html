@@ -18,7 +18,7 @@
                         tttext="NAVBAR.TTTEXT_ADDTRANS"></menubutton>
         </div>
     </div>
-    <div class="container-wrapper diagram-container">
+    <div id="diagram-container" class="container-wrapper diagram-container">
         <svg id="diagram-svg" class="noselect" xmlns="http://www.w3.org/2000/svg"
              style="font-family:'Roboto', sans-serif; font-weight:100">
             <svg-grid></svg-grid>
@@ -37,8 +37,8 @@
             </svg-outer>
             <g id="zoom"></g>
             <svg-pda-stack ng-show="automatonData.type=== 'PDA' || automatonData.type ==='NPDA'"></svg-pda-stack>
+            <svg-tm-tape ng-show="automatonData.type === 'TM'"></svg-tm-tape>
         </svg>
         <context-menu></context-menu>
-
     </div>
 </div>
