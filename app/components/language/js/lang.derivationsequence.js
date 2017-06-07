@@ -1,97 +1,162 @@
 autoSim.DerivationSequence = function ($scope) {
     var self = this;
 
-    console.log("create DerivationSequence");
-
-    self.currentPosition = undefined;
-    self.positions = [];
-    self.currentSequenceObjId = 0;
-    self.firstStep = true;
-    self.counter = 0;
+    self.dSequenceId = 0;
 
     $scope.langCore.langUpdateListeners.push(self);
 
-
     /**
-     * Searches the next right sequence.
+     * Creates the complete derivation sequence.
      */
-    self.getNextTerminal = function () {
-        var check = false;
-        var string = "";
+    self.createDerivationSequence = function () {
+        var counter = 0;
+        var endCounter = 10;
+        var firstStep = false;
+        var toAdd;
 
-        _.forEach($scope.productions.nonTerminalObject, function (production) {
+        var current = $scope.productions.getByNonTerminalId($scope.productions.findStartRuleId());
 
-            if (production.id == self.currentPosition) {
+        while (counter < endCounter) {
 
-                _.forEach(production.follower, function (follows) {
+            if (!firstStep) {
+                firstStep = true;
+                toAdd = self.buildSequence(current);
 
-                    if (!check) {
-                        self.positions.push(follows);
-                    }
-
-                    //Check if endsign is not reachable!!!!
-
-                    _.forEach($scope.productions.nonTerminalObject, function (followProduction) {
-
-                        if (follows == followProduction.id) {
-
-                            if (self.firstStep === true) {
-
-                                var sequence = new autoSim.DerivationSequenceObject(self.currentSequenceObjId++,
-                                    production.right);
-                                self.push(sequence);
-                                self.firstStep = false;
-
-                            }
-
-                            if (!check) {
-                                string = _.replace($scope.derivationsequence[self.currentSequenceObjId - 1].sequence,
-                                    followProduction.left, followProduction.right);
-                                var sequence = new autoSim.DerivationSequenceObject(self.currentSequenceObjId++,
-                                    string);
-                                self.push(sequence);
-                            }
-
-                            var test = string.includes($scope.productions.endSign);
-
-                            if (test) {
-                                check = true;
-                                self.positions = [];
-                            }
-
-                        }
-                    });
-                });
+            } else {
+                toAdd = _.replace(self[self.length - 1].sequence, current.left, self.buildSequence(current));
             }
-        });
-        self.currentPosition = self.positions.pop();
-        self.counter++;
+            self.addSequence(toAdd, current);
+
+            current = $scope.productions.getByNonTerminalId(self.setNextFollower(current));
+            counter++;
+        }
+        self.checkEndOfSequence();
     };
 
     /**
-     * Calls the getNextTerminal method, until endSign is reached.
+     * Sets the next Value, to calculate the next derivation step.
+     * @param   {object}   current [[Description]]
+     * @returns {[[Type]]} [[Description]]
      */
-    self.callGetNextTerminal = function () {
-        self.currentPosition = $scope.productions.findStartRuleId();
+    self.setNextFollower = function (current) {
+        var amount = self.checkFollowerAmount(current);
 
-        while ($scope.productions.getEndSignId() !== self.currentPosition) {
-            self.getNextTerminal();
-    
-            if (self.counter > 10) {
-                return false;
+        if (amount > 1) {
+            //Rework for better algorithm, but works for now.
+            var random = Math.floor((Math.random() * amount) + 0);
+
+            return current.follower[random];
+
+        } else {
+
+            return current.follower[0];
+        }
+    };
+
+    /**
+     * Counts the follower of an non terminal.
+     * @param   {object}   current [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.checkFollowerAmount = function (current) {
+        var count = 0;
+
+        _.forEach(current.follower, function (value) {
+            count++;
+        });
+
+        return count;
+    };
+
+    /**
+     * Builds the string, with terminal and non terminal.
+     * @param   {[[Type]]} current [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.buildSequence = function (current) {
+        var string = self.getNextTerminal(current);
+        string = string.concat(self.getNextNonTerminal(current));
+
+        return string;
+    };
+
+    /**
+     * Creates an Object aóf derivation sequence and adds it to itself.
+     * @param {[[Type]]} string [[Description]]
+     */
+    self.addSequence = function (string) {
+        var sequence = new autoSim.DerivationSequenceObject(self.dSequenceId++, string);
+        self.push(sequence);
+    };
+
+    /**
+     * Checks, that the end of the derivation sequence is the end sign, and change it to them.
+     */
+    self.checkEndOfSequence = function () {
+
+        for (var i = self.length - 1; i > 0; i--) {
+            var toCheck = self[i].sequence;
+            var newString = "";
+
+            _.forEach($scope.productions.nonTerminalObject, function (value) {
+
+                if (toCheck.slice(-1) == value.left) {
+
+                    if (value.isEnd) {
+                        i = 0;
+                        newString = _.replace(toCheck, value.left, "");
+                    }
+                }
+            });
+
+            if (i > 0) {
+                self.pop();
             }
         }
+        self.addSequence(newString);
+    };
+
+    /**
+     * Gets the next terminal, based on the non terminal.
+     * @param   {object}   current [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.getNextTerminal = function (current) {
+        var result;
+
+        _.forEach($scope.productions.terminalObject, function (terminal) {
+
+            if (current.followerTerminal == terminal.id) {
+                result = terminal.char;
+            }
+        });
+
+        return result;
+    };
+
+    /**
+     * Gets the next non terminal, based on the current non terminal.
+     * @param   {object}   current [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.getNextNonTerminal = function (current) {
+        var result;
+
+        _.forEach($scope.productions.nonTerminalObject, function (value) {
+
+            if (current.follower[0] == value.id) {
+                result = value.left;
+            }
+        });
+
+        return result;
     };
 
     // Called by the listener in the core.
     self.updateFunction = function () {
-        self.positions = [];
-        self.currentSequenceObjId = 0;
-        self.firstStep = true;
-        self.counter = 0;
 
         while (self.pop() !== undefined) {}
-        self.callGetNextTerminal();
+        self.createDerivationSequence();
     };
 
 };

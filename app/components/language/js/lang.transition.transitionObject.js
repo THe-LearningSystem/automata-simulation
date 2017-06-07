@@ -6,4 +6,4 @@ autoSim.Transition = function (id, fromState, toState, path) {
     self.to = toState;
     self.path = path;
 };
-autoSim.Production.prototype = Array.prototype;
+autoSim.Transition.prototype = Array.prototype;

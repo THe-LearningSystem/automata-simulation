@@ -5,7 +5,5 @@ autoSim.Terminal = function (id, posX, posY, char, leftId) {
     self.posX = posX;
     self.posY = posY;
     self.char = char;
-    self.nonTerminalOwner = leftId;
-    self.selected = null;
 };
 autoSim.Terminal.prototype = Array.prototype;

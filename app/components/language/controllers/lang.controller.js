@@ -1,7 +1,7 @@
 angular.module('automata-simulation').controller('langController', LANGController);
 
 function LANGController($scope, hotkeys) {
-    console.log("create LANGUAGE");
+    console.log("create type 3 LANGUAGE");
     prepareScope($scope);
 
     //Adding the different "classes" to the scope.

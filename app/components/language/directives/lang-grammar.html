@@ -11,6 +11,7 @@
             </span>
             }
         </div>
+
         <div class="stf-element" uib-tooltip="Terminale (Alphabet)" tooltip-placement="right">
             &Sigma; = {
             <span ng-repeat="terminal in productions.terminal">
@@ -20,18 +21,18 @@
             </span>
             }
         </div>
+
         <div class="stf-element" uib-tooltip="Produktionen (Regeln)" tooltip-placement="right">
             P = {
+            <span ng-show="productions.currentEnd">( {{productions.currentEnd}} -> ε )</span>
             <span ng-repeat="production in productions.nonTerminalObject | orderBy:'left'">
-                <span>
-                    ( {{production.left}}
-                </span> ->
-            <span>
-                    {{production.right}} ){{$last ? '' : ', '}}
-                </span>
+                <span> ( {{production.left}} </span> 
+                ->
+            <span> {{production.right}} ) {{$last ? '' : ' , '}} </span>
             </span>
             }
         </div>
+
         <div class="stf-element" uib-tooltip="Startvariable" tooltip-placement="right">
             S<sub>0</sub> = {
             <span>

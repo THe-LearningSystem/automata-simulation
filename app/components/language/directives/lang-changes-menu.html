@@ -7,23 +7,23 @@
                 <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
             </button>
             <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
-                <li ng-repeat="nonTerminal in productions.nonTerminal track by $index">
-                    <a ng-click="productions.changeStart(nonTerminal)">{{nonTerminal}}</a>
+                <li ng-repeat="nonTerminal in productions.nonTerminalObject">
+                    <a ng-click="productions.changeStart(nonTerminal.id)">{{nonTerminal.left}}</a>
                 </li>
             </ul>
         </div>
-    </div>
-
+    </div> 
+    
     <div class="input-group">
-        <span class="input-group-addon">Endzeichen:</span>
+        <span class="input-group-addon">Ende:</span>
         <div uib-dropdown on-toggle="toggled(open)">
             <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
-                {{productions.endSign}}
+                {{productions.currentEnd}} -> ε
                 <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
             </button>
             <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
-                <li ng-repeat="terminal in productions.terminal track by $index">
-                    <a ng-click="productions.changeEndSign(terminal)">{{terminal}}</a>
+                <li ng-repeat="nonTerminal in productions.nonTerminalObject">
+                    <a ng-click="productions.changeEnd(nonTerminal.left)">{{nonTerminal.left}} -> ε</a>
                 </li>
             </ul>
         </div>

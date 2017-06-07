@@ -5,54 +5,28 @@ autoSim.Productions = function ($scope) {
 
     self.nonTerminalId = 0;
     self.terminalId = 0;
+
     self.nonTerminalObject = [];
     self.nonTerminal = [];
     self.terminalObject = [];
     self.terminal = [];
+
+    self.currentStartVariable = null;
+    self.currentEnd = null;
+
     self.selected = null;
-    self.currentStartVariable = undefined;
-    self.endSign = undefined;
     self.radiusNT = 25;
     self.radiusT = 20;
     self.posX = 0;
-    self.posY = 0;
+    self.posY = 100;
 
     $scope.langCore.langUpdateListeners.push(self);
-    
-    /**
-     * Changes the endSign to the given one.
-     * @param {[[Type]]} value [[Description]]
-     */
-    self.changeEndSign = function (value) {
-        console.log(self);
-        self.endSign = value;
-        $scope.langCore.langUpdateListener();
-    };
-
-    /**
-     * Searches for the Id, given the endSign.
-     * @returns {[[Type]]} [[Description]]
-     */
-    self.getEndSignId = function () {
-        var check = -1;
-
-        _.forEach(self.nonTerminalObject, function (value) {
-
-            _.forEach(value.right, function (right) {
-
-                if (right == self.endSign) {
-                    check = value.id;
-                }
-            });
-        });
-        return check;
-    };
 
     /**
      * Changes the start values of the productions.
      * @param {[[Type]]} left [[Description]]
      */
-    self.changeStart = function (left) {
+    self.changeStart = function (nT) {
 
         _.forEach(self.nonTerminalObject, function (value) {
 
@@ -60,9 +34,29 @@ autoSim.Productions = function ($scope) {
                 value.isStart = false;
             }
 
-            if (left == value.left) {
+            if (nT == value.id) {
                 value.isStart = true;
                 self.currentStartVariable = value.left;
+            }
+        });
+        $scope.langCore.langUpdateListener();
+    };
+
+    /**
+     * Changes the end values of the productions.
+     * @param {[[Type]]} left [[Description]]
+     */
+    self.changeEnd = function (left) {
+
+        _.forEach(self.nonTerminalObject, function (value) {
+
+            if (value.isEnd === true) {
+                value.isEnd = false;
+            }
+
+            if (left == value.left) {
+                value.isEnd = true;
+                self.currentEnd = value.left;
             }
         });
         $scope.langCore.langUpdateListener();
@@ -74,7 +68,8 @@ autoSim.Productions = function ($scope) {
      */
     self.removeWithId = function (prId) {
         $scope.langTransitions.removeWithId(prId);
-        self.nonTerminalObject.splice(self.getIndexBynonTerminalId(prId), 1);
+        self.nonTerminalObject.splice(self.getIndexByNonTerminalId(prId), 1);
+        self.terminalObject.splice(self.getIndexByTerminalId(prId), 1);
         $scope.langCore.langUpdateListener();
     };
 
@@ -89,7 +84,7 @@ autoSim.Productions = function ($scope) {
         nonTerminal.posY = newY;
         $scope.langTransitions.updateTransitionPosition(nonTerminal);
     };
-    
+
     /**
      * Moves a terminal to the given position.
      * @param state
@@ -103,16 +98,16 @@ autoSim.Productions = function ($scope) {
     };
 
     /**
-     * Searches the Rule with the given parameter.
+     * Searches the start rule.
      * @param   {[[Type]]} left [[Description]]
      * @returns {[[Type]]} [[Description]]
      */
     self.findStartRuleId = function () {
         var result;
-        
+
         _.forEach(self.nonTerminalObject, function (tmp) {
-            
-            if (tmp.left == self.currentStartVariable) {
+
+            if (tmp.isStart) {
                 result = tmp.id;
             }
         });
@@ -125,7 +120,7 @@ autoSim.Productions = function ($scope) {
     self.updateFollowingIds = function () {
 
         _.forEach(self.nonTerminalObject, function (tmp) {
-            
+
             _.forEach(self.nonTerminalObject, function (production) {
 
                 _.forEach(production.right, function (right) {
@@ -176,7 +171,7 @@ autoSim.Productions = function ($scope) {
     self.getByNonTerminalId = function (nonTerminalId) {
         return self.nonTerminalObject[self.getIndexByNonTerminalId(nonTerminalId)];
     };
-    
+
     /**
      * Returns the terminal with the given id.
      * @param nonTerminalId
@@ -198,7 +193,7 @@ autoSim.Productions = function ($scope) {
             }
         });
     };
-    
+
     /**
      * Get the array index from the production with the given id.
      * @param nonTerminalId
@@ -236,11 +231,10 @@ autoSim.Productions = function ($scope) {
     self.createWithId = function (pId, prLeft, prRight) {
         // Only Type 3 language
         var prLeftUpper = angular.uppercase(prLeft);
-
-        var nonTerminal = new autoSim.nonTerminal(pId, prLeftUpper, prRight, self.posX, self.posY);
+        var terminalId;
 
         var counter = 0;
-        var x = 0;
+        var x = self.posX + 100;
         var y = self.posY + 100;
         self.posX = self.posX + 100;
 
@@ -252,10 +246,12 @@ autoSim.Productions = function ($scope) {
                 }
                 var terminal = new autoSim.Terminal(self.terminalId++, x, y, char, pId);
                 self.terminalObject.push(terminal);
+                terminalId = terminal.id;
                 counter++;
             }
         });
 
+        var nonTerminal = new autoSim.nonTerminal(pId, prLeftUpper, prRight, self.posX, self.posY, terminalId);
         self.nonTerminalObject.push(nonTerminal);
         self.updateTerminals();
         self.updateNonTerminals();

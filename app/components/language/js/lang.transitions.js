@@ -45,7 +45,7 @@ autoSim.LangTransitions = function ($scope) {
 
             _.forEach($scope.productions.terminalObject, function (terminal) {
 
-                if (nonTerminal.id == terminal.nonTerminalOwner) {
+                if (nonTerminal.followerTerminal == terminal.id) {
                     var prod1 = $scope.productions.getByNonTerminalId(nonTerminal.id);
                     var prod2 = $scope.productions.getByTerminalId(terminal.id);
 
