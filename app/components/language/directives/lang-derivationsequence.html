@@ -3,14 +3,18 @@
     <div class="title">Ableitungssequenz</div>
     <div class="content">
         <span>
-            {{productions.startVariable}}
+            {{productions.getByNonTerminalId(productions.start).left}}
         </span>
+        <span class="sequenceA">
         =>
+        </span>
         <span ng-repeat="next in derivationsequence">
             <span>
                 {{next.sequence}}
                 <br>
-                {{$last ? '' : ' => '}}
+                <span class="sequenceB" >
+                    {{$last ? '' : '=>'}}
+                </span>
             </span>
         </span>
     </div>

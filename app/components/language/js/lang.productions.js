@@ -3,24 +3,135 @@ autoSim.Productions = function ($scope) {
 
     console.log("langProduction");
 
+    self.radius = 20;
+    self.orderId = 0;
+
     self.nonTerminalId = 0;
+    self.ntX = 100;
+    self.ntY = 100;
+
     self.terminalId = 0;
+    self.tX = 100;
+    self.tY = 200;
 
     self.nonTerminalObject = [];
-    self.nonTerminal = [];
+    self.nonTerminalOrder = [];
+    self.nonTerminal = []; //to delete!
     self.terminalObject = [];
-    self.terminal = [];
+    self.terminalOrder = [];
+    self.terminal = []; //To delete!
 
-    self.currentStartVariable = null;
-    self.currentEnd = null;
-
+    self.start = undefined;
+    self.end = undefined;
+    self.firstVar = true;
     self.selected = null;
-    self.radiusNT = 25;
-    self.radiusT = 20;
-    self.posX = 0;
-    self.posY = 100;
+    self.beginInput = true;
+
+    self.updateRule = function (prod) {
+        console.log(prod, self.start, self.end);
+        var startProd = self.getByNonTerminalId(self.start);
+
+        if (self.start == prod.left) {
+            self.changeStart(prod.id);
+
+        } else if (self.end == prod.left) {
+            self.changeEnd(prod.left);
+        }
+    };
 
     $scope.langCore.langUpdateListeners.push(self);
+
+    /**
+     * For checking, that the rule is a type 3 rule and holds the conventions.
+     * @param   {[[Type]]} left  [[Description]]
+     * @param   {[[Type]]} right [[Description]]
+     * @returns {boolean}  [[Description]]
+     */
+    self.noErrorsInInput = function (left, right) {
+        var leftLetter = false;
+        var rightLetter = false;
+
+        if (self.checkLeftForLetter(left)) {
+
+            leftLetter = true;
+        }
+
+        if (self.checkRightForLetter(right)) {
+
+            rightLetter = true;
+
+        }
+
+        if (leftLetter && rightLetter && !self.beginInput) {
+            return true;
+        }
+
+        if (self.beginInput) {
+            self.beginInput = false;
+        }
+
+        return false;
+    };
+
+    /**
+     * Checks the left value of a production rule, for only letters.
+     * @param   {[[Type]]} string [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.checkLeftForLetter = function (string) {
+
+        if (string !== undefined) {
+
+            return /^[A-Z]/.test(string);
+        } else {
+
+            self.beginInput = true;
+            return true;
+        }
+    };
+
+    /**
+     * Checks the right value of a production rule, for only letters.
+     * @param   {[[Type]]} string [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.checkRightForLetter = function (string) {
+
+        if (string !== undefined) {
+
+            return /^[a-z][A-Z]/.test(string);
+        } else {
+
+            self.beginInput = true;
+            return true;
+        }
+    };
+
+    /**
+     * Adds the non terminal to the non terminal order array, that is shown in the grid.
+     * @param {[[Type]]} terminal [[Description]]
+     */
+    self.addNonTerminalToOrder = function (nonTerminal) {
+        //Not optimal togetherness of terminal order and non terminal order.
+        if (self.firstVar === false) {
+            self.orderId++;
+        }
+
+        self.nonTerminalOrder.push(new autoSim.nonTerminalOrder(self.orderId, nonTerminal, self.ntX, self.ntY));
+        self.ntX = self.ntX + 100;
+        //self.ntY = self.ntY + 100;
+        self.firstVar = false;
+    };
+
+    /**
+     * Adds the terminal to the terminal order array, that is shown in the grid.
+     * @param {[[Type]]} terminal [[Description]]
+     */
+    self.addTerminalToOrder = function (terminal) {
+        self.terminalOrder.push(new autoSim.terminalOrder(self.orderId, terminal, self.tX, self.tY));
+        self.tX = self.tX + 100;
+        //self.tY = self.tY + 100;
+    };
 
     /**
      * Changes the start values of the productions.
@@ -36,7 +147,11 @@ autoSim.Productions = function ($scope) {
 
             if (nT == value.id) {
                 value.isStart = true;
-                self.currentStartVariable = value.left;
+                self.start = value.id;
+            }
+
+            if (nT == -1) {
+                self.start = undefined;
             }
         });
         $scope.langCore.langUpdateListener();
@@ -56,7 +171,11 @@ autoSim.Productions = function ($scope) {
 
             if (left == value.left) {
                 value.isEnd = true;
-                self.currentEnd = value.left;
+                self.end = value.left;
+            }
+
+            if (left == -1) {
+                self.end = undefined;
             }
         });
         $scope.langCore.langUpdateListener();
@@ -67,7 +186,15 @@ autoSim.Productions = function ($scope) {
      * @param {[[Type]]} prId [[Description]]
      */
     self.removeWithId = function (prId) {
-        $scope.langTransitions.removeWithId(prId);
+
+        if (self.getByNonTerminalId(prId).left == self.end) {
+            self.changeEnd(-1);
+        }
+
+        if (self.getByNonTerminalId(prId).left == self.start) {
+            self.changeStart(-1);
+        }
+
         self.nonTerminalObject.splice(self.getIndexByNonTerminalId(prId), 1);
         self.terminalObject.splice(self.getIndexByTerminalId(prId), 1);
         $scope.langCore.langUpdateListener();
@@ -111,6 +238,7 @@ autoSim.Productions = function ($scope) {
                 result = tmp.id;
             }
         });
+
         return result;
     };
 
@@ -131,7 +259,6 @@ autoSim.Productions = function ($scope) {
                             production.follower.push(tmp.id);
                         }
                     }
-
                 });
             });
         });
@@ -148,10 +275,12 @@ autoSim.Productions = function ($scope) {
         var check = false;
 
         _.forEach(followerArray, function (value) {
+
             if (value == toCheck) {
                 check = true;
             }
         });
+
         return check;
     };
 
@@ -160,6 +289,7 @@ autoSim.Productions = function ($scope) {
      * @returns {[[Type]]} [[Description]]
      */
     self.getNonTerminals = function () {
+
         return self.nonTerminal;
     };
 
@@ -169,7 +299,18 @@ autoSim.Productions = function ($scope) {
      * @returns {object} Returns the objectReference of the production undefined if not found
      */
     self.getByNonTerminalId = function (nonTerminalId) {
+
         return self.nonTerminalObject[self.getIndexByNonTerminalId(nonTerminalId)];
+    };
+
+    /**
+     * Get the non terminal order with the given non terminal id;
+     * @param   {[[Type]]} nonTerminalId [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.getByNonTerminalOrderId = function (nonTerminalId) {
+
+        return self.nonTerminalOrder[self.getIndexByNonTerminalOrderId(nonTerminalId)];
     };
 
     /**
@@ -178,31 +319,72 @@ autoSim.Productions = function ($scope) {
      * @returns {object} Returns the objectReference of the production undefined if not found
      */
     self.getByTerminalId = function (nonTerminalId) {
+
         return self.terminalObject[self.getIndexByTerminalId(nonTerminalId)];
     };
 
     /**
-     * Get the array index from the production with the given id.
-     * @param nonTerminalId
-     * @returns  {Boolean} Returns the index and -1 when production with nonTerminalId not found
+     * Get the terminal order with the given terminal id;
+     * @param   {[[Type]]} nonTerminalId [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.getByTerminalOrderId = function (terminalId) {
+
+        return self.terminalOrder[self.getIndexByTerminalOrderId(terminalId)];
+    };
+
+    /**
+     * Get the array position of the given non terminal.
+     * @param   {[[Type]]} nonTerminalId [[Description]]
+     * @returns {[[Type]]} [[Description]]
      */
     self.getIndexByNonTerminalId = function (nonTerminalId) {
         return _.findIndex(self.nonTerminalObject, function (production) {
             if (production.id === nonTerminalId) {
+
                 return production;
             }
         });
     };
 
     /**
-     * Get the array index from the production with the given id.
-     * @param nonTerminalId
-     * @returns  {Boolean} Returns the index and -1 when production with nonTerminalId not found
+     * Get the array index from the non terminal order array with the given id.
+     * @param   {[[Type]]} nonTerminalId [[Description]]
+     * @returns {[[Type]]} [[Description]]
      */
-    self.getIndexByTerminalId = function (nonTerminalId) {
+    self.getIndexByNonTerminalOrderId = function (nonTerminalId) {
+        return _.findIndex(self.nonTerminalOrder, function (value) {
+            if (value.id === nonTerminalId) {
+
+                return value;
+            }
+        });
+    };
+
+    /**
+     * Get the array position of the given terminal.
+     * @param   {[[Type]]} terminalId [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.getIndexByTerminalId = function (terminalId) {
         return _.findIndex(self.terminalObject, function (production) {
-            if (production.id === nonTerminalId) {
+            if (production.id === terminalId) {
+
                 return production;
+            }
+        });
+    };
+
+    /**
+     * Get the array index from the terminal order array with the given id.
+     * @param   {[[Type]]} terminalId [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.getIndexByTerminalOrderId = function (terminalId) {
+        return _.findIndex(self.terminalOrder, function (value) {
+            if (value.id === terminalId) {
+
+                return value;
             }
         });
     };
@@ -215,8 +397,7 @@ autoSim.Productions = function ($scope) {
      */
     self.create = function (prLeft, prRight) {
         var newProduction = self.createWithId(self.nonTerminalId++, prLeft, prRight);
-        $scope.langTransitions.checkNonTerminalTransitions();
-        $scope.langTransitions.checkTerminalTranstition();
+
         return newProduction;
     };
 
@@ -233,30 +414,73 @@ autoSim.Productions = function ($scope) {
         var prLeftUpper = angular.uppercase(prLeft);
         var terminalId;
 
-        var counter = 0;
-        var x = self.posX + 100;
-        var y = self.posY + 100;
-        self.posX = self.posX + 100;
-
         _.forEach(prRight, function (char) {
 
             if (char == angular.lowercase(char)) {
-                if (counter > 0) {
-                    x = x + 100;
-                }
-                var terminal = new autoSim.Terminal(self.terminalId++, x, y, char, pId);
-                self.terminalObject.push(terminal);
-                terminalId = terminal.id;
-                counter++;
+                terminalId = self.createTerminal(char).id;
             }
         });
 
-        var nonTerminal = new autoSim.nonTerminal(pId, prLeftUpper, prRight, self.posX, self.posY, terminalId);
+        var nonTerminal = new autoSim.nonTerminal(pId, prLeftUpper, prRight, terminalId);
         self.nonTerminalObject.push(nonTerminal);
         self.updateTerminals();
         self.updateNonTerminals();
         self.updateFollowingIds();
+
+        //Clear the input field after submission of the data.
+        self.menuLeft = undefined;
+        self.menuRight = undefined;
+        self.beginInput = true;
+
         return nonTerminal;
+    };
+
+    /**
+     * Set's the follower of a terminal from the non terminal.
+     * Add's the terminal to the terminal object array. !! No available check if there is an existing terminal !!
+     */
+    self.checkTerminalFollowerOfNonTerminal = function () {
+
+        _.forEach(self.nonTerminalObject, function (nonTerminal) {
+
+            _.forEach(nonTerminal.right, function (char) {
+
+                _.forEach(self.terminalObject, function (terminal) {
+
+                    //Only do, when the terminal is not in the terminal object array.
+                    if (char == angular.lowercase(char)) {
+                        var test = false;
+
+                        _.forEach(self.terminalObject, function (value) {
+
+                            if (value.char == char) {
+                                test = true;
+                            }
+                        });
+
+                        if (test === false) {
+                            nonTerminal.followerTerminal = self.createTerminal(char).id;
+                        }
+                    }
+
+                    if (char == terminal.char) {
+                        nonTerminal.followerTerminal = terminal.id;
+                    }
+                });
+            });
+        });
+    };
+
+    /**
+     * Creates a terminal and add's it to the terminal object array.
+     * @param   {[[Type]]} char [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.createTerminal = function (char) {
+        var terminal = new autoSim.Terminal(self.terminalId++, char);
+        self.terminalObject.push(terminal);
+
+        return terminal;
     };
 
     /**
@@ -325,14 +549,51 @@ autoSim.Productions = function ($scope) {
         return false;
     };
 
+    self.removeTerminalIfNotUsed = function () {
+        var check = false;
+
+        _.forEach(self.terminalObject, function (terminal) {
+
+            _.forEach(self.nonTerminalObject, function (nonTerminal) {
+
+                if (terminal !== undefined && terminal.id == nonTerminal.followerTerminal) {
+                    check = true;
+                }
+            });
+
+            if (!check && terminal !== undefined) {
+                self.terminalObject.splice(self.getIndexByTerminalId(terminal.id), 1);
+            }
+            check = false;
+        });
+    };
+
     // Called by the listener in the core.
     self.updateFunction = function () {
+        self.nonTerminalOrder = [];
         self.nonTerminal = [];
+        self.terminalOrder = [];
         self.terminal = [];
+
+        self.beginInput = true;
+
+        self.ntX = 100;
+        self.ntY = 100;
+
+        self.tX = 100;
+        self.tY = 200;
 
         self.updateNonTerminals();
         self.updateTerminals();
-    };
 
+        _.forEach(self.nonTerminalObject, function (value) {
+            value.follower.pop();
+            value.followerTerminal = -1;
+        });
+
+        self.checkTerminalFollowerOfNonTerminal();
+        self.updateFollowingIds();
+        self.removeTerminalIfNotUsed();
+    };
 };
 autoSim.Productions.prototype = Array.prototype;

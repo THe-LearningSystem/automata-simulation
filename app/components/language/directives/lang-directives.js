@@ -53,6 +53,12 @@ autoSim.directive("langdevelop", function () {
     };
 });
 
+autoSim.directive("langprogramsettings", function () {
+    return {
+        templateUrl: 'components/language/directives/lang-generalSettings.html'
+    };
+});
+
 autoSim.directive("langgrammar", function () {
     return {
         templateUrl: 'components/language/directives/lang-grammar.html'

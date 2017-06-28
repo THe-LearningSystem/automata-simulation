@@ -8,8 +8,11 @@ function TestLangData($scope) {
 
         var rule1 = $scope.productions.create("A", "aB");
         var rule2 = $scope.productions.create("B", "bC");
-        //var rule21 = $scope.productions.create("B", "iC");
+        var rule21 = $scope.productions.create("B", "iC");
         var rule3 = $scope.productions.create("C", "cA");
+        
+        //var rule4 = $scope.productions.create("A", "aB");
+        //var rule5 = $scope.productions.create("B", "bC");
 
         $scope.productions.changeStart(rule1.id);
         $scope.productions.changeEnd(rule3.left);

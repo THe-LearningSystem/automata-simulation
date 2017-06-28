@@ -2,15 +2,25 @@
     <form name="editAddNewMenu">
         <div class="input-group">
             <span class="input-group-addon">Regel links:</span>
-            <input class="form-control" id="production-input-left" maxlength="1" ng-model="productions.menu.edit.left">
+            <input class="form-control"id="production-input-left" maxlength="1" ng-model="productions.menuLeft">
+        </div>
+
+        <p></p>
+        <div class="alert alert-danger" ng-show="!productions.checkLeftForLetter(productions.menuLeft)">
+            Bitte nur non Terminal (Großbuchstabe) eingeben!
         </div>
 
         <div class="input-group">
             <span class="input-group-addon">Regel rechts:</span>
-            <input class="form-control" id="production-input-right" maxlength="2" ng-model="productions.menu.edit.right">
+            <input class="form-control" id="production-input-right" maxlength="2" ng-model="productions.menuRight">
         </div>
 
-        <button class="btn" ng-click="productions.create(productions.menu.edit.left, productions.menu.edit.right)">
+        <p></p>
+        <div class="alert alert-danger" ng-show="!productions.checkRightForLetter(productions.menuRight)">
+            Bitte nur ein Terminal (Kleinbuchstabe) und dann ein non Terminal (Großbuchstabe) eingeben!
+        </div> 
+        
+        <button class="btn" ng-disabled="!productions.noErrorsInInput(productions.menuLeft, productions.menuRight)" ng-click="productions.create(productions.menuLeft, productions.menuRight)">
             Hinzufügen
         </button>
     </form>

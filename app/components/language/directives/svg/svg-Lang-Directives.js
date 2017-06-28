@@ -70,7 +70,7 @@ autoSim.directive("svglangnonterminal", function () {
             var dragAmount;
 
             scope.startProductionDragging = function () {
-                scope.productions.selected = scope.productions.getByNonTerminalId(parseInt(d3.select(this).attr("nonterminal-object-id")));
+                scope.productions.selected = scope.productions.getByNonTerminalOrderId(parseInt(d3.select(this).attr("nonterminal-object-id")));
                 scope.draggingPrevent = false;
                 dragAmount = 0;
             };
@@ -155,7 +155,7 @@ autoSim.directive("svglangterminal", function () {
             var dragAmount;
                 
             scope.startProductionDragging = function () {
-                scope.productions.selected = scope.productions.getByTerminalId(parseInt(d3.select(this).attr("terminal-object-id")));
+                scope.productions.selected = scope.productions.getByTerminalOrderId(parseInt(d3.select(this).attr("terminal-object-id")));
                 scope.draggingPrevent = false;
                 dragAmount = 0;
             };

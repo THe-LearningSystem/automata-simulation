@@ -1,9 +1,7 @@
-autoSim.Terminal = function (id, posX, posY, char, leftId) {
+autoSim.Terminal = function (id, char) {
     var self = this;
 
     self.id = id;
-    self.posX = posX;
-    self.posY = posY;
     self.char = char;
 };
 autoSim.Terminal.prototype = Array.prototype;

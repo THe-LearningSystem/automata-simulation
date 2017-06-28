@@ -2,35 +2,49 @@ autoSim.DerivationSequence = function ($scope) {
     var self = this;
 
     self.dSequenceId = 0;
+    self.maxSteps = 10;
 
     $scope.langCore.langUpdateListeners.push(self);
-
+    
     /**
      * Creates the complete derivation sequence.
      */
     self.createDerivationSequence = function () {
         var counter = 0;
-        var endCounter = 10;
+        var endCounter = self.maxSteps;
         var firstStep = false;
         var toAdd;
-
+        
         var current = $scope.productions.getByNonTerminalId($scope.productions.findStartRuleId());
+
+        if (current !== undefined) {
+            $scope.productions.addNonTerminalToOrder(current);
+        }
 
         while (counter < endCounter) {
 
-            if (!firstStep) {
-                firstStep = true;
-                toAdd = self.buildSequence(current);
+            if (current === undefined) {
+                counter = endCounter;
 
             } else {
-                toAdd = _.replace(self[self.length - 1].sequence, current.left, self.buildSequence(current));
-            }
-            self.addSequence(toAdd, current);
 
+                if (!firstStep) {
+                    firstStep = true;
+                    toAdd = self.buildSequence(current);
+
+                } else {
+                    toAdd = _.replace(self[self.length - 1].sequence, current.left, self.buildSequence(current));
+                }
+                self.addSequence(toAdd, current);
+            }
             current = $scope.productions.getByNonTerminalId(self.setNextFollower(current));
             counter++;
         }
-        self.checkEndOfSequence();
+
+        if (current !== undefined) {
+            self.checkEndOfSequence();
+            $scope.langTransitions.updateFunction();
+        }
     };
 
     /**
@@ -47,6 +61,9 @@ autoSim.DerivationSequence = function ($scope) {
 
             return current.follower[random];
 
+        } else if (amount == -1) {
+            return -1;
+
         } else {
 
             return current.follower[0];
@@ -61,9 +78,15 @@ autoSim.DerivationSequence = function ($scope) {
     self.checkFollowerAmount = function (current) {
         var count = 0;
 
-        _.forEach(current.follower, function (value) {
-            count++;
-        });
+        if (current === undefined) {
+            count = -1;
+
+        } else {
+
+            _.forEach(current.follower, function (value) {
+                count++;
+            });
+        }
 
         return count;
     };
@@ -91,6 +114,7 @@ autoSim.DerivationSequence = function ($scope) {
 
     /**
      * Checks, that the end of the derivation sequence is the end sign, and change it to them.
+     * Updates the order arrays to the correct sequence.
      */
     self.checkEndOfSequence = function () {
 
@@ -111,6 +135,8 @@ autoSim.DerivationSequence = function ($scope) {
 
             if (i > 0) {
                 self.pop();
+                $scope.productions.terminalOrder.pop();
+                $scope.productions.nonTerminalOrder.pop();
             }
         }
         self.addSequence(newString);
@@ -128,6 +154,7 @@ autoSim.DerivationSequence = function ($scope) {
 
             if (current.followerTerminal == terminal.id) {
                 result = terminal.char;
+                $scope.productions.addTerminalToOrder(terminal);
             }
         });
 
@@ -140,12 +167,13 @@ autoSim.DerivationSequence = function ($scope) {
      * @returns {[[Type]]} [[Description]]
      */
     self.getNextNonTerminal = function (current) {
-        var result;
+        var result = "";
 
         _.forEach($scope.productions.nonTerminalObject, function (value) {
 
             if (current.follower[0] == value.id) {
                 result = value.left;
+                $scope.productions.addNonTerminalToOrder(value);
             }
         });
 
@@ -158,6 +186,14 @@ autoSim.DerivationSequence = function ($scope) {
         while (self.pop() !== undefined) {}
         self.createDerivationSequence();
     };
+    
+    //Not sure to do this??
+    $scope.$watch('derivationsequence.maxSteps', function (oldValue, newValue) {
+        
+        if (oldValue !== newValue) {
+            $scope.langCore.langUpdateListener();
+        }
+    });
 
 };
 autoSim.DerivationSequence.prototype = Array.prototype;

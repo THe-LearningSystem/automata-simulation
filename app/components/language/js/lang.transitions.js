@@ -5,23 +5,7 @@ autoSim.LangTransitions = function ($scope) {
 
     self.id = 0;
 
-    /**
-     * Removes the transition with the given production id.
-     */
-    self.removeWithId = function (prId) {
-        var toDelete = [];
-
-        _.forEach(self, function (transition) {
-
-            if (prId == transition.from.id || prId == transition.to.id) {
-                toDelete.push(self.getIndexByTransitionId(transition.id));
-            }
-        });
-
-        _.forEach(toDelete, function (value) {
-            self.splice(toDelete.pop(), 1);
-        });
-    };
+    $scope.langCore.langUpdateListeners.push(self);
 
     /**
      * Get the array index from the transition with the given id.
@@ -41,13 +25,13 @@ autoSim.LangTransitions = function ($scope) {
      */
     self.checkTerminalTranstition = function () {
 
-        _.forEach($scope.productions.nonTerminalObject, function (nonTerminal) {
+        _.forEach($scope.productions.nonTerminalOrder, function (nonTerminal) {
 
-            _.forEach($scope.productions.terminalObject, function (terminal) {
+            _.forEach($scope.productions.terminalOrder, function (terminal) {
 
-                if (nonTerminal.followerTerminal == terminal.id) {
-                    var prod1 = $scope.productions.getByNonTerminalId(nonTerminal.id);
-                    var prod2 = $scope.productions.getByTerminalId(terminal.id);
+                if (nonTerminal.id == terminal.id) {
+                    var prod1 = $scope.productions.getByNonTerminalOrderId(nonTerminal.id);
+                    var prod2 = $scope.productions.getByTerminalOrderId(terminal.id);
 
                     if (!self.checkIfTransitionExists(prod1, prod2)) {
                         self.create(prod1, prod2, true);
@@ -62,23 +46,15 @@ autoSim.LangTransitions = function ($scope) {
      */
     self.checkNonTerminalTransitions = function () {
 
-        _.forEach($scope.productions.nonTerminalObject, function (production) {
+        for (var i = 0; i < $scope.productions.nonTerminalOrder.length - 1; i++) {
 
-            _.forEach($scope.productions.nonTerminalObject, function (production2) {
+            var prod1 = $scope.productions.getByNonTerminalOrderId($scope.productions.nonTerminalOrder[i].id);
+            var prod2 = $scope.productions.getByNonTerminalOrderId($scope.productions.nonTerminalOrder[i + 1].id);
 
-                _.forEach(production2.follower, function (follow) {
-
-                    if (production.id == follow) {
-                        var prod1 = $scope.productions.getByNonTerminalId(production2.id);
-                        var prod2 = $scope.productions.getByNonTerminalId(production.id);
-
-                        if (!self.checkIfTransitionExists(prod1, prod2)) {
-                            self.create(prod1, prod2);
-                        }
-                    }
-                });
-            });
-        });
+            if (!self.checkIfTransitionExists(prod1, prod2)) {
+                self.create(prod1, prod2);
+            }
+        }
     };
 
     /**
@@ -139,8 +115,8 @@ autoSim.LangTransitions = function ($scope) {
         var directionVectorLength = Math.sqrt(directionVector.x * directionVector.x + directionVector.y * directionVector.y);
 
         //Non Terminals in grid are bigger, transition is not completly correct, but works for now.
-        var nStart = ($scope.productions.radiusT) / directionVectorLength;
-        var nEnd = ($scope.productions.radiusT) / directionVectorLength;
+        var nStart = ($scope.productions.radius) / directionVectorLength;
+        var nEnd = ($scope.productions.radius) / directionVectorLength;
 
         obj.xStart = from.posX + nStart * directionVector.x;
         obj.yStart = from.posY + nStart * directionVector.y;
@@ -169,5 +145,12 @@ autoSim.LangTransitions = function ($scope) {
         });
     };
 
+    // Called by the listener in the core.
+    self.updateFunction = function () {
+
+        while (self.pop() !== undefined) {}
+        self.checkTerminalTranstition();
+        self.checkNonTerminalTransitions();
+    };
 };
 autoSim.LangTransitions.prototype = Array.prototype;

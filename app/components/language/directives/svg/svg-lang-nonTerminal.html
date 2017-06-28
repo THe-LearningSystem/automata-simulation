@@ -1,7 +1,6 @@
 <g ng-attr-transform="translate({{production.posX}} {{production.posY}})" class="nonTerminal" ng-attr-nonterminal-object-id="{{production.id}}">
-    <circle class="nonTerminal-circle" r="25"></circle>
-    <circle class="nonTerminal-circle hover-circle" r="25"></circle>
-    <text class="state-text" dominant-baseline="central" text-anchor="middle" style="font-family:'Roboto', sans-serif;">
-        {{production.left}}
+    <circle class="lang-circle" r="20"></circle>
+    <text class="nonTerminal-text" dominant-baseline="central" text-anchor="middle" style="font-family:'Roboto', sans-serif;">
+        {{production.nt.left}}
     </text>
 </g>

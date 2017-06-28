@@ -24,9 +24,9 @@
 
         <div class="stf-element" uib-tooltip="Produktionen (Regeln)" tooltip-placement="right">
             P = {
-            <span ng-show="productions.currentEnd">( {{productions.currentEnd}} -> ε )</span>
+            <span ng-show="productions.end">( {{productions.end}} -> ε ) ,</span>
             <span ng-repeat="production in productions.nonTerminalObject | orderBy:'left'">
-                <span> ( {{production.left}} </span> 
+                <span> ( {{productions.getByNonTerminalId(productions.start).left}} </span> 
                 ->
             <span> {{production.right}} ) {{$last ? '' : ' , '}} </span>
             </span>
@@ -36,7 +36,7 @@
         <div class="stf-element" uib-tooltip="Startvariable" tooltip-placement="right">
             S<sub>0</sub> = {
             <span>
-                    {{productions.currentStartVariable}}
+                    {{productions.getByNonTerminalId(productions.start).left}}
                 </span> }
         </div>
     </div>

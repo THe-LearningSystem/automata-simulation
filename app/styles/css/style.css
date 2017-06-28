@@ -6332,38 +6332,60 @@ rzslider .rz-pointer:after {
 #diagram-lang-svg {
   width: 100%;
   height: 100%;
-  min-width: auto; }
+  min-width: auto;
+}
 
 #diagram-lang-svg {
   -ms-flex: auto;
-      flex: auto; }
+      flex: auto;
+}
 
 .nonTerminal {
-  cursor: context-menu; }
+  cursor: context-menu;
+}
 
 .nonTerminal:hover {
-  cursor: pointer; }
-
-.nonTerminal:hover .hover-circle {
-  fill: #000;
-  fill-opacity: 0.4; }
-
-.nonTerminal-circle {
-  fill: #CCC;
-  stroke: #666;
-  stroke-width: 2; }
+  cursor: pointer;
+}
 
 .terminal {
   cursor: context-menu; }
 
 .terminal:hover {
-  cursor: pointer; }
+  cursor: pointer;
+}
 
-.terminal:hover .hover-circle {
+.lang-circle {
+  fill: #FFF;
+  fill-opacity: 0.6;
+}
+
+.lang-derivation-sequence .content {
+    padding: 8px;
+}
+
+.lang-derivation-sequence .sequenceA {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.lang-derivation-sequence .sequenceB {
+    padding-left: 2em;
+    padding-right: 1em;
+}
+
+.nonTerminal-text {
+    font-size: 25px;
+}
+
+.terminal-text {
+    font-size: 20px;
+}
+
+#lang-marker-arrow {
   fill: #000;
-  fill-opacity: 0.4; }
+}
 
-.terminal-circle {
-  fill: #CCC;
-  stroke: #666;
-  stroke-width: 2; }
+.lang-transition-line {
+  stroke-width: 1.5;
+}

@@ -3,7 +3,7 @@
         <span class="input-group-addon">Startvariable:</span>
         <div uib-dropdown on-toggle="toggled(open)">
             <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
-                {{productions.currentStartVariable}}
+                {{productions.getByNonTerminalId(productions.start).left}}
                 <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
             </button>
             <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
@@ -12,13 +12,13 @@
                 </li>
             </ul>
         </div>
-    </div> 
-    
+    </div>
+
     <div class="input-group">
         <span class="input-group-addon">Ende:</span>
         <div uib-dropdown on-toggle="toggled(open)">
             <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
-                {{productions.currentEnd}} -> ε
+                {{productions.end ? productions.end + ' -> ε' : ''}}
                 <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
             </button>
             <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
@@ -32,10 +32,10 @@
     <div class="input-group">
         <div class="input-group" ng-repeat="production in productions.nonTerminalObject">
             <span class="input-group-addon">L:</span>
-            <input ng-model="production.left" class="form-control" id="production-input-left" maxlength="1" ng-disabled="production.isStart">
+            <input ng-model="production.left" ng-change="productions.updateRule(production)" class="form-control" id="production-input-left" maxlength="1">
 
             <span class="input-group-addon">R:</span>
-            <input ng-model="production.right" class="form-control" id="production-input-right" maxlength="2">
+            <input ng-model="production.right" ng-change="langCore.langUpdateListener()" class="form-control" id="production-input-right" maxlength="2">
 
             <span class="input-group-addon btn btn-danger transbutton" ng-click="productions.removeWithId(production.id)">
                 <span class="icon-times">
@@ -43,4 +43,8 @@
             </span>
         </div>
     </div>
+
+    <button class="btn" ng-show="true" ng-click="langCore.langUpdateListener()">
+        Aktualisieren
+    </button>
 </container-item>
