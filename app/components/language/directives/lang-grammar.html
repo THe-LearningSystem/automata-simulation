@@ -4,8 +4,8 @@
     <div class="content">
         <div class="stf-element" uib-tooltip="Non Terminale (Variablen)" tooltip-placement="right">
             V = {
-            <span ng-repeat="nonTerminal in productions.nonTerminal">
-                <span>
+            <span ng-repeat="nonTerminal in langGrammar.nonTerminals">
+                <span ng-class="{'lang-simulator-grammar': nonTerminal === langSimulator.animated.currentProduction.left}">
                     {{nonTerminal}}{{$last ? '' : ', '}}
                 </span>
             </span>
@@ -14,8 +14,8 @@
 
         <div class="stf-element" uib-tooltip="Terminale (Alphabet)" tooltip-placement="right">
             &Sigma; = {
-            <span ng-repeat="terminal in productions.terminal">
-                <span>
+            <span ng-repeat="terminal in langGrammar.terminals">
+                <span ng-class="{'lang-simulator-grammar': terminal === langSimulator.animated.currentTerminal}">
                     {{terminal}}{{$last ? '' : ', '}}
                 </span>
             </span>
@@ -24,11 +24,10 @@
 
         <div class="stf-element" uib-tooltip="Produktionen (Regeln)" tooltip-placement="right">
             P = {
-            <span ng-show="productions.end">( {{productions.end}} -> ε ) ,</span>
-            <span ng-repeat="production in productions.nonTerminalObject | orderBy:'left'">
-                <span> ( {{productions.getByNonTerminalId(productions.start).left}} </span> 
-                ->
-            <span> {{production.right}} ) {{$last ? '' : ' , '}} </span>
+            <span ng-repeat="production in langProductionRules | orderBy:'left'">
+                <span ng-class="{'lang-simulator-grammar': production === langSimulator.animated.currentProduction}"> ( {{production.left}} </span>
+                &#11106;
+            <span ng-class="{'lang-simulator-grammar': production === langSimulator.animated.currentProduction}"> {{production.right}} ) {{$last ? '' : ' , '}} </span>
             </span>
             }
         </div>
@@ -36,7 +35,7 @@
         <div class="stf-element" uib-tooltip="Startvariable" tooltip-placement="right">
             S<sub>0</sub> = {
             <span>
-                    {{productions.getByNonTerminalId(productions.start).left}}
+                    {{langProductionRules.getStartRule().left}}
                 </span> }
         </div>
     </div>

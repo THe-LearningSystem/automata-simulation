@@ -16,18 +16,19 @@
             <marker id="lang-marker-arrow" refX="7.5" refY="3" markerWidth="10" markerHeight="10" orient="auto">
                 <path d="M0,0 L0,6 L9,3 z"></path>
             </marker>
+            <marker id="lang-marker-arrow-animated" refX="7.5" refY="3" markerWidth="10" markerHeight="10" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z"></path>
+            </marker>
 
             <svglangouter>
-                <g id="nonTerminals">
-                    <svglangnonterminal ng-repeat="nonTerminal in productions.nonTerminalOrder" production="nonTerminal"></svglangnonterminal>
-                </g>
 
-                <g id="terminals">
-                    <svglangterminal ng-repeat="rightProduction in productions.terminalOrder" production='rightProduction'></svglangterminal>
+                <g id="productionRules">
+                    <svgproductionrule ng-repeat="rule in langDerivationtree.draw">
+                    </svgproductionrule>
                 </g>
 
                 <g id="transitions">
-                    <svglangtransition ng-repeat="transition in langTransitions" transition="transition"></svglangtransition>
+                    <svglangtransition ng-repeat="transition in langTransitions"></svglangtransition>
                 </g>
             </svglangouter>
             <g id="zoom"></g>

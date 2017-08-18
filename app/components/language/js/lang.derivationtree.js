@@ -1,9 +1,7 @@
 //statediagram for the svg diagram
-autoSim.DerivationTree = function ($scope) {
+autoSim.LangDerivationTree = function ($scope) {
     "use strict";
     var self = this;
-
-    console.log("langDerivationTree");
     
     /**
      * Update the width and the Height

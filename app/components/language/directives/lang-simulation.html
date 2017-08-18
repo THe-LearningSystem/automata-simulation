@@ -1,17 +1,28 @@
-<container-item titlename="SIM.TITLE" id="simulation-tab">
+<container-item titlename="Simulation" id="simulation-tab">
     <div class="sim-buttons">
-        <menubutton icon="play" action="simulator.playOrPause()" tttext="SIM.PLAY"
-                    ng-disabled="simulator.animatedSequence !== null"
-                    ng-hide="simulator.isInPlay"></menubutton>
-        <menubutton icon="pause" action="simulator.playOrPause()" tttext="SIM.PAUSE"
-                    ng-hide="!simulator.isInPlay"></menubutton>
-        <menubutton icon="stop" action="simulator.stop()" ng-disabled="!simulator.isInAnimation"
+        <menubutton icon="play" action="langSimulator.playOrPause()" tttext="SIM.PLAY"
+                    ng-disabled="langSimulator.simulationDone || !langWordChecker.inputAccepted"
+                    ng-hide="langSimulator.isInPlay"></menubutton>
+        <menubutton icon="pause" action="langSimulator.playOrPause()" tttext="SIM.PAUSE"
+                    ng-hide="!langSimulator.isInPlay"></menubutton>
+        <menubutton icon="stop" action="langSimulator.stop()" ng-disabled="!langSimulator.isInAnimation"
                     tttext="SIM.STOP"></menubutton>
-        <menubutton icon="fast-backward" action="simulator.stepBackwardWrapper()"
-                    ng-disabled="!simulator.isInAnimation || simulator.animatedSequence !== null"
+        <menubutton icon="fast-backward" action="langSimulator.previousStepWrapper()"
+                    ng-disabled="langSimulator.startReached"
                     tttext="SIM.STEPBACKWARD"></menubutton>
-        <menubutton icon="fast-forward" action="simulator.stepForwardWrapper()"
-                    ng-disabled="simulator.status =='notAccepted' || simulator.status=='accepted' || simulator.animatedSequence !== null"
+        <menubutton icon="fast-forward" action="langSimulator.nextStepWrapper()"
+                    ng-disabled="langSimulator.simulationDone || !langWordChecker.inputAccepted"
                     tttext="SIM.STEPFORWARD"></menubutton>
+    </div>
+    
+    <div class="input-group">
+        
+        <!-- What does aria-hidden exactly do? -->
+        <span class="input-group-addon" aria-hidden="true">Eingabe:</span>
+        <input ng-disabled="langSimulator.isInPlay" class="inputWord form-control" ng-model="languageData.inputWord" ng-change="langCore.langUpdateListener()">
+        <span class="input-group-addon icon-times red sim-input-not-accepted" aria-hidden="true"
+              ng-show="!langWordChecker.inputAccepted"></span>
+        <span class="input-group-addon icon-check green" aria-hidden="true"
+              ng-show="langWordChecker.inputAccepted"></span>
     </div>
 </container-item>

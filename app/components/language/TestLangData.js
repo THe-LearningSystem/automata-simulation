@@ -2,19 +2,32 @@ function TestLangData($scope) {
     "use strict";
     var self = this;
 
-    console.log("langTest");
-
-    self.testLANG = function () {
-
-        var rule1 = $scope.productions.create("A", "aB");
-        var rule2 = $scope.productions.create("B", "bC");
-        var rule21 = $scope.productions.create("B", "iC");
-        var rule3 = $scope.productions.create("C", "cA");
+    self.testLANG1 = function () {
+        // At least 2 times 'a' and then as many of 'a' and then as many of 'b'.
         
-        //var rule4 = $scope.productions.create("A", "aB");
-        //var rule5 = $scope.productions.create("B", "bC");
-
-        $scope.productions.changeStart(rule1.id);
-        $scope.productions.changeEnd(rule3.left);
+        var rule00 = $scope.langProductionRules.create("S", "aA");
+        var rule01 = $scope.langProductionRules.create("A", "aA");
+        var rule02 = $scope.langProductionRules.create("A", "aB");
+        var rule03 = $scope.langProductionRules.create("B", "bB");
+        var rule04 = $scope.langProductionRules.create("B", "ε");
+        
+        $scope.languageData.inputWord = "aaab";
+        $scope.langProductionRules.changeStart(rule00);
+    };
+    
+    self.testLANG2 = function () {
+        // At least 2 times 'a' and then as many of 'a' and then as many of 'b'.
+        
+        var rule10 = $scope.langProductionRules.create("S", "aA");
+        var rule11 = $scope.langProductionRules.create("A", "aA");
+        var rule12 = $scope.langProductionRules.create("A", "bA");
+        var rule13 = $scope.langProductionRules.create("A", "cA");
+        var rule14 = $scope.langProductionRules.create("A", "dA");
+        var rule15 = $scope.langProductionRules.create("A", "aB");
+        var rule16 = $scope.langProductionRules.create("B", "bB");
+        var rule17 = $scope.langProductionRules.create("B", "ε");
+        
+        $scope.languageData.inputWord = "aabcda";
+        $scope.langProductionRules.changeStart(rule10);
     };
 }

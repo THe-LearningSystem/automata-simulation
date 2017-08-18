@@ -1,58 +1,58 @@
 autoSim.LangTransitions = function ($scope) {
     var self = this;
 
-    console.log("create Transitions");
-
-    self.id = 0;
+    self.transitionId = 0;
+    self.radius = 20;
 
     $scope.langCore.langUpdateListeners.push(self);
 
     /**
-     * Get the array index from the transition with the given id.
-     * @param productionId
-     * @returns  {Boolean} Returns the index and -1 when production with productionId not found
+     * Calls the "createWithId" method, to create a new transition.
+     * @param {[[Type]]} from [[Description]]
+     * @param {[[Type]]} to   [[Description]]
      */
-    self.getIndexByTransitionId = function (transitionId) {
-        return _.findIndex(self, function (transition) {
-            if (transition.id === transitionId) {
-                return transition;
-            }
-        });
-    };
+    self.create = function () {
+        var rule = $scope.langDerivationtree.draw;
+        var animationGroup = 0;
 
-    /**
-     * Checks the terminal transitions for existance and creates them in both directions.
-     */
-    self.checkTerminalTranstition = function () {
+        _.forEach(rule, function (value) {
 
-        _.forEach($scope.productions.nonTerminalOrder, function (nonTerminal) {
-
-            _.forEach($scope.productions.terminalOrder, function (terminal) {
-
-                if (nonTerminal.id == terminal.id) {
-                    var prod1 = $scope.productions.getByNonTerminalOrderId(nonTerminal.id);
-                    var prod2 = $scope.productions.getByTerminalOrderId(terminal.id);
-
-                    if (!self.checkIfTransitionExists(prod1, prod2)) {
-                        self.create(prod1, prod2, true);
-                    }
-                }
+            _.forEach(value.follower, function (id) {
+                var value2 = $scope.langDerivationtree.draw.getById(id);
+                self.createWithId(self.transitionId++, value, value2, animationGroup);
             });
+            animationGroup++;
         });
     };
 
     /**
-     * Checks the non terminal transitions for existance and creates them in both directions.
+     * Creates a new transition.
+     * @param {[[Type]]} id   [[Description]]
+     * @param {[[Type]]} from [[Description]]
+     * @param {[[Type]]} to   [[Description]]
      */
-    self.checkNonTerminalTransitions = function () {
+    self.createWithId = function (id, from, to, animationGroup) {
+        var transition = new autoSim.LangTransitionObject(id, from, to, self.calculatePath(from, to), animationGroup);
+        self.push(transition);
+    };
+    
+    /**
+     * Searches the transferred transition group, and returns the follower group of it.
+     * @param   {[[Type]]} transitionGroup [[Description]]
+     * @returns {[[Type]]} [[Description]]
+     */
+    self.getTransitionGroup = function (transitionGroup, next) {
+        var value = 1;
+        
+        if (!next) {
+            value = - 1;
+        }
+        
+        for (var i = 0; i < self.length; i++) {
 
-        for (var i = 0; i < $scope.productions.nonTerminalOrder.length - 1; i++) {
-
-            var prod1 = $scope.productions.getByNonTerminalOrderId($scope.productions.nonTerminalOrder[i].id);
-            var prod2 = $scope.productions.getByNonTerminalOrderId($scope.productions.nonTerminalOrder[i + 1].id);
-
-            if (!self.checkIfTransitionExists(prod1, prod2)) {
-                self.create(prod1, prod2);
+            if (self[i].animationGroup === transitionGroup && self[i + value].animationGroup !== transitionGroup) {
+                
+                return self[i + value].animationGroup;
             }
         }
     };
@@ -79,32 +79,12 @@ autoSim.LangTransitions = function ($scope) {
     };
 
     /**
-     * Calls the "createWithId" method, to create a new transition.
-     * @param {[[Type]]} from [[Description]]
-     * @param {[[Type]]} to   [[Description]]
-     */
-    self.create = function (from, to, isTerminal) {
-        self.createWithId(self.id++, from, to, isTerminal);
-    };
-
-    /**
-     * Creates a new transition.
-     * @param {[[Type]]} id   [[Description]]
-     * @param {[[Type]]} from [[Description]]
-     * @param {[[Type]]} to   [[Description]]
-     */
-    self.createWithId = function (id, from, to, isTerminal) {
-        var transtition = new autoSim.Transition(id, from, to, self.calculatePath(from, to, isTerminal));
-        self.push(transtition);
-    };
-
-    /**
      * Calculates the path of the transition.
      * @param   {object}   from [[Description]]
      * @param   {object}   to   [[Description]]
      * @returns {[[Type]]} [[Description]]
      */
-    self.calculatePath = function (from, to, isTerminal) {
+    self.calculatePath = function (from, to) {
         var obj = {};
 
         var directionVector = {
@@ -115,8 +95,8 @@ autoSim.LangTransitions = function ($scope) {
         var directionVectorLength = Math.sqrt(directionVector.x * directionVector.x + directionVector.y * directionVector.y);
 
         //Non Terminals in grid are bigger, transition is not completly correct, but works for now.
-        var nStart = ($scope.productions.radius) / directionVectorLength;
-        var nEnd = ($scope.productions.radius) / directionVectorLength;
+        var nStart = (self.radius) / directionVectorLength;
+        var nEnd = (self.radius) / directionVectorLength;
 
         obj.xStart = from.posX + nStart * directionVector.x;
         obj.yStart = from.posY + nStart * directionVector.y;
@@ -131,26 +111,11 @@ autoSim.LangTransitions = function ($scope) {
         return obj;
     };
 
-    /**
-     * Updates the current path to a newer one.
-     * @param {[[Type]]} production [[Description]]
-     */
-    self.updateTransitionPosition = function (production, isTerminal) {
-
-        _.forEach(self, function (value) {
-
-            if (value.from === production || value.to === production) {
-                value.path = self.calculatePath(value.from, value.to, isTerminal);
-            }
-        });
-    };
-
     // Called by the listener in the core.
     self.updateFunction = function () {
-
         while (self.pop() !== undefined) {}
-        self.checkTerminalTranstition();
-        self.checkNonTerminalTransitions();
+
+        self.create();
     };
 };
 autoSim.LangTransitions.prototype = Array.prototype;

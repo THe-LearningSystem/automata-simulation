@@ -1,4 +1,4 @@
-autoSim.DerivationSequenceObject = function (id, sequence) {
+autoSim.LangDerivationSequenceObject = function (id, sequence) {
     var self = this;
     
     self.id = id;

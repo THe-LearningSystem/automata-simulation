@@ -1,4 +1,4 @@
-autoSim.DerivationTreeZoom = function ($scope) {
+autoSim.LangDerivationTreeZoom = function ($scope) {
     var self = this;
 
     //amount the user can zoom out
@@ -7,9 +7,7 @@ autoSim.DerivationTreeZoom = function ($scope) {
     self.zoomMin = 0.5;
     self.zoomValue = 0.1;
     self.prevent = false;
-    
-    console.log("langderivationtreeZoom");
-    
+        
     /**
      * zooms in in the svg
      */
@@ -113,7 +111,6 @@ autoSim.DerivationTreeZoom = function ($scope) {
     };
 
     self.zoom = function () {
-        console.log("zoom");
         if (!self.prevent) {
             $scope.languageData.diagram.scale = Math.floor(d3.event.transform.k * 100) / 100;
             $scope.languageData.diagram.x = d3.event.transform.x;

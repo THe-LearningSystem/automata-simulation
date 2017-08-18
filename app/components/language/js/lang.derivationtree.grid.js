@@ -1,8 +1,6 @@
-autoSim.DerivationTreeGrid = function ($scope) {
+autoSim.LangDerivationTreeGrid = function ($scope) {
     var self = this;
-    
-    console.log("langderivationtreeGrid")
-    
+        
     //the space between each SnappingPoint 1:(0,0)->2:(0+gridSpace,0+gridSpace)
     self.spaceBetweenSnappingPoint = 100;
     //the distance when the state is snapped to the next SnappingPoint (Rectangle form)
@@ -25,12 +23,12 @@ autoSim.DerivationTreeGrid = function ($scope) {
             var i;
             
             //xGrid
-            for (i = xOffset; i < $scope.derivationtree.getSvgWidth(); i += self.spaceBetweenSnappingPoint * $scope.languageData.diagram.scale) {
-                self.container.append("line").attr("stroke-width", thickness).attr("class", "grid-line xgrid-line").attr("x1", i).attr("y1", 0).attr("x2", i).attr("y2", $scope.derivationtree.getSvgHeight());
+            for (i = xOffset; i < $scope.langDerivationtree.getSvgWidth(); i += self.spaceBetweenSnappingPoint * $scope.languageData.diagram.scale) {
+                self.container.append("line").attr("stroke-width", thickness).attr("class", "grid-line xgrid-line").attr("x1", i).attr("y1", 0).attr("x2", i).attr("y2", $scope.langDerivationtree.getSvgHeight());
             }
             //yGrid
-            for (i = yOffset; i < $scope.derivationtree.getSvgHeight(); i += self.spaceBetweenSnappingPoint * $scope.languageData.diagram.scale) {
-                self.container.append("line").attr("stroke-width", thickness).attr("class", "grid-line ygrid-line").attr("x1", 0).attr("y1", i).attr("x2", $scope.derivationtree.getSvgWidth()).attr("y2", i);
+            for (i = yOffset; i < $scope.langDerivationtree.getSvgHeight(); i += self.spaceBetweenSnappingPoint * $scope.languageData.diagram.scale) {
+                self.container.append("line").attr("stroke-width", thickness).attr("class", "grid-line ygrid-line").attr("x1", 0).attr("y1", i).attr("x2", $scope.langDerivationtree.getSvgWidth()).attr("y2", i);
             }
         } else {
         }
@@ -43,7 +41,7 @@ autoSim.DerivationTreeGrid = function ($scope) {
     $scope.$watchCollection('languageData.diagram', function () {
         self.draw();
     });
-    $scope.$watch('derivationtree.grid.isOpen', function () {
+    $scope.$watch('langDerivationtree.grid.isOpen', function () {
         self.draw();
     });
 };

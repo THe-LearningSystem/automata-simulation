@@ -19,7 +19,7 @@ autoSim.directive("containeritem", function () {
         replace: true,
         transclude: true,
         link: function (scope, elm, attrs) {
-            if (scope.extendableRaw == undefined || scope.extendableRaw != false) {
+            if (scope.extendableRaw === undefined || scope.extendableRaw !== false) {
                 scope.extendable = true;
             } else {
                 scope.extendable = false;
@@ -90,20 +90,18 @@ autoSim.directive("languagename", function () {
     };
 });
 
-autoSim.directive("langtopmenu", function () {
-    return {
-        templateUrl: 'components/language/directives/lang-top-menu.html'
-    };
-});
-
-autoSim.directive("langaddnewmenu", function () {
-    return {
-        templateUrl: 'components/language/directives/lang-addNew-menu.html'
-    };
-});
-
 autoSim.directive("langchangesmenu", function () {
     return {
+        link: function (scope, elm, attrs) {
+            /**
+             * Leave the input field after clicking the enter button
+             */
+            scope.keypressCallback = function ($event) {
+                if ($event.charCode == 13) {
+                    document.getElementById("production-input-left").focus();
+                }
+            };
+        },
         templateUrl: 'components/language/directives/lang-changes-menu.html'
     };
 });
@@ -111,5 +109,42 @@ autoSim.directive("langchangesmenu", function () {
 autoSim.directive("langsimulation", function () {
     return {
         templateUrl: 'components/language/directives/lang-simulation.html'
+    };
+});
+
+autoSim.directive("langsimulationsettings", function () {
+    return {
+        link: function (scope, elm, attrs) {
+            /**
+             * Options for the stepTimeOut-Slider
+             */
+            scope.stepTimeOutSlider = {
+                options: {
+                    floor: 0,
+                    step: 100,
+                    ceil: 3000,
+                    hideLimitLabels: true,
+                    translate: function (value) {
+                        return value + ' ms';
+                    }
+                }
+            };
+
+            /**
+             * Options for the loopTimeOut-Slider
+             */
+            scope.loopTimeOutSlider = {
+                options: {
+                    floor: 0,
+                    step: 100,
+                    ceil: 4000,
+                    hideLimitLabels: true,
+                    translate: function (value) {
+                        return value + ' ms';
+                    }
+                }
+            };
+        },
+        templateUrl: 'components/language/directives/lang-simulation-settings.html'
     };
 });

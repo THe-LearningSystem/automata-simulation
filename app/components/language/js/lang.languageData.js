@@ -1,6 +1,6 @@
-autoSim.LanguageData = function () {
+autoSim.LanguageData = function (languageData) {
     var self = this;
-    self.type = "LANGUAGE";
+    self.type = languageData;
     self.font = "'Roboto', sans-serif";
     self.diagram = {
         x: 0,

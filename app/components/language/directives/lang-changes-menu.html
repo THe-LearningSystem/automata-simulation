@@ -1,50 +1,87 @@
 <container-item titlename="Bearbeiten" extendable-raw="true">
-    <div class="input-group">
-        <span class="input-group-addon">Startvariable:</span>
-        <div uib-dropdown on-toggle="toggled(open)">
-            <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
-                {{productions.getByNonTerminalId(productions.start).left}}
-                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-            </button>
-            <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
-                <li ng-repeat="nonTerminal in productions.nonTerminalObject">
-                    <a ng-click="productions.changeStart(nonTerminal.id)">{{nonTerminal.left}}</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <form name="editAddNewMenu">
 
-    <div class="input-group">
-        <span class="input-group-addon">Ende:</span>
-        <div uib-dropdown on-toggle="toggled(open)">
-            <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
-                {{productions.end ? productions.end + ' -> ε' : ''}}
-                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-            </button>
-            <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
-                <li ng-repeat="nonTerminal in productions.nonTerminalObject">
-                    <a ng-click="productions.changeEnd(nonTerminal.left)">{{nonTerminal.left}} -> ε</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+        <div class="input-group">
+            <div class="input-group">
 
-    <div class="input-group">
-        <div class="input-group" ng-repeat="production in productions.nonTerminalObject">
-            <span class="input-group-addon">L:</span>
-            <input ng-model="production.left" ng-change="productions.updateRule(production)" class="form-control" id="production-input-left" maxlength="1">
+                <input ng-disabled="langSimulator.isInPlay" class="form-control" id="production-input-left" maxlength="10" ng-model="langProductionRules.menuLeft" ng-keypress="keypressCallback($event)">
 
-            <span class="input-group-addon">R:</span>
-            <input ng-model="production.right" ng-change="langCore.langUpdateListener()" class="form-control" id="production-input-right" maxlength="2">
+                <span class="input-group-addon">&#11106;</span>
+                <input ng-disabled="langSimulator.isInPlay" class="form-control" id="production-input-right" maxlength="2" ng-model="langProductionRules.menuRight" ng-keypress="keypressCallback($event)">
 
-            <span class="input-group-addon btn btn-danger transbutton" ng-click="productions.removeWithId(production.id)">
-                <span class="icon-times">
+                <!-- Hover des Buttons fehlt -->
+                <span class="input-group-addon btn" ng-click="langProductionRules.change.addEpsilonToRightSide(null, false)">
+                    <span>ε</span>
                 </span>
+            </div>
+        </div>
+
+        <p></p>
+        <div class="alert alert-danger" ng-show="!langProductionRules.change.checkLeftForLetter(langProductionRules.menuLeft)">
+            Bitte nur non Terminal (Großbuchstabe) eingeben!
+        </div>
+
+        <p></p>
+        <!--TODO: Checking of the right side only with terminal -->
+        <div class="alert alert-danger" ng-show="!langProductionRules.change.checkRightForLetter(langProductionRules.menuRight)">
+            Bitte nur ein Terminal (Kleinbuchstabe) oder dann ein non Terminal (Großbuchstabe) eingeben!
+        </div>
+
+        <button class="btn" ng-disabled="!langProductionRules.change.noErrorsInInput(langProductionRules.menuLeft, langProductionRules.menuRight)" ng-click="langProductionRules.create(langProductionRules.menuLeft, langProductionRules.menuRight)">
+            Hinzufügen
+        </button>
+    </form>
+    <p></p>
+
+    <!-- Add and change in one tab for more clarity. -->
+
+    <div class="input-group">
+        <div class="input-group" ng-repeat="production in langProductionRules">
+            <input ng-disabled="langSimulator.isInPlay" ng-change="langProductionRules.change.updateRule(production, true)" ng-model="production.left" class="form-control" id="production-input-left" maxlength="1">
+
+            <span class="input-group-addon">&#11106;</span>
+
+            <input ng-disabled="langSimulator.isInPlay" ng-change="langProductionRules.change.updateRule(production, false)" ng-model="production.right" class="form-control" id="production-input-right" maxlength="2">
+
+            <!-- Hover des Buttons fehlt -->
+            <span class="input-group-addon btn" ng-click="langProductionRules.change.addEpsilonToRightSide(production.id, true)">
+                <span>ε</span>
             </span>
+
+            <span class="input-group-addon btn btn-danger transbutton" ng-click="langProductionRules.removeWithId(production.id)">
+                <span class="icon-times"></span>
+            </span>
+
         </div>
     </div>
 
-    <button class="btn" ng-show="true" ng-click="langCore.langUpdateListener()">
-        Aktualisieren
-    </button>
+    <p></p>
+    <div class="alert alert-danger" ng-show="!langProductionRules.change.checkUpdateLeft">
+        Bitte nur non Terminal (Großbuchstabe) eingeben!
+    </div>
+
+    <p></p>
+    <div class="alert alert-danger" ng-show="!langProductionRules.change.checkUpdateRight">
+        Bitte nur ein Terminal (Kleinbuchstabe) oder dann ein non Terminal (Großbuchstabe) eingeben!
+    </div>
+
+    <p></p>
+    <div class="input-group" ng-show="langProductionRules.change.showStartRuleDropdown">
+        <span class="input-group-addon">Startregel:</span>
+        <div uib-dropdown on-toggle="toggled(open)">
+            <button type="button" class="menu-button dropbutton" uib-dropdown-toggle>
+                {{langProductionRules.getStartRule().left}}
+                <span ng-show="langProductionRules.getStartRule()">
+                    &#11106;
+                </span> {{langProductionRules.getStartRule().right}}
+                <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+            </button>
+            <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+                <li ng-repeat="rule in langProductionRules">
+                    <a ng-click="langProductionRules.changeStart(rule)">{{rule.left}} &#11106; {{rule.right}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
 </container-item>

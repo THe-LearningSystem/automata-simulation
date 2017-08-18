@@ -1,0 +1,21 @@
+<container-item titlename="SIM_SET.TITLE">
+
+    <div class="border-bottom">
+        <p>
+            {{"SIM_SET.STO" | translate}}
+        </p>
+        <rzslider rz-slider-model="langSimulator.stepTimeOut" rz-slider-options="stepTimeOutSlider.options"></rzslider>
+    </div>
+
+    <div class="border-bottom">
+        <p>
+            {{"SIM_SET.LTO" | translate}}
+        </p>
+        <rzslider rz-slider-model="langSimulator.loopTimeOut" rz-slider-options="loopTimeOutSlider.options"></rzslider>
+    </div>
+    <p>
+        <input class="checkbox-item" id="simulator-settings-input-loop" type="checkbox"
+               ng-model="langSimulator.loopSimulation" title="">
+        {{"SIM_SET.LOOP" | translate}}
+    </p>
+</container-item>

@@ -2,20 +2,20 @@
 
     <div class="title">Ableitungssequenz</div>
     <div class="content">
-        <span>
-            {{productions.getByNonTerminalId(productions.start).left}}
+        <span ng-show="langWordChecker.inputAccepted">
+            {{langProductionRules.getStartRule().left}}
         </span>
-        <span class="sequenceA">
-        =>
+        <span class="sequenceA" ng-show="langWordChecker.inputAccepted">
+        &#10233;
         </span>
-        <span ng-repeat="next in derivationsequence">
-            <span>
+        <span ng-repeat="next in langDerivationSequence">
+            <span ng-class="{'lang-simulator-derivationsequence': next.sequence === langSimulator.animated.currentDerivationSequence}">
                 {{next.sequence}}
                 <br>
-                <span class="sequenceB" >
-                    {{$last ? '' : '=>'}}
-                </span>
             </span>
+                <span class="sequenceB" >
+                    {{$last ? '' : '&#10233;'}}
+                </span>
         </span>
     </div>
 </div>
