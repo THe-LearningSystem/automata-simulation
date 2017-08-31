@@ -1,3 +1,6 @@
+This Project was integrated in [Link](https://github.com/THe-LearningSystem/frontend).
+
+
 #Automata Simulation
 This project was founded to facilitate the understanding and learning of the automatatheory for students.
 This application is a project as a part of the informaticsproject in the 5th semester at the technical university
